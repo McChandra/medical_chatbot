@@ -1,0 +1,19 @@
+# ==============================
+# MedQuAD Medical Chatbot
+# Python Dependencies
+# ==============================
+
+# Data Processing
+pandas
+numpy
+
+# Data Visualization / EDA
+matplotlib
+seaborn
+
+# Machine Learning
+scikit-learn
+
+# Jupyter
+jupyter
+ipykernel
