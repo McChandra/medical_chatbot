@@ -1,0 +1,133 @@
+# ============================================================
+# MedQuAD Medical Chatbot - .gitignore
+# ============================================================
+
+# -----------------------------
+# Python
+# -----------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# -----------------------------
+# Virtual Environments
+# -----------------------------
+.venv/
+venv/
+env/
+ENV/
+
+# -----------------------------
+# Environment Variables / Secrets
+# -----------------------------
+.env
+.env.*
+!.env.example
+
+# -----------------------------
+# AWS Credentials / Configuration
+# Never commit credentials
+# -----------------------------
+.aws/
+*.pem
+*.key
+
+# -----------------------------
+# Jupyter Notebook
+# -----------------------------
+.ipynb_checkpoints/
+
+# -----------------------------
+# IDE / Editor
+# -----------------------------
+.vscode/
+.idea/
+
+# -----------------------------
+# Operating System
+# -----------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -----------------------------
+# Logs
+# -----------------------------
+*.log
+logs/
+
+# -----------------------------
+# Testing / Coverage
+# -----------------------------
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# -----------------------------
+# MLflow
+# -----------------------------
+mlruns/
+mlartifacts/
+
+# -----------------------------
+# Hugging Face Cache
+# -----------------------------
+.cache/
+huggingface/
+transformers_cache/
+
+# -----------------------------
+# ML Models / Checkpoints
+# -----------------------------
+models/
+checkpoints/
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+*.onnx
+
+# -----------------------------
+# FAISS / Vector Indexes
+# -----------------------------
+*.faiss
+*.index
+
+# -----------------------------
+# Dataset Files
+# Raw/processed datasets should
+# live in S3, not Git
+# -----------------------------
+data/raw/
+data/processed/
+
+*.parquet
+
+# Keep directory structure in Git
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# -----------------------------
+# Temporary Files
+# -----------------------------
+tmp/
+temp/
+*.tmp
+
+# -----------------------------
+# Streamlit Secrets
+# -----------------------------
+.streamlit/secrets.toml
+
+# -----------------------------
+# Docker
+# -----------------------------
+docker-compose.override.yml
