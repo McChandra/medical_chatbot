@@ -1,0 +1,994 @@
+# MedQuAD Medical Chatbot — System Design
+
+## 1. Project Overview
+
+The MedQuAD Medical Chatbot is an NLP-based medical question-answering system built using the MedQuAD dataset.
+
+The project follows a modular machine-learning architecture in which data ingestion, preprocessing, exploratory data analysis, feature engineering, model training, evaluation, inference, postprocessing, frontend, and deployment are maintained as separate components.
+
+The initial application will use:
+
+- Python
+- Pandas
+- Jupyter
+- Streamlit
+- Hugging Face Transformers
+- FLAN-T5
+- AWS SageMaker AI
+- Amazon S3
+- MLflow
+- GitHub
+- Docker
+
+The modular architecture is designed so that individual components can later be migrated into AWS SageMaker processing, training, inference, model registry, and deployment workflows.
+
+---
+
+# 2. Project Directory Structure
+
+```text
+medquad-medical-chatbot/
+│
+├── .gitignore
+├── README.md
+├── requirements.txt
+│
+├── data/
+│   ├── raw/
+│   │   └── .gitkeep
+│   └── processed/
+│       └── .gitkeep
+│
+├── src/
+│   ├── data/
+│   │   ├── __init__.py
+│   │   ├── load_data.py
+│   │   ├── preprocessing.py
+│   │   └── eda.py
+│   │
+│   ├── features/
+│   │   ├── __init__.py
+│   │   └── feature_engineering.py
+│   │
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── train.py
+│   │   ├── evaluate.py
+│   │   └── predict.py
+│   │
+│   └── serving/
+│       ├── __init__.py
+│       └── postprocessing.py
+│
+├── app/
+│   └── streamlit_app.py
+│
+├── notebooks/
+│   └── main.ipynb
+│
+├── artifacts/
+│   ├── models/
+│   ├── metrics/
+│   └── plots/
+│
+├── tests/
+│
+└── deployment/
+    └── Dockerfile
+```
+
+---
+
+# 3. Root-Level Files
+
+## `.gitignore`
+
+The `.gitignore` file defines files and directories that Git should not track.
+
+For this project, it prevents unnecessary or sensitive files from being uploaded to GitHub, including:
+
+- Python virtual environments
+- Python cache files
+- `.env` files
+- AWS credentials
+- Streamlit secrets
+- large datasets
+- trained model weights
+- MLflow artifacts
+- temporary files
+- Jupyter checkpoints
+- local FAISS/vector indexes
+
+This is particularly important for an ML project because datasets and trained model artifacts can be very large and should normally be stored in Amazon S3 rather than GitHub.
+
+---
+
+## `README.md`
+
+The README is the main documentation page of the GitHub repository.
+
+It should eventually contain:
+
+- Project description
+- Business problem
+- Target audience
+- MedQuAD dataset description
+- System architecture
+- Technology stack
+- Installation instructions
+- Local development instructions
+- Model information
+- Evaluation methodology
+- AWS architecture
+- Deployment instructions
+- Project limitations
+- Medical disclaimer
+- Team members
+
+A new developer should be able to understand what the project does and how to run it by reading the README.
+
+---
+
+## `requirements.txt`
+
+This file contains the Python dependencies required to run the project.
+
+Possible dependencies include:
+
+```text
+pandas
+numpy
+matplotlib
+streamlit
+transformers
+torch
+scikit-learn
+datasets
+evaluate
+sentencepiece
+boto3
+mlflow
+```
+
+The exact dependencies will be added as the project develops.
+
+A developer can install them using:
+
+```bash
+pip install -r requirements.txt
+```
+
+Keeping dependencies in one file helps create reproducible local, Docker, and AWS environments.
+
+---
+
+# 4. `data/`
+
+The `data` directory represents the local data layer.
+
+```text
+data/
+├── raw/
+└── processed/
+```
+
+Large datasets should not normally be committed to GitHub.
+
+During AWS deployment, Amazon S3 will become the primary persistent data storage.
+
+---
+
+## `data/raw/`
+
+Contains the original dataset exactly as it was downloaded or received.
+
+Example:
+
+```text
+data/raw/medquad.csv
+```
+
+The raw dataset should not be manually modified.
+
+The principle is:
+
+```text
+Original Data
+     ↓
+data/raw/
+     ↓
+Preprocessing
+     ↓
+data/processed/
+```
+
+Keeping an unchanged raw copy makes the data pipeline reproducible.
+
+---
+
+## `data/raw/.gitkeep`
+
+Git does not track empty directories.
+
+`.gitkeep` is an empty placeholder allowing the `raw/` directory to remain in the Git repository without committing the actual dataset.
+
+---
+
+## `data/processed/`
+
+Contains data generated after preprocessing and transformation.
+
+Possible future files include:
+
+```text
+medquad_clean.csv
+medquad_clean.parquet
+train.parquet
+validation.parquet
+test.parquet
+```
+
+These are generated artifacts rather than original source data.
+
+---
+
+## `data/processed/.gitkeep`
+
+Maintains the empty processed-data directory in Git before processed files exist.
+
+---
+
+# 5. `src/`
+
+`src` contains the reusable Python source code for the machine-learning system.
+
+The main rule is:
+
+**Reusable production logic belongs in `src/`, while experimentation belongs in `notebooks/`.**
+
+The source code is separated into:
+
+```text
+src/
+├── data/
+├── features/
+├── models/
+└── serving/
+```
+
+This creates a modular ML pipeline.
+
+---
+
+# 6. `src/data/`
+
+Contains code related to loading, understanding, validating, and preprocessing the dataset.
+
+---
+
+## `src/data/__init__.py`
+
+Marks the `data` directory as part of the Python package.
+
+This allows imports such as:
+
+```python
+from src.data.load_data import load_csv
+```
+
+The file may remain empty initially.
+
+---
+
+## `src/data/load_data.py`
+
+Responsible only for **data ingestion/loading**.
+
+Responsibilities include:
+
+- Accept a dataset path
+- Verify that the file exists
+- Validate the supported file format
+- Load the dataset
+- Return a Pandas DataFrame
+- Eventually support loading from Amazon S3
+
+Example flow:
+
+```text
+MedQuAD CSV
+     ↓
+load_data.py
+     ↓
+Pandas DataFrame
+```
+
+This module should NOT perform extensive data cleaning, EDA, feature engineering, or model training.
+
+Keeping ingestion separate makes it easier to replace local files with S3 later.
+
+---
+
+## `src/data/preprocessing.py`
+
+Contains the data-cleaning logic.
+
+Potential responsibilities include:
+
+- Remove duplicate records
+- Handle missing questions
+- Handle missing answers
+- Remove HTML artifacts
+- Normalize whitespace
+- Remove invalid records
+- Normalize text formatting
+- Validate question-answer pairs
+- Prepare data for later ML processing
+
+Flow:
+
+```text
+Raw DataFrame
+      ↓
+preprocessing.py
+      ↓
+Clean DataFrame
+```
+
+The preprocessing functions should eventually be reusable both locally and inside an AWS SageMaker Processing Job.
+
+---
+
+## `src/data/eda.py`
+
+Contains reusable Exploratory Data Analysis logic.
+
+EDA is used to understand the characteristics and quality of MedQuAD before model development.
+
+Possible analyses include:
+
+- Dataset dimensions
+- Missing-value analysis
+- Duplicate analysis
+- Question-length distribution
+- Answer-length distribution
+- Token-length distribution
+- Question categories
+- Medical categories
+- Common terms
+- Outlier identification
+
+Example:
+
+```text
+Clean/Raw Dataset
+       ↓
+     EDA
+       ↓
+Dataset Understanding
+```
+
+EDA should primarily **analyze** the dataset rather than modify the production data.
+
+---
+
+# 7. `src/features/`
+
+Contains feature-engineering logic.
+
+---
+
+## `src/features/__init__.py`
+
+Marks the `features` directory as a Python package.
+
+This allows imports such as:
+
+```python
+from src.features.feature_engineering import create_features
+```
+
+---
+
+## `src/features/feature_engineering.py`
+
+Creates ML-relevant features from the cleaned dataset.
+
+Potential features include:
+
+- Question length
+- Answer length
+- Question token count
+- Answer token count
+- Question type
+- Medical category
+- Medical entity information
+- Transformer tokens
+- Embeddings
+
+Example:
+
+```text
+Clean MedQuAD
+      ↓
+Feature Engineering
+      ↓
+ML-ready dataset
+```
+
+As the AWS architecture develops, some reusable features may later be integrated with SageMaker Feature Store or a feature-processing pipeline.
+
+---
+
+# 8. `src/models/`
+
+Contains model-related code.
+
+Training, evaluation, and inference are deliberately separated.
+
+```text
+models/
+├── train.py
+├── evaluate.py
+└── predict.py
+```
+
+---
+
+## `src/models/__init__.py`
+
+Marks the models directory as a Python package.
+
+---
+
+## `src/models/train.py`
+
+Contains model-building and training logic.
+
+For the initial project, the primary model candidate is FLAN-T5.
+
+Potential responsibilities include:
+
+- Load pretrained tokenizer
+- Load pretrained model
+- Configure training parameters
+- Prepare training dataset
+- Fine-tune the model if required
+- Save the trained model
+- Save tokenizer artifacts
+- Log experiments using MLflow
+
+Conceptually:
+
+```text
+Training Data
+     ↓
+Pretrained FLAN-T5
+     ↓
+Training/Fine-tuning
+     ↓
+Model Artifact
+```
+
+Training should not contain Streamlit or UI logic.
+
+---
+
+## `src/models/evaluate.py`
+
+Evaluates model performance independently from training.
+
+Possible metrics include:
+
+- ROUGE
+- BLEU
+- BERTScore
+- Exact Match where appropriate
+- F1 where appropriate
+- Response latency
+- Human factuality evaluation
+- Hallucination evaluation
+
+Results can later be saved into:
+
+```text
+artifacts/metrics/
+```
+
+and logged through MLflow.
+
+The evaluation stage helps determine whether a model meets the project's quality threshold before deployment.
+
+---
+
+## `src/models/predict.py`
+
+Contains inference/prediction logic.
+
+Its purpose is to take a user question and obtain a model prediction.
+
+Conceptually:
+
+```text
+Question
+   ↓
+Prediction preprocessing/tokenization
+   ↓
+Model
+   ↓
+Raw prediction
+```
+
+Eventually the rest of the application should be able to call something conceptually similar to:
+
+```python
+answer = predict(question)
+```
+
+This is particularly important for deployment because SageMaker inference will need clearly separated model-loading and prediction behavior.
+
+---
+
+# 9. `src/serving/`
+
+Contains logic used after model inference and before returning the response to the application.
+
+---
+
+## `src/serving/__init__.py`
+
+Marks the serving directory as a Python package.
+
+---
+
+## `src/serving/postprocessing.py`
+
+Transforms raw model output into the final response presented to the user.
+
+Possible responsibilities include:
+
+- Decode model output
+- Remove unwanted model tokens
+- Clean whitespace
+- Format the response
+- Apply confidence thresholds
+- Apply safety rules
+- Add source information
+- Handle low-confidence predictions
+- Handle unsupported questions
+
+Conceptually:
+
+```text
+Raw Model Prediction
+        ↓
+Postprocessing
+        ↓
+Safe Formatted Response
+```
+
+For example, a low-confidence answer may result in a fallback message rather than displaying an unreliable medical answer.
+
+---
+
+# 10. `app/`
+
+Contains the user-facing application.
+
+---
+
+## `app/streamlit_app.py`
+
+The Streamlit application is the frontend of the medical chatbot.
+
+It will provide:
+
+- Medical chatbot interface
+- Question input
+- Chat-style responses
+- Source information
+- Confidence information
+- Response latency
+- Supporting evidence
+- Feedback controls
+- Medical disclaimer
+- Model information/evaluation display
+
+Conceptual flow:
+
+```text
+User
+ ↓
+Streamlit
+ ↓
+Question
+ ↓
+Prediction Service
+ ↓
+Postprocessing
+ ↓
+Response
+ ↓
+Streamlit
+ ↓
+User
+```
+
+Streamlit should NOT contain:
+
+- Model training code
+- Full preprocessing pipelines
+- EDA
+- Feature engineering
+- Large amounts of model implementation code
+
+Instead, it should call functions from the reusable `src/` modules.
+
+---
+
+# 11. `notebooks/`
+
+Contains Jupyter notebooks used for experimentation and analysis.
+
+---
+
+## `notebooks/main.ipynb`
+
+The main notebook acts as the experimental workspace for the entire ML lifecycle.
+
+It can be used to:
+
+1. Load MedQuAD
+2. Inspect the dataset
+3. Run preprocessing
+4. Perform EDA
+5. Create features
+6. Test tokenization
+7. Test pretrained models
+8. Train/fine-tune models
+9. Evaluate models
+10. Compare experiments
+11. Test predictions
+
+The notebook should use functions from `src/` rather than permanently duplicating the implementation.
+
+For example:
+
+```python
+from src.data.load_data import load_csv
+from src.data.preprocessing import preprocess_data
+from src.features.feature_engineering import create_features
+```
+
+The design principle is:
+
+```text
+Notebook
+=
+Experimentation + Analysis + Visualization
+
+src/
+=
+Reusable Application/ML Logic
+```
+
+The notebook can later be executed in a Jupyter/SageMaker environment.
+
+---
+
+# 12. `artifacts/`
+
+Stores outputs generated by the ML workflow during local development.
+
+```text
+artifacts/
+├── models/
+├── metrics/
+└── plots/
+```
+
+These directories separate generated outputs from source code.
+
+---
+
+## `artifacts/models/`
+
+Stores locally generated model artifacts.
+
+Examples may include:
+
+```text
+trained_model/
+tokenizer/
+model_config/
+```
+
+During AWS deployment, production model artifacts should generally be stored in Amazon S3 and managed/versioned through the selected model-management workflow.
+
+---
+
+## `artifacts/metrics/`
+
+Stores evaluation results.
+
+Examples:
+
+```text
+evaluation.json
+rouge_scores.json
+latency.json
+benchmark_results.csv
+```
+
+This makes model performance reproducible and comparable.
+
+---
+
+## `artifacts/plots/`
+
+Stores generated visualizations.
+
+Examples:
+
+```text
+question_length_distribution.png
+answer_length_distribution.png
+training_loss.png
+model_comparison.png
+latency_comparison.png
+```
+
+These plots can later be used in reports and presentations.
+
+---
+
+# 13. `tests/`
+
+Contains automated tests.
+
+Tests help verify that changes to one part of the project do not break another part.
+
+Future tests may include:
+
+```text
+test_load_data.py
+test_preprocessing.py
+test_features.py
+test_predict.py
+test_api.py
+```
+
+Examples of checks include:
+
+- Dataset loader rejects nonexistent files
+- Preprocessing removes null questions
+- Model receives valid input
+- Prediction returns expected response structure
+- Application handles invalid requests safely
+
+These tests will later become important for CI/CD.
+
+Conceptually:
+
+```text
+Git Push
+   ↓
+CI/CD
+   ↓
+Run Tests
+   ↓
+PASS?
+ /   \
+Yes   No
+ ↓     ↓
+Build Stop
+```
+
+---
+
+# 14. `deployment/`
+
+Contains deployment-specific configuration.
+
+---
+
+## `deployment/Dockerfile`
+
+Defines the model/application container environment.
+
+The Dockerfile eventually specifies:
+
+- Base Python image
+- System dependencies
+- Python dependencies
+- Application/model files
+- Runtime configuration
+- Container startup command
+
+Conceptually:
+
+```text
+Source Code
++
+Dependencies
++
+Model Serving Logic
+       ↓
+Dockerfile
+       ↓
+Docker Image
+       ↓
+Model Container
+       ↓
+AWS Compute
+```
+
+The container allows the model to run in a consistent environment across development and deployment.
+
+---
+
+# 15. Overall ML System Flow
+
+The complete local system is designed as:
+
+```text
+MedQuAD CSV
+     │
+     ▼
+load_data.py
+     │
+     ▼
+preprocessing.py
+     │
+     ├──────────────► eda.py
+     │
+     ▼
+feature_engineering.py
+     │
+     ▼
+train.py
+     │
+     ▼
+MODEL ARTIFACT
+     │
+     ▼
+evaluate.py
+     │
+     ▼
+Quality Threshold
+     │
+     ▼
+predict.py
+     │
+     ▼
+postprocessing.py
+     │
+     ▼
+streamlit_app.py
+     │
+     ▼
+USER
+```
+
+---
+
+# 16. AWS Mapping
+
+The local architecture is intentionally designed so that it can later map to AWS services.
+
+```text
+LOCAL COMPONENT                 AWS ROLE
+
+data/raw/                       Amazon S3 Raw Zone
+
+load_data.py                    S3 Data Ingestion
+
+preprocessing.py                SageMaker Processing
+
+feature_engineering.py          Feature Processing /
+                                Feature Store where appropriate
+
+main.ipynb                      Jupyter/SageMaker Environment
+
+train.py                        SageMaker Training
+
+evaluate.py                     Model Evaluation
+
+MLflow                          Experiment Tracking
+
+artifacts/models/               S3 Model Artifacts
+
+Model Artifact                  Model Registry
+
+predict.py                      Inference Logic
+
+postprocessing.py               Inference/Postprocessing
+
+Dockerfile                      Model Container
+
+Model Container                 SageMaker Hosting
+
+Compute                         SageMaker Instance(s)
+
+Scaling                         Endpoint Auto Scaling
+
+streamlit_app.py                User Application
+```
+
+The final production lifecycle can therefore evolve toward:
+
+```text
+DATA
+ ↓
+PREPROCESS
+ ↓
+FEATURES
+ ↓
+TRAIN
+ ↓
+EVALUATE
+ ↓
+REGISTER
+ ↓
+CONTAINERIZE
+ ↓
+DEPLOY
+ ↓
+SERVE
+ ↓
+MONITOR
+ ↓
+RETRAIN
+```
+
+---
+
+# 17. Core Design Principle
+
+Each module should have one primary responsibility.
+
+For example:
+
+```text
+load_data.py
+      =
+LOAD DATA
+
+preprocessing.py
+      =
+CLEAN DATA
+
+eda.py
+      =
+UNDERSTAND DATA
+
+feature_engineering.py
+      =
+CREATE FEATURES
+
+train.py
+      =
+TRAIN MODEL
+
+evaluate.py
+      =
+MEASURE MODEL
+
+predict.py
+      =
+RUN INFERENCE
+
+postprocessing.py
+      =
+PREPARE RESPONSE
+
+streamlit_app.py
+      =
+INTERACT WITH USER
+
+Dockerfile
+      =
+PACKAGE RUNTIME
+```
+
+This separation makes the project easier to test, maintain, debug, deploy, and migrate to AWS.
