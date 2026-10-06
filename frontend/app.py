@@ -14,6 +14,7 @@ Responsibilities:
 import streamlit as st
 
 from home import render_home
+from login import render_login
 from components.styles import load_css
 from components.theme_toggle import render_theme_toggle
 
@@ -97,9 +98,7 @@ if current_page == "home":
 
 elif current_page == "login":
 
-    st.info(
-        "Login page will be implemented next."
-    )
+    render_login()
 
 
 # ------------------------------------------------------------------
