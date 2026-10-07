@@ -2,92 +2,134 @@
 # MedQuAD Medical Chatbot - .gitignore
 # ============================================================
 
-# -----------------------------
-# Python
-# -----------------------------
+
+# ------------------------------------------------------------
+# Python bytecode / cache
+# ------------------------------------------------------------
 __pycache__/
+**/__pycache__/
 *.py[cod]
 *$py.class
 *.so
+
+# Python package/build artifacts
 *.egg
 *.egg-info/
-dist/
-build/
 .eggs/
+build/
+dist/
 
-# -----------------------------
-# Virtual Environments
-# -----------------------------
+
+# ------------------------------------------------------------
+# Python tooling caches
+# ------------------------------------------------------------
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pytype/
+.pyre/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+
+# ------------------------------------------------------------
+# Virtual environments
+# ------------------------------------------------------------
 .venv/
 venv/
 env/
 ENV/
 
-# -----------------------------
-# Environment Variables / Secrets
-# -----------------------------
+
+# ------------------------------------------------------------
+# Environment variables / secrets
+# ------------------------------------------------------------
 .env
 .env.*
 !.env.example
 
-# -----------------------------
-# AWS Credentials / Configuration
-# Never commit credentials
-# -----------------------------
+# Streamlit secrets
+.streamlit/secrets.toml
+
+
+# ------------------------------------------------------------
+# AWS credentials / configuration
+# NEVER commit credentials
+# ------------------------------------------------------------
 .aws/
 *.pem
 *.key
 
-# -----------------------------
+
+# ------------------------------------------------------------
 # Jupyter Notebook
-# -----------------------------
+# ------------------------------------------------------------
 .ipynb_checkpoints/
 
-# -----------------------------
+
+# ------------------------------------------------------------
 # IDE / Editor
-# -----------------------------
+# ------------------------------------------------------------
 .vscode/
 .idea/
 
-# -----------------------------
+
+# ------------------------------------------------------------
 # Operating System
-# -----------------------------
+# ------------------------------------------------------------
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# -----------------------------
+
+# ------------------------------------------------------------
 # Logs
-# -----------------------------
+# ------------------------------------------------------------
 *.log
 logs/
 
-# -----------------------------
-# Testing / Coverage
-# -----------------------------
-.pytest_cache/
-.coverage
-htmlcov/
-coverage.xml
 
-# -----------------------------
+# ------------------------------------------------------------
 # MLflow
-# -----------------------------
+# ------------------------------------------------------------
 mlruns/
 mlartifacts/
 
-# -----------------------------
-# Hugging Face Cache
-# -----------------------------
+
+# ------------------------------------------------------------
+# Hugging Face / ML caches
+# ------------------------------------------------------------
 .cache/
 huggingface/
 transformers_cache/
 
-# -----------------------------
-# ML Models / Checkpoints
-# -----------------------------
-models/
+# Hugging Face local cache variants
+.huggingface/
+hf_cache/
+
+
+# ------------------------------------------------------------
+# Model artifacts / checkpoints
+# ------------------------------------------------------------
+#
+# IMPORTANT:
+# Do NOT ignore the models/ directory.
+#
+# Our models/ directory contains source code:
+# models/train.py
+# models/evaluate.py
+# models/predictions.py
+#
+# Only generated model artifacts should be ignored.
+# ------------------------------------------------------------
+
 checkpoints/
+
+artifacts/models/
+artifacts/checkpoints/
+
 *.bin
 *.safetensors
 *.pt
@@ -95,39 +137,73 @@ checkpoints/
 *.ckpt
 *.onnx
 
-# -----------------------------
-# FAISS / Vector Indexes
-# -----------------------------
+
+# ------------------------------------------------------------
+# FAISS / Vector indexes
+# ------------------------------------------------------------
 *.faiss
 *.index
 
-# -----------------------------
-# Dataset Files
-# Raw/processed datasets should
-# live in S3, not Git
-# -----------------------------
-data/raw/
-data/processed/
+
+# ------------------------------------------------------------
+# Dataset files
+#
+# Raw and processed datasets should eventually live in S3
+# rather than Git.
+# ------------------------------------------------------------
+
+data/raw/*
+data/processed/*
 
 *.parquet
+
 
 # Keep directory structure in Git
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 
-# -----------------------------
-# Temporary Files
-# -----------------------------
+
+# ------------------------------------------------------------
+# Temporary files
+# ------------------------------------------------------------
 tmp/
 temp/
+
 *.tmp
+*.temp
+*.bak
+*.swp
+*~
 
-# -----------------------------
-# Streamlit Secrets
-# -----------------------------
-.streamlit/secrets.toml
 
-# -----------------------------
+# ------------------------------------------------------------
+# Streamlit runtime/cache
+# ------------------------------------------------------------
+.streamlit/cache/
+
+
+# ------------------------------------------------------------
+# SageMaker / ML training outputs
+# ------------------------------------------------------------
+sagemaker-output/
+training-output/
+model-output/
+
+
+# ------------------------------------------------------------
+# Local generated artifacts
+#
+# Keep the artifacts directory itself available,
+# but don't commit generated model files.
+# ------------------------------------------------------------
+artifacts/models/*
+artifacts/checkpoints/*
+
+!artifacts/models/.gitkeep
+!artifacts/checkpoints/.gitkeep
+
+
+# ------------------------------------------------------------
 # Docker
-# -----------------------------
+# ------------------------------------------------------------
 docker-compose.override.yml
