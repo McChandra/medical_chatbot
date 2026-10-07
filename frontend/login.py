@@ -40,7 +40,8 @@ def render_login():
 
         # Google login
         if st.button(
-            "🌐 Continue with Google",
+            "Continue with Google",
+            icon=":material/account_circle:",
             use_container_width=True,
             key="google_login",
         ):

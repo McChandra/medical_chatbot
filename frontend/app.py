@@ -15,7 +15,10 @@ import streamlit as st
 
 from home import render_home
 from login import render_login
-from components.styles import load_css
+from signup import render_signup
+from chat import render_chatbot
+
+from components.styles_loader import load_css
 from components.theme_toggle import render_theme_toggle
 
 
@@ -107,9 +110,7 @@ elif current_page == "login":
 
 elif current_page == "signup":
 
-    st.info(
-        "Sign-up page will be implemented next."
-    )
+    render_signup()
 
 
 # ------------------------------------------------------------------
@@ -127,9 +128,7 @@ elif current_page == "chatbot":
 
     else:
 
-        st.info(
-            "MedQuad AI chatbot will be implemented here."
-        )
+        render_chatbot()
 
 
 # ------------------------------------------------------------------

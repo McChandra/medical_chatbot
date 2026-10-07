@@ -2,58 +2,43 @@ import streamlit as st
 
 
 def render_home():
-    """Render the MedQuad AI landing page."""
+    """Render the public MedQuad AI landing page."""
+
 
     # ---------------------------------------------------------
-    # LANDING PAGE HEADER
+    # HERO
     # ---------------------------------------------------------
 
     st.markdown(
-        """
-<div style="text-align: center; padding: 60px 20px 30px 20px;">
+"""<section class="home-hero">
 
-<div style="
-    font-size: 18px;
-    color: #0866F5;
-    font-weight: 600;
-    letter-spacing: 1px;
-">
+<div class="home-eyebrow">
 WELCOME TO
 </div>
 
-<h1 style="
-    font-size: 56px;
-    margin: 8px 0;
-    color: #092664;
-">
-MedQuad <span style="color: #0866F5;">AI</span>
-</h1>
+<div class="home-hero-brand">
+<div class="home-hero-logo">✚</div>
 
-<h3 style="
-    color: #162B59;
-    font-weight: 500;
-">
+<div class="home-hero-title">
+MedQuad <span>AI</span>
+</div>
+</div>
+
+<h2>
 Your Trusted Health AI Assistant
-</h3>
+</h2>
 
-<p style="
-    max-width: 650px;
-    margin: 20px auto;
-    font-size: 18px;
-    color: #536587;
-    line-height: 1.6;
-">
+<p>
 Ask questions about symptoms, conditions, treatments,
 prevention, and general health information.
 </p>
 
-</div>
-""",
-        unsafe_allow_html=True,
+</section>""",
+    unsafe_allow_html=True,
     )
 
     # ---------------------------------------------------------
-    # ACTION BUTTONS
+    # ACTIONS
     # ---------------------------------------------------------
 
     left, center, right = st.columns([1.5, 2, 1.5])
@@ -63,14 +48,18 @@ prevention, and general health information.
         if st.button(
             "Get Started",
             type="primary",
+            icon=":material/arrow_forward:",
             use_container_width=True,
+            key="home_get_started",
         ):
             st.session_state.page = "signup"
             st.rerun()
 
         if st.button(
             "I already have an account",
+            icon=":material/login:",
             use_container_width=True,
+            key="home_login",
         ):
             st.session_state.page = "login"
             st.rerun()
@@ -80,18 +69,16 @@ prevention, and general health information.
     # ---------------------------------------------------------
 
     st.markdown(
-        """
-<div style="
-    text-align: center;
-    color: #667694;
-    font-size: 14px;
-    padding: 35px 10px 10px 10px;
-">
-🛡️ <strong>Reliable Health Information</strong>
-<br><br>
-MedQuad AI provides educational health information
-and is not a substitute for professional medical advice.
+"""<div class="home-safety">
+<div class="home-safety-heading">
+<span>🛡️</span>
+<strong>Reliable Health Information</strong>
 </div>
-""",
+
+<p>
+MedQuad AI provides educational health information and is
+not a substitute for professional medical advice.
+</p>
+</div>""",
         unsafe_allow_html=True,
     )

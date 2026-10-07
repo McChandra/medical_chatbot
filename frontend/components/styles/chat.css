@@ -1,0 +1,348 @@
+/* =========================================================
+   MEDQUAD AI — CHATBOT
+   ========================================================= */
+
+
+/* =========================================================
+   CHAT HEADER / BRAND
+   ========================================================= */
+
+.chat-brand {
+    color:
+        var(--text-primary);
+
+    font-size:
+        21px;
+
+    font-weight:
+        700;
+}
+
+
+.chat-brand span {
+    color:
+        var(--primary);
+}
+
+
+/* =========================================================
+   CHAT WELCOME
+   ========================================================= */
+
+.chat-welcome {
+    max-width:
+        720px;
+
+    margin:
+        3rem auto 2.5rem auto;
+
+    text-align:
+        center;
+}
+
+
+.chat-medical-icon {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    width:
+        58px;
+
+    height:
+        58px;
+
+    margin:
+        0 auto 1.25rem auto;
+
+    background:
+        var(--primary-soft);
+
+    color:
+        var(--primary);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        18px;
+
+    font-size:
+        28px;
+
+    font-weight:
+        700;
+}
+
+
+.chat-welcome h1 {
+    margin-bottom:
+        0.75rem;
+
+    color:
+        var(--text-primary) !important;
+
+    font-size:
+        36px;
+
+    font-weight:
+        700;
+}
+
+
+.chat-welcome p {
+    max-width:
+        600px;
+
+    margin:
+        0 auto;
+
+    color:
+        var(--text-secondary) !important;
+
+    font-size:
+        16px;
+
+    line-height:
+        1.7;
+}
+
+
+/* =========================================================
+   USER MESSAGE
+   ========================================================= */
+
+.user-message {
+    max-width:
+        75%;
+
+    margin-left:
+        auto;
+
+    padding:
+        0.9rem 1.1rem;
+
+    background:
+        var(--primary-soft);
+
+    color:
+        var(--text-primary);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        18px 18px 4px 18px;
+}
+
+
+/* =========================================================
+   ASSISTANT MESSAGE
+   ========================================================= */
+
+.assistant-message {
+    max-width:
+        80%;
+
+    padding:
+        1.2rem;
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text-primary);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        18px 18px 18px 4px;
+
+    box-shadow:
+        var(--shadow);
+}
+
+
+/* =========================================================
+   STREAMLIT CHAT MESSAGE
+   ========================================================= */
+
+[data-testid="stChatMessage"] {
+    background:
+        var(--surface) !important;
+
+    color:
+        var(--text-primary) !important;
+
+    border:
+        1px solid var(--border) !important;
+
+    border-radius:
+        16px !important;
+
+    padding:
+        0.75rem 1rem;
+
+    margin-bottom:
+        0.75rem;
+
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease;
+}
+
+
+[data-testid="stChatMessage"] p {
+    color:
+        var(--text-primary) !important;
+}
+
+
+/* =========================================================
+   CHAT INPUT
+   ========================================================= */
+
+[data-testid="stChatInput"] {
+    background:
+        var(--surface) !important;
+
+    border:
+        1px solid var(--border) !important;
+
+    border-radius:
+        16px !important;
+
+    box-shadow:
+        var(--shadow) !important;
+
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+[data-testid="stChatInput"] textarea {
+    background:
+        transparent !important;
+
+    color:
+        var(--text-primary) !important;
+
+    caret-color:
+        var(--primary) !important;
+}
+
+
+[data-testid="stChatInput"] textarea::placeholder {
+    color:
+        var(--text-muted) !important;
+
+    opacity:
+        1 !important;
+}
+
+
+[data-testid="stChatInput"]:focus-within {
+    border-color:
+        var(--primary) !important;
+
+    box-shadow:
+        0 0 0 3px rgba(8, 106, 246, 0.10) !important;
+}
+
+
+[data-testid="stChatInput"] button {
+    color:
+        var(--primary) !important;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .chat-welcome {
+        margin:
+            1.75rem auto 2rem auto;
+    }
+
+
+    .chat-welcome h1 {
+        font-size:
+            28px;
+    }
+
+
+    .chat-welcome p {
+        font-size:
+            14px;
+    }
+
+
+    .chat-medical-icon {
+        width:
+            50px;
+
+        height:
+            50px;
+
+        font-size:
+            24px;
+    }
+
+
+    .user-message,
+    .assistant-message {
+        max-width:
+            95%;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .chat-brand {
+        font-size:
+            18px;
+    }
+
+
+    .chat-welcome {
+        margin-top:
+            1.25rem;
+    }
+
+
+    .chat-welcome h1 {
+        font-size:
+            25px;
+    }
+
+
+    [data-testid="stChatMessage"] {
+        padding:
+            0.6rem 0.75rem;
+    }
+
+
+    [data-testid="stChatInput"] {
+        border-radius:
+            14px !important;
+    }
+
+}
