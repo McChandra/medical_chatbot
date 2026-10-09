@@ -1,187 +1,257 @@
 import streamlit as st
 
 
+# =========================================================
+# SUGGESTED QUESTIONS
+# =========================================================
+
 SUGGESTED_QUESTIONS = [
-    "What are the common symptoms of diabetes?",
-    "What causes high blood pressure?",
-    "How can I prevent seasonal flu?",
-    "When should I seek care for a headache?",
+    "What are the symptoms of dengue?",
+    "Tell me about Vitamin D deficiency",
+    "How can I improve my heart health?",
+    "What are the treatment options for type 2 diabetes?",
 ]
 
 
-def render_chatbot():
-    """Render the main MedQuad AI chatbot interface."""
+# =========================================================
+# MAIN CHAT PAGE
+# =========================================================
 
-    # ---------------------------------------------------------
-    # CHAT STATE
-    # ---------------------------------------------------------
+def render_chatbot():
+    """Render the MedQuad AI new-chat dashboard."""
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
+    render_dashboard_header()
 
-    # ---------------------------------------------------------
-    # HEADER
-    # ---------------------------------------------------------
-
-    header_left, header_right = st.columns(
-        [4, 1],
-        vertical_alignment="center",
+    sidebar_col, main_col = st.columns(
+        [1.05, 4.6],
+        gap="large",
     )
 
-    with header_left:
-        st.markdown(
-"""<div class="chat-brand">
-✚ MedQuad <span>AI</span>
-</div>""",
-            unsafe_allow_html=True,
-        )
+    with sidebar_col:
+        render_sidebar()
 
-    with header_right:
-        if st.button(
-            "Logout",
-            icon=":material/logout:",
-            use_container_width=True,
-            key="logout",
-        ):
-            st.session_state.authenticated = False
-            st.session_state.page = "home"
-            st.session_state.messages = []
+    with main_col:
+        render_hero()
+        render_suggestions()
 
-            st.rerun()
-
-
-    st.divider()
-
-
-    # ---------------------------------------------------------
-    # EMPTY / WELCOME STATE
-    # ---------------------------------------------------------
-
-    if not st.session_state.messages:
-
-        st.markdown(
-"""<div class="chat-welcome">
-<div class="chat-medical-icon">✚</div>
-
-<h1>How can I help you today?</h1>
-
-<p>
-Ask a health-related question and MedQuad AI will
-help you find relevant medical information.
-</p>
-</div>""",
-            unsafe_allow_html=True,
-        )
-
-
-        st.markdown(
-            "### Suggested questions"
-        )
-
-
-        col1, col2 = st.columns(2)
-
-        with col1:
-
-            if st.button(
-                SUGGESTED_QUESTIONS[0],
-                icon=":material/medical_information:",
-                use_container_width=True,
-                key="suggestion_1",
-            ):
-                add_user_question(
-                    SUGGESTED_QUESTIONS[0]
-                )
-
-            if st.button(
-                SUGGESTED_QUESTIONS[2],
-                icon=":material/health_and_safety:",
-                use_container_width=True,
-                key="suggestion_3",
-            ):
-                add_user_question(
-                    SUGGESTED_QUESTIONS[2]
-                )
-
-
-        with col2:
-
-            if st.button(
-                SUGGESTED_QUESTIONS[1],
-                icon=":material/favorite:",
-                use_container_width=True,
-                key="suggestion_2",
-            ):
-                add_user_question(
-                    SUGGESTED_QUESTIONS[1]
-                )
-
-            if st.button(
-                SUGGESTED_QUESTIONS[3],
-                icon=":material/emergency:",
-                use_container_width=True,
-                key="suggestion_4",
-            ):
-                add_user_question(
-                    SUGGESTED_QUESTIONS[3]
-                )
-
-
-    # ---------------------------------------------------------
-    # CONVERSATION
-    # ---------------------------------------------------------
-
-    else:
-
-        for message in st.session_state.messages:
-
-            with st.chat_message(
-                message["role"]
-            ):
-                st.markdown(
-                    message["content"]
-                )
-
-
-    # ---------------------------------------------------------
-    # CHAT INPUT
-    # ---------------------------------------------------------
-
+    # Streamlit keeps chat_input fixed at the bottom.
     question = st.chat_input(
-        "Ask a health question..."
+        "Ask your health question...",
+        key="health_question_input",
     )
 
     if question:
-        add_user_question(question)
+        submit_question(question)
 
 
-def add_user_question(question):
-    """Add a new question to the conversation."""
+# =========================================================
+# HEADER
+# =========================================================
+
+def render_dashboard_header():
+    """Render the top MedQuad AI dashboard header."""
+
+    brand_col, nav_col, account_col = st.columns(
+        [2.5, 2.2, 0.45],
+        vertical_alignment="center",
+    )
+
+    with brand_col:
+        st.markdown(
+"""<div class="dashboard-brand">
+<div class="dashboard-brand-icon">✚</div>
+<div class="dashboard-brand-text">
+<div class="dashboard-brand-name">MedQuad <span>AI</span></div>
+<div class="dashboard-brand-subtitle">Your Trusted Health AI Assistant</div>
+</div>
+</div>""",
+    unsafe_allow_html=True,
+    )
+
+    with nav_col:
+        st.markdown(
+"""<div class="dashboard-navigation">
+<div class="dashboard-nav-item dashboard-nav-active">
+<span class="dashboard-nav-icon">⌂</span>
+<span>Home</span>
+</div>
+<div class="dashboard-nav-item">
+<span class="dashboard-nav-icon">ⓘ</span>
+<span>About</span>
+</div>
+<div class="dashboard-nav-item">
+<span class="dashboard-nav-icon">▣</span>
+<span>Health Resources</span>
+</div>
+</div>""",
+    unsafe_allow_html=True,
+    )
+
+
+# =========================================================
+# LEFT SIDEBAR
+# =========================================================
+
+def render_sidebar():
+    """Render the left navigation shown in screenshot 2."""
+
+    if st.button(
+        "New Chat",
+        icon=":material/add:",
+        type="primary",
+        use_container_width=True,
+        key="new_chat_button",
+    ):
+        st.session_state.messages = []
+        st.rerun()
+
+    st.markdown(
+"""<div class="sidebar-navigation">
+<div class="sidebar-nav-item sidebar-nav-active">
+<span class="sidebar-nav-icon">◯</span>
+<span>Chat</span>
+</div>
+<div class="sidebar-nav-item">
+<span class="sidebar-nav-icon">▤</span>
+<span>Health Library</span>
+</div>
+<div class="sidebar-nav-item">
+<span class="sidebar-nav-icon">♡</span>
+<span>Saved Answers</span>
+</div>
+<div class="sidebar-nav-item">
+<span class="sidebar-nav-icon">⚙</span>
+<span>Settings</span>
+</div>
+</div>
+<div class="sidebar-safety-card">
+<div class="sidebar-safety-icon">✚</div>
+<div class="sidebar-safety-title">
+Reliable<br>
+Health Information
+</div>
+<div class="sidebar-safety-text">
+Get evidence-based answers to your health questions.
+Not a substitute for professional medical advice.
+</div>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+
+
+# =========================================================
+# MEDICAL HERO
+# =========================================================
+
+def render_hero():
+    """Render the screenshot-2 MedQuad AI medical hero."""
+
+    st.markdown(
+        """
+<div class="chat-hero">
+<div class="chat-hero-content">
+<div class="chat-hero-eyebrow">
+WELCOME TO
+</div>
+<div class="chat-hero-title">
+MedQuad <span>AI</span>
+</div>
+<div class="chat-hero-subtitle">
+Your personal health Q&amp;A assistant
+</div>
+<div class="chat-hero-description">
+Ask questions about symptoms, conditions, treatments, medications, and general health information.
+</div>
+</div>
+<div class="chat-hero-visual">
+<div class="medical-orbit orbit-stethoscope">🩺</div>
+<div class="medical-orbit orbit-heart">❤️</div>
+<div class="medical-orbit orbit-pill">💊</div>
+<div class="medical-orbit orbit-document">▤</div>
+<div class="medical-robot">
+<div class="robot-antenna">
+<div class="robot-antenna-ball"></div>
+</div>
+<div class="robot-head">
+<div class="robot-face">
+<span class="robot-eye"></span>
+<span class="robot-eye"></span>
+</div>
+</div>
+<div class="robot-body">
+<span>✚</span>
+</div>
+</div>
+</div>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+
+
+# =========================================================
+# SUGGESTED QUESTIONS
+# =========================================================
+
+def render_suggestions():
+    """Render the four question cards from screenshot 2."""
+
+    st.markdown(
+        """
+<div class="suggested-heading">
+    <span class="suggested-heading-icon">💡</span>
+    <span>Try asking...</span>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+
+    columns = st.columns(4, gap="small")
+
+    icons = [
+        ":material/stethoscope:",
+        ":material/medication:",
+        ":material/favorite:",
+        ":material/description:",
+    ]
+
+    for index, question in enumerate(SUGGESTED_QUESTIONS):
+
+        with columns[index]:
+
+            if st.button(
+                question,
+                icon=icons[index],
+                use_container_width=True,
+                key=f"suggestion_{index}",
+            ):
+                submit_question(question)
+
+
+# =========================================================
+# QUESTION SUBMISSION
+# =========================================================
+
+def submit_question(question):
+    """Store the question for the future response page."""
 
     question = question.strip()
 
     if not question:
         return
 
-    st.session_state.messages.append(
+    st.session_state.messages = [
         {
             "role": "user",
             "content": question,
         }
-    )
+    ]
 
-    # Temporary response until model integration.
-    st.session_state.messages.append(
-        {
-            "role": "assistant",
-            "content": (
-                "I'm currently running in frontend "
-                "development mode. Your question was "
-                "received successfully. The MedQuad AI "
-                "model will be connected in a later step."
-            ),
-        }
-    )
+    # We will connect this to response.py next.
+    st.session_state.page = "response"
 
     st.rerun()

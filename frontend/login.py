@@ -1,4 +1,5 @@
 import streamlit as st
+from auth_service import sign_in_with_email
 
 
 def render_login():
@@ -108,12 +109,26 @@ Forgot password?
             else:
 
                 # Temporary development authentication
-                st.session_state.authenticated = True
+                try:
+                    response = sign_in_with_email(
+                        email=email.strip(),
+                        password=password,
+                    )
 
-                st.session_state.page = "chatbot"
+                    # Checking the response user and session
+                    if response.user and response.session:
+                        st.session_state.authenticated = True
+                        st.session_state.user = response.user.id
+                        st.session_state.email = response.user.email
+                        st.session_state.page = "chatbot"
 
-                st.rerun()
+                        st.rerun()
 
+                    else:
+                        st.error("Authentication failed. Please check your credentials.")
+
+                except Exception as error:
+                    st.error(f"Authentication Failed: {error}")
 
         # -----------------------------------------------------
         # CREATE ACCOUNT
