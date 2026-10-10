@@ -21,7 +21,20 @@ from chat import render_chatbot
 from components.styles_loader import load_css
 from components.theme_toggle import render_theme_toggle
 
-from auth_service import get_supabase_client
+
+import os
+import httpx
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Locate the project root
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+# Locate the .env file
+ENV_PATH = PROJECT_ROOT / ".env"
+
+# Load environment variables
+load_dotenv(dotenv_path=ENV_PATH)
 
 
 # ------------------------------------------------------------------
@@ -56,35 +69,48 @@ if "dark_mode" not in st.session_state:
 
 
 # ---------------------------------------------------------
-# GOOGLE OAUTH CALLBACK
+# GOOGLE OAUTH - FASTAPI SESSION HANDOFF
 # ---------------------------------------------------------
 
-auth_code = st.query_params.get("code")
+auth_ticket = st.query_params.get("auth_ticket")
 
-if auth_code:
+if auth_ticket:
+
+    # Clear the temporary ticket from the URL
+    st.query_params.clear()
+
     try:
-        supabase = get_supabase_client()
+        backend_url = os.getenv("BACKEND_URL")
 
-        response = supabase.auth.exchange_code_for_session({
-            "auth_code": auth_code
-        })
+        if not backend_url:
+            raise ValueError("BACKEND_URL is not configured")
 
-        if response.user and response.session:
-            st.session_state.authenticated = True
-            st.session_state.user_id = response.user.id
-            st.session_state.user_email = response.user.email
-            st.session_state.page = "chatbot"
+        # Exchange the one-time ticket with FastAPI
+        response = httpx.post(
+            f"{backend_url}/auth/session/exchange",
+            json={"ticket": auth_ticket},
+            timeout=10.0
+        )
 
-            st.query_params.clear()
-            st.rerun()
+        response.raise_for_status()
+        auth_data = response.json()
 
-        else:
-            st.query_params.clear()
-            st.session_state.page = "login"
-            st.error("Google authentication was not completed.")
+        if not auth_data.get("authenticated"):
+            raise ValueError("Authentication was not confirmed")
 
-    except Exception:
-        st.query_params.clear()
+        # Store authenticated session details
+        st.session_state.authenticated = True
+        st.session_state.user_id = auth_data["user_id"]
+        st.session_state.user_email = auth_data["email"]
+        st.session_state.access_token = auth_data["access_token"]
+        st.session_state.refresh_token = auth_data["refresh_token"]
+
+        # Navigate to the chatbot
+        st.session_state.page = "chatbot"
+        st.rerun()
+
+    except (httpx.HTTPError, KeyError, ValueError):
+        st.session_state.authenticated = False
         st.session_state.page = "login"
         st.error(
             "Google sign-in could not be completed. "

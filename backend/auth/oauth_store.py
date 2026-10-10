@@ -34,3 +34,39 @@ def consume_transaction(transaction_id: str) -> str | None:
         return None
 
     return transaction["verifier"]
+
+#--------------------------------------------------
+# Temporary Authentication Storage
+#--------------------------------------------------
+
+# One-time authentication handoffs
+_handoffs = {}
+
+HANDOFF_TTL_SECONDS = 60
+
+
+def create_handoff(session_data: dict) -> str:
+    """Store an authenticated session for 60 seconds."""
+    ticket = secrets.token_urlsafe(32)
+
+    with _lock:
+        _handoffs[ticket] = {
+            "session": session_data,
+            "expires_at": time.time() + HANDOFF_TTL_SECONDS,
+        }
+
+    return ticket
+
+
+def consume_handoff(ticket: str) -> dict | None:
+    """Return a session once, before its expiration."""
+    with _lock:
+        handoff = _handoffs.pop(ticket, None)
+
+    if handoff is None:
+        return None
+
+    if time.time() > handoff["expires_at"]:
+        return None
+
+    return handoff["session"]

@@ -16,3 +16,17 @@ response = supabase.auth.sign_in_with_oauth({
 
 print("OAuth URL generated:", bool(response.url))
 print("Storage keys:", list(storage.storage.keys()))
+
+verifier = storage.get_verifier()
+
+print("PKCE verifier generated:", bool(verifier))
+
+restored_storage = PKCEStorage()
+
+if verifier:
+    restored_storage.set_verifier(verifier)
+
+print(
+    "PKCE verifier restored:",
+    restored_storage.get_verifier() == verifier
+)

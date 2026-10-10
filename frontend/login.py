@@ -39,16 +39,11 @@ def render_login():
 
     with center:
 
-        # Google login
-        if st.button(
-            "Continue with Google",
-            icon=":material/account_circle:",
-            use_container_width=True,
-            key="google_login",
-        ):
-            st.info(
-                "Google authentication will be connected later."
-            )
+        st.link_button(
+    "Continue with Google",
+    "http://localhost:8000/auth/google/login",
+    use_container_width=True
+        )
 
 
         # Divider
