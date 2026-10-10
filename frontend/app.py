@@ -23,9 +23,12 @@ from components.theme_toggle import render_theme_toggle
 
 
 import os
+import time
 import httpx
 from pathlib import Path
 from dotenv import load_dotenv
+
+from components.notifications import show_pending_notification
 
 # Locate the project root
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -106,6 +109,12 @@ if auth_ticket:
         st.session_state.refresh_token = auth_data["refresh_token"]
 
         # Navigate to the chatbot
+        success_message = st.empty()
+        st.session_state.success_notification = (
+            "Signed in successfully! Welcome to MedQuad AI."
+        )
+        time.sleep(2)
+        success_message.empty()
         st.session_state.page = "chatbot"
         st.rerun()
 
@@ -129,6 +138,7 @@ theme = (
 )
 
 load_css(theme)
+show_pending_notification()
 
 
 # ------------------------------------------------------------------

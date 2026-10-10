@@ -1,4 +1,5 @@
 import streamlit as st
+import time
 
 
 #----------------------------------------------------------
@@ -30,6 +31,13 @@ def logout_user():
 
     for key in session_keys:
         st.session_state.pop(key, None)
+
+    success_message = st.empty()
+    st.session_state.success_notification = (
+        "Logged out successfully. See you again!"
+    )
+    time.sleep(2)
+    success_message.empty()
 
     st.session_state.page = "home"
     st.query_params.clear()

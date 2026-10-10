@@ -1,5 +1,6 @@
 import streamlit as st
 from auth_service import sign_in_with_email
+import time
 
 
 def render_login():
@@ -127,6 +128,12 @@ Forgot password?
                         st.session_state.authenticated = True
                         st.session_state.user = response.user.id
                         st.session_state.email = response.user.email
+                        success_message = st.empty()
+                        st.session_state.success_notification = (
+                            "Signed in successfully! Welcome to MedQuad AI."
+                        )
+                        time.sleep(2)
+                        success_message.empty()  
                         st.session_state.page = "chatbot"
 
                         st.rerun()
