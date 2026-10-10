@@ -1,15 +1,16 @@
 
 import streamlit as st
 
-from supabase import Client, create_client
-from supabase.lib.client_options import ClientOptions
+from supabase import (
+    Client,
+    ClientOptions,
+    create_client,
+)
 
 
 def get_supabase_client() -> Client:
-    """
-    Create a Supabase client for the current
-    Streamlit session.
-    """
+    """Create and reuse the Supabase client."""
+
     if "supabase_client" not in st.session_state:
 
         st.session_state.supabase_client = create_client(
@@ -24,30 +25,11 @@ def get_supabase_client() -> Client:
 
 
 def sign_in_with_email(email: str, password: str):
-    """
-    Authenticate an existing user with
-    their email and password.
-    """
+    """Authenticate a user with email and password."""
+
     supabase = get_supabase_client()
 
     return supabase.auth.sign_in_with_password({
         "email": email,
         "password": password,
     })
-
-
-def get_google_login_url() -> str:
-    """
-    Request a Google OAuth login URL
-    from Supabase.
-    """
-    supabase = get_supabase_client()
-
-    response = supabase.auth.sign_in_with_oauth({
-        "provider": "google",
-        "options": {
-            "redirect_to": "http://localhost:8501"
-        },
-    })
-
-    return response.url

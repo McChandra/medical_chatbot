@@ -1,6 +1,41 @@
 import streamlit as st
 
 
+#----------------------------------------------------------
+# Logout Functionality
+#----------------------------------------------------------
+
+def logout_user():
+    """Sign out the current user and clear local session data."""
+
+    supabase = st.session_state.get("supabase_client")
+
+    if supabase is not None:
+        try:
+            supabase.auth.sign_out()
+        except Exception:
+            # Still clear local state if the sign-out request fails.
+            pass
+
+    session_keys = [
+        "authenticated",
+        "user_id",
+        "user_email",
+        "user_name",
+        "access_token",
+        "refresh_token",
+        "supabase_client",
+        "messages",
+    ]
+
+    for key in session_keys:
+        st.session_state.pop(key, None)
+
+    st.session_state.page = "home"
+    st.query_params.clear()
+    st.rerun()
+
+
 # =========================================================
 # SUGGESTED QUESTIONS
 # =========================================================
@@ -17,17 +52,27 @@ SUGGESTED_QUESTIONS = [
 # MAIN CHAT PAGE
 # =========================================================
 
+
+
 def render_chatbot():
-    """Render the MedQuad AI new-chat dashboard."""
+    """Render the responsive MedQuad AI dashboard."""
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
     render_dashboard_header()
 
+    # Detect browser viewport width.
+    # Requires a Streamlit version supporting st.context.url
+    # for URL access; viewport width itself is not exposed
+    # through this API.
+
+    # Keep the desktop sidebar, but use a compact menu
+    # on mobile through CSS-controlled containers.
     sidebar_col, main_col = st.columns(
-        [1.05, 4.6],
-        gap="large",
+        [1.3, 4.7],
+        gap="medium",
+        vertical_alignment="top",
     )
 
     with sidebar_col:
@@ -37,7 +82,6 @@ def render_chatbot():
         render_hero()
         render_suggestions()
 
-    # Streamlit keeps chat_input fixed at the bottom.
     question = st.chat_input(
         "Ask your health question...",
         key="health_question_input",
@@ -55,7 +99,7 @@ def render_dashboard_header():
     """Render the top MedQuad AI dashboard header."""
 
     brand_col, nav_col, account_col = st.columns(
-        [2.5, 2.2, 0.45],
+        [2.5, 2.2, 0.9],
         vertical_alignment="center",
     )
 
@@ -90,6 +134,17 @@ def render_dashboard_header():
     unsafe_allow_html=True,
     )
 
+
+    with account_col:
+        if st.button(
+            "Logout",
+            icon=":material/logout:",
+            type="primary",
+            key="dashboard_logout",
+            help="Sign out of MedQuad AI",
+            use_container_width=True,
+        ):
+            logout_user()
 
 # =========================================================
 # LEFT SIDEBAR

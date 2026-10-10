@@ -81,8 +81,8 @@
     background:
         linear-gradient(
             145deg,
-            #28c2f5,
-            var(--primary)
+            #29C7F6 0%,
+            red 45%
         );
 
     color: #ffffff;

@@ -4,47 +4,130 @@
    ========================================================= */
 
 
-/* =========================================================
-   AUTH HEADER
-   ========================================================= */
 
-.auth-header {
-    width: 100%;
-    max-width: 675px;
 
-    margin:
-        1rem auto 2rem auto;
+/* ==========================================
+   SHARED LOGIN & SIGNUP BRANDING
+   ========================================== */
 
-    text-align:
-        center;
+.auth-branding {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
 }
 
+.auth-branding-eyebrow {
+    color: #086AF6;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+}
 
-.auth-brand {
+.auth-branding-row {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 1.25rem;
+    max-width: 100%;
+}
 
-    gap: 0.35rem;
+.auth-branding-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 85px;
+    width: 85px;
+    height: 85px;
 
-    width: 100%;
+    background: linear-gradient(
+        135deg,
+        #43B8D7 0%,
+        #FF0000 58%,
+        #FF0000 100%
+    );
 
-    margin-bottom: 1rem;
+    border-radius: 23px;
+    color: #FFFFFF;
+    font-size: 50px;
+    font-weight: 800;
+    line-height: 1;
+}
 
+.auth-branding-title {
     color: var(--text-primary);
+    font-size: clamp(2rem, 4vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    white-space: nowrap;
+}
 
-    font-size: 20px;
-    font-weight: 700;
+.auth-branding-title span {
+    color: #086AF6;
+}
 
+.auth-page-heading {
     text-align: center;
+    margin-bottom: 2rem;
 }
 
-
-.auth-brand span {
-    color:
-        var(--primary) !important;
+.auth-page-heading h1 {
+    color: var(--text-primary);
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 800;
+    margin-bottom: 0.75rem;
 }
 
+.auth-page-heading p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* ==========================================
+   MOBILE RESPONSIVENESS
+   ========================================== */
+
+@media (max-width: 768px) {
+    .auth-branding-row {
+        gap: 0.75rem;
+    }
+
+    .auth-branding-logo {
+        flex-basis: 56px;
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        font-size: 34px;
+    }
+
+    .auth-branding-title {
+        font-size: clamp(1.35rem, 6vw, 2.5rem);
+    }
+
+    .auth-branding {
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-branding-logo {
+        flex-basis: 46px;
+        width: 46px;
+        height: 46px;
+        font-size: 28px;
+        border-radius: 13px;
+    }
+
+    .auth-branding-title {
+        font-size: clamp(1.15rem, 5.5vw, 1.8rem);
+    }
+
+    .auth-branding-row {
+        gap: 0.5rem;
+    }
+}
 
 .auth-header h1 {
     margin-bottom:

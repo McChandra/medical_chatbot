@@ -11,6 +11,7 @@
     display: flex;
     align-items: center;
     gap: 0.85rem;
+    padding: 1rem;
 }
 
 .dashboard-brand-icon {
@@ -26,7 +27,7 @@
         linear-gradient(
             145deg,
             #29C7F6 0%,
-            #0874F9 72%
+            red 45%
         );
 
     color: #ffffff;
@@ -1085,4 +1086,255 @@ button:hover {
             12px !important;
     }
 
+}
+
+
+/* ==========================================
+   MEDQUAD AI - CHAT RESPONSIVENESS FIX
+   ========================================== */
+
+/* Prevent flex items from overflowing */
+.dashboard-brand,
+.dashboard-brand-text,
+.chat-hero-content,
+.chat-hero-visual {
+    min-width: 0;
+}
+
+/* Header and navigation */
+.dashboard-navigation {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.35rem;
+}
+
+.dashboard-nav-item {
+    padding: 0.5rem 0.6rem;
+}
+
+/* Hero layout */
+.chat-hero {
+    gap: 1.5rem;
+    padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.chat-hero-content {
+    flex: 1 1 0;
+    width: auto;
+}
+
+.chat-hero-title {
+    font-size: clamp(2rem, 3.5vw, 45px);
+}
+
+.chat-hero-visual {
+    flex: 0 1 280px;
+    width: min(280px, 40%);
+}
+
+/* Sidebar card */
+.sidebar-safety-card {
+    width: 100%;
+    min-width: 0;
+    margin-top: 1.5rem;
+    overflow-wrap: break-word;
+}
+
+/* Chat input: use a responsive centered layout
+   instead of fixed viewport pixel offsets */
+@media (min-width: 1025px) {
+    [data-testid="stBottom"] {
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+    }
+
+    [data-testid="stBottomBlockContainer"] {
+        width: calc(100% - 2rem) !important;
+        max-width: 1440px !important;
+        margin-inline: auto !important;
+        padding-left: clamp(230px, 22%, 320px) !important;
+        padding-right: 2rem !important;
+    }
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .chat-hero {
+        padding: 1.5rem;
+    }
+
+    .chat-hero-visual {
+        flex-basis: 220px;
+        width: 220px;
+    }
+
+    .chat-hero-title {
+        font-size: 34px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .dashboard-brand-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 24px;
+    }
+
+    .dashboard-brand-name {
+        font-size: 21px;
+    }
+
+    .dashboard-brand-subtitle {
+        white-space: normal;
+        font-size: 11px;
+    }
+
+    .dashboard-navigation {
+        justify-content: flex-start;
+    }
+
+    .dashboard-nav-item {
+        min-height: 36px;
+        font-size: 12px;
+    }
+
+    .chat-hero {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1.25rem;
+    }
+
+    .chat-hero-content {
+        width: 100%;
+    }
+
+    .chat-hero-title {
+        font-size: 32px;
+    }
+
+    .chat-hero-subtitle {
+        font-size: 17px;
+    }
+
+    .chat-hero-visual {
+        flex: none;
+        width: min(100%, 280px);
+        height: 180px;
+        align-self: center;
+    }
+
+    .sidebar-safety-card {
+        margin-top: 1rem;
+    }
+
+    [data-testid="stBottomBlockContainer"] {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+    .chat-hero-title {
+        font-size: 28px;
+    }
+
+    .chat-hero-description {
+        font-size: 13px;
+    }
+
+    .medical-orbit {
+        width: 46px;
+        height: 46px;
+        font-size: 20px;
+    }
+}
+
+
+/* ==========================================
+   MOBILE CHAT INPUT FIX
+   ========================================== */
+
+@media (max-width: 768px) {
+
+    [data-testid="stBottom"] {
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+
+        padding: 0 12px 12px !important;
+        box-sizing: border-box;
+    }
+
+    [data-testid="stBottom"] > div,
+    [data-testid="stBottomBlockContainer"] {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        margin: 0 auto !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    [data-testid="stChatInput"] {
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 56px;
+
+        border-radius: 14px !important;
+    }
+
+    [data-testid="stChatInput"] textarea {
+        font-size: 16px !important;
+    }
+
+    /* Avoid content hiding behind the input */
+    .stApp .block-container {
+        padding-bottom: 7rem !important;
+    }
+}
+
+
+/* ==========================================
+   LOGOUT BUTTON — LIGHT & DARK THEME
+   ========================================== */
+
+.st-key-dashboard_logout button {
+    background: var(--logout-bg) !important;
+    color: var(--logout-text) !important;
+    border: 1px solid transparent !important;
+    border-radius: 12px !important;
+    box-shadow: var(--logout-shadow) !important;
+
+    transition:
+        background-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+/* Text and icon */
+.st-key-dashboard_logout button p,
+.st-key-dashboard_logout button span,
+.st-key-dashboard_logout button svg {
+    color: var(--logout-text) !important;
+}
+
+.st-key-dashboard_logout button svg {
+    stroke: var(--logout-text) !important;
+}
+
+/* Hover */
+.st-key-dashboard_logout button:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--logout-shadow) !important;
+}
+
+/* Keep text and icon colors on hover */
+.st-key-dashboard_logout button:hover p,
+.st-key-dashboard_logout button:hover span,
+.st-key-dashboard_logout button:hover svg {
+    color: var(--logout-text) !important;
 }

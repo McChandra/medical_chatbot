@@ -34,6 +34,11 @@ def load_css(theme: str = "light"):
 
             --border: #293B55;
 
+            /* Logout button */
+            --logout-bg: #FFFFFF;
+            --logout-text: #111827;
+            --logout-shadow: 0 4px 14px rgba(0, 0, 0, 0.30);
+
             --shadow:
                 0 8px 28px rgba(0, 0, 0, 0.24);
         }
@@ -56,6 +61,11 @@ def load_css(theme: str = "light"):
             --text-muted: #7B8CA7;
 
             --border: #DCE8F6;
+
+            /* Logout button */
+            --logout-bg: #086AF6;
+            --logout-text: #FFFFFF;
+            --logout-shadow: 0 4px 12px rgba(8, 106, 246, 0.15);
 
             --shadow:
                 0 8px 28px rgba(22, 72, 140, 0.08);

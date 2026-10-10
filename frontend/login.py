@@ -21,15 +21,27 @@ def render_login():
     # LOGIN HEADER
     # ---------------------------------------------------------
 
+    
     st.markdown(
-"""<div class="auth-header">
-<div class="auth-brand">✚ MedQuad <span>AI</span></div>
+    """<div class="auth-branding">
+<div class="auth-branding-eyebrow">WELCOME TO</div>
+<div class="auth-branding-row">
+    <div class="auth-branding-logo">✚</div>
+    <div class="auth-branding-title">
+        MedQuad <span>AI</span>
+    </div>
+</div>
+</div>""",
+    unsafe_allow_html=True,
+    )
+
+    st.markdown(
+    """<div class="auth-page-heading">
 <h1>Welcome Back</h1>
 <p>Sign in to continue to your trusted health AI assistant.</p>
 </div>""",
-        unsafe_allow_html=True,
+    unsafe_allow_html=True,
     )
-
 
     # ---------------------------------------------------------
     # LOGIN FORM
