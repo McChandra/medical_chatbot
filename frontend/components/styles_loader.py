@@ -41,6 +41,9 @@ def load_css(theme: str = "light"):
 
             --shadow:
                 0 8px 28px rgba(0, 0, 0, 0.24);
+            
+            /* Forgot Password */
+            --forgot-password-color: #FFFFFF;
         }
         """
 
@@ -66,6 +69,9 @@ def load_css(theme: str = "light"):
             --logout-bg: #086AF6;
             --logout-text: #FFFFFF;
             --logout-shadow: 0 4px 12px rgba(8, 106, 246, 0.15);
+
+            /* Forgot Password */
+            --forgot-password-color: var(--primary);
 
             --shadow:
                 0 8px 28px rgba(22, 72, 140, 0.08);

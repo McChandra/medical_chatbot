@@ -844,33 +844,20 @@ button:hover {
 }
 
 
+
 /* =========================================================
-   CHAT INPUT TEXTAREA
+   CHAT INPUT TEXTAREA — LIGHT & DARK THEME
    ========================================================= */
 
 [data-testid="stChatInput"] textarea {
-    background:
-        transparent !important;
+    background: transparent !important;
 
-    color:
-        var(--text-primary) !important;
+    color: var(--text-primary) !important;
+    -webkit-text-fill-color: var(--text-primary) !important;
 
-    caret-color:
-        var(--primary) !important;
-
-    font-size:
-        15px !important;
+    caret-color: var(--primary) !important;
+    font-size: 15px !important;
 }
-
-
-[data-testid="stChatInput"] textarea::placeholder {
-    color:
-        var(--text-muted) !important;
-
-    opacity:
-        1 !important;
-}
-
 
 /* =========================================================
    CHAT INPUT FOCUS

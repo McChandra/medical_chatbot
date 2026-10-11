@@ -17,6 +17,7 @@ from home import render_home
 from login import render_login
 from signup import render_signup
 from chat import render_chatbot
+from forgot_password import render_forgot_password
 
 from components.styles_loader import load_css
 from components.theme_toggle import render_theme_toggle
@@ -59,6 +60,13 @@ st.set_page_config(
 # Current application page
 if "page" not in st.session_state:
     st.session_state.page = "home"
+
+# Forwarding to the forgot password page if requested via query parameter
+requested_page = st.query_params.get("page")
+
+if requested_page == "forgot_password":
+    st.session_state.page = "forgot_password"
+    del st.query_params["page"]
 
 
 # Authentication state
@@ -187,6 +195,13 @@ elif current_page == "signup":
 
     render_signup()
 
+#------------------------------------------------------------------
+# FORGOT PASSWORD
+# ------------------------------------------------------------------
+
+elif current_page == "forgot_password":
+
+    render_forgot_password()
 
 # ------------------------------------------------------------------
 # CHATBOT

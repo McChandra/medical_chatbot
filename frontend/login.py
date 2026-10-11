@@ -85,14 +85,15 @@ def render_login():
         )
 
 
-        # Forgot password
+        # Forgot Password
         st.markdown(
 """<div class="forgot-password">
+<a href="/?page=forgot_password" target="_self">
 Forgot password?
+</a>
 </div>""",
             unsafe_allow_html=True,
         )
-
 
         # Sign in
         if st.button(
