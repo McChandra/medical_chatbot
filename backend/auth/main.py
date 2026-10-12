@@ -8,7 +8,6 @@ from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 from backend.auth.service import create_supabase_client
 from backend.auth.oauth_store import create_transaction, consume_transaction
 from backend.auth.pkce_storage import PKCEStorage
-from backend.auth.service import create_supabase_client
 
 from pydantic import BaseModel
 from backend.auth.oauth_store import create_handoff, consume_handoff
