@@ -822,20 +822,20 @@ button:hover {
    CHAT INPUT FIELD
    ========================================================= */
 
+
+/* =========================================================
+   CHAT INPUT FIELD
+   ========================================================= */
+
 [data-testid="stChatInput"] {
     min-height: 64px;
 
-    background:
-        var(--surface) !important;
+    background-color: var(--surface) !important;
+    color: var(--text-primary) !important;
 
-    border:
-        1px solid var(--border) !important;
-
-    border-radius:
-        15px !important;
-
-    box-shadow:
-        var(--shadow) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 15px !important;
+    box-shadow: var(--shadow) !important;
 
     transition:
         background-color 0.25s ease,
@@ -843,20 +843,32 @@ button:hover {
         box-shadow 0.25s ease;
 }
 
+/* Streamlit internal input container */
+[data-testid="stChatInput"] > div {
+    background-color: var(--surface) !important;
+}
 
 
 /* =========================================================
    CHAT INPUT TEXTAREA — LIGHT & DARK THEME
    ========================================================= */
 
-[data-testid="stChatInput"] textarea {
-    background: transparent !important;
+[data-testid="stChatInput"] textarea,
+[data-testid="stChatInput"] [contenteditable="true"] {
+    background-color: transparent !important;
 
     color: var(--text-primary) !important;
     -webkit-text-fill-color: var(--text-primary) !important;
 
     caret-color: var(--primary) !important;
     font-size: 15px !important;
+}
+
+/* Placeholder text */
+[data-testid="stChatInput"] textarea::placeholder {
+    color: var(--text-muted) !important;
+    -webkit-text-fill-color: var(--text-muted) !important;
+    opacity: 1 !important;
 }
 
 /* =========================================================
