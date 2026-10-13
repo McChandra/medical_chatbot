@@ -41,6 +41,54 @@ ENV_PATH = PROJECT_ROOT / ".env"
 load_dotenv(dotenv_path=ENV_PATH)
 
 
+def restore_browser_session() -> bool:
+    """
+    Restore authentication from an existing encrypted
+    browser cookie.
+
+    Returns True only when FastAPI validates the session.
+    """
+
+    cookie_name = os.getenv(
+        "SESSION_COOKIE_NAME",
+        "medquad_session",
+    )
+
+    encrypted_cookie = st.context.cookies.get(cookie_name)
+
+    if not encrypted_cookie:
+        return False
+
+    backend_url = os.getenv("BACKEND_URL")
+
+    if not backend_url:
+        return False
+
+    try:
+        response = httpx.get(
+            f"{backend_url}/auth/session/me",
+            cookies={cookie_name: encrypted_cookie},
+            timeout=10.0,
+        )
+
+        if response.status_code != 200:
+            return False
+
+        auth_data = response.json()
+
+        if not auth_data.get("authenticated"):
+            return False
+
+        st.session_state.authenticated = True
+        st.session_state.user_id = auth_data["user_id"]
+        st.session_state.user_email = auth_data["email"]
+        st.session_state.page = "chatbot"
+
+        return True
+
+    except (httpx.HTTPError, ValueError, KeyError):
+        return False
+
 # ------------------------------------------------------------------
 # PAGE CONFIGURATION
 # ------------------------------------------------------------------
@@ -52,7 +100,6 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-
 # ------------------------------------------------------------------
 # SESSION STATE
 # ------------------------------------------------------------------
@@ -60,6 +107,39 @@ st.set_page_config(
 # Current application page
 if "page" not in st.session_state:
     st.session_state.page = "home"
+
+# --------------------------------------------------
+# COMPLETE BROWSER LOGOUT
+# --------------------------------------------------
+
+if st.query_params.get("page") == "logged_out":
+
+    # Clear authentication and previous chat data
+    for key in [
+        "authenticated",
+        "user",
+        "email",
+        "user_id",
+        "user_email",
+        "user_name",
+        "access_token",
+        "refresh_token",
+        "supabase_client",
+        "messages",
+    ]:
+        st.session_state.pop(key, None)
+
+    st.session_state.authenticated = False
+    st.session_state.page = "login"
+
+    st.session_state.success_notification = (
+        "Logged out successfully. See you again!"
+    )
+
+    # Remove the temporary logout parameter
+    st.query_params.clear()
+
+    st.rerun()
 
 # Forwarding to the forgot password page if requested via query parameter
 requested_page = st.query_params.get("page")
@@ -72,6 +152,8 @@ if requested_page == "forgot_password":
 # Authentication state
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
+
+    restore_browser_session()
 
 
 # Theme state

@@ -340,3 +340,29 @@
     }
 
 }
+
+/* ==========================================
+   GOOGLE LOGIN BUTTON — LIGHT & DARK THEME
+   ========================================== */
+
+[data-testid="stLinkButton"] a[href*="/auth/google/login"] {
+    background-color: #FFFFFF !important;
+    color: #09245E !important;
+    -webkit-text-fill-color: #09245E !important;
+    border: 1px solid #DCE5F2 !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+}
+
+/* Ensure inner text is visible */
+[data-testid="stLinkButton"] a[href*="/auth/google/login"] *,
+[data-testid="stLinkButton"] a[href*="/auth/google/login"]:hover {
+    color: #09245E !important;
+    -webkit-text-fill-color: #09245E !important;
+}
+
+/* Hover effect */
+[data-testid="stLinkButton"] a[href*="/auth/google/login"]:hover {
+    background-color: #F0F5FF !important;
+    border-color: #086AF6 !important;
+}

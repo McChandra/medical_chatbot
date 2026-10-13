@@ -1,5 +1,8 @@
 import streamlit as st
-from auth_service import sign_in_with_email
+from auth_service import (
+    sign_in_with_email,
+    prepare_persistent_session,
+)
 import time
 
 
@@ -126,17 +129,18 @@ Forgot password?
 
                     # Checking the response user and session
                     if response.user and response.session:
-                        st.session_state.authenticated = True
-                        st.session_state.user = response.user.id
-                        st.session_state.email = response.user.email
-                        success_message = st.empty()
-                        st.session_state.success_notification = (
-                            "Signed in successfully! Welcome to MedQuad AI."
-                        )
-                        time.sleep(2)
-                        success_message.empty()  
-                        st.session_state.page = "chatbot"
+                        # Prepare the session data for FastAPI
+                        session_data = prepare_persistent_session(response)
 
+                        # Store the session data in Streamlit's session state
+                        st.session_state.authenticated = True
+                        st.session_state.user_id = session_data["user_id"]
+                        st.session_state.email = session_data["email"]
+                        st.session_state.access_token = session_data["access_token"]
+                        st.session_state.refresh_token = session_data["refresh_token"]
+
+                        # Redirect to the chatbot page
+                        st.session_state.page = "chatbot"
                         st.rerun()
 
                     else:

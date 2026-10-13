@@ -33,3 +33,27 @@ def sign_in_with_email(email: str, password: str):
         "email": email,
         "password": password,
     })
+
+
+def prepare_persistent_session(auth_response) -> dict:
+    """
+    Extract the Supabase credentials needed to
+    establish a persistent FastAPI browser session.
+
+    This function does not create a cookie.
+    """
+
+    if not auth_response.user or not auth_response.session:
+        raise ValueError("Authentication session is missing.")
+
+    session = auth_response.session
+
+    if not session.access_token or not session.refresh_token:
+        raise ValueError("Authentication tokens are missing.")
+
+    return {
+        "user_id": auth_response.user.id,
+        "email": auth_response.user.email,
+        "access_token": session.access_token,
+        "refresh_token": session.refresh_token,
+    }

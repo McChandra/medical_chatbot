@@ -6,8 +6,14 @@ import time
 # Logout Functionality
 #----------------------------------------------------------
 
+
 def logout_user():
-    """Sign out the current user and clear local session data."""
+    """
+    Clear the Streamlit authentication state.
+
+    The browser must also visit FastAPI to delete
+    the persistent authentication cookie.
+    """
 
     supabase = st.session_state.get("supabase_client")
 
@@ -15,11 +21,12 @@ def logout_user():
         try:
             supabase.auth.sign_out()
         except Exception:
-            # Still clear local state if the sign-out request fails.
             pass
 
     session_keys = [
         "authenticated",
+        "user",
+        "email",
         "user_id",
         "user_email",
         "user_name",
@@ -32,17 +39,10 @@ def logout_user():
     for key in session_keys:
         st.session_state.pop(key, None)
 
-    success_message = st.empty()
-    st.session_state.success_notification = (
-        "Logged out successfully. See you again!"
-    )
-    time.sleep(2)
-    success_message.empty()
-
-    st.session_state.page = "home"
+    st.session_state.authenticated = False
+    st.session_state.page = "login"
+    st.session_state.logout_pending = True
     st.query_params.clear()
-    st.rerun()
-
 
 # =========================================================
 # SUGGESTED QUESTIONS
@@ -59,8 +59,6 @@ SUGGESTED_QUESTIONS = [
 # =========================================================
 # MAIN CHAT PAGE
 # =========================================================
-
-
 
 def render_chatbot():
     """Render the responsive MedQuad AI dashboard."""
@@ -144,15 +142,26 @@ def render_dashboard_header():
 
 
     with account_col:
-        if st.button(
-            "Logout",
-            icon=":material/logout:",
-            type="primary",
-            key="dashboard_logout",
-            help="Sign out of MedQuad AI",
-            use_container_width=True,
-        ):
-            logout_user()
+        theme_class = (
+        "medquad-dark"
+        if st.session_state.get("dark_mode", False)
+        else "medquad-light"
+    )
+
+        logout_html = """
+    <a
+        href="http://localhost:8000/auth/session/browser/logout"
+        target="_top"
+        class="medquad-logout-btn THEME_CLASS"
+    >
+        <span>↪ Logout</span>
+    </a>
+    """
+
+        st.html(
+        logout_html.replace("THEME_CLASS", theme_class)
+    )
+
 
 # =========================================================
 # LEFT SIDEBAR
@@ -204,7 +213,6 @@ Not a substitute for professional medical advice.
 """,
         unsafe_allow_html=True,
     )
-
 
 # =========================================================
 # MEDICAL HERO

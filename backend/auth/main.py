@@ -1,7 +1,9 @@
 
+import json
 import os
+import secrets
 from urllib.parse import urlencode
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request, Response
 from fastapi.responses import RedirectResponse
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 
@@ -12,11 +14,20 @@ from backend.auth.pkce_storage import PKCEStorage
 from pydantic import BaseModel
 from backend.auth.oauth_store import create_handoff, consume_handoff
 
+from backend.auth.session_security import encrypt_session, decrypt_session
+
 router = APIRouter(
     prefix="/auth",
     tags=["Authentication"]
 )
 
+SESSION_COOKIE_NAME = os.getenv(
+    "SESSION_COOKIE_NAME", "medquad_session"
+)
+
+SESSION_MAX_AGE = int(
+    os.getenv("SESSION_MAX_AGE", "604800")
+)
 
 # --------------------------------------------------
 # AUTHENTICATION HEALTH CHECK
@@ -179,6 +190,10 @@ def google_callback(request: Request, code: str | None = None):
 
     ticket = create_handoff(session_data)
 
+    encrypted_session = encrypt_session(
+        json.dumps(session_data)
+    )
+
     # 7. Redirect to Streamlit with a one-time ticket
 
     redirect_url = (
@@ -189,6 +204,16 @@ def google_callback(request: Request, code: str | None = None):
     response = RedirectResponse(
         url=redirect_url,
         status_code=302
+    )
+
+    response.set_cookie(
+        key=SESSION_COOKIE_NAME,
+        value=encrypted_session,
+        max_age=SESSION_MAX_AGE,
+        httponly=True,
+        secure=False,  # Local development only
+        samesite="lax",
+        path="/",
     )
 
     response.delete_cookie(
@@ -240,3 +265,190 @@ def exchange_handoff(payload: HandoffRequest):
             status_code=401,
             detail="Unable to validate authentication session."
         )
+
+
+# --------------------------------------------------
+# PERSISTENT AUTHENTICATION SESSION
+# --------------------------------------------------
+
+class SessionCreateRequest(BaseModel):
+    access_token: str
+    refresh_token: str
+
+
+@router.post("/session/create")
+def create_persistent_session(
+    payload: SessionCreateRequest,
+    response: Response
+):
+    """
+    Validate Supabase authentication and establish
+    an encrypted browser session.
+    """
+
+    try:
+        supabase = create_supabase_client()
+
+        user_response = supabase.auth.get_user(
+            payload.access_token
+        )
+
+        if user_response.user is None:
+            raise ValueError("Invalid authentication session")
+
+        # Encrypt session credentials
+        import json
+
+        session_data = json.dumps({
+            "access_token": payload.access_token,
+            "refresh_token": payload.refresh_token,
+        })
+
+        encrypted_session = encrypt_session(session_data)
+
+        response.set_cookie(
+            key=SESSION_COOKIE_NAME,
+            value=encrypted_session,
+            max_age=SESSION_MAX_AGE,
+            httponly=True,
+            secure=False,  # Local development only
+            samesite="lax",
+            path="/",
+        )
+
+        return {
+            "authenticated": True,
+            "user_id": user_response.user.id,
+            "email": user_response.user.email,
+        }
+
+    except Exception:
+        raise HTTPException(
+            status_code=401,
+            detail="Unable to create authentication session."
+        )
+
+
+@router.get("/session/me")
+def get_current_session(request: Request):
+    """
+    Validate an existing browser session.
+    """
+
+    encrypted_session = request.cookies.get(
+        SESSION_COOKIE_NAME
+    )
+
+    if not encrypted_session:
+        raise HTTPException(
+            status_code=401,
+            detail="No active session."
+        )
+
+    decrypted = decrypt_session(encrypted_session)
+
+    if decrypted is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Session expired or invalid."
+        )
+
+    try:
+        import json
+
+        session_data = json.loads(decrypted)
+
+        supabase = create_supabase_client()
+
+        user_response = supabase.auth.get_user(
+            session_data["access_token"]
+        )
+
+        if user_response.user is None:
+            raise ValueError("Invalid user session")
+
+        return {
+            "authenticated": True,
+            "user_id": user_response.user.id,
+            "email": user_response.user.email,
+        }
+
+    except Exception:
+        raise HTTPException(
+            status_code=401,
+            detail="Unable to validate authentication session."
+        )
+
+
+@router.post("/session/logout")
+def logout_persistent_session(response: Response):
+    """
+    Remove the persistent browser session cookie.
+    """
+
+    response.delete_cookie(
+        key=SESSION_COOKIE_NAME,
+        path="/",
+        samesite="lax",
+    )
+
+    return {
+        "authenticated": False,
+        "message": "Signed out successfully."
+    }
+
+
+# --------------------------------------------------
+# Browser Authentication Nonce
+# --------------------------------------------------
+
+BROWSER_NONCE_COOKIE = "medquad_browser_nonce"
+
+
+@router.get("/session/browser/start")
+def start_browser_session(response: Response):
+    """
+    Create a temporary browser-bound authentication nonce.
+
+    The nonce is stored in an HttpOnly cookie and
+    is not returned to JavaScript or Streamlit.
+    """
+
+    browser_nonce = secrets.token_urlsafe(32)
+
+    response.set_cookie(
+        key=BROWSER_NONCE_COOKIE,
+        value=browser_nonce,
+        max_age=300,
+        httponly=True,
+        secure=False,  # Local development only
+        samesite="lax",
+        path="/auth/session",
+    )
+
+    return {
+        "status": "ready",
+        "message": "Browser authentication initialized.",
+    }
+
+
+@router.get("/session/browser/logout")
+def browser_logout():
+    """Delete the browser session and return to Streamlit."""
+
+    frontend_url = os.environ["FRONTEND_URL"].rstrip("/")
+
+    response = RedirectResponse(
+        url=f"{frontend_url}/?page=logged_out",
+        status_code=303,
+    )
+
+    response.delete_cookie(
+        key=SESSION_COOKIE_NAME,
+        path="/",
+        secure=False,  # Local development only
+        httponly=True,
+        samesite="lax",
+    )
+
+    return response

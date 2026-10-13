@@ -1298,42 +1298,49 @@ button:hover {
 
 
 /* ==========================================
-   LOGOUT BUTTON — LIGHT & DARK THEME
+   LOGOUT BUTTON — LIGHT THEME
    ========================================== */
 
-.st-key-dashboard_logout button {
-    background: var(--logout-bg) !important;
-    color: var(--logout-text) !important;
-    border: 1px solid transparent !important;
-    border-radius: 12px !important;
-    box-shadow: var(--logout-shadow) !important;
+.medquad-logout-btn,
+.medquad-logout-btn:visited {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 
-    transition:
-        background-color 0.2s ease,
-        box-shadow 0.2s ease,
-        transform 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 16px;
+    border-radius: 10px;
+
+    background: var(--primary, #2563EB) !important;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none !important;
+    opacity: 1 !important;
 }
 
-/* Text and icon */
-.st-key-dashboard_logout button p,
-.st-key-dashboard_logout button span,
-.st-key-dashboard_logout button svg {
-    color: var(--logout-text) !important;
+.medquad-logout-btn span,
+.medquad-logout-btn svg {
+    color: inherit !important;
+    -webkit-text-fill-color: inherit !important;
+    opacity: 1 !important;
 }
 
-.st-key-dashboard_logout button svg {
-    stroke: var(--logout-text) !important;
+.medquad-logout-btn svg {
+    stroke: currentColor;
 }
 
-/* Hover */
-.st-key-dashboard_logout button:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--logout-shadow) !important;
-}
+/* ==========================================
+   LOGOUT BUTTON — DARK THEME
+   ========================================== */
 
-/* Keep text and icon colors on hover */
-.st-key-dashboard_logout button:hover p,
-.st-key-dashboard_logout button:hover span,
-.st-key-dashboard_logout button:hover svg {
-    color: var(--logout-text) !important;
+.medquad-logout-btn.medquad-dark,
+.medquad-logout-btn.medquad-dark:visited {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
 }
