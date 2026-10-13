@@ -366,3 +366,62 @@
     background-color: #F0F5FF !important;
     border-color: #086AF6 !important;
 }
+
+
+/* =========================================================
+   MEDQUAD AI — SIGN IN BUTTON
+   SAME PURPLE GRADIENT IN LIGHT & DARK THEMES
+   ========================================================= */
+
+/* Login form submit button */
+[data-testid="stFormSubmitButton"] button {
+    background: linear-gradient(
+        110deg,
+        #8650E8 0%,
+        #703EDB 100%
+    ) !important;
+
+    border: none !important;
+    border-radius: 16px !important;
+
+    min-height: 60px !important;
+
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+
+    font-size: 18px !important;
+    font-weight: 500 !important;
+
+    box-shadow: none !important;
+
+    transition:
+        filter 0.2s ease,
+        transform 0.2s ease !important;
+}
+
+/* Force white text inside the button */
+[data-testid="stFormSubmitButton"] button *,
+[data-testid="stFormSubmitButton"] button p,
+[data-testid="stFormSubmitButton"] button span {
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+}
+
+/* Hover */
+[data-testid="stFormSubmitButton"] button:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+}
+
+/* Pressed */
+[data-testid="stFormSubmitButton"] button:active {
+    transform: translateY(0);
+}
+
+/* Keyboard focus */
+[data-testid="stFormSubmitButton"] button:focus-visible {
+    outline: 3px solid #B69AFF !important;
+    outline-offset: 3px !important;
+}

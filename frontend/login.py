@@ -1,4 +1,7 @@
 import streamlit as st
+import re
+
+
 from auth_service import (
     sign_in_with_email,
     prepare_persistent_session,
@@ -55,100 +58,113 @@ def render_login():
 
     with center:
 
+        # Google Login
         st.link_button(
-    "Continue with Google",
-    "http://localhost:8000/auth/google/login",
-    use_container_width=True
+            "Continue with Google",
+            "http://localhost:8000/auth/google/login",
+            use_container_width=True,
         )
-
 
         # Divider
         st.markdown(
-"""<div class="auth-divider">
+            """<div class="auth-divider">
 <span>or continue with email</span>
 </div>""",
             unsafe_allow_html=True,
         )
 
+        # -----------------------------------------------------
+        # EMAIL LOGIN FORM
+        # -----------------------------------------------------
 
-        # Email
-        email = st.text_input(
-            "Email address",
-            placeholder="you@example.com",
-            key="login_email",
-        )
+        with st.form(
+            key="login_form",
+            enter_to_submit=True,
+            border=False,
+        ):
 
+            email = st.text_input(
+                "Email address",
+                placeholder="you@example.com",
+                key="login_email",
+            )
 
-        # Password
-        password = st.text_input(
-            "Password",
-            type="password",
-            placeholder="Enter your password",
-            key="login_password",
-        )
+            password = st.text_input(
+                "Password",
+                type="password",
+                placeholder="Enter your password",
+                key="login_password",
+            )
 
-
-        # Forgot Password
-        st.markdown(
-"""<div class="forgot-password">
+            st.markdown(
+                """<div class="forgot-password">
 <a href="/?page=forgot_password" target="_self">
 Forgot password?
 </a>
 </div>""",
-            unsafe_allow_html=True,
-        )
+                unsafe_allow_html=True,
+            )
 
-        # Sign in
-        if st.button(
-            "Sign In",
-            type="primary",
-            use_container_width=True,
-            key="login_submit",
-        ):
+            submitted = st.form_submit_button(
+                "Sign In",
+                type="primary",
+                use_container_width=True,
+                key="login_submit",
+            )
 
-            if not email.strip():
+        # -----------------------------------------------------
+        # VALIDATE AND SIGN IN
+        # -----------------------------------------------------
 
-                st.warning(
-                    "Please enter your email address."
+        if submitted:
+
+            clean_email = email.strip().lower()
+
+            if not clean_email:
+                st.warning("Please enter your email address.")
+
+            elif not re.fullmatch(
+                r"[^@\s]+@[^@\s]+\.[^@\s]+",
+                clean_email,
+            ):
+                message = st.empty()
+                message.error(
+                    "Invalid email address. Please enter a valid email."
                 )
+                time.sleep(2)
+                message.empty()
 
             elif not password:
-
-                st.warning(
-                    "Please enter your password."
-                )
+                st.warning("Please enter your password.")
 
             else:
-
-                # Temporary development authentication
                 try:
                     response = sign_in_with_email(
-                        email=email.strip(),
+                        email=clean_email,
                         password=password,
                     )
 
-                    # Checking the response user and session
                     if response.user and response.session:
-                        # Prepare the session data for FastAPI
+
                         session_data = prepare_persistent_session(response)
 
-                        # Store the session data in Streamlit's session state
                         st.session_state.authenticated = True
                         st.session_state.user_id = session_data["user_id"]
                         st.session_state.email = session_data["email"]
                         st.session_state.access_token = session_data["access_token"]
                         st.session_state.refresh_token = session_data["refresh_token"]
 
-                        # Redirect to the chatbot page
                         st.session_state.page = "chatbot"
                         st.rerun()
 
                     else:
-                        st.error("Authentication failed. Please check your credentials.")
+                        st.error(
+                            "Authentication failed. Please check your credentials."
+                        )
 
                 except Exception as error:
                     st.error(f"Authentication Failed: {error}")
-
+                    
         # -----------------------------------------------------
         # CREATE ACCOUNT
         # -----------------------------------------------------

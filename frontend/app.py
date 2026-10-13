@@ -1,52 +1,60 @@
+
 """
 MedQuad AI Streamlit Application
 
-This module is the main entry point for the MedQuad AI frontend.
+Main entry point for the MedQuad AI frontend.
 
 Responsibilities:
-- Configure the Streamlit application
-- Initialize application session state
-- Load the global light/dark theme
-- Display the theme toggle
-- Route users between application views
+- Configure Streamlit
+- Initialize session state
+- Restore authenticated browser sessions
+- Handle Google OAuth authentication
+- Handle browser logout
+- Handle password recovery routing
+- Load light/dark themes
+- Route between application pages
 """
 
+import os
+import time
+from pathlib import Path
+
+import httpx
 import streamlit as st
+from dotenv import load_dotenv
 
 from home import render_home
 from login import render_login
 from signup import render_signup
 from chat import render_chatbot
 from forgot_password import render_forgot_password
+from reset_password import render_reset_password
 
 from components.styles_loader import load_css
 from components.theme_toggle import render_theme_toggle
-
-
-import os
-import time
-import httpx
-from pathlib import Path
-from dotenv import load_dotenv
-
 from components.notifications import show_pending_notification
 
-# Locate the project root
+
+# =========================================================
+# ENVIRONMENT CONFIGURATION
+# =========================================================
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-# Locate the .env file
 ENV_PATH = PROJECT_ROOT / ".env"
 
-# Load environment variables
 load_dotenv(dotenv_path=ENV_PATH)
 
 
+# =========================================================
+# RESTORE PERSISTENT BROWSER SESSION
+# =========================================================
+
 def restore_browser_session() -> bool:
     """
-    Restore authentication from an existing encrypted
-    browser cookie.
+    Restore authentication using the encrypted browser cookie.
 
-    Returns True only when FastAPI validates the session.
+    FastAPI validates the cookie before the user is authenticated.
     """
 
     cookie_name = os.getenv(
@@ -67,7 +75,9 @@ def restore_browser_session() -> bool:
     try:
         response = httpx.get(
             f"{backend_url}/auth/session/me",
-            cookies={cookie_name: encrypted_cookie},
+            cookies={
+                cookie_name: encrypted_cookie
+            },
             timeout=10.0,
         )
 
@@ -82,6 +92,7 @@ def restore_browser_session() -> bool:
         st.session_state.authenticated = True
         st.session_state.user_id = auth_data["user_id"]
         st.session_state.user_email = auth_data["email"]
+
         st.session_state.page = "chatbot"
 
         return True
@@ -89,9 +100,10 @@ def restore_browser_session() -> bool:
     except (httpx.HTTPError, ValueError, KeyError):
         return False
 
-# ------------------------------------------------------------------
-# PAGE CONFIGURATION
-# ------------------------------------------------------------------
+
+# =========================================================
+# STREAMLIT PAGE CONFIGURATION
+# =========================================================
 
 st.set_page_config(
     page_title="MedQuad AI",
@@ -100,22 +112,25 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# ------------------------------------------------------------------
-# SESSION STATE
-# ------------------------------------------------------------------
 
-# Current application page
+# =========================================================
+# INITIALIZE SESSION STATE
+# =========================================================
+
 if "page" not in st.session_state:
     st.session_state.page = "home"
 
-# --------------------------------------------------
-# COMPLETE BROWSER LOGOUT
-# --------------------------------------------------
+if "dark_mode" not in st.session_state:
+    st.session_state.dark_mode = False
+
+
+# =========================================================
+# HANDLE COMPLETE BROWSER LOGOUT
+# =========================================================
 
 if st.query_params.get("page") == "logged_out":
 
-    # Clear authentication and previous chat data
-    for key in [
+    session_keys = [
         "authenticated",
         "user",
         "email",
@@ -126,7 +141,12 @@ if st.query_params.get("page") == "logged_out":
         "refresh_token",
         "supabase_client",
         "messages",
-    ]:
+        "password_recovery_verified",
+        "password_recovery_access_token",
+        "password_recovery_refresh_token",
+    ]
+
+    for key in session_keys:
         st.session_state.pop(key, None)
 
     st.session_state.authenticated = False
@@ -136,90 +156,124 @@ if st.query_params.get("page") == "logged_out":
         "Logged out successfully. See you again!"
     )
 
-    # Remove the temporary logout parameter
     st.query_params.clear()
 
     st.rerun()
 
-# Forwarding to the forgot password page if requested via query parameter
+
+# =========================================================
+# HANDLE PAGE REQUESTS FROM URL
+# =========================================================
+
 requested_page = st.query_params.get("page")
 
 if requested_page == "forgot_password":
+
     st.session_state.page = "forgot_password"
+
     del st.query_params["page"]
 
+elif requested_page == "reset_password":
 
-# Authentication state
+    # Keep the URL parameters until the recovery link
+    # has been verified by reset_password.py.
+    st.session_state.page = "reset_password"
+
+
+# =========================================================
+# INITIALIZE AUTHENTICATION
+# =========================================================
+
 if "authenticated" not in st.session_state:
+
     st.session_state.authenticated = False
 
-    restore_browser_session()
+    # A password recovery link must take priority
+    # over any previously saved browser session.
+    if st.session_state.page != "reset_password":
+
+        restore_browser_session()
 
 
-# Theme state
-if "dark_mode" not in st.session_state:
-    st.session_state.dark_mode = False
-
-
-# ---------------------------------------------------------
+# =========================================================
 # GOOGLE OAUTH - FASTAPI SESSION HANDOFF
-# ---------------------------------------------------------
+# =========================================================
 
 auth_ticket = st.query_params.get("auth_ticket")
 
 if auth_ticket:
 
-    # Clear the temporary ticket from the URL
     st.query_params.clear()
 
     try:
         backend_url = os.getenv("BACKEND_URL")
 
         if not backend_url:
-            raise ValueError("BACKEND_URL is not configured")
+            raise ValueError(
+                "BACKEND_URL is not configured"
+            )
 
-        # Exchange the one-time ticket with FastAPI
         response = httpx.post(
             f"{backend_url}/auth/session/exchange",
-            json={"ticket": auth_ticket},
-            timeout=10.0
+            json={
+                "ticket": auth_ticket
+            },
+            timeout=10.0,
         )
 
         response.raise_for_status()
+
         auth_data = response.json()
 
         if not auth_data.get("authenticated"):
-            raise ValueError("Authentication was not confirmed")
+            raise ValueError(
+                "Authentication was not confirmed"
+            )
 
-        # Store authenticated session details
         st.session_state.authenticated = True
-        st.session_state.user_id = auth_data["user_id"]
-        st.session_state.user_email = auth_data["email"]
-        st.session_state.access_token = auth_data["access_token"]
-        st.session_state.refresh_token = auth_data["refresh_token"]
 
-        # Navigate to the chatbot
-        success_message = st.empty()
-        st.session_state.success_notification = (
-            "Signed in successfully! Welcome to MedQuad AI."
+        st.session_state.user_id = (
+            auth_data["user_id"]
         )
+
+        st.session_state.user_email = (
+            auth_data["email"]
+        )
+
+        st.session_state.access_token = (
+            auth_data["access_token"]
+        )
+
+        st.session_state.refresh_token = (
+            auth_data["refresh_token"]
+        )
+
+        st.session_state.success_notification = (
+            "Signed in successfully! "
+            "Welcome to MedQuad AI."
+        )
+
         time.sleep(2)
-        success_message.empty()
+
         st.session_state.page = "chatbot"
+
         st.rerun()
 
     except (httpx.HTTPError, KeyError, ValueError):
+
         st.session_state.authenticated = False
+
         st.session_state.page = "login"
+
         st.error(
             "Google sign-in could not be completed. "
             "Please try again."
         )
 
 
-# ------------------------------------------------------------------
-# THEME CONFIGURATION
-# ------------------------------------------------------------------
+# =========================================================
+# LOAD LIGHT / DARK THEME
+# =========================================================
 
 theme = (
     "dark"
@@ -228,12 +282,13 @@ theme = (
 )
 
 load_css(theme)
+
 show_pending_notification()
 
 
-# ------------------------------------------------------------------
-# MEDQUAD TOP CONTROLS
-# ------------------------------------------------------------------
+# =========================================================
+# DISPLAY THEME TOGGLE
+# =========================================================
 
 theme_left, theme_right = st.columns(
     [4, 1],
@@ -241,57 +296,68 @@ theme_left, theme_right = st.columns(
 )
 
 with theme_right:
-    render_theme_toggle()
-    
 
-# ------------------------------------------------------------------
+    render_theme_toggle()
+
+
+# =========================================================
 # PAGE ROUTING
-# ------------------------------------------------------------------
+# =========================================================
 
 current_page = st.session_state.page
 
 
-# ------------------------------------------------------------------
-# HOME
-# ------------------------------------------------------------------
+# ---------------------------------------------------------
+# HOME PAGE
+# ---------------------------------------------------------
 
 if current_page == "home":
 
     render_home()
 
 
-# ------------------------------------------------------------------
-# LOGIN
-# ------------------------------------------------------------------
+# ---------------------------------------------------------
+# LOGIN PAGE
+# ---------------------------------------------------------
 
 elif current_page == "login":
 
     render_login()
 
 
-# ------------------------------------------------------------------
-# SIGN UP
-# ------------------------------------------------------------------
+# ---------------------------------------------------------
+# SIGNUP PAGE
+# ---------------------------------------------------------
 
 elif current_page == "signup":
 
     render_signup()
 
-#------------------------------------------------------------------
-# FORGOT PASSWORD
-# ------------------------------------------------------------------
+
+# ---------------------------------------------------------
+# FORGOT PASSWORD PAGE
+# ---------------------------------------------------------
 
 elif current_page == "forgot_password":
 
     render_forgot_password()
 
-# ------------------------------------------------------------------
-# CHATBOT
-# ------------------------------------------------------------------
+
+# ---------------------------------------------------------
+# RESET PASSWORD PAGE
+# ---------------------------------------------------------
+
+elif current_page == "reset_password":
+
+    render_reset_password()
+
+
+# ---------------------------------------------------------
+# CHATBOT PAGE
+# ---------------------------------------------------------
 
 elif current_page == "chatbot":
 
-    # Prevent unauthenticated access to the chatbot
     if not st.session_state.authenticated:
 
         st.session_state.page = "login"
@@ -303,9 +369,9 @@ elif current_page == "chatbot":
         render_chatbot()
 
 
-# ------------------------------------------------------------------
+# ---------------------------------------------------------
 # UNKNOWN PAGE
-# ------------------------------------------------------------------
+# ---------------------------------------------------------
 
 else:
 
