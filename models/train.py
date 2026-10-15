@@ -1045,23 +1045,9 @@ def create_trainer(
 def fine_tune_model(trainer):
     """
     Fine-tune FLAN-T5 using the configured Seq2SeqTrainer.
-
-    Parameters
-    ----------
-    trainer
-        Configured Hugging Face Seq2SeqTrainer containing the model,
-        training dataset, validation dataset, training arguments,
-        and data collator.
-
-    Returns
-    -------
-    training_result
-        Training result returned by Hugging Face Trainer.
-
-    Notes
-    -----
-    This function requires a PyTorch-enabled training environment.
     """
+    training_result = trainer.train()
+    return training_result
 
     # --------------------------------------------------------------
     # Validate Trainer
