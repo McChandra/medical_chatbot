@@ -4,7 +4,7 @@ import os
 import secrets
 from urllib.parse import urlencode
 from fastapi import APIRouter, HTTPException, Request, Response
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, HTMLResponse
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 
 from backend.auth.service import create_supabase_client
@@ -354,7 +354,6 @@ def get_current_session(request: Request):
         )
 
     try:
-        import json
 
         session_data = json.loads(decrypted)
 
@@ -452,3 +451,287 @@ def browser_logout():
     )
 
     return response
+
+
+# --------------------------------------------------
+# PASSWORD RECOVERY PAGE
+# --------------------------------------------------
+
+@router.get("/reset-password", response_class=HTMLResponse)
+def reset_password_page():
+    """Display the Supabase password recovery form."""
+
+    supabase_url = os.environ["SUPABASE_URL"]
+    supabase_key = os.environ["SUPABASE_KEY"]
+
+    html = r"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>Reset Password | MedQuad AI</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f8ff;
+            color: #172b4d;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 440px;
+            padding: 36px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,.08);
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 0;
+        }
+
+        p {
+            text-align: center;
+            color: #52627a;
+            line-height: 1.5;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 7px;
+            border: 1px solid #ccd5e3;
+            border-radius: 8px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 22px;
+            background: #1c4c9b;
+            color: white;
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button:disabled {
+            opacity: .6;
+        }
+
+        #message {
+            margin-top: 18px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .requirements {
+            text-align: left;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>Create New Password</h1>
+    <p>Secure your MedQuad AI account.</p>
+
+    <form id="reset-form" hidden>
+
+        <label for="password">New Password</label>
+        <input
+            id="password"
+            type="password"
+            autocomplete="new-password"
+            required
+        >
+
+        <label for="confirm">Confirm New Password</label>
+        <input
+            id="confirm"
+            type="password"
+            autocomplete="new-password"
+            required
+        >
+
+        <p class="requirements">
+            At least 8 characters, one uppercase letter,
+            one number, and one special character.
+        </p>
+
+        <button id="submit" type="submit">
+            Save New Password
+        </button>
+
+    </form>
+
+    <div id="message" role="status">
+        Verifying your recovery link...
+    </div>
+
+</div>
+
+<script type="module">
+    import { createClient } from
+        "https://esm.sh/@supabase/supabase-js@2";
+
+    // Replace with your Supabase public credentials.
+    // Never use a service_role or secret key here.
+    const SUPABASE_URL = __SUPABASE_URL__;
+    const SUPABASE_KEY = __SUPABASE_KEY__;
+
+    const supabase = createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY,
+        {
+            auth: {
+                detectSessionInUrl: false,
+                persistSession: false,
+                autoRefreshToken: false
+            }
+        }
+    );
+
+    const form = document.getElementById("reset-form");
+    const message = document.getElementById("message");
+    const button = document.getElementById("submit");
+
+    const params = new URLSearchParams(
+        window.location.hash.substring(1)
+    );
+
+    const accessToken = params.get("access_token");
+    const refreshToken = params.get("refresh_token");
+    const recoveryType = params.get("type");
+
+    // Remove tokens from browser address bar.
+    window.history.replaceState(
+        null, "",
+        window.location.pathname
+    );
+
+    let recoveryVerified = false;
+
+    if (
+        accessToken &&
+        refreshToken &&
+        recoveryType === "recovery"
+    ) {
+        const { data, error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
+        });
+
+        if (!error && data.user) {
+            recoveryVerified = true;
+            form.hidden = false;
+            message.textContent = "";
+        } else {
+            message.textContent =
+                "Invalid or expired recovery link. " +
+                "Please request a new email.";
+        }
+    } else {
+        message.textContent =
+            "Invalid recovery link. Please request a new email.";
+    }
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        if (!recoveryVerified) return;
+
+        const password =
+            document.getElementById("password").value;
+
+        const confirm =
+            document.getElementById("confirm").value;
+
+        const strongPassword =
+            password.length >= 8 &&
+            /[A-Z]/.test(password) &&
+            /[0-9]/.test(password) &&
+            /[^A-Za-z0-9]/.test(password);
+
+        if (!strongPassword) {
+            message.textContent =
+                "Password must contain at least 8 characters, " +
+                "one uppercase letter, one number, " +
+                "and one special character.";
+            return;
+        }
+
+        if (password !== confirm) {
+            message.textContent = "Passwords do not match.";
+            return;
+        }
+
+        button.disabled = true;
+        message.textContent = "Updating your password...";
+
+        const { error } = await supabase.auth.updateUser({
+            password: password
+        });
+
+        if (error) {
+            message.textContent =
+                "Unable to update your password: " +
+                error.message;
+            button.disabled = false;
+            return;
+        }
+
+        form.hidden = true;
+
+        // Show success message
+    message.textContent =
+        "Password changed successfully! Redirecting to Login in 2 seconds...";
+
+    // Start the 2-second countdown immediately
+    setTimeout(() => {
+        window.location.replace(
+            "http://localhost:8501/?page=login"
+        );
+    }, 2000);
+
+    // Sign out the Supabase recovery session
+    supabase.auth.signOut().catch(console.error);
+    });
+</script>
+
+</body>
+</html>
+"""
+
+    html = html.replace(
+        "__SUPABASE_URL__",
+        json.dumps(supabase_url)
+    ).replace(
+        "__SUPABASE_KEY__",
+        json.dumps(supabase_key)
+    )
+
+    return HTMLResponse(content=html)
+

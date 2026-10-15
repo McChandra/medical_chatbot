@@ -1,18 +1,21 @@
 
+import os
 import re
 import time
-import os
 
 import streamlit as st
 from auth_service import get_supabase_client
 
 
 def render_forgot_password():
+    """Render the MedQuad AI forgot-password page."""
 
+    # Back to login
     if st.button("← Back to Sign In", key="forgot_back"):
         st.session_state.page = "login"
         st.rerun()
 
+    # Page heading
     st.markdown(
         """
         <div class="auth-page-heading">
@@ -26,13 +29,13 @@ def render_forgot_password():
         unsafe_allow_html=True,
     )
 
+    # Centered form
     left, center, right = st.columns([1.5, 2, 1.5])
 
-    
     with center:
 
         with st.form(
-            "forgot_password_form",
+            key="forgot_password_form",
             enter_to_submit=True,
             border=False,
         ):
@@ -46,76 +49,83 @@ def render_forgot_password():
                 "Send Reset Link",
                 type="primary",
                 use_container_width=True,
-                key="send_reset_link",
             )
 
-        if submitted:
+        if not submitted:
+            return
 
-            clean_email = email.strip().lower()
+        # STEP 1: Validate email
+        clean_email = email.strip().lower()
 
-            # STEP 1: Validate email address
-            if not clean_email:
-                error_message = st.empty()
-                error_message.error(
-                    "Please enter your email address."
-                )
-                time.sleep(2)
-                error_message.empty()
-                return
+        if not clean_email:
+            st.error("Please enter your email address.")
+            return
 
-            if not re.fullmatch(
-                r"[^@\s]+@[^@\s]+\.[^@\s]+",
-                clean_email,
-            ):
-                error_message = st.empty()
-                error_message.error(
-                    "Please enter a valid email address."
-                )
-                time.sleep(2)
-                error_message.empty()
-                return
+        if not re.fullmatch(
+            r"[^@\s]+@[^@\s]+\.[^@\s]+",
+            clean_email,
+        ):
+            st.error("Please enter a valid email address.")
+            return
 
-            # STEP 2: Send password reset email
-            try:
-                supabase = get_supabase_client()
+        # STEP 2: Send password-reset email
+        reset_url = os.getenv(
+            "PASSWORD_RESET_URL",
+            "http://localhost:8000/auth/reset-password",
+        ).rstrip("/")
 
-                frontend_url = os.getenv(
-                    "FRONTEND_URL",
-                    "http://localhost:8501",
-                ).rstrip("/")
+        try:
+            supabase = get_supabase_client()
 
+            with st.spinner("Sending password reset link..."):
                 supabase.auth.reset_password_email(
                     clean_email,
                     options={
-                        "redirect_to": (
-                            f"{frontend_url}/?page=reset_password"
-                        )
+                        "redirect_to": reset_url,
                     },
                 )
 
-                success_message = st.empty()
+            st.success(
+                "If an account exists for this email, "
+                "a password reset link will be sent."
+            )
 
-                success_message.success(
-                    "If an account exists for this email, "
-                    "a password reset link will be sent."
+            st.info(
+                "Please check your inbox and spam folder."
+            )
+
+            # Wait for 2 seconds
+            time.sleep(2)
+
+            # Redirect to login page
+            st.session_state.page = "login"
+            st.query_params.clear()
+            st.rerun()
+
+
+        except Exception as error:
+            error_text = str(error).lower()
+
+            if "rate limit" in error_text:
+                st.warning(
+                    "Too many reset requests. "
+                    "Please try again later."
+                )
+            else:
+                st.error(
+                    "Unable to send the password reset email. "
+                    "Please try again later."
                 )
 
-                time.sleep(2)
-                success_message.empty()
+                # Local development diagnostics.
+                # Do not log authentication tokens.
+                print(
+                    "Password reset request failed:",
+                    type(error).__name__,
+                )
 
-                st.session_state.page = "login"
-                st.rerun()
-
-            except Exception as error:
-
-                if "rate limit" in str(error).lower():
-                    st.warning(
-                        "Too many email requests. "
-                        "Please try again later."
-                    )
-                else:
-                    st.error(
-                        "Unable to process your request. "
-                        "Please try again later."
-                    )
-
+            # Wait for 2 seconds and redirect to login
+            time.sleep(2)
+            st.session_state.page = "login"
+            st.query_params.clear()
+            st.rerun()

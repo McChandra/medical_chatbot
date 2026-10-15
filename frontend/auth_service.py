@@ -23,6 +23,17 @@ def get_supabase_client() -> Client:
 
     return st.session_state.supabase_client
 
+def get_recovery_supabase_client() -> Client:
+    """Create a separate Supabase client for password recovery."""
+
+    return create_client(
+        st.secrets["SUPABASE_URL"],
+        st.secrets["SUPABASE_KEY"],
+        options=ClientOptions(
+            flow_type="pkce"
+        ),
+    )
+
 
 def sign_in_with_email(email: str, password: str):
     """Authenticate a user with email and password."""

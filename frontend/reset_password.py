@@ -1,12 +1,31 @@
 
+import re
 import time
 
 import streamlit as st
 from auth_service import get_supabase_client
 
 
+def validate_password(password):
+    """Return a validation message or None."""
+
+    if len(password) < 8:
+        return "Password must contain at least 8 characters."
+
+    if not re.search(r"[A-Z]", password):
+        return "Password must contain at least one uppercase letter."
+
+    if not re.search(r"[0-9]", password):
+        return "Password must contain at least one number."
+
+    if not re.search(r"[^A-Za-z0-9]", password):
+        return "Password must contain at least one special character."
+
+    return None
+
+
 def render_reset_password():
-    """Verify the recovery link and let the user set a new password."""
+    """Verify recovery link and update the user's password."""
 
     st.markdown(
         """
@@ -21,14 +40,10 @@ def render_reset_password():
         unsafe_allow_html=True,
     )
 
-    # ---------------------------------------------
-    # STEP 1: VERIFY THE SUPABASE RECOVERY LINK
-    # ---------------------------------------------
-
+    # STEP 1: VERIFY RECOVERY LINK
     if not st.session_state.get(
         "password_recovery_verified", False
     ):
-
         token_hash = st.query_params.get("token_hash")
         recovery_type = st.query_params.get("type")
 
@@ -56,18 +71,15 @@ def render_reset_password():
                 return
 
             st.session_state.password_recovery_verified = True
-
             st.session_state.password_recovery_access_token = (
                 result.session.access_token
             )
-
             st.session_state.password_recovery_refresh_token = (
                 result.session.refresh_token
             )
 
-            # Remove the recovery token from the browser URL.
+            # Remove token from browser URL.
             st.query_params.clear()
-
             st.rerun()
 
         except Exception:
@@ -77,19 +89,20 @@ def render_reset_password():
             )
             return
 
-    # ---------------------------------------------
-    # STEP 2: DISPLAY NEW PASSWORD FORM
-    # ---------------------------------------------
-
+    # STEP 2: DISPLAY PASSWORD FORM
     left, center, right = st.columns([1.5, 2, 1.5])
 
     with center:
-        error_message = st.empty()
+        st.caption(
+            "Password requirements: at least 8 characters, "
+            "one uppercase letter, one number, "
+            "and one special character."
+        )
 
         with st.form(
             "reset_password_form",
             enter_to_submit=True,
-            border=False
+            border=False,
         ):
             new_password = st.text_input(
                 "New Password",
@@ -99,7 +112,7 @@ def render_reset_password():
             )
 
             confirm_password = st.text_input(
-                "Confirm Password",
+                "Confirm New Password",
                 type="password",
                 placeholder="Re-enter your new password",
                 key="reset_confirm_password",
@@ -112,68 +125,62 @@ def render_reset_password():
                 key="save_new_password",
             )
 
-        if submitted:
+        if not submitted:
+            return
 
-            if not new_password:
-                error_message("Please enter your new password.")
-                return
+        # STEP 3: VALIDATE PASSWORD
+        validation_error = validate_password(new_password)
 
-            # Validate the Password
-            if len(new_password) < 8:
-                error_message("Password must contain at least 8 characters.")
-                return
+        if validation_error:
+            st.error(validation_error)
+            return
 
-            if new_password != confirm_password:
-                error_message("Passwords do not match.")
-                return
+        if new_password != confirm_password:
+            st.error("Passwords do not match.")
+            return
 
+        # STEP 4: UPDATE PASSWORD
+        try:
+            supabase = get_supabase_client()
 
-            # -------------------------------------
-            # STEP 4: UPDATE PASSWORD IN SUPABASE
-            # -------------------------------------
+            supabase.auth.set_session(
+                st.session_state.password_recovery_access_token,
+                st.session_state.password_recovery_refresh_token,
+            )
 
+            supabase.auth.update_user(
+                {"password": new_password}
+            )
+
+            # End recovery session.
             try:
-                supabase = get_supabase_client()
-
-                supabase.auth.set_session(
-                    st.session_state.password_recovery_access_token,
-                    st.session_state.password_recovery_refresh_token,
-                )
-
-                supabase.auth.update_user(
-                    {
-                        "password": new_password
-                    }
-                )
-
-                try:
-                    supabase.auth.sign_out()
-                except Exception:
-                    pass
-
-                # Remove recovery credentials.
-                for key in [
-                    "password_recovery_verified",
-                    "password_recovery_access_token",
-                    "password_recovery_refresh_token",
-                ]:
-                    st.session_state.pop(key, None)
-
-                st.session_state.authenticated = False
-
-                st.success(
-                    "Password successfully updated! "
-                    "Redirecting to Login in 2 seconds..."
-                )
-
-                time.sleep(2)
-
-                st.session_state.page = "login"
-                st.query_params.clear()
-                st.rerun()
-
+                supabase.auth.sign_out()
             except Exception:
-                st.error(
-                    "Unable to update your password. "
-                    "Please request a new reset link."
-                )
+                pass
+
+            # Clear recovery credentials.
+            for key in [
+                "password_recovery_verified",
+                "password_recovery_access_token",
+                "password_recovery_refresh_token",
+            ]:
+                st.session_state.pop(key, None)
+
+            st.session_state.authenticated = False
+
+            st.success(
+                "Successfully changed the password! "
+                "Redirecting to Login..."
+            )
+
+            time.sleep(2)
+
+            st.session_state.page = "login"
+            st.query_params.clear()
+            st.rerun()
+
+        except Exception:
+            st.error(
+                "Unable to update your password. "
+                "Please request a new reset link."
+            )
