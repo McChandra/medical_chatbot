@@ -1,0 +1,46 @@
+name: MedQuad AI CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  syntax-check:
+    name: Validate Python syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile project Python files
+        run: |
+          python -m compileall -q backend frontend features models src
+
+  unit-tests:
+    name: Run lightweight unit tests
+    needs: syntax-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install pytest
+        run: python -m pip install pytest
+
+      - name: Run tests
+        run: |
+          if [ -d tests ] && find tests -name 'test_*.py' | grep -q .; then
+            python -m pytest tests -q
+          else
+            echo "No unit tests found; failing CI until tests are added."
+            exit 1
+          fi
