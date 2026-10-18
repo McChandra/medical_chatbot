@@ -1,0 +1,38 @@
+{
+  "report_type": "MedQuad Data Quality Monitoring",
+  "generated_at": "2026-10-18T09:59:34.075283+00:00",
+  "dataset": "/home/sagemaker-user/medical_chatbot/data/processed/medquad_final_passages.csv",
+  "total_records": 38544,
+  "duplicate_rows": 0,
+  "missing_values": {
+    "record_id": 0,
+    "question": 0,
+    "passage": 0,
+    "source": 0,
+    "focus_area": 0,
+    "token_length": 0
+  },
+  "token_length": {
+    "mean": 149.20996782897467,
+    "median": 163.0,
+    "max": 240
+  },
+  "source_distribution": {
+    "GARD": 13222,
+    "GHR": 8786,
+    "CancerGov": 4499,
+    "NIDDK": 3262,
+    "NHLBI": 2687,
+    "NIHSeniorHealth": 2123,
+    "MPlusHealthTopics": 1743,
+    "NINDS": 1527,
+    "CDC": 695
+  },
+  "checks": {
+    "dataset_not_empty": true,
+    "questions_present": true,
+    "passages_present": true,
+    "token_lengths_nonnegative": true
+  },
+  "overall_status": "PASS"
+}

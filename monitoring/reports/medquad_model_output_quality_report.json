@@ -1,0 +1,42 @@
+{
+  "report_type": "Offline Medical Output Quality Review",
+  "generated_at": "2026-10-18T10:04:05.318473+00:00",
+  "model": "google/flan-t5-small",
+  "model_type": "pretrained_baseline",
+  "evaluation_scope": "Five demonstration outputs; repeated questions",
+  "sample_size": 5,
+  "unique_questions": 2,
+  "reviewed_outputs": [
+    {
+      "question": "What is (are) Glaucoma ?",
+      "prediction": "Glaucoma (are) Glaucoma is a genus of fungi in the family Cerambycidae.",
+      "review_label": "factually_incorrect"
+    },
+    {
+      "question": "What is (are) Glaucoma ?",
+      "prediction": "Glaucoma (are) Glaucoma is a genus of fungi in the family Cerambycidae.",
+      "review_label": "factually_incorrect"
+    },
+    {
+      "question": "What is (are) Glaucoma ?",
+      "prediction": "Glaucoma (are) Glaucoma is a genus of fungi in the family Cerambycidae.",
+      "review_label": "factually_incorrect"
+    },
+    {
+      "question": "What causes Glaucoma ?",
+      "prediction": "Glaucoma is a common cause of glaucoma.",
+      "review_label": "circular_uninformative"
+    },
+    {
+      "question": "What causes Glaucoma ?",
+      "prediction": "Glaucoma is a common cause of glaucoma.",
+      "review_label": "circular_uninformative"
+    }
+  ],
+  "review_summary": {
+    "factually_incorrect": 3,
+    "circular_uninformative": 2
+  },
+  "clinical_readiness": "NOT_VALIDATED",
+  "limitations": "Small, non-independent sample. Manual qualitative review only; not a medical accuracy benchmark."
+}

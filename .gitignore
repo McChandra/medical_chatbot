@@ -207,3 +207,4 @@ artifacts/checkpoints/*
 # Docker
 # ------------------------------------------------------------
 docker-compose.override.yml
+/artifacts/

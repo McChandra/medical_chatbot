@@ -1,0 +1,42 @@
+[
+  {
+    "record_id": "0",
+    "question": "What is (are) Glaucoma ?",
+    "model_prediction": "Glaucoma (are) Glaucoma is a genus of fungi in the family Cerambycidae.",
+    "model": "google/flan-t5-small",
+    "model_type": "pretrained_baseline",
+    "generated_at": "2026-10-18T10:02:56.516849+00:00"
+  },
+  {
+    "record_id": "0",
+    "question": "What is (are) Glaucoma ?",
+    "model_prediction": "Glaucoma (are) Glaucoma is a genus of fungi in the family Cerambycidae.",
+    "model": "google/flan-t5-small",
+    "model_type": "pretrained_baseline",
+    "generated_at": "2026-10-18T10:02:57.756528+00:00"
+  },
+  {
+    "record_id": "0",
+    "question": "What is (are) Glaucoma ?",
+    "model_prediction": "Glaucoma (are) Glaucoma is a genus of fungi in the family Cerambycidae.",
+    "model": "google/flan-t5-small",
+    "model_type": "pretrained_baseline",
+    "generated_at": "2026-10-18T10:02:58.720166+00:00"
+  },
+  {
+    "record_id": "1",
+    "question": "What causes Glaucoma ?",
+    "model_prediction": "Glaucoma is a common cause of glaucoma.",
+    "model": "google/flan-t5-small",
+    "model_type": "pretrained_baseline",
+    "generated_at": "2026-10-18T10:02:59.242420+00:00"
+  },
+  {
+    "record_id": "1",
+    "question": "What causes Glaucoma ?",
+    "model_prediction": "Glaucoma is a common cause of glaucoma.",
+    "model": "google/flan-t5-small",
+    "model_type": "pretrained_baseline",
+    "generated_at": "2026-10-18T10:02:59.769158+00:00"
+  }
+]
