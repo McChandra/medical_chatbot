@@ -13,6 +13,8 @@ Shiley-Marcos School of Engineering
 **Project Status:** Academic Research Prototype  
 **Clinical Validation:** Not validated
 
+**Kaggle Dataset Link:** https://www.kaggle.com/datasets/pythonafroz/medquad-medical-question-answer-for-ai-research
+
 ---
 
 ## 1. Project Overview
