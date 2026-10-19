@@ -307,7 +307,6 @@ with theme_right:
 
 current_page = st.session_state.page
 
-
 # ---------------------------------------------------------
 # HOME PAGE
 # ---------------------------------------------------------
@@ -364,24 +363,23 @@ elif current_page == "chatbot":
         st.session_state.page = "login"
 
         st.rerun()
-    
-    #------------------------------------------------------
-    # Response Page
-    #------------------------------------------------------
-    elif current_page == "response":
-        if not st.session_state.authenticated:
-
-            st.session_state.page == "login"
-
-            st.rerun()
-        else:
-
-            render_response()
 
     else:
 
         render_chatbot()
 
+#------------------------------------------------------
+# Response Page
+#------------------------------------------------------
+elif current_page == "response":
+    if not st.session_state.authenticated:
+
+        st.session_state.page == "login"
+
+        st.rerun()
+    else:
+
+        render_response()
 
 # ---------------------------------------------------------
 # UNKNOWN PAGE
