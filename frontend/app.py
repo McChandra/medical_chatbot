@@ -27,6 +27,7 @@ from home import render_home
 from login import render_login
 from signup import render_signup
 from chat import render_chatbot
+from response import render_response
 from forgot_password import render_forgot_password
 from reset_password import render_reset_password
 
@@ -363,6 +364,19 @@ elif current_page == "chatbot":
         st.session_state.page = "login"
 
         st.rerun()
+    
+    #------------------------------------------------------
+    # Response Page
+    #------------------------------------------------------
+    elif current_page == "response":
+        if not st.session_state.authenticated:
+
+            st.session_state.page == "login"
+
+            st.rerun()
+        else:
+
+            render_response()
 
     else:
 
