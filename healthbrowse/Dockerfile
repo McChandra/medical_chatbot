@@ -7,6 +7,7 @@ COPY . .
 RUN npm run build && npm prune --omit=dev --no-audit --no-fund && mkdir -p node_modules
 
 FROM node:24-bookworm-slim@sha256:c86ecead9e55a5210ac1727de38a4ca840bf03dcaf34dc9749addbf383b1920c AS runtime
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
 ENV NODE_ENV=production PORT=8080
 WORKDIR /app
 COPY --from=build /app/package*.json ./
@@ -18,4 +19,4 @@ USER node
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
   CMD node -e "fetch('http://127.0.0.1:'+process.env.PORT+'/readyz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
-CMD ["npm", "start"]
+CMD ["node", "server/main.mjs"]
