@@ -1,0 +1,3892 @@
+{
+  "Breast Cancer": [
+    {
+      "kind": "core",
+      "title": "Breast Cancer",
+      "url": "https://medlineplus.gov/breastcancer.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Breast cancer - Genetics",
+      "url": "https://medlineplus.gov/genetics/condition/breast-cancer/",
+      "detail": "",
+      "publisher": "MedlinePlus Genetics (GHR)"
+    },
+    {
+      "kind": "core",
+      "title": "Inflammatory breast carcinoma",
+      "url": "https://rarediseases.info.nih.gov/diseases/6784/inflammatory-breast-carcinoma",
+      "detail": "",
+      "publisher": "GARD"
+    },
+    {
+      "kind": "core",
+      "title": "Breast Cancer Treatment (PDQ®)",
+      "url": "https://www.cancer.gov/types/breast/hp/breast-treatment-pdq",
+      "detail": "",
+      "publisher": "CancerGov"
+    },
+    {
+      "kind": "core",
+      "title": "Breast Cancer Basics",
+      "url": "https://www.cdc.gov/breast-cancer/about/index.html",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "CBIS-DDSM (Curated Breast Imaging Subset of Digital Database for Screening Mammography)",
+      "url": "https://www.cancerimagingarchive.net/collection/cbis-ddsm/",
+      "detail": "Modality: Mammography DICOM images, ROI masks, pathology labels, radiomic features. Size: 1,566 actual participants; 10,239 images. Access as catalogued: open.",
+      "publisher": "www.cancerimagingarchive.net"
+    },
+    {
+      "kind": "dataset",
+      "title": "TCGA-BRCA (Breast Invasive Carcinoma)",
+      "url": "https://portal.gdc.cancer.gov/projects/TCGA-BRCA",
+      "detail": "Modality: Clinical, histopathology slides, RNA/DNA sequencing, copy number, methylation, proteomics, mutations. Size: 1,098 cases; 71,423 files listed. Access as catalogued: controlled.",
+      "publisher": "portal.gdc.cancer.gov"
+    },
+    {
+      "kind": "dataset",
+      "title": "METABRIC",
+      "url": "https://ega-archive.org/studies/EGAS00000000083",
+      "detail": "Modality: Integrated breast-tumor genomic, transcriptomic, copy-number, and clinical data. Size: Approximately 2,000 primary breast tumors (997 discovery and 995 validation in the study description). Access as catalogued: controlled.",
+      "publisher": "ega-archive.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "Breast Cancer Wisconsin Diagnostic",
+      "url": "https://huggingface.co/datasets/scikit-learn/breast-cancer-wisconsin",
+      "detail": "Modality: Tabular fine-needle-aspirate cell-nucleus features with benign/malignant labels. Size: 569 records in the source UCI dataset. Access as catalogued: open.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "tool",
+      "title": "Breast-Cancer-Detection",
+      "url": "https://github.com/gscdit/Breast-Cancer-Detection",
+      "detail": "github. Educational ML classification repository using the Breast Cancer Wisconsin Diagnostic dataset; not a clinical device or validated clinical model.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "scikit-learn/breast-cancer-wisconsin",
+      "url": "https://huggingface.co/datasets/scikit-learn/breast-cancer-wisconsin",
+      "detail": "huggingface. Open tabular dataset mirror with nucleus morphology features and benign/malignant diagnosis.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "statistics",
+      "title": "NCI SEER Cancer Stat Facts: Female Breast Cancer",
+      "url": "https://seer.cancer.gov/statfacts/html/breast.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "seer.cancer.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC United States Cancer Statistics",
+      "url": "https://www.cdc.gov/united-states-cancer-statistics/index.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "NCCN Guidelines: Breast Cancer, Version 6.2026",
+      "url": "https://www.nccn.org/guidelines/guidelines-detail?id=1419",
+      "detail": "2026",
+      "publisher": "National Comprehensive Cancer Network"
+    },
+    {
+      "kind": "guideline",
+      "title": "Breast Cancer Treatment (PDQ®)",
+      "url": "https://www.cancer.gov/types/breast/hp/breast-treatment-pdq",
+      "detail": "2025",
+      "publisher": "National Cancer Institute"
+    },
+    {
+      "kind": "guideline",
+      "title": "Breast Cancer: Screening",
+      "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/breast-cancer-screening",
+      "detail": "2024",
+      "publisher": "U.S. Preventive Services Task Force"
+    },
+    {
+      "kind": "article",
+      "title": "Screening for breast cancer: a comparative effectiveness review for the US Preventive Services Task Force",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13587997/",
+      "detail": "2024",
+      "publisher": "pmc.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "Screening for Breast Cancer: US Preventive Services Task Force Recommendation Statement",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38687503/",
+      "detail": "2024",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "Breast Cancer: An Overview of Current Therapeutic Strategies",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10596062/",
+      "detail": "2023",
+      "publisher": "pmc.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "risk",
+      "title": "Breast Cancer Risk Assessment Tool (BCRAT; Gail Model)",
+      "url": "https://bcrisktool.cancer.gov/",
+      "detail": "",
+      "publisher": "National Cancer Institute"
+    },
+    {
+      "kind": "education",
+      "title": "Breast Cancer: Prevention, Screening, Diagnosis and Treatment",
+      "url": "https://edhub.ama-assn.org/course/270",
+      "detail": "CME",
+      "publisher": "AMA Ed Hub"
+    },
+    {
+      "kind": "education",
+      "title": "Introduction to Breast Cancer",
+      "url": "https://www.coursera.org/learn/breast-cancer-causes-prevention",
+      "detail": "MOOC",
+      "publisher": "Coursera (Yale/Johns Hopkins course content partners)"
+    },
+    {
+      "kind": "education",
+      "title": "Breast Surgical Oncology Fellowship Match and Curriculum",
+      "url": "https://surgonc.org/fellows/breast-surgical-oncology-fellowship/",
+      "detail": "fellowship",
+      "publisher": "Society of Surgical Oncology / American Society of Breast Surgeons"
+    },
+    {
+      "kind": "education",
+      "title": "Breast Surgical Oncology Fellowship",
+      "url": "https://www.kumc.edu/school-of-medicine/academics/departments/surgery/academics/fellowships/breast-surgical-oncology-fellowship.html",
+      "detail": "fellowship",
+      "publisher": "University of Kansas School of Medicine"
+    },
+    {
+      "kind": "facility",
+      "title": "NCI-Designated Cancer Centers (comprehensive, clinical, and basic laboratory centers)",
+      "url": "https://www.cancer.gov/research/infrastructure/cancer-centers/find",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.cancer.gov"
+    },
+    {
+      "kind": "facility",
+      "title": "FDA Mammography Quality Standards Act (MQSA) mammography program",
+      "url": "https://www.fda.gov/radiation-emitting-products/mammography-quality-standards-act-mqsa-and-mqsa-program",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.fda.gov"
+    },
+    {
+      "kind": "trial",
+      "title": "Breast Cancer trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Breast%20Neoplasms",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "Prostate Cancer": [
+    {
+      "kind": "core",
+      "title": "Prostate Cancer Symptoms",
+      "url": "https://medlineplus.gov/prostatecancer.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Prostate cancer - Genetics",
+      "url": "https://medlineplus.gov/genetics/condition/prostate-cancer/",
+      "detail": "",
+      "publisher": "MedlinePlus Genetics (GHR)"
+    },
+    {
+      "kind": "core",
+      "title": "Familial prostate carcinoma",
+      "url": "https://rarediseases.info.nih.gov/diseases/4520/familial-prostate-carcinoma",
+      "detail": "",
+      "publisher": "GARD"
+    },
+    {
+      "kind": "core",
+      "title": "Prostate Cancer Treatment (PDQ®)",
+      "url": "https://www.cancer.gov/types/prostate/hp/prostate-treatment-pdq",
+      "detail": "",
+      "publisher": "CancerGov"
+    },
+    {
+      "kind": "core",
+      "title": "Prostate Cancer",
+      "url": "https://www.cdc.gov/prostate-cancer/index.html",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "PROSTATEx",
+      "url": "https://www.cancerimagingarchive.net/collection/prostatex/",
+      "detail": "Modality: Multiparametric prostate MRI, lesion classification. Size: 346 subjects. Access as catalogued: open.",
+      "publisher": "www.cancerimagingarchive.net"
+    },
+    {
+      "kind": "dataset",
+      "title": "TCGA-PRAD/TCIA",
+      "url": "https://www.cancerimagingarchive.net/collection/tcga-prad/",
+      "detail": "Modality: MR, CT, PET with linked clinical, genomic and pathology data. Size: 14 imaging subjects; TCGA target about 500 specimens. Access as catalogued: open.",
+      "publisher": "www.cancerimagingarchive.net"
+    },
+    {
+      "kind": "dataset",
+      "title": "TCGA-PRAD GDC",
+      "url": "https://portal.gdc.cancer.gov/projects/TCGA-PRAD",
+      "detail": "Modality: Clinical, RNA-seq, mutation, CNV, methylation, pathology and other genomics. Size: 500 cases; 32,218 files. Access as catalogued: controlled.",
+      "publisher": "portal.gdc.cancer.gov"
+    },
+    {
+      "kind": "dataset",
+      "title": "fastMRI Prostate",
+      "url": "https://www.nature.com/articles/s41597-024-03252-w",
+      "detail": "Modality: Raw k-space, reconstructed T2/DWI MRI and PI-RADS labels. Size: 312 patients, 1,560 volumes, 47,468 slices. Access as catalogued: registration.",
+      "publisher": "www.nature.com"
+    },
+    {
+      "kind": "dataset",
+      "title": "cBioPortal TCGA PanCancer Atlas prostate study",
+      "url": "https://www.cbioportal.org/study/summary?id=prad_tcga_pan_can_atlas_2018",
+      "detail": "Modality: Clinical and molecular genomics. Size: 494 patients and 494 profiled samples. Access as catalogued: open.",
+      "publisher": "www.cbioportal.org"
+    },
+    {
+      "kind": "tool",
+      "title": "PROSTATEx_masks",
+      "url": "https://github.com/rcuocolo/PROSTATEx_masks",
+      "detail": "github. Lesion and prostate masks for the PROSTATEx training dataset.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "fastMRI_prostate",
+      "url": "https://github.com/cai2r/fastMRI_prostate",
+      "detail": "github. T2/DWI reconstruction and clinically significant cancer classification code.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "idc-prostate-mri-analysis",
+      "url": "https://github.com/ImagingDataCommons/idc-prostate-mri-analysis",
+      "detail": "github. Analysis code for public prostate MRI segmentation methods.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "AbdomenMRUS-csPCa-CAD-nnUNet",
+      "url": "https://github.com/DIAGNijmegen/AbdomenMRUS-csPCa-CAD-nnUNet",
+      "detail": "github. Model for clinically significant prostate cancer detection in biparametric MRI.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "statistics",
+      "title": "NCI SEER Cancer Stat Facts: Prostate Cancer",
+      "url": "https://seer.cancer.gov/statfacts/html/prost.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "seer.cancer.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC Prostate Cancer",
+      "url": "https://www.cdc.gov/prostate-cancer/index.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "EAU Guidelines on Prostate Cancer",
+      "url": "https://uroweb.org/guidelines/prostate-cancer",
+      "detail": "2026",
+      "publisher": "European Association of Urology"
+    },
+    {
+      "kind": "guideline",
+      "title": "Prostate Cancer: Screening",
+      "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/prostate-cancer-screening",
+      "detail": "2018",
+      "publisher": "U.S. Preventive Services Task Force"
+    },
+    {
+      "kind": "guideline",
+      "title": "Early Detection of Prostate Cancer Guideline",
+      "url": "https://www.auanet.org/guidelines-and-quality/guidelines/early-detection-of-prostate-cancer-guidelines",
+      "detail": "2023",
+      "publisher": "American Urological Association/Society of Urologic Oncology"
+    },
+    {
+      "kind": "article",
+      "title": "2022 Update on Prostate Cancer Epidemiology and Risk Factors—A Systematic Review",
+      "url": "https://doi.org/10.1016/j.eururo.2023.04.021",
+      "detail": "2023",
+      "publisher": "doi.org"
+    },
+    {
+      "kind": "article",
+      "title": "Metastatic Prostate Cancer—A Review of Current Treatment Options and Promising New Therapies",
+      "url": "https://doi.org/10.3390/cancers15020461",
+      "detail": "2023",
+      "publisher": "doi.org"
+    },
+    {
+      "kind": "risk",
+      "title": "Prostate Biopsy Collaborative Group (PBCG) Risk Calculator",
+      "url": "https://riskcalc.org/PBCG/",
+      "detail": "",
+      "publisher": "RiskCalc.org; based on Ankerst et al."
+    },
+    {
+      "kind": "education",
+      "title": "Prostate Cancer",
+      "url": "https://training.seer.cancer.gov/prostate/",
+      "detail": "short course",
+      "publisher": "NCI/SEER Training"
+    },
+    {
+      "kind": "education",
+      "title": "Medical Student Curriculum: Prostate Cancer Screening and Management",
+      "url": "https://www.auanet.org/meetings-and-education/for-medical-students/medical-students-curriculum/prostate-cancer/psa",
+      "detail": "short course",
+      "publisher": "American Urological Association"
+    },
+    {
+      "kind": "education",
+      "title": "Translational AI Applications in Prostate Cancer",
+      "url": "https://bioinformatics.ccr.cancer.gov/btep/classes/ai-baris-turkbey--air",
+      "detail": "short course",
+      "publisher": "NCI Center for Cancer Research"
+    },
+    {
+      "kind": "education",
+      "title": "ACGME Urology Residency Program Requirements",
+      "url": "https://www.acgme.org/globalassets/pfassets/programrequirements/2026-prs/480_urology_2026.pdf",
+      "detail": "residency",
+      "publisher": "Accreditation Council for Graduate Medical Education"
+    },
+    {
+      "kind": "facility",
+      "title": "NCI-Designated Cancer Centers",
+      "url": "https://www.cancer.gov/research/infrastructure/cancer-centers/find",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.cancer.gov"
+    },
+    {
+      "kind": "trial",
+      "title": "Prostate Cancer trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Prostate%20Cancer",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "Stroke": [
+    {
+      "kind": "core",
+      "title": "Stroke / CVA / Cerebrovascular Accident",
+      "url": "https://medlineplus.gov/stroke.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Stroke Overview",
+      "url": "https://www.ninds.nih.gov/health-information/stroke/stroke-overview",
+      "detail": "",
+      "publisher": "NINDS"
+    },
+    {
+      "kind": "core",
+      "title": "Stroke",
+      "url": "https://www.nia.nih.gov/health/stroke",
+      "detail": "",
+      "publisher": "NIA (NIHSeniorHealth successor)"
+    },
+    {
+      "kind": "core",
+      "title": "Diabetes, Heart Disease, & Stroke",
+      "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/heart-disease-stroke",
+      "detail": "",
+      "publisher": "NIDDK"
+    },
+    {
+      "kind": "core",
+      "title": "Definition of stroke",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-terms/def/stroke",
+      "detail": "",
+      "publisher": "CancerGov"
+    },
+    {
+      "kind": "core",
+      "title": "What Is a Stroke?",
+      "url": "https://www.nhlbi.nih.gov/health/stroke",
+      "detail": "",
+      "publisher": "NHLBI"
+    },
+    {
+      "kind": "core",
+      "title": "Stroke",
+      "url": "https://www.cdc.gov/stroke/index.html",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "ATLAS v2.0 (Anatomical Tracings of Lesions After Stroke)",
+      "url": "https://fcon_1000.projects.nitrc.org/indi/retro/atlas.html",
+      "detail": "Modality: T1-weighted structural MRI with lesion masks and metadata. Size: 955 scans: 655 public training and 300 hidden test. Access as catalogued: registration.",
+      "publisher": "fcon_1000.projects.nitrc.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "ISLES 2022",
+      "url": "https://www.nature.com/articles/s41597-022-01875-5",
+      "detail": "Modality: Multimodal MRI: DWI, ADC and FLAIR, with infarct segmentation masks. Size: 400 cases: 250 public training and 150 test not publicly released. Access as catalogued: open.",
+      "publisher": "www.nature.com"
+    },
+    {
+      "kind": "dataset",
+      "title": "Annotated Clinical MRIs and Linked Metadata of Patients with Acute Stroke (ICPSR 38464)",
+      "url": "https://www.icpsr.umich.edu/web/ADDEP/studies/38464",
+      "detail": "Modality: 2,888 multimodal clinical MRIs in NIfTI/BIDS format with DWI lesion masks and clinical metadata. Size: 2,888 MRI studies. Access as catalogued: controlled.",
+      "publisher": "www.icpsr.umich.edu"
+    },
+    {
+      "kind": "dataset",
+      "title": "NIHSS Annotations for the MIMIC-III Database",
+      "url": "https://physionet.org/content/stroke-scale-mimic-iii/",
+      "detail": "Modality: Annotated clinical free-text discharge summaries for NLP. Size: 312 stroke patients, 2,929 NIHSS items. Access as catalogued: registration.",
+      "publisher": "physionet.org"
+    },
+    {
+      "kind": "tool",
+      "title": "Acute-stroke_Detection_Segmentation",
+      "url": "https://github.com/Chin-Fu-Liu/Acute-stroke_Detection_Segmentation",
+      "detail": "github. Deep-learning detection and segmentation of acute and subacute ischemic stroke in diffusion-weighted MRI; repository reports training/testing on 2,348",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "NIHSS_IE",
+      "url": "https://github.com/huangxiaoshuo/NIHSS_IE",
+      "detail": "github. Information extraction of NIH Stroke Scale items and values from MIMIC-III discharge summaries.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC Stroke Facts",
+      "url": "https://www.cdc.gov/stroke/data-research/facts-stats/",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC WONDER/NCHS mortality data (linked from CDC Stroke Facts)",
+      "url": "https://wonder.cdc.gov/mcd.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "wonder.cdc.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "2024 Guideline for the Primary Prevention of Stroke",
+      "url": "https://www.ahajournals.org/doi/10.1161/STR.0000000000000475",
+      "detail": "2024",
+      "publisher": "American Heart Association/American Stroke Association"
+    },
+    {
+      "kind": "guideline",
+      "title": "2021 Guideline for the Prevention of Stroke in Patients With Stroke and Transient Ischemic Attack",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34024117/",
+      "detail": "2021",
+      "publisher": "American Heart Association/American Stroke Association"
+    },
+    {
+      "kind": "guideline",
+      "title": "2022 Guideline for the Management of Patients With Spontaneous Intracerebral Hemorrhage",
+      "url": "https://www.ahajournals.org/doi/10.1161/STR.0000000000000407",
+      "detail": "2022",
+      "publisher": "American Heart Association/American Stroke Association"
+    },
+    {
+      "kind": "article",
+      "title": "ISLES 2022: A multi-center magnetic resonance imaging stroke lesion segmentation dataset",
+      "url": "https://doi.org/10.1038/s41597-022-01875-5",
+      "detail": "2022",
+      "publisher": "doi.org"
+    },
+    {
+      "kind": "article",
+      "title": "A large public dataset of annotated clinical MRIs and metadata of patients with acute stroke",
+      "url": "https://doi.org/10.1038/s41597-023-02457-9",
+      "detail": "2023",
+      "publisher": "doi.org"
+    },
+    {
+      "kind": "risk",
+      "title": "PREVENT Online Calculator",
+      "url": "https://professional.heart.org/en/guidelines-and-statements/prevent-calculator",
+      "detail": "",
+      "publisher": "American Heart Association"
+    },
+    {
+      "kind": "risk",
+      "title": "QRISK3",
+      "url": "https://qrisk.org/",
+      "detail": "",
+      "publisher": "UK National Health Service doctors and academics/QResearch collaborators"
+    },
+    {
+      "kind": "education",
+      "title": "Stroke CME: Prevention, Treatment and Recovery",
+      "url": "https://edhub.ama-assn.org/course/346",
+      "detail": "CME",
+      "publisher": "American Medical Association Ed Hub"
+    },
+    {
+      "kind": "education",
+      "title": "Vascular Neurology Program Requirements",
+      "url": "https://www.acgme.org/globalassets/pfassets/programrequirements/2025-reformatted-requirements/188_vascularneurology_2025_reformatted.pdf",
+      "detail": "fellowship",
+      "publisher": "Accreditation Council for Graduate Medical Education"
+    },
+    {
+      "kind": "education",
+      "title": "Vascular Neurology Fellowship Program",
+      "url": "https://medicine.uky.edu/departments/neurology/vascular-neurology-fellowship",
+      "detail": "fellowship",
+      "publisher": "University of Kentucky"
+    },
+    {
+      "kind": "education",
+      "title": "Vascular Neurology / Stroke Fellowship",
+      "url": "https://medschool.umich.edu/departments/neurology/education/fellowships-advanced-training-programs/vascular-neurology-stroke",
+      "detail": "fellowship",
+      "publisher": "University of Michigan Medical School"
+    },
+    {
+      "kind": "facility",
+      "title": "Joint Commission Acute Stroke Ready Hospital, Primary Stroke Center, Thrombectomy-Capable Stroke Center, and Comprehensive Stroke Center certifications",
+      "url": "https://www.jointcommission.org/en-us/certification/stroke",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.jointcommission.org"
+    },
+    {
+      "kind": "facility",
+      "title": "Joint Commission accredited and certified organizations directory",
+      "url": "https://www.jointcommission.org/en-us/about-us/recognizing-excellence/find-accredited-organizations",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.jointcommission.org"
+    },
+    {
+      "kind": "trial",
+      "title": "Stroke trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Stroke",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "Skin Cancer": [
+    {
+      "kind": "core",
+      "title": "Skin Cancer / Basal Cell Carcinoma",
+      "url": "https://medlineplus.gov/skincancer.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Melanoma",
+      "url": "https://medlineplus.gov/genetics/condition/melanoma/",
+      "detail": "",
+      "publisher": "MedlinePlus Genetics (GHR)"
+    },
+    {
+      "kind": "core",
+      "title": "Skin Cancer (Including Melanoma)—Patient Version",
+      "url": "https://www.cancer.gov/types/skin",
+      "detail": "",
+      "publisher": "CancerGov"
+    },
+    {
+      "kind": "core",
+      "title": "Skin Cancer Basics",
+      "url": "https://www.cdc.gov/skin-cancer/about/index.html",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "ISIC 2016 Challenge Task 3",
+      "url": "https://challenge.isic-archive.com/data/",
+      "detail": "Modality: 900 dermoscopic JPEG lesion images, segmentation masks, and malignant- status labels. Size: 900 training images. Access as catalogued: open.",
+      "publisher": "challenge.isic-archive.com"
+    },
+    {
+      "kind": "dataset",
+      "title": "HAM10000 / ISIC 2018 Challenge Task 3 Training",
+      "url": "https://api.isic-archive.com/collections/66/",
+      "detail": "Modality: Dermatoscopic lesion images with lesion diagnoses. Size: 10,015 images; 7,470 specified lesions. Access as catalogued: open.",
+      "publisher": "api.isic-archive.com"
+    },
+    {
+      "kind": "dataset",
+      "title": "MRA-MIDAS",
+      "url": "https://aimi.stanford.edu/datasets/mra-midas-Multimodal-Image-Dataset-for-AI-based-Skin-Cancer",
+      "detail": "Modality: Paired clinical and dermoscopic photographs, patient-level metadata, and histopathology. Size: Public dataset; landing page does not state one total image count. Access as catalogued: open.",
+      "publisher": "aimi.stanford.edu"
+    },
+    {
+      "kind": "dataset",
+      "title": "Falah/skin-cancer",
+      "url": "https://huggingface.co/datasets/Falah/skin-cancer",
+      "detail": "Modality: Skin-cancer images with benign/malignant labels. Size: 2,637 rows/images. Access as catalogued: registration.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "tool",
+      "title": "melanoma-segmentation-and-classification",
+      "url": "https://github.com/SantiagoM99/melanoma-segmentation-and-classification",
+      "detail": "github. Deep-learning lesion segmentation and classification using U-Net/transformer- style models; research code, not a clinical device.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "unet-skin-cancer",
+      "url": "https://github.com/pooya-mohammadi/unet-skin-cancer",
+      "detail": "github. ISIC 2016 skin-lesion segmentation experiments with U-Net variants and augmentation.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "EfficientNetV2S Skin Cancer Classifier",
+      "url": "https://huggingface.co/Miguel764/efficientnetv2s-skin-cancer-classifier",
+      "detail": "huggingface. HAM10000-trained seven-class lesion classifier; model card reports research metrics and does not establish clinical validation.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "statistics",
+      "title": "SEER Cancer Stat Facts: Melanoma of the Skin",
+      "url": "https://seer.cancer.gov/statfacts/html/melan.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "seer.cancer.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC Melanoma Dashboard",
+      "url": "https://ephtracking.cdc.gov/Applications/melanomadashboard/",
+      "detail": "Statistics and surveillance source",
+      "publisher": "ephtracking.cdc.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "NCCN Guidelines Insights: Melanoma: Cutaneous, Version 2.2024",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39019054/",
+      "detail": "2024",
+      "publisher": "NCCN"
+    },
+    {
+      "kind": "guideline",
+      "title": "Basal Cell Skin Cancer, Version 2.2024",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37935106/",
+      "detail": "2023",
+      "publisher": "NCCN"
+    },
+    {
+      "kind": "guideline",
+      "title": "Systemic Therapy for Melanoma: ASCO Guideline Update",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37579248/",
+      "detail": "2023",
+      "publisher": "American Society of Clinical Oncology"
+    },
+    {
+      "kind": "guideline",
+      "title": "Skin Cancer: Screening",
+      "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/skin-cancer-screening",
+      "detail": "2023",
+      "publisher": "U.S. Preventive Services Task Force"
+    },
+    {
+      "kind": "article",
+      "title": "Systemic Therapy for Melanoma: ASCO Guideline Update",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37579248/",
+      "detail": "2023",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "NCCN Guidelines Insights: Melanoma: Cutaneous, Version 2.2024",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39019054/",
+      "detail": "2024",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "Basal Cell Skin Cancer, Version 2.2024",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37935106/",
+      "detail": "2023",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "risk",
+      "title": "Melanoma Risk Assessment Tool (MRAT)",
+      "url": "https://mrisktool.cancer.gov/about.html",
+      "detail": "",
+      "publisher": "National Cancer Institute"
+    },
+    {
+      "kind": "education",
+      "title": "Advanced Imaging Techniques for Skin Cancer Diagnosis and Reduction of Unnecessary Biopsies",
+      "url": "https://learning.aad.org/Listing/Advanced-Imaging-Techniques-for-Skin-Cancer-Diagnosis-and-Reduction-Of-Unnecessary-Biopsies-19312",
+      "detail": "CME",
+      "publisher": "American Academy of Dermatology"
+    },
+    {
+      "kind": "education",
+      "title": "Skin Cancer: Melanoma",
+      "url": "https://training.seer.cancer.gov/melanoma/",
+      "detail": "short course",
+      "publisher": "National Cancer Institute SEER Training"
+    },
+    {
+      "kind": "education",
+      "title": "Dermatology Residency",
+      "url": "https://medschool.cuanschutz.edu/dermatology/education/15",
+      "detail": "residency",
+      "publisher": "University of Colorado School of Medicine"
+    },
+    {
+      "kind": "education",
+      "title": "Micrographic Surgery and Dermatologic Oncology Fellowship",
+      "url": "https://www.abderm.org/residents-and-fellows/fellowship-training/micrographic-surgery-and-dermatologic-oncology",
+      "detail": "fellowship",
+      "publisher": "American Board of Dermatology / ACGME pathway"
+    },
+    {
+      "kind": "facility",
+      "title": "NCI-Designated Cancer Centers",
+      "url": "https://www.cancer.gov/research/infrastructure/cancer-centers/find",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.cancer.gov"
+    },
+    {
+      "kind": "trial",
+      "title": "Skin Cancer trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Skin%20Neoplasms",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "Alzheimer's Disease": [
+    {
+      "kind": "core",
+      "title": "Alzheimer's Disease",
+      "url": "https://medlineplus.gov/alzheimersdisease.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Alzheimer disease",
+      "url": "https://medlineplus.gov/genetics/condition/alzheimers-disease/",
+      "detail": "",
+      "publisher": "MedlinePlus Genetics (GHR)"
+    },
+    {
+      "kind": "core",
+      "title": "Early-onset autosomal dominant Alzheimer disease",
+      "url": "https://rarediseases.info.nih.gov/diseases/12798/early-onset-autosomal-dominant-alzheimer-disease",
+      "detail": "",
+      "publisher": "GARD"
+    },
+    {
+      "kind": "core",
+      "title": "Alzheimer's Disease",
+      "url": "https://www.ninds.nih.gov/health-information/disorders/alzheimers-disease",
+      "detail": "",
+      "publisher": "NINDS"
+    },
+    {
+      "kind": "core",
+      "title": "Alzheimer's Disease Fact Sheet",
+      "url": "https://www.nia.nih.gov/health/alzheimers-and-dementia/alzheimers-disease-fact-sheet",
+      "detail": "",
+      "publisher": "NIA (NIHSeniorHealth successor)"
+    },
+    {
+      "kind": "core",
+      "title": "Definition of Alzheimer disease",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-terms/def/alzheimer-disease",
+      "detail": "",
+      "publisher": "CancerGov"
+    },
+    {
+      "kind": "core",
+      "title": "About Alzheimer's",
+      "url": "https://www.cdc.gov/alzheimers-dementia/about/alzheimers.html",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "Alzheimer's Disease Neuroimaging Initiative (ADNI)",
+      "url": "https://adni.loni.usc.edu/data-samples/adni-data/",
+      "detail": "Modality: Longitudinal clinical, cognitive, structural/functional/molecular imaging, biofluid biomarkers, genetics, demographics. Size: Large longitudinal collection; participant total not stated on the opened page. Access as catalogued: registration.",
+      "publisher": "adni.loni.usc.edu"
+    },
+    {
+      "kind": "dataset",
+      "title": "National Alzheimer's Coordinating Center (NACC)",
+      "url": "https://www.naccdata.org/",
+      "detail": "Modality: Clinical assessments, neuropathology, MRI/PET, genetics, biomarkers. Size: 54,000+ participants; 201,000 clinical assessments; 8,300+ neuropathology exams; 15,000+ MRI/PET participants. Access as catalogued: registration.",
+      "publisher": "www.naccdata.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "Open Access Series of Imaging Studies (OASIS-3/4)",
+      "url": "https://sites.wustl.edu/oasisbrains/",
+      "detail": "Modality: Multimodal MRI, clinical, cognitive, biomarker, and memory-complaint cohorts. Size: Multiple releases; exact current participant total not stated on the opened page. Access as catalogued: registration.",
+      "publisher": "sites.wustl.edu"
+    },
+    {
+      "kind": "dataset",
+      "title": "UK Biobank imaging data",
+      "url": "https://www.ukbiobank.ac.uk/about-our-data/types-of-data/imaging-data/",
+      "detail": "Modality: Brain MRI and other imaging linked to genetics, lifestyle, biomarkers, and health records. Size: 100,000 participants with imaging currently available; 3,000 repeat images. Access as catalogued: controlled.",
+      "publisher": "www.ukbiobank.ac.uk"
+    },
+    {
+      "kind": "dataset",
+      "title": "Australian Imaging, Biomarkers and Lifestyle (AIBL) Study",
+      "url": "https://aibl.org.au/",
+      "detail": "Modality: Longitudinal cognition, blood/CSF biomarkers, nuclear and structural neuroimaging, mood and lifestyle. Size: 3,045 participants and 10,494 person-contact years (February 2023). Access as catalogued: registration.",
+      "publisher": "aibl.org.au"
+    },
+    {
+      "kind": "dataset",
+      "title": "Falah/Alzheimer_MRI",
+      "url": "https://huggingface.co/datasets/Falah/Alzheimer_MRI",
+      "detail": "Modality: 128x128 brain MRI image classification. Size: 6,400 images: 5,120 train and 1,280 test; four labels. Access as catalogued: open.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "tool",
+      "title": "Alzheimer_Detection",
+      "url": "https://github.com/mrinoybanerjee/Alzheimer_Detection",
+      "detail": "github. MRI detection experiments using CNN/ResNet, EfficientNet, and vision transformers.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "Using-Machine-Learning-to-Predict-Alzheimer-s-Disease",
+      "url": "https://github.com/catedombrowski/Using-Machine-Learning-to-Predict-Alzheimer-s-Disease",
+      "detail": "github. OASIS-based MRI classification and machine-learning notebooks.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "Fine-Tuning ResNet50 for Alzheimer's MRI Classification",
+      "url": "https://huggingface.co/Fawazzx/alzheimer_classification_using_resnet50_finetuned",
+      "detail": "huggingface. ResNet50 notebook/model for four-stage MRI classification using Falah/Alzheimer_MRI.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC Alzheimer's Disease and Healthy Aging Data Portal",
+      "url": "https://www.cdc.gov/healthy-aging-data/data-portal/index.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC Alzheimer's Disease Mortality / Stats of the States",
+      "url": "https://www.cdc.gov/nchs/state-stats/deaths/alzheimers.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "Criteria for Diagnosis and Staging of Alzheimer's Disease (2024 revised criteria)",
+      "url": "https://www.alz.org/research/for_researchers/diagnostic-criteria-guidelines",
+      "detail": "2024",
+      "publisher": "National Institute on Aging– Alzheimer's Association workgroup"
+    },
+    {
+      "kind": "guideline",
+      "title": "Cognitive Impairment in Older Adults: Screening",
+      "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/cognitive-impairment-in-older-adults-screening",
+      "detail": "2020",
+      "publisher": "U.S. Preventive Services Task Force"
+    },
+    {
+      "kind": "article",
+      "title": "Lecanemab in Early Alzheimer's Disease",
+      "url": "https://www.nejm.org/doi/full/10.1056/NEJMoa2212948",
+      "detail": "2022/2023",
+      "publisher": "www.nejm.org"
+    },
+    {
+      "kind": "article",
+      "title": "Trial of Donanemab in Early Symptomatic Alzheimer Disease: The TRAILBLAZER- ALZ 2 Randomized Clinical Trial",
+      "url": "https://jamanetwork.com/journals/jama/fullarticle/2807533",
+      "detail": "2023",
+      "publisher": "jamanetwork.com"
+    },
+    {
+      "kind": "article",
+      "title": "Criteria for Diagnosis and Staging of Alzheimer's Disease",
+      "url": "https://www.alz.org/research/for_researchers/diagnostic-criteria-guidelines",
+      "detail": "2024",
+      "publisher": "www.alz.org"
+    },
+    {
+      "kind": "risk",
+      "title": "Alzheimer Dementia Calculator",
+      "url": "https://alzheimerdementiacalculator.wustl.edu/",
+      "detail": "",
+      "publisher": "Washington University in St. Louis"
+    },
+    {
+      "kind": "risk",
+      "title": "CAIDE Dementia Risk Score",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4878198/",
+      "detail": "",
+      "publisher": "CAIDE investigators; described by Sindi et al."
+    },
+    {
+      "kind": "education",
+      "title": "Public Health and Dementia Curriculum",
+      "url": "https://www.cdc.gov/aging-programs/php/training/index.html",
+      "detail": "short course",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "education",
+      "title": "American College of Preventive Medicine online brain health course",
+      "url": "https://www.cdc.gov/aging-programs/php/training/index.html",
+      "detail": "CME",
+      "publisher": "ACPM via CDC training page"
+    },
+    {
+      "kind": "education",
+      "title": "Training Curriculum: Alzheimer's Disease and Related Dementias",
+      "url": "https://www.nia.nih.gov/health/health-care-professionals-information/alzheimers-and-related-dementias-resources",
+      "detail": "short course",
+      "publisher": "HRSA Bureau of Health Workforce via NIA"
+    },
+    {
+      "kind": "education",
+      "title": "Living with Dementia: Impact on Individuals, Caregivers, Communities and Society",
+      "url": "https://www.coursera.org/learn/dementia-care",
+      "detail": "MOOC",
+      "publisher": "Coursera"
+    },
+    {
+      "kind": "education",
+      "title": "Geriatric Neurology Fellowship",
+      "url": "https://medschool.uci.edu/research/clinical-departments/neurology/education-training/fellowship-programs/geriatric-neurology",
+      "detail": "fellowship",
+      "publisher": "University of California, Irvine"
+    },
+    {
+      "kind": "facility",
+      "title": "NIA-funded Alzheimer's Disease Research Centers (ADRCs)",
+      "url": "https://www.nia.nih.gov/health/clinical-trials-and-studies/find-alzheimers-disease-research-center",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.nia.nih.gov"
+    },
+    {
+      "kind": "trial",
+      "title": "Alzheimer's Disease trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Alzheimer%20Disease",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "Colorectal Cancer": [
+    {
+      "kind": "core",
+      "title": "Colorectal Cancer / Colon Cancer / Rectal Cancer",
+      "url": "https://medlineplus.gov/colorectalcancer.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Lynch syndrome",
+      "url": "https://medlineplus.gov/genetics/condition/lynch-syndrome/",
+      "detail": "",
+      "publisher": "MedlinePlus Genetics (GHR)"
+    },
+    {
+      "kind": "core",
+      "title": "Familial colorectal cancer type X",
+      "url": "https://rarediseases.info.nih.gov/diseases/21840/familial-colorectal-cancer-type-x",
+      "detail": "",
+      "publisher": "GARD"
+    },
+    {
+      "kind": "core",
+      "title": "Chapter 8: Cancer of the Colon & Rectum",
+      "url": "https://www.niddk.nih.gov/about-niddk/strategic-plans-reports/burden-of-digestive-diseases-in-united-states/cancer-colon-rectum",
+      "detail": "",
+      "publisher": "NIDDK"
+    },
+    {
+      "kind": "core",
+      "title": "Colorectal Cancer Screening (PDQ)–Patient Version",
+      "url": "https://www.cancer.gov/types/colorectal/patient/colorectal-screening-pdq",
+      "detail": "",
+      "publisher": "CancerGov"
+    },
+    {
+      "kind": "core",
+      "title": "Screening for Colorectal Cancer",
+      "url": "https://www.cdc.gov/colorectal-cancer/screening/index.html",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "TCGA-COAD (GDC)",
+      "url": "https://portal.gdc.cancer.gov/projects/TCGA-COAD",
+      "detail": "Modality: genomic, clinical, biospecimen, diagnostic/tissue slide. Size: 461 cases; 29,242 files. Access as catalogued: controlled.",
+      "publisher": "portal.gdc.cancer.gov"
+    },
+    {
+      "kind": "dataset",
+      "title": "TCGA-READ (GDC)",
+      "url": "https://portal.gdc.cancer.gov/projects/TCGA-READ",
+      "detail": "Modality: genomic, clinical, biospecimen, diagnostic/tissue slide. Size: 172 cases; 10,387 files. Access as catalogued: controlled.",
+      "publisher": "portal.gdc.cancer.gov"
+    },
+    {
+      "kind": "dataset",
+      "title": "NCT-CRC-HE-100K and CRC- VAL-HE-7K",
+      "url": "https://zenodo.org/records/1214456",
+      "detail": "Modality: H&E histopathology image patches. Size: 100,000 training patches plus 7,180 validation patches from 50 patients. Access as catalogued: open.",
+      "publisher": "zenodo.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "Kather texture collection",
+      "url": "https://zenodo.org/records/53169",
+      "detail": "Modality: RGB colorectal histology tiles and large images. Size: 5,000 150x150 tiles plus 10 large 5000x5000 images. Access as catalogued: open.",
+      "publisher": "zenodo.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "CPTAC-COAD (TCIA)",
+      "url": "https://www.cancerimagingarchive.net/collection/cptac-coad/",
+      "detail": "Modality: histopathology whole-slide images linked to clinical/genomic/proteomic resources. Size: 106 subjects. Access as catalogued: open.",
+      "publisher": "www.cancerimagingarchive.net"
+    },
+    {
+      "kind": "tool",
+      "title": "jnkather/histology-multiclass-texture",
+      "url": "https://github.com/jnkather/histology-multiclass-texture",
+      "detail": "github. MATLAB source and trained classifier for multiclass colorectal histology texture classification.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "xiey1/Colorectal_Histology_MNIST",
+      "url": "https://github.com/xiey1/Colorectal_Histology_MNIST",
+      "detail": "github. CNN and transfer-learning examples using 5,000 eight-class tissue images.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "zeeshanalipanhwar/Texture-Classification-in-Colorectal- Cancer-Histology",
+      "url": "https://github.com/zeeshanalipanhwar/Texture-Classification-in-Colorectal-Cancer-Histology",
+      "detail": "github. ResNet/CNN examples using 150x150 RGB colorectal histology tiles.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "kamaludeen/fututech-colorectal-cancer",
+      "url": "https://huggingface.co/datasets/kamaludeen/fututech-colorectal-cancer",
+      "detail": "huggingface. Tabular gut-microbiome colorectal cancer dataset; Hugging Face size category under 1,000 rows.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "statistics",
+      "title": "NCI SEER Cancer Stat Facts: Colorectal Cancer",
+      "url": "https://seer.cancer.gov/statfacts/html/colorect.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "seer.cancer.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC Colorectal Cancer Statistics / U.S. Cancer Statistics Data Visualizations",
+      "url": "https://www.cdc.gov/colorectal-cancer/statistics/index.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "Colorectal Cancer: Screening",
+      "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/colorectal-cancer-screening",
+      "detail": "2021",
+      "publisher": "U.S. Preventive Services Task Force"
+    },
+    {
+      "kind": "guideline",
+      "title": "NCCN Clinical Practice Guidelines in Oncology",
+      "url": "https://www.nccn.org/guidelines/category_1",
+      "detail": "current portal; versions change",
+      "publisher": "National Comprehensive Cancer Network"
+    },
+    {
+      "kind": "guideline",
+      "title": "ESMO Living Guideline: Metastatic Colorectal Cancer",
+      "url": "https://www.esmo.org/guidelines/living-guidelines/esmo-living-guideline-metastatic-colorectal-cancer",
+      "detail": "2026",
+      "publisher": "European Society for Medical Oncology"
+    },
+    {
+      "kind": "article",
+      "title": "Pembrolizumab versus chemotherapy for MSI-H or dMMR metastatic colorectal cancer: final analysis of KEYNOTE-177",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35427471/",
+      "detail": "2022",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "Neoadjuvant Pembrolizumab in Localized Microsatellite Instability-High/Deficient Mismatch Repair Solid Tumors",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36623241/",
+      "detail": "2023",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "Neoadjuvant Immunotherapy in Locally Advanced Mismatch Repair-Deficient Colon Cancer (NICHE-2)",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38838311/",
+      "detail": "2024",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "risk",
+      "title": "Colorectal Cancer Risk Assessment Tool (CCRAT)",
+      "url": "https://ccrisktool.cancer.gov/about.html",
+      "detail": "",
+      "publisher": "National Cancer Institute"
+    },
+    {
+      "kind": "education",
+      "title": "Colorectal Cancer",
+      "url": "https://training.seer.cancer.gov/colorectal/",
+      "detail": "short course",
+      "publisher": "NCI/SEER Training Modules"
+    },
+    {
+      "kind": "education",
+      "title": "Introduction to the Biology of Cancer",
+      "url": "https://www.coursera.org/learn/cancer",
+      "detail": "MOOC",
+      "publisher": "Johns Hopkins University via Coursera"
+    },
+    {
+      "kind": "education",
+      "title": "Screening for Colorectal Cancer: Recommended Best Practices; CRC Screening and Surveillance: Optimizing Quality",
+      "url": "https://nccrt.org/resource/screening-colorectal-cancer-optimizing-quality-cme/",
+      "detail": "CME",
+      "publisher": "CDC and Medscape Education"
+    },
+    {
+      "kind": "education",
+      "title": "Colon and Rectal Surgery",
+      "url": "https://www.acgme.org/specialties/colon-and-rectal-surgery/overview/",
+      "detail": "residency",
+      "publisher": "ACGME"
+    },
+    {
+      "kind": "education",
+      "title": "Colon and Rectal Surgery Fellowship",
+      "url": "https://surgery.weill.cornell.edu/education-and-training/fellowships/colon-and-rectal-surgery-fellowship",
+      "detail": "fellowship",
+      "publisher": "Weill Cornell Medicine"
+    },
+    {
+      "kind": "facility",
+      "title": "NCI-Designated Cancer Centers",
+      "url": "https://www.cancer.gov/research/infrastructure/cancer-centers",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.cancer.gov"
+    },
+    {
+      "kind": "trial",
+      "title": "Colorectal Cancer trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Colorectal%20Cancer",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "Lung Cancer": [
+    {
+      "kind": "core",
+      "title": "Lung Cancer Symptoms",
+      "url": "https://medlineplus.gov/lungcancer.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Lung cancer",
+      "url": "https://medlineplus.gov/genetics/condition/lung-cancer/",
+      "detail": "",
+      "publisher": "MedlinePlus Genetics (GHR)"
+    },
+    {
+      "kind": "core",
+      "title": "Lung Cancer—Health Professional Version",
+      "url": "https://www.cancer.gov/types/lung/hp",
+      "detail": "",
+      "publisher": "CancerGov"
+    },
+    {
+      "kind": "core",
+      "title": "Screening for Lung Cancer",
+      "url": "https://www.cdc.gov/lung-cancer/screening/index.html",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "LIDC-IDRI",
+      "url": "https://www.cancerimagingarchive.net/collection/lidc-idri/",
+      "detail": "Modality: Thoracic CT with radiologist nodule annotations and diagnosis metadata. Size: 1,010 subjects; 1,018 cases. Access as catalogued: open.",
+      "publisher": "www.cancerimagingarchive.net"
+    },
+    {
+      "kind": "dataset",
+      "title": "TCIA TCGA-LUAD",
+      "url": "https://www.cancerimagingarchive.net/collection/tcga-luad/",
+      "detail": "Modality: CT, PET, nuclear medicine with matched clinical/genomic context. Size: 69 imaging subjects. Access as catalogued: open.",
+      "publisher": "www.cancerimagingarchive.net"
+    },
+    {
+      "kind": "dataset",
+      "title": "GDC TCGA-LUAD",
+      "url": "https://portal.gdc.cancer.gov/projects/tcga-luad",
+      "detail": "Modality: Clinical and genomics: RNA-seq, WES, copy number, methylation, proteomics and pathology. Size: 585 cases; 36,740 files. Access as catalogued: controlled.",
+      "publisher": "portal.gdc.cancer.gov"
+    },
+    {
+      "kind": "dataset",
+      "title": "nateraw/lung-cancer",
+      "url": "https://huggingface.co/datasets/nateraw/lung-cancer",
+      "detail": "Modality: Tabular CSV/text features. Size: Less than 1,000 rows (Hugging Face size category n<1K). Access as catalogued: open.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "tool",
+      "title": "dv-123/Lung_cancer",
+      "url": "https://github.com/dv-123/Lung_cancer",
+      "detail": "github. Computer vision and machine learning for chest radiographs and malignant lung nodules; research code.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "jeetmehta/Lung-Cancer-Classification",
+      "url": "https://github.com/jeetmehta/Lung-Cancer-Classification",
+      "detail": "github. Machine-learning and image-processing project for CT-scan lung-cancer classification; research code.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "nateraw/lung-cancer",
+      "url": "https://huggingface.co/datasets/nateraw/lung-cancer",
+      "detail": "huggingface. Small tabular lung-cancer dataset for exploratory ML; not a clinical validation set.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "statistics",
+      "title": "SEER Cancer Stat Facts: Lung and Bronchus Cancer",
+      "url": "https://seer.cancer.gov/statfacts/html/lungb.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "seer.cancer.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "NCI Lung Cancer Screening PDQ evidence summary",
+      "url": "https://www.cancer.gov/types/lung/hp/lung-screening-pdq",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cancer.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "Non-Small Cell Lung Cancer Treatment (PDQ)",
+      "url": "https://www.cancer.gov/types/lung/hp/non-small-cell-lung-treatment-pdq",
+      "detail": "continuously updated",
+      "publisher": "National Cancer Institute"
+    },
+    {
+      "kind": "guideline",
+      "title": "Small Cell Lung Cancer Treatment (PDQ)",
+      "url": "https://www.cancer.gov/types/lung/hp/small-cell-lung-treatment-pdq",
+      "detail": "continuously updated",
+      "publisher": "National Cancer Institute"
+    },
+    {
+      "kind": "guideline",
+      "title": "Non-Small Cell Lung Cancer, Version 4.2024",
+      "url": "https://www.nccn.org/guidelines/guidelines-detail?category=1&id=1450",
+      "detail": "2024",
+      "publisher": "National Comprehensive Cancer Network"
+    },
+    {
+      "kind": "guideline",
+      "title": "Lung Cancer: Screening",
+      "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/lung-cancer-screening",
+      "detail": "2021",
+      "publisher": "U.S. Preventive Services Task Force"
+    },
+    {
+      "kind": "article",
+      "title": "Evaluation of the accuracy of the PLCOm2012 6-year lung cancer risk prediction model among smokers in the CARTaGENE population-based cohort",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10095260/",
+      "detail": "2023",
+      "publisher": "pmc.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "Lung Cancer Screening (PDQ): evidence from NLST and NELSON LDCT trials",
+      "url": "https://www.cancer.gov/types/lung/hp/lung-screening-pdq",
+      "detail": "2025",
+      "publisher": "www.cancer.gov"
+    },
+    {
+      "kind": "risk",
+      "title": "PLCOm2012 six-year lung-cancer risk model",
+      "url": "https://www.evidencio.com/models/show/993",
+      "detail": "",
+      "publisher": "Research authors led by Martin C. Tammemägi; public implementation by Evidencio"
+    },
+    {
+      "kind": "education",
+      "title": "Introduction to the Biology of Cancer",
+      "url": "https://www.coursera.org/learn/cancer",
+      "detail": "MOOC",
+      "publisher": "Johns Hopkins University / Coursera"
+    },
+    {
+      "kind": "education",
+      "title": "Basic Concepts of Lung Cancer: Diagnosis and Treatment",
+      "url": "https://www.coursera.org/learn/lung-cancer",
+      "detail": "MOOC",
+      "publisher": "Coursera"
+    },
+    {
+      "kind": "education",
+      "title": "Practical Management of Lung Cancer",
+      "url": "https://ce.mayo.edu/pulmonary-medicine/content/practical-management-lung-cancer",
+      "detail": "CME",
+      "publisher": "Mayo Clinic School of Continuous Professional Development"
+    },
+    {
+      "kind": "education",
+      "title": "ACGME-certified Thoracic Surgery Fellowship Program",
+      "url": "https://medicine.temple.edu/departments-centers/clinical-departments/thoracic-medicine-surgery/fellowship-programs/thoracic-surgery-fellowship/acgme-accredited-thoracic-fellowship-program",
+      "detail": "fellowship",
+      "publisher": "Temple University Hospital"
+    },
+    {
+      "kind": "education",
+      "title": "Thoracic Surgery Independent Program Requirements",
+      "url": "https://www.acgme.org/globalassets/pfassets/programrequirements/2025-reformatted-requirements/460_thoracicsurgeryindependent_2025_reformatted.pdf",
+      "detail": "residency",
+      "publisher": "Accreditation Council for Graduate Medical Education"
+    },
+    {
+      "kind": "facility",
+      "title": "NCI-Designated Cancer Centers",
+      "url": "https://www.cancer.gov/research/infrastructure/cancer-centers",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.cancer.gov"
+    },
+    {
+      "kind": "trial",
+      "title": "Lung Cancer trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Lung%20Neoplasms",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "High Blood Cholesterol": [
+    {
+      "kind": "core",
+      "title": "High Cholesterol",
+      "url": "https://medlineplus.gov/cholesterol.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Familial Hypercholesterolemia",
+      "url": "https://medlineplus.gov/genetics/condition/familial-hypercholesterolemia/",
+      "detail": "",
+      "publisher": "MedlinePlus Genetics (GHR)"
+    },
+    {
+      "kind": "core",
+      "title": "Blood Cholesterol",
+      "url": "https://www.nhlbi.nih.gov/health/blood-cholesterol",
+      "detail": "",
+      "publisher": "NHLBI"
+    },
+    {
+      "kind": "core",
+      "title": "About Cholesterol",
+      "url": "https://www.cdc.gov/cholesterol/about/index.html",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "NHANES 2017-March 2020 pre-pandemic total cholesterol laboratory file",
+      "url": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2017/DataFiles/P_TCHOL.htm",
+      "detail": "Modality: tabular serum laboratory measurements. Size: 10,828 measured values (6+ years; 1,370 missing). Access as catalogued: open.",
+      "publisher": "wwwn.cdc.gov"
+    },
+    {
+      "kind": "dataset",
+      "title": "NHANES 2015-2016 total cholesterol laboratory file",
+      "url": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2015/DataFiles/TCHOL_I.htm",
+      "detail": "Modality: tabular serum laboratory measurements. Size: 7,256 measured values (6+ years; 765 missing). Access as catalogued: open.",
+      "publisher": "wwwn.cdc.gov"
+    },
+    {
+      "kind": "dataset",
+      "title": "NHANES 2013-2014 total cholesterol laboratory file",
+      "url": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/TCHOL_H.htm",
+      "detail": "Modality: tabular serum laboratory measurements. Size: 7,624 measured values (6+ years; 667 missing). Access as catalogued: open.",
+      "publisher": "wwwn.cdc.gov"
+    },
+    {
+      "kind": "dataset",
+      "title": "MIMIC-IV v3.1",
+      "url": "https://physionet.org/content/mimiciv/",
+      "detail": "Modality: deidentified EHR, ICU, laboratory, medication, diagnosis and procedure data. Size: 364,627 individuals, 546,028 hospitalizations, 94,458 ICU stays in v3.0 description. Access as catalogued: registration.",
+      "publisher": "physionet.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "HHS-Official DQS Cholesterol in adults age 20 and older",
+      "url": "https://huggingface.co/datasets/HHS-Official/dqs-cholesterol-in-adults-age-20-and-older-by-sele",
+      "detail": "Modality: tabular population estimates and subgroup/time-series data. Size: 1988-2020 temporal coverage; 38 subgroup values in the preview. Access as catalogued: open.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "tool",
+      "title": "CholesterolConcentrationPredictor",
+      "url": "https://huggingface.co/CaxtonEmeraldS/CholesterolConcentrationPredictor",
+      "detail": "huggingface. Keras model resource; model card states it is not deployed by an inference provider and provides no clinical validation.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "tool",
+      "title": "HeartHealthPrediction",
+      "url": "https://github.com/ammarmahmood1999/HeartHealthPrediction",
+      "detail": "github. Community heart-risk prediction repository using cholesterol among risk features; educational only.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "Heart-Disease-Data-Visualization",
+      "url": "https://github.com/NhanPhamThanh-IT/Heart-Disease-Data-Visualization",
+      "detail": "github. Community visualization repository using cholesterol-containing heart-disease data; educational only.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC/NCHS NHANES cholesterol laboratory files",
+      "url": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2017/DataFiles/P_TCHOL.htm",
+      "detail": "Statistics and surveillance source",
+      "publisher": "wwwn.cdc.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC About Cholesterol and facts/statistics resources",
+      "url": "https://www.cdc.gov/cholesterol/about/index.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "HHS/NCHS Health, United States cholesterol DQS dataset",
+      "url": "https://huggingface.co/datasets/HHS-Official/dqs-cholesterol-in-adults-age-20-and-older-by-sele",
+      "detail": "Statistics and surveillance source",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "guideline",
+      "title": "2026 Guideline on the Management of Dyslipidemias",
+      "url": "https://www.ahajournals.org/doi/10.1161/CIR.0000000000001423",
+      "detail": "2026",
+      "publisher": "ACC/AHA/Multisociety"
+    },
+    {
+      "kind": "guideline",
+      "title": "2018 Guideline on the Management of Blood Cholesterol",
+      "url": "https://www.ahajournals.org/doi/10.1161/CIR.0000000000000625",
+      "detail": "2018/2019",
+      "publisher": "AHA/ACC Multisociety"
+    },
+    {
+      "kind": "guideline",
+      "title": "Statin Use for the Primary Prevention of Cardiovascular Disease in Adults",
+      "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/statin-use-in-adults-preventive-medication",
+      "detail": "2022",
+      "publisher": "USPSTF"
+    },
+    {
+      "kind": "article",
+      "title": "Familial Hypercholesterolemia: From Clinical Suspicion to Genetic Testing and Management",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39076456/",
+      "detail": "2023",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "Impact of Bempedoic Acid on Total Cardiovascular Events",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38231501/",
+      "detail": "2024",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "risk",
+      "title": "PREVENT-ASCVD Equations / Risk Estimator",
+      "url": "https://tools.acc.org/ascvd-risk-estimator-plus/#!/calculate/estimate/",
+      "detail": "",
+      "publisher": "American Heart Association / American College of Cardiology"
+    },
+    {
+      "kind": "risk",
+      "title": "ACC/AHA Pooled Cohort Equations",
+      "url": "https://tools.acc.org/ascvd-risk-estimator-plus/#!/calculate/estimate/",
+      "detail": "",
+      "publisher": "American College of Cardiology / American Heart Association"
+    },
+    {
+      "kind": "education",
+      "title": "Cholesterol for Professionals",
+      "url": "https://professional.heart.org/en/education/cholesterol-for-professionals",
+      "detail": "CME",
+      "publisher": "American Heart Association"
+    },
+    {
+      "kind": "education",
+      "title": "The Heart of the Matter: Exploring the Cardiovascular System",
+      "url": "https://www.coursera.org/learn/3d-cardiovascular-anatomy-physiology-interactive-course",
+      "detail": "MOOC",
+      "publisher": "Coursera"
+    },
+    {
+      "kind": "education",
+      "title": "Preventive Cardiology Fellowship",
+      "url": "https://health.uconn.edu/graduate-medical-education/preventive-cardiology/",
+      "detail": "fellowship",
+      "publisher": "University of Connecticut"
+    },
+    {
+      "kind": "education",
+      "title": "Cardiovascular Disease Program Requirements",
+      "url": "https://www.acgme.org/globalassets/pfassets/programrequirements/2025-reformatted-requirements/141_cardiovasculardisease_2025_reformatted.pdf",
+      "detail": "fellowship",
+      "publisher": "Accreditation Council for Graduate Medical Education"
+    },
+    {
+      "kind": "trial",
+      "title": "High Blood Cholesterol trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Hypercholesterolemia",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "Heart Attack": [
+    {
+      "kind": "core",
+      "title": "Heart Attack / Myocardial Infarction",
+      "url": "https://medlineplus.gov/heartattack.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "What Is a Heart Attack?",
+      "url": "https://www.nhlbi.nih.gov/health/heart-attack",
+      "detail": "",
+      "publisher": "NHLBI"
+    },
+    {
+      "kind": "core",
+      "title": "About Heart Attack Symptoms, Risk, and Recovery",
+      "url": "https://www.cdc.gov/heart-disease/about/heart-attack.html",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "PTB-XL",
+      "url": "https://physionet.org/content/ptb-xl/",
+      "detail": "Modality: Open 12-lead clinical ECG waveforms and cardiologist/SCP-ECG annotations; infarction characteristics. Size: 21,799 10-second ECGs from 18,869 patients; 5,469 myocardial-infarction superclass records. Access as catalogued: open.",
+      "publisher": "physionet.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "PTB Diagnostic ECG Database",
+      "url": "https://physionet.org/content/ptbdb/",
+      "detail": "Modality: Open high-resolution 15-lead ECG waveforms with clinical summaries. Size: 549 records from about 290 subjects; 148 subjects with myocardial infarction. Access as catalogued: open.",
+      "publisher": "physionet.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "MIMIC-IV-ECG",
+      "url": "https://physionet.org/content/mimic-iv-ecg/1.0/",
+      "detail": "Modality: De-identified 12-lead diagnostic ECG waveforms, machine measurements, and links to clinical data. Size: Approximately 800,000 10- second ECGs from nearly 160,000 patients. Access as catalogued: open.",
+      "publisher": "physionet.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "MIMIC-IV-Ext Cardiac Disease",
+      "url": "https://physionet.org/content/mimic-iv-ext-cardiac-disease/",
+      "detail": "Modality: Credentialed multimodal clinical records: complaints, history, exams, labs, imaging, ECG reports, and diagnoses. Size: 4,761 cardiac-disease patient records, including acute myocardial infarction cases. Access as catalogued: controlled.",
+      "publisher": "physionet.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "ACS-QUIK",
+      "url": "https://biolincc.nhlbi.nih.gov/studies/acs_quik/",
+      "detail": "Modality: Registration-access clinical-trial data with ACS presentation, care processes, and 30- day major adverse cardiovascular outcomes. Size: 22,557 adults with ACS from 63 hospitals in Kerala; 21,079 with complete outcome data. Access as catalogued: registration.",
+      "publisher": "biolincc.nhlbi.nih.gov"
+    },
+    {
+      "kind": "tool",
+      "title": "Cardiac-Disease-Diagnosis-Using-Large-Language- Models-in-Real-World-Medical-Scenarios",
+      "url": "https://github.com/jwcao134/Cardiac-Disease-Diagnosis-Using-Large-Language-Models-in-Real-World-Medical-Scenarios",
+      "detail": "github. Open-source project associated with the MIMIC-IV-Ext cardiac-disease diagnosis work.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "Heart-Diseaseor-Attack-Classification",
+      "url": "https://github.com/doguilmak/Heart-Diseaseor-Attack-Classification",
+      "detail": "github. Research classification repository describing prediction of heart disease or myocardial infarction from patient parameters; not a clinical device.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC Heart Disease Facts and Statistics",
+      "url": "https://www.cdc.gov/heart-disease/data-research/facts-stats/index.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC WONDER Multiple Cause of Death Database",
+      "url": "https://wonder.cdc.gov/mcd.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "wonder.cdc.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "2025 Guideline for the Management of Patients With Acute Coronary Syndromes",
+      "url": "https://www.ahajournals.org/doi/10.1161/CIR.0000000000001309",
+      "detail": "2025",
+      "publisher": "ACC/AHA/ACEP/NAEMSP/SCAI"
+    },
+    {
+      "kind": "guideline",
+      "title": "2023 ESC Guidelines for the Management of Acute Coronary Syndromes (reviewed in 2024)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11012418/",
+      "detail": "2023",
+      "publisher": "European Society of Cardiology"
+    },
+    {
+      "kind": "article",
+      "title": "The Evolving Field of Acute Coronary Syndrome Management: A Critical Appraisal of the 2023 European Society of Cardiology Guidelines for the Management of Acute Coronary Syndrome",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11012418/",
+      "detail": "2024",
+      "publisher": "pmc.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "2025 ACC/AHA/ACEP/NAEMSP/SCAI Guideline for the Management of Patients With Acute Coronary Syndromes",
+      "url": "https://doi.org/10.1161/CIR.0000000000001309",
+      "detail": "2025",
+      "publisher": "doi.org"
+    },
+    {
+      "kind": "risk",
+      "title": "PREVENT Online Calculator",
+      "url": "https://professional.heart.org/en/guidelines-and-statements/prevent-calculator",
+      "detail": "",
+      "publisher": "American Heart Association"
+    },
+    {
+      "kind": "risk",
+      "title": "ASCVD Risk Estimator",
+      "url": "https://tools.acc.org/ascvd-risk-estimator/default.aspx",
+      "detail": "",
+      "publisher": "American College of Cardiology"
+    },
+    {
+      "kind": "education",
+      "title": "Myocardial Infarction",
+      "url": "https://www.coursera.org/learn/infarction",
+      "detail": "MOOC",
+      "publisher": "University of Zurich via Coursera"
+    },
+    {
+      "kind": "education",
+      "title": "Cardiology Update: The Heart of the Matter Online Course",
+      "url": "https://ce.mayo.edu/online-education/content/cardiology-update-heart-matter-online-course",
+      "detail": "CME",
+      "publisher": "Mayo Clinic School of Continuous Professional Development"
+    },
+    {
+      "kind": "education",
+      "title": "Update in Clinical Cardiology",
+      "url": "https://learn.hms.harvard.edu/cardiology",
+      "detail": "CME",
+      "publisher": "Harvard Medical School Continuing Education / Mass General Brigham"
+    },
+    {
+      "kind": "education",
+      "title": "Managing Coronary Artery Disease",
+      "url": "https://www.edx.org/learn/disease/stanford-university-managing-coronary-artery-disease",
+      "detail": "certificate",
+      "publisher": "Stanford Online via edX"
+    },
+    {
+      "kind": "education",
+      "title": "ACGME Cardiovascular Disease Program Requirements",
+      "url": "https://www.acgme.org/globalassets/pfassets/programrequirements/2025-reformatted-requirements/141_cardiovasculardisease_2025_reformatted.pdf",
+      "detail": "fellowship",
+      "publisher": "Accreditation Council for Graduate Medical Education"
+    },
+    {
+      "kind": "education",
+      "title": "General Cardiology Disease Fellowship",
+      "url": "https://medschool.umich.edu/departments/internal-medicine/divisions/cardiovascular-medicine/education/fellowships-training-programs/general-cardiology-disease",
+      "detail": "fellowship",
+      "publisher": "University of Michigan Medical School"
+    },
+    {
+      "kind": "facility",
+      "title": "Joint Commission Acute Heart Attack Ready Certification",
+      "url": "https://www.jointcommission.org/en-us/about-us/recognizing-excellence/find-accredited-organizations",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.jointcommission.org"
+    },
+    {
+      "kind": "facility",
+      "title": "Joint Commission Primary Heart Attack Center Certification",
+      "url": "https://www.jointcommission.org/en-us/about-us/recognizing-excellence/find-accredited-organizations",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.jointcommission.org"
+    },
+    {
+      "kind": "facility",
+      "title": "Joint Commission Comprehensive Heart Attack Center Certification",
+      "url": "https://www.jointcommission.org/en-us/about-us/recognizing-excellence/find-accredited-organizations",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.jointcommission.org"
+    },
+    {
+      "kind": "trial",
+      "title": "Heart Attack trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Heart%20Attack",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "Heart Failure": [
+    {
+      "kind": "core",
+      "title": "Heart Failure",
+      "url": "https://medlineplus.gov/heartfailure.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "What Is Heart Failure?",
+      "url": "https://www.nhlbi.nih.gov/health/heart-failure",
+      "detail": "",
+      "publisher": "NHLBI"
+    },
+    {
+      "kind": "core",
+      "title": "Heart Failure",
+      "url": "https://www.cdc.gov/heart-disease/about/heart-failure.html",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "UCI Heart Failure Clinical Records",
+      "url": "https://archive.ics.uci.edu/dataset/519/heart+failure+clinical+records",
+      "detail": "Modality: Tabular clinical follow-up records. Size: 299 patients; 13 clinical features. Access as catalogued: open.",
+      "publisher": "archive.ics.uci.edu"
+    },
+    {
+      "kind": "dataset",
+      "title": "MIMIC-III Clinical Database v1.4",
+      "url": "https://physionet.org/content/mimiciii/1.4/",
+      "detail": "Modality: Deidentified ICU EHR: vital signs, labs, medications, notes, imaging reports, mortality. Size: More than 40,000 ICU patients. Access as catalogued: controlled.",
+      "publisher": "physionet.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "MIMIC-IV v3.1",
+      "url": "https://physionet.org/content/mimiciv/3.1/",
+      "detail": "Modality: Deidentified hospital and ICU EHR, including labs, medications, diagnoses, procedures, and clinical events. Size: Over 65,000 ICU patients and over 200,000 emergency-department patients. Access as catalogued: controlled.",
+      "publisher": "physionet.org"
+    },
+    {
+      "kind": "tool",
+      "title": "anik199/Heart-failure-prediction",
+      "url": "https://github.com/anik199/Heart-failure-prediction",
+      "detail": "github. Educational ML notebook using a 918-row Kaggle heart-disease dataset; not clinically validated.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "sanithps98/Heart-Disease-Prediction",
+      "url": "https://github.com/sanithps98/Heart-Disease-Prediction",
+      "detail": "github. Educational classifiers using the 299- patient UCI heart-failure clinical-record dataset; not clinically validated.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC Heart Failure facts",
+      "url": "https://www.cdc.gov/heart-disease/about/heart-failure.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC WONDER Multiple Cause of Death data",
+      "url": "https://wonder.cdc.gov/mcd.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "wonder.cdc.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure",
+      "url": "https://www.ahajournals.org/doi/10.1161/CIR.0000000000001063",
+      "detail": "2022",
+      "publisher": "AHA/ACC/HFSA"
+    },
+    {
+      "kind": "guideline",
+      "title": "2023 Focused Update of the 2021 ESC Guidelines for the diagnosis and treatment of acute and chronic heart failure",
+      "url": "https://academic.oup.com/eurheartj/article/44/38/3627/7246292",
+      "detail": "2023",
+      "publisher": "European Society of Cardiology and Heart Failure Association"
+    },
+    {
+      "kind": "article",
+      "title": "Empagliflozin in Heart Failure with a Preserved Ejection Fraction",
+      "url": "https://www.nejm.org/doi/full/10.1056/NEJMoa2107038",
+      "detail": "2021",
+      "publisher": "www.nejm.org"
+    },
+    {
+      "kind": "article",
+      "title": "Dapagliflozin in Heart Failure with Mildly Reduced or Preserved Ejection Fraction",
+      "url": "https://www.nejm.org/doi/full/10.1056/NEJMoa2206286",
+      "detail": "2022",
+      "publisher": "www.nejm.org"
+    },
+    {
+      "kind": "risk",
+      "title": "Seattle Heart Failure Model",
+      "url": "https://depts.washington.edu/shfm/",
+      "detail": "",
+      "publisher": "University of Washington"
+    },
+    {
+      "kind": "risk",
+      "title": "MAGGIC Heart Failure Risk Score",
+      "url": "https://www.mdcalc.com/calc/3803/maggic-risk-calculator-heart-failure",
+      "detail": "",
+      "publisher": "MAGGIC investigators; calculator hosted by MDCalc"
+    },
+    {
+      "kind": "education",
+      "title": "HFSA OnDemand Library free CME programs",
+      "url": "https://hfsa.org/free-cme-programs",
+      "detail": "CME",
+      "publisher": "Heart Failure Society of America"
+    },
+    {
+      "kind": "education",
+      "title": "Course Offerings for Heart Failure Fellows",
+      "url": "https://www.cardiovascular.abbott/us/en/hcp/education-training/fellows-education/heart-failure.html",
+      "detail": "short course",
+      "publisher": "Abbott"
+    },
+    {
+      "kind": "education",
+      "title": "Heart Failure & Transplant Cardiology Fellowship Program",
+      "url": "https://education.ochsner.org/gme/training-programs/heart-failure-transplant-cardiology-fellowship/",
+      "detail": "fellowship",
+      "publisher": "Ochsner Health"
+    },
+    {
+      "kind": "education",
+      "title": "Advanced Training Statement on Advanced Heart Failure and Transplant Cardiology",
+      "url": "https://professional.heart.org/en/guidelines-and-statements/guidelines-and-statements-search",
+      "detail": "fellowship",
+      "publisher": "AHA/ACC/HFSA/ISHLT/ACP"
+    },
+    {
+      "kind": "facility",
+      "title": "JCI-accredited organizations directory (general accreditation; not heart- failure-specific)",
+      "url": "https://www.qualitycheck.org/",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.qualitycheck.org"
+    },
+    {
+      "kind": "trial",
+      "title": "Heart Failure trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Heart%20Failure",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "High Blood Pressure": [
+    {
+      "kind": "core",
+      "title": "High Blood Pressure / Hypertension",
+      "url": "https://medlineplus.gov/highbloodpressure.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Hypertension",
+      "url": "https://medlineplus.gov/genetics/condition/hypertension/",
+      "detail": "",
+      "publisher": "MedlinePlus Genetics (GHR)"
+    },
+    {
+      "kind": "core",
+      "title": "High Blood Pressure & Kidney Disease",
+      "url": "https://www.niddk.nih.gov/health-information/kidney-disease/high-blood-pressure",
+      "detail": "",
+      "publisher": "NIDDK"
+    },
+    {
+      "kind": "core",
+      "title": "High blood pressure",
+      "url": "https://www.nia.nih.gov/health/high-blood-pressure",
+      "detail": "",
+      "publisher": "NIA (NIHSeniorHealth successor)"
+    },
+    {
+      "kind": "core",
+      "title": "Mind Your Risks",
+      "url": "https://www.ninds.nih.gov/health-information/public-education/mind-your-risks",
+      "detail": "",
+      "publisher": "NINDS"
+    },
+    {
+      "kind": "core",
+      "title": "High Blood Pressure",
+      "url": "https://www.nhlbi.nih.gov/health/high-blood-pressure",
+      "detail": "",
+      "publisher": "NHLBI"
+    },
+    {
+      "kind": "core",
+      "title": "About High Blood Pressure",
+      "url": "https://www.cdc.gov/high-blood-pressure/about/index.html",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "NHANES",
+      "url": "https://wwwn.cdc.gov/nchs/nhanes/",
+      "detail": "Modality: Population survey, examination, laboratory, questionnaire, and blood- pressure measurements. Size: Continuous U.S. cycles from 1999 onward; cycle-specific files. Access as catalogued: open.",
+      "publisher": "wwwn.cdc.gov"
+    },
+    {
+      "kind": "dataset",
+      "title": "MIMIC-IV v3.1",
+      "url": "https://physionet.org/content/mimiciv/3.1/",
+      "detail": "Modality: De-identified EHR, ICU/ED, vitals, labs, diagnoses, treatments. Size: 364,627 unique patients in v3.0-era counts; 65,000+ ICU and 200,000+ ED patients described. Access as catalogued: credentialed.",
+      "publisher": "physionet.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "eICU Collaborative Research Database",
+      "url": "https://physionet.org/content/eicu-crd/2.0/",
+      "detail": "Modality: De-identified multicenter ICU EHR with vital signs, labs, diagnoses, treatments. Size: 200,000+ ICU admissions and 139,000+ unique patients. Access as catalogued: credentialed.",
+      "publisher": "physionet.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "Autonomic Aging",
+      "url": "https://physionet.org/content/autonomic-aging-cardiovascular/",
+      "detail": "Modality: ECG and continuous noninvasive blood- pressure waveforms. Size: 1,121 healthy volunteers; 5.9 GB uncompressed. Access as catalogued: open.",
+      "publisher": "physionet.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "CardioWave-Portable",
+      "url": "https://physionet.org/content/cardiowave-portable/",
+      "detail": "Modality: Synchronized single-lead ECG/PPG with cuff systolic and diastolic labels. Size: 3,849 24-second records from 977 adults. Access as catalogued: controlled.",
+      "publisher": "physionet.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "Blood Pressure in Salt- Sensitive Dahl Rats",
+      "url": "https://physionet.org/content/bpssrat/1.0.0/",
+      "detail": "Modality: Continuous telemetry blood-pressure time series. Size: 9 Dahl SS rats and 6 SS.13BN rats under high/low salt conditions. Access as catalogued: open.",
+      "publisher": "physionet.org"
+    },
+    {
+      "kind": "tool",
+      "title": "MIMIC Code Repository",
+      "url": "https://github.com/mit-lcp/mimic-code",
+      "detail": "github. Community code for MIMIC-III/IV extraction and analysis; useful for EHR hypertension cohorts.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "eICU Collaborative Research Database Code Repository",
+      "url": "https://github.com/mit-lcp/eicu-code",
+      "detail": "github. Community code for eICU database analysis.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "aaladnan/Blood-Pressure-Prediction",
+      "url": "https://huggingface.co/aaladnan/Blood-Pressure-Prediction",
+      "detail": "huggingface. Verified model page; no model card was available at review time.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC High Blood Pressure",
+      "url": "https://www.cdc.gov/high-blood-pressure/about/index.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC/NCHS NHANES",
+      "url": "https://wwwn.cdc.gov/nchs/nhanes/",
+      "detail": "Statistics and surveillance source",
+      "publisher": "wwwn.cdc.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "2025 High Blood Pressure Guideline",
+      "url": "https://professional.heart.org/en/science-news/2025-high-blood-pressure-guideline",
+      "detail": "2025",
+      "publisher": "AHA/ACC and partner organizations"
+    },
+    {
+      "kind": "guideline",
+      "title": "2024 ESC Guidelines for the Management of Elevated Blood Pressure and Hypertension",
+      "url": "https://www.escardio.org/guidelines/clinical-practice-guidelines/all-esc-practice-guidelines/elevated-blood-pressure-and-hypertension/",
+      "detail": "2024",
+      "publisher": "European Society of Cardiology"
+    },
+    {
+      "kind": "guideline",
+      "title": "Hypertension in Adults: Screening",
+      "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/hypertension-in-adults-screening",
+      "detail": "2021",
+      "publisher": "USPSTF"
+    },
+    {
+      "kind": "article",
+      "title": "Time to Clinical Benefit of Intensive Blood Pressure Lowering in Patients 60 Years and Older With Hypertension: A Secondary Analysis of Randomized Clinical Trials",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35532917/",
+      "detail": "2022",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "Development and Validation of the American Heart Association PREVENT Equations",
+      "url": "https://professional.heart.org/en/guidelines-and-statements/prevent-calculator",
+      "detail": "2023",
+      "publisher": "professional.heart.org"
+    },
+    {
+      "kind": "risk",
+      "title": "PREVENT Online Calculator",
+      "url": "https://professional.heart.org/en/guidelines-and-statements/prevent-calculator",
+      "detail": "",
+      "publisher": "American Heart Association"
+    },
+    {
+      "kind": "education",
+      "title": "Hypertension in Primary Care",
+      "url": "https://online.stanford.edu/courses/som-ycme0038-hypertension-primary-care",
+      "detail": "CME",
+      "publisher": "Stanford Medicine"
+    },
+    {
+      "kind": "education",
+      "title": "Fundamentals for Implementing a Hypertension Program",
+      "url": "https://www.coursera.org/learn/hypertension-program",
+      "detail": "MOOC",
+      "publisher": "Yale University on Coursera"
+    },
+    {
+      "kind": "education",
+      "title": "Cardiovascular Disease Program Requirements (2025)",
+      "url": "https://www.acgme.org/globalassets/pfassets/programrequirements/2025-reformatted-requirements/141_cardiovasculardisease_2025_reformatted.pdf",
+      "detail": "fellowship",
+      "publisher": "ACGME"
+    },
+    {
+      "kind": "education",
+      "title": "Cardiovascular Disease Fellowship",
+      "url": "https://cardiologyfellowship.uchicago.edu/",
+      "detail": "fellowship",
+      "publisher": "University of Chicago"
+    },
+    {
+      "kind": "facility",
+      "title": "Joint Commission/JCI Quality Check accredited organizations directory",
+      "url": "https://www.qualitycheck.org/",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.qualitycheck.org"
+    },
+    {
+      "kind": "trial",
+      "title": "High Blood Pressure trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Hypertension",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "Parkinson's Disease": [
+    {
+      "kind": "core",
+      "title": "Parkinson's Disease",
+      "url": "https://medlineplus.gov/parkinsonsdisease.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Parkinson's disease",
+      "url": "https://medlineplus.gov/genetics/condition/parkinsons-disease/",
+      "detail": "",
+      "publisher": "MedlinePlus Genetics (GHR)"
+    },
+    {
+      "kind": "core",
+      "title": "Parkinson disease, late-onset",
+      "url": "https://rarediseases.info.nih.gov/diseases/17684/parkinson-disease-late-onset",
+      "detail": "",
+      "publisher": "GARD"
+    },
+    {
+      "kind": "core",
+      "title": "Parkinson's Disease",
+      "url": "https://www.ninds.nih.gov/health-information/disorders/parkinsons-disease",
+      "detail": "",
+      "publisher": "NINDS"
+    },
+    {
+      "kind": "core",
+      "title": "Parkinson's Disease: Causes, Symptoms, and Treatments",
+      "url": "https://www.nia.nih.gov/health/parkinsons-disease/parkinsons-disease-causes-symptoms-and-treatments",
+      "detail": "",
+      "publisher": "NIA (NIHSeniorHealth successor)"
+    },
+    {
+      "kind": "core",
+      "title": "Parkinson disease",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-terms/def/parkinson-disease",
+      "detail": "",
+      "publisher": "CancerGov"
+    },
+    {
+      "kind": "core",
+      "title": "Parkinson's Disease Mortality, Stats of the States",
+      "url": "https://www.cdc.gov/nchs/state-stats/deaths/parkinsons-disease.html",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "Gait in Parkinson's Disease",
+      "url": "https://physionet.org/content/gaitpdb/1.0.0/",
+      "detail": "Modality: force-sensor gait time series and clinical metadata. Size: 93 idiopathic PD, 73 controls; 288.4 MB. Access as catalogued: open.",
+      "publisher": "physionet.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "Tappy Keystroke Data",
+      "url": "https://physionet.org/content/tappy/1.0.0/",
+      "detail": "Modality: keyboard timing logs and participant metadata. Size: over 200 participants; 85.1 MB. Access as catalogued: open.",
+      "publisher": "physionet.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "NTUA Parkinson's Dataset",
+      "url": "https://github.com/ails-lab/ntua-parkinson-dataset",
+      "detail": "Modality: MRI and DaT scans plus some clinical/demographic CSV data. Size: 78 individuals (55 PD, 23 controls); over 42,000 images. Access as catalogued: open.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "dataset",
+      "title": "Multimodal Data for Freezing of Gait in Parkinson's Disease",
+      "url": "https://github.com/AccSrd/multimodal-Parkinson-data-processing",
+      "detail": "Modality: EEG, EMG, ECG, skin conductance, accelerometry. Size: 12 valid PD participants; 222 minutes; 334 labeled freezing events. Access as catalogued: open.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "dataset",
+      "title": "Italian Parkinson's Voice and Speech",
+      "url": "https://huggingface.co/datasets/birgermoell/Italian_Parkinsons_Voice_and_Speech",
+      "detail": "Modality: audio. Size: dataset page provides 250- second preview items; full size not stated on opened card. Access as catalogued: open.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "tool",
+      "title": "ails-lab/ntua-parkinson-dataset",
+      "url": "https://github.com/ails-lab/ntua-parkinson-dataset",
+      "detail": "github. MRI and DaT scan dataset with clinical metadata.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "AccSrd/multimodal-Parkinson-data-processing",
+      "url": "https://github.com/AccSrd/multimodal-Parkinson-data-processing",
+      "detail": "github. Processing code and sample data for multimodal freezing-of-gait signals.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "birgermoell/Italian_Parkinsons_Voice_and_Speech",
+      "url": "https://huggingface.co/datasets/birgermoell/Italian_Parkinsons_Voice_and_Speech",
+      "detail": "huggingface. Audio dataset with Parkinson voice and speech recordings.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC Stats of the States: Parkinson's Disease Mortality",
+      "url": "https://www.cdc.gov/nchs/state-stats/deaths/parkinsons-disease.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "Dopaminergic Therapy for Motor Symptoms in Early Parkinson Disease",
+      "url": "https://www.aan.com/Guidelines/home/GuidelineDetail/1043",
+      "detail": "2021; reaffirmed 2025",
+      "publisher": "American Academy of Neurology"
+    },
+    {
+      "kind": "guideline",
+      "title": "MDS Clinical Diagnostic Criteria for Parkinson's Disease",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/26474316/",
+      "detail": "2015",
+      "publisher": "Movement Disorder Society"
+    },
+    {
+      "kind": "article",
+      "title": "Parkinson disease therapy: current strategies and future directions",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39496848/",
+      "detail": "2024",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "Temporal trends in the prevalence of Parkinson's disease",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38945129/",
+      "detail": "2024",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "education",
+      "title": "Parkinson's Disease and Other Movement Disorders",
+      "url": "https://ce.mayo.edu/neurology-and-neurologic-surgery/content/parkinson%E2%80%99s-disease-and-other-movement-disorders-2022-0",
+      "detail": "CME",
+      "publisher": "Mayo Clinic School of Continuous Professional Development"
+    },
+    {
+      "kind": "education",
+      "title": "From Data to Medicine: Early Parkinson's Disease Detection",
+      "url": "https://edhub.ama-assn.org/parkinsons-foundation-education/by-topic",
+      "detail": "CME",
+      "publisher": "Parkinson's Foundation via AMA Ed Hub"
+    },
+    {
+      "kind": "education",
+      "title": "Movement Disorders Fellowship",
+      "url": "https://www.cc.nih.gov/training/gme/programs/movement_disorder",
+      "detail": "fellowship",
+      "publisher": "NIH Clinical Center"
+    },
+    {
+      "kind": "education",
+      "title": "Movement Disorders Fellowship at Penn",
+      "url": "https://www.med.upenn.edu/pdmdc/movement-fellowship-at-penn.html",
+      "detail": "fellowship",
+      "publisher": "University of Pennsylvania"
+    },
+    {
+      "kind": "education",
+      "title": "Movement Disorders Fellowship",
+      "url": "https://www.neurology.columbia.edu/education/fellowship-programs/movement-disorders",
+      "detail": "fellowship",
+      "publisher": "Columbia University"
+    },
+    {
+      "kind": "facility",
+      "title": "International Parkinson and Movement Disorder Society Specialist Finder",
+      "url": "https://mds.movementdisorders.org/specialist-finder/",
+      "detail": "Facility directory or certification reference",
+      "publisher": "mds.movementdisorders.org"
+    },
+    {
+      "kind": "facility",
+      "title": "NINDS Morris K. Udall Parkinson's Disease Research Centers of Excellence",
+      "url": "https://www.ninds.nih.gov/current-research/focus-disorders/parkinsons-disease-research/parkinsons-disease-research-centers-excellence",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.ninds.nih.gov"
+    },
+    {
+      "kind": "trial",
+      "title": "Parkinson's Disease trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Parkinson%20Disease",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "Leukemia": [
+    {
+      "kind": "core",
+      "title": "Leukemia",
+      "url": "https://medlineplus.gov/leukemia.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Chronic myeloid leukemia",
+      "url": "https://medlineplus.gov/genetics/condition/chronic-myeloid-leukemia/",
+      "detail": "",
+      "publisher": "MedlinePlus Genetics (GHR)"
+    },
+    {
+      "kind": "core",
+      "title": "Leukemia—Patient Version",
+      "url": "https://www.cancer.gov/types/leukemia",
+      "detail": "",
+      "publisher": "CancerGov"
+    },
+    {
+      "kind": "dataset",
+      "title": "Golub leukemia gene- expression data",
+      "url": "https://hastie.su.domains/CASI_files/DATA/leukemia.html",
+      "detail": "Modality: microarray gene expression. Size: 72 patients (47 ALL, 25 AML); 7,128 genes in the large matrix. Access as catalogued: open.",
+      "publisher": "hastie.su.domains"
+    },
+    {
+      "kind": "dataset",
+      "title": "C-NMC Leukemia Classification Dataset (ISBI 2019 ALL Challenge)",
+      "url": "https://huggingface.co/datasets/dwb2023/cnmc-leukemia-2019",
+      "detail": "Modality: microscopic white-cell images with labels. Size: 10,661 images in one split. Access as catalogued: open.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "dataset",
+      "title": "EGA dataset for acute myeloid leukemia samples",
+      "url": "https://ega-archive.org/datasets/EGAD50000000175",
+      "detail": "Modality: paired RNA-seq, ATAC-seq, and whole- genome sequencing. Size: 9 AML samples; 20 FASTQ files totaling about 550.4 GB. Access as catalogued: controlled.",
+      "publisher": "ega-archive.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "TCGA-LAML project",
+      "url": "https://gdc.cancer.gov/about-data/publications/TCGA-LAML",
+      "detail": "Modality: cancer genomics and multi-omics. Size: project-level AML data; exact sample count not stated on verified landing page. Access as catalogued: controlled.",
+      "publisher": "gdc.cancer.gov"
+    },
+    {
+      "kind": "tool",
+      "title": "taareek/leukemia-web",
+      "url": "https://github.com/taareek/leukemia-web",
+      "detail": "github. FastAPI computer-aided ALL image- classification application; research code, not a clinical device.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "P-MCC/Leukemia-Detection",
+      "url": "https://github.com/P-MCC/Leukemia-Detection",
+      "detail": "github. Transfer-learning and ensemble classification models using ALL-IDB microscopic images.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "good2idnan/medgemma-1.5-4b-it-leukemia-lora",
+      "url": "https://huggingface.co/good2idnan/medgemma-1.5-4b-it-leukemia-lora",
+      "detail": "huggingface. Research LoRA VLM for ALL blood-cell images; model card explicitly disclaims FDA approval and clinical use.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "statistics",
+      "title": "NCI Surveillance, Epidemiology, and End Results (SEER) Cancer Stat Facts: Leukemia",
+      "url": "https://seer.cancer.gov/statfacts/html/leuks.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "seer.cancer.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "Acute Myeloid Leukemia Treatment (PDQ)",
+      "url": "https://www.cancer.gov/types/leukemia/hp/adult-aml-treatment-pdq",
+      "detail": "current living summary",
+      "publisher": "National Cancer Institute"
+    },
+    {
+      "kind": "guideline",
+      "title": "Adult Acute Lymphoblastic Leukemia Treatment (PDQ)",
+      "url": "https://www.cancer.gov/types/leukemia/hp/adult-all-treatment-pdq",
+      "detail": "current living summary",
+      "publisher": "National Cancer Institute"
+    },
+    {
+      "kind": "guideline",
+      "title": "Chronic Lymphocytic Leukemia Treatment (PDQ)",
+      "url": "https://www.cancer.gov/types/leukemia/hp/cll-treatment-pdq",
+      "detail": "current living summary",
+      "publisher": "National Cancer Institute"
+    },
+    {
+      "kind": "guideline",
+      "title": "Diagnosis and management of AML in adults: 2022 ELN recommendations",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35797463/",
+      "detail": "2022",
+      "publisher": "European LeukemiaNet"
+    },
+    {
+      "kind": "guideline",
+      "title": "ASH Clinical Practice Guidelines",
+      "url": "https://www.hematology.org/education/clinicians/guidelines-and-quality-care/clinical-practice-guidelines",
+      "detail": "current page",
+      "publisher": "American Society of Hematology"
+    },
+    {
+      "kind": "article",
+      "title": "The 5th edition of the World Health Classification of Tumours of Haematolymphoid Tumours: lymphoid neoplasms",
+      "url": "https://www.nature.com/articles/s41375-022-01620-2",
+      "detail": "2022",
+      "publisher": "www.nature.com"
+    },
+    {
+      "kind": "article",
+      "title": "Acute myeloid leukemia: 2023 update on diagnosis, risk-stratification, and management",
+      "url": "https://doi.org/10.1002/ajh.26822",
+      "detail": "2023",
+      "publisher": "doi.org"
+    },
+    {
+      "kind": "article",
+      "title": "Diagnosis and management of AML in adults: 2022 ELN recommendations from an international expert panel",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35797463/",
+      "detail": "2022",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "risk",
+      "title": "CLL International Prognostic Index (CLL-IPI)",
+      "url": "https://www.cancer.gov/types/leukemia/hp/cll-treatment-pdq",
+      "detail": "",
+      "publisher": "International CLL-IPI Working Group"
+    },
+    {
+      "kind": "education",
+      "title": "23rd Annual Mayo Clinic Hematology Review",
+      "url": "https://ce.mayo.edu/hematology-and-oncology/group/hematology-and-oncology",
+      "detail": "CME",
+      "publisher": "Mayo Clinic"
+    },
+    {
+      "kind": "education",
+      "title": "Hematology & Medical Oncology Practice Updates and Board Review Online Course",
+      "url": "https://ce.mayo.edu/hematology-and-oncology/group/hematology-and-oncology",
+      "detail": "CME",
+      "publisher": "Mayo Clinic"
+    },
+    {
+      "kind": "education",
+      "title": "Hematology & Oncology Fellowship",
+      "url": "https://medschool.umich.edu/departments/internal-medicine/divisions/hematology-oncology/education/hematology-oncology-fellowship",
+      "detail": "fellowship",
+      "publisher": "University of Michigan Medical School"
+    },
+    {
+      "kind": "education",
+      "title": "Program Requirements for Graduate Medical Education in Hematology and Medical Oncology",
+      "url": "https://www.acgme.org/globalassets/pfassets/programrequirements/2025-reformatted-requirements/155_hematologymedicaloncology_2025_reformatted.pdf",
+      "detail": "fellowship",
+      "publisher": "Accreditation Council for Graduate Medical Education"
+    },
+    {
+      "kind": "education",
+      "title": "ASH Clinical Practice Guidelines learning resources",
+      "url": "https://www.hematology.org/education/clinicians/guidelines-and-quality-care/clinical-practice-guidelines",
+      "detail": "CME",
+      "publisher": "American Society of Hematology"
+    },
+    {
+      "kind": "facility",
+      "title": "NCI-Designated Cancer Centers",
+      "url": "https://www.cancer.gov/research/infrastructure/cancer-centers",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.cancer.gov"
+    },
+    {
+      "kind": "trial",
+      "title": "Leukemia trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Leukemia",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "Osteoporosis": [
+    {
+      "kind": "core",
+      "title": "Osteoporosis",
+      "url": "https://medlineplus.gov/osteoporosis.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Juvenile primary osteoporosis",
+      "url": "https://medlineplus.gov/genetics/condition/juvenile-primary-osteoporosis/",
+      "detail": "",
+      "publisher": "MedlinePlus Genetics (GHR)"
+    },
+    {
+      "kind": "core",
+      "title": "X-linked osteoporosis with fractures",
+      "url": "https://rarediseases.info.nih.gov/diseases/17614/x-linked-osteoporosis-with-fractures",
+      "detail": "",
+      "publisher": "GARD"
+    },
+    {
+      "kind": "core",
+      "title": "Osteoporosis",
+      "url": "https://www.nia.nih.gov/health/osteoporosis/osteoporosis",
+      "detail": "",
+      "publisher": "NIA (NIHSeniorHealth successor)"
+    },
+    {
+      "kind": "core",
+      "title": "Definition of osteoporosis",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-terms/def/osteoporosis",
+      "detail": "",
+      "publisher": "CancerGov"
+    },
+    {
+      "kind": "core",
+      "title": "FastStats: Osteoporosis",
+      "url": "https://www.cdc.gov/nchs/fastats/osteoporosis.htm",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "NHANES 2017-2018 DXA DXX_J",
+      "url": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2017/DataFiles/DXX_J.htm",
+      "detail": "Modality: Whole-body dual-energy X-ray absorptiometry-derived bone and soft- tissue measures. Size: 5,114 records in the file; eligible participants aged 8- 59. Access as catalogued: open.",
+      "publisher": "wwwn.cdc.gov"
+    },
+    {
+      "kind": "dataset",
+      "title": "NHANES osteoporosis prevalence/BMD results",
+      "url": "https://www.cdc.gov/nchs/products/databriefs/db405.htm",
+      "detail": "Modality: Survey plus femoral-neck and lumbar- spine DXA-derived epidemiology. Size: Repeated NHANES cycles; 2017-2018 prevalence estimates for adults 50+. Access as catalogued: open.",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "dataset",
+      "title": "Women’s Health Initiative Clinical Trial and Observational Study (WHI- CTOS)",
+      "url": "https://biolincc.nhlbi.nih.gov/studies/whi_ctos/",
+      "detail": "Modality: Longitudinal questionnaires, clinical outcomes, fractures, interventions and biospecimen-linked study data. Size: 68,132 randomized trial participants and 93,676 observational participants. Access as catalogued: registration.",
+      "publisher": "biolincc.nhlbi.nih.gov"
+    },
+    {
+      "kind": "dataset",
+      "title": "WHI Baseline datasets",
+      "url": "https://www.whi.org/datasets/baseline",
+      "detail": "Modality: Questionnaire and clinical variables including osteoporosis/bone medication, fractures and family history. Size: WHI investigator datasets; cohort-specific files. Access as catalogued: registration.",
+      "publisher": "www.whi.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "Framingham Bone Mineral Density Study",
+      "url": "https://dbgap.ncbi.nlm.nih.gov/aa/wga.cgi?view_pdf=1&pfid=14663",
+      "detail": "Modality: Bone mineral density and phenotype/genotype data. Size: Controlled-access dbGaP study; size varies by release. Access as catalogued: controlled.",
+      "publisher": "dbgap.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "tool",
+      "title": "AI-In-Osteoporosis-Diagnosis",
+      "url": "https://github.com/itsabdulrahman/AI-In-Osteoporosis-Diagnosis",
+      "detail": "github. Survey and links covering X-ray, CT and DXA AI research.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "fracture-risk",
+      "url": "https://github.com/oliverkieran/fracture-risk",
+      "detail": "github. Code/data structure for osteoporosis fracture-risk prediction with Swiss and UK Biobank validation.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "Bone-Fracture-Detection",
+      "url": "https://github.com/eliashossain001/Bone-Fracture-Detection",
+      "detail": "github. X-ray fracture deep-learning review/project; fracture detection is related to, not synonymous with, osteoporosis.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "waseemkathia/osteoporosis",
+      "url": "https://huggingface.co/datasets/waseemkathia/osteoporosis",
+      "detail": "huggingface. 224x224 image dataset with two displayed labels, Normal and Osteoporosis; 66 train and 8 test rows shown.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC NCHS FastStats: Osteoporosis",
+      "url": "https://www.cdc.gov/nchs/fastats/osteoporosis.htm",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC NCHS Data Brief 405: Osteoporosis or Low Bone Mass in Older Adults",
+      "url": "https://www.cdc.gov/nchs/products/databriefs/db405.htm",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "Clinician’s Guide to Prevention and Treatment of Osteoporosis",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9546973/",
+      "detail": "2022",
+      "publisher": "Bone Health and Osteoporosis Foundation"
+    },
+    {
+      "kind": "guideline",
+      "title": "Pharmacological Management of Osteoporosis in Postmenopausal Women",
+      "url": "https://www.endocrine.org/clinical-practice-guidelines/osteoporosis-in-postmenopausal-women",
+      "detail": "2019; update 2020",
+      "publisher": "Endocrine Society"
+    },
+    {
+      "kind": "guideline",
+      "title": "Osteoporosis to Prevent Fractures: Screening",
+      "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/osteoporosis-screening",
+      "detail": "2025",
+      "publisher": "USPSTF"
+    },
+    {
+      "kind": "guideline",
+      "title": "Evidence-Based Guideline for the management of osteoporosis in men",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38485753/",
+      "detail": "2024",
+      "publisher": "ESCEO/IOF working group"
+    },
+    {
+      "kind": "article",
+      "title": "Osteoporosis: Review of Etiology, Mechanisms, and Management",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36948779/",
+      "detail": "2023",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "Evidence-Based Guideline for the management of osteoporosis in men",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38485753/",
+      "detail": "2024",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "Goal-directed osteoporosis treatment",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39073912/",
+      "detail": "2024",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "risk",
+      "title": "FRAX",
+      "url": "https://fraxplus.org/",
+      "detail": "",
+      "publisher": "Centre for Metabolic Bone Diseases, University of Sheffield and collaborating cohorts"
+    },
+    {
+      "kind": "education",
+      "title": "AACE Certificate: Osteoporosis and Bone Health",
+      "url": "https://pro.aace.com/education-and-event/product/aace-certificate-osteoporosis-and-bone-health",
+      "detail": "certificate",
+      "publisher": "American Association of Clinical Endocrinology"
+    },
+    {
+      "kind": "education",
+      "title": "A Course on Osteoporosis and Metabolic Bone Disease",
+      "url": "https://education.endocrine.org/Public/Catalog/Details.aspx?id=zqQ3ZxVmqsKGvteUtFwwXA%3D%3D",
+      "detail": "CME",
+      "publisher": "Endocrine Society"
+    },
+    {
+      "kind": "education",
+      "title": "Adult and Pediatric Endocrinology, Diabetes, and Metabolism Fellowship",
+      "url": "https://medicine.uchicago.edu/sections/endocrinology-diabetes-metabolism/training-programs/acgme-fellowship",
+      "detail": "fellowship",
+      "publisher": "University of Chicago"
+    },
+    {
+      "kind": "education",
+      "title": "Osteoporosis, Bone and Mineral Diseases Fellowship",
+      "url": "https://bonehealth.wustl.edu/education/residents-fellows/",
+      "detail": "fellowship",
+      "publisher": "Washington University in St. Louis"
+    },
+    {
+      "kind": "education",
+      "title": "Endocrinology, Diabetes, and Metabolism Program Requirements",
+      "url": "https://www.acgme.org/globalassets/pfassets/programrequirements/2025-reformatted-requirements/143_endocrinologydiabetesmetabolism_2025_reformatted.pdf",
+      "detail": "fellowship",
+      "publisher": "ACGME"
+    },
+    {
+      "kind": "facility",
+      "title": "ISCD Facility Accreditation for DXA skeletal assessment",
+      "url": "https://my.iscd.org/Certify/Accreditation/Accredited-Facilities",
+      "detail": "Facility directory or certification reference",
+      "publisher": "my.iscd.org"
+    },
+    {
+      "kind": "facility",
+      "title": "Bone Health and Osteoporosis Foundation Professional Partners Network directory",
+      "url": "https://www.bonehealthandosteoporosis.org/find-a-professional/",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.bonehealthandosteoporosis.org"
+    },
+    {
+      "kind": "trial",
+      "title": "Osteoporosis trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Osteoporosis",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "Shingles": [
+    {
+      "kind": "core",
+      "title": "Shingles / Herpes Zoster",
+      "url": "https://medlineplus.gov/shingles.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Shingles",
+      "url": "https://medlineplus.gov/genetics/condition/shingles/",
+      "detail": "",
+      "publisher": "MedlinePlus Genetics (GHR)"
+    },
+    {
+      "kind": "core",
+      "title": "Shingles",
+      "url": "https://www.nia.nih.gov/health/shingles/shingles",
+      "detail": "",
+      "publisher": "NIA (NIHSeniorHealth successor)"
+    },
+    {
+      "kind": "core",
+      "title": "About Shingles (Herpes Zoster)",
+      "url": "https://www.cdc.gov/shingles/about/index.html",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "Association of herpes zoster and chronic inflammatory skin disease in United States inpatients",
+      "url": "https://data.mendeley.com/datasets/7z9656xvgy/1",
+      "detail": "Modality: tabular supplemental Tables 1-2. Size: not stated on landing page. Access as catalogued: open.",
+      "publisher": "data.mendeley.com"
+    },
+    {
+      "kind": "dataset",
+      "title": "Global Burden of Varicella and Herpes Zoster in Adults Aged 65 Years and Older",
+      "url": "https://data.mendeley.com/datasets/h4c2n55msw/1",
+      "detail": "Modality: population-level tabular burden data. Size: not stated on landing page. Access as catalogued: open.",
+      "publisher": "data.mendeley.com"
+    },
+    {
+      "kind": "dataset",
+      "title": "Risk of recurrent herpes zoster in a population-based cohort study of older adults",
+      "url": "https://data.mendeley.com/datasets/vkxmd63vkc/1",
+      "detail": "Modality: cohort appendix/tabular data. Size: not stated on landing page. Access as catalogued: open.",
+      "publisher": "data.mendeley.com"
+    },
+    {
+      "kind": "dataset",
+      "title": "Incidence of initial and recurrent herpes zoster among aged 50 and older population",
+      "url": "https://data.mendeley.com/datasets/yhhxdvjdbd/1",
+      "detail": "Modality: supplementary tabular material. Size: 39.9 KB. Access as catalogued: open.",
+      "publisher": "data.mendeley.com"
+    },
+    {
+      "kind": "tool",
+      "title": "nextstrain/vzv",
+      "url": "https://github.com/nextstrain/vzv",
+      "detail": "github. VZV sequence curation, alignment, clade and mutation analysis, and visualization; useful for genomic feature generation.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "MicroBioGenoHub/VaricellaGen",
+      "url": "https://github.com/MicroBioGenoHub/VaricellaGen",
+      "detail": "github. VZV QC, variant calling, consensus genomes, clade typing, and phylogeny; not a validated clinical diagnostic model.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC Shingles Facts and Stats",
+      "url": "https://www.cdc.gov/shingles/data-research/index.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC Pink Book Chapter 23: Zoster",
+      "url": "https://www.cdc.gov/pinkbook/hcp/table-of-contents/chapter-23-zoster.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "Recommendations for Use of Herpes Zoster Vaccines",
+      "url": "https://www.cdc.gov/mmwr/volumes/67/wr/mm6703a5.htm",
+      "detail": "2018",
+      "publisher": "CDC Advisory Committee on Immunization Practices"
+    },
+    {
+      "kind": "guideline",
+      "title": "Use of Recombinant Zoster Vaccine in Immunocompromised Adults Aged 19 ≥ Years",
+      "url": "https://www.cdc.gov/mmwr/volumes/71/wr/mm7103a2.htm",
+      "detail": "2022",
+      "publisher": "CDC Advisory Committee on Immunization Practices"
+    },
+    {
+      "kind": "article",
+      "title": "Risk factors for herpes zoster infections: a systematic review and meta-analysis",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38236326/",
+      "detail": "2024",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "Use of Recombinant Zoster Vaccine in Immunocompromised Adults Aged 19 ≥ Years",
+      "url": "https://www.cdc.gov/mmwr/volumes/71/wr/mm7103a2.htm",
+      "detail": "2022",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "education",
+      "title": "Immunization: You Call the Shots— Module 17—Herpes Zoster (Shingles)— 2024",
+      "url": "https://www2.cdc.gov/nip/isd/ycts/mod1/courses/zoster/ce.asp",
+      "detail": "CME",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "education",
+      "title": "What Do Viruses Do And How Do We Control Them",
+      "url": "https://www.coursera.org/learn/what-do-viruses-do-and-how-do-we-control-them",
+      "detail": "MOOC",
+      "publisher": "Imperial College London via Coursera"
+    },
+    {
+      "kind": "education",
+      "title": "ACGME Adult Infectious Diseases Fellowship",
+      "url": "https://www.hopkinsmedicine.org/infectious-diseases/education/fellowships/acgme-adult-infectious-diseases-fellowship",
+      "detail": "fellowship",
+      "publisher": "Johns Hopkins University School of Medicine"
+    },
+    {
+      "kind": "education",
+      "title": "Master of Health Science in Clinical Investigation",
+      "url": "https://publichealth.jhu.edu/academics/mhs-graduate-training-programs-in-clinical-investigation",
+      "detail": "degree",
+      "publisher": "Johns Hopkins Bloomberg School of Public Health"
+    },
+    {
+      "kind": "facility",
+      "title": "Pharmacies and immunization sites searchable by ZIP",
+      "url": "https://www.vaccines.gov/find-vaccines/",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.vaccines.gov"
+    },
+    {
+      "kind": "facility",
+      "title": "Federally supported health centers and service sites",
+      "url": "https://findahealthcenter.hrsa.gov/",
+      "detail": "Facility directory or certification reference",
+      "publisher": "findahealthcenter.hrsa.gov"
+    },
+    {
+      "kind": "trial",
+      "title": "Shingles trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Herpes%20Zoster",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "Diabetes": [
+    {
+      "kind": "core",
+      "title": "Diabetes",
+      "url": "https://medlineplus.gov/diabetes.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Type 1 diabetes",
+      "url": "https://medlineplus.gov/genetics/condition/type-1-diabetes/",
+      "detail": "",
+      "publisher": "MedlinePlus Genetics (GHR)"
+    },
+    {
+      "kind": "core",
+      "title": "Type 2 diabetes",
+      "url": "https://medlineplus.gov/genetics/condition/type-2-diabetes/",
+      "detail": "",
+      "publisher": "MedlinePlus Genetics (GHR)"
+    },
+    {
+      "kind": "core",
+      "title": "Diabetes Overview",
+      "url": "https://www.niddk.nih.gov/health-information/diabetes/overview",
+      "detail": "",
+      "publisher": "NIDDK"
+    },
+    {
+      "kind": "core",
+      "title": "Diabetes",
+      "url": "https://www.nia.nih.gov/health/diabetes",
+      "detail": "",
+      "publisher": "NIA (NIHSeniorHealth successor)"
+    },
+    {
+      "kind": "core",
+      "title": "Take Diabetes to Heart Fact Sheet",
+      "url": "https://www.nhlbi.nih.gov/resources/take-diabetes-heart-fact-sheet",
+      "detail": "",
+      "publisher": "NHLBI"
+    },
+    {
+      "kind": "core",
+      "title": "Definition of diabetes mellitus",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-terms/def/diabetes-mellitus",
+      "detail": "",
+      "publisher": "CancerGov"
+    },
+    {
+      "kind": "core",
+      "title": "Diabetes Basics",
+      "url": "https://www.cdc.gov/diabetes/about/index.html",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "National Health and Nutrition Examination Survey (NHANES)",
+      "url": "https://wwwn.cdc.gov/nchs/nhanes/",
+      "detail": "Modality: Interview, examination, laboratory and nutrition survey data. Size: Repeated U.S. survey cycles; cycle-specific sizes. Access as catalogued: open.",
+      "publisher": "wwwn.cdc.gov"
+    },
+    {
+      "kind": "dataset",
+      "title": "Behavioral Risk Factor Surveillance System (BRFSS) annual data",
+      "url": "https://www.cdc.gov/brfss/annual_data/annual_data.htm",
+      "detail": "Modality: Telephone survey and health behavior data. Size: Large annual state-based survey; year-specific files. Access as catalogued: open.",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "dataset",
+      "title": "MIMIC-IV v3.1",
+      "url": "https://physionet.org/content/mimiciv/",
+      "detail": "Modality: Deidentified hospital and ICU EHR, labs, medications and diagnoses. Size: Over 364,000 people and 546,000 hospitalizations in v3.0; v3.1 current page. Access as catalogued: controlled.",
+      "publisher": "physionet.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "CDC Diabetes Health Indicators",
+      "url": "https://archive.ics.uci.edu/dataset/891/cdc+diabetes+health+indicators",
+      "detail": "Modality: Tabular multivariate survey classification data. Size: 253,680 instances and 21 features. Access as catalogued: open.",
+      "publisher": "archive.ics.uci.edu"
+    },
+    {
+      "kind": "tool",
+      "title": "Pima-Indians-Diabetes-Dataset",
+      "url": "https://github.com/npradaschnor/Pima-Indians-Diabetes-Dataset",
+      "detail": "github. Benchmark repository describing 768 women, one diabetes outcome and eight clinical attributes; provenance and representativeness require caution.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "aidenpan/Diabetes",
+      "url": "https://huggingface.co/datasets/aidenpan/Diabetes",
+      "detail": "huggingface. Open tabular dataset with viewer; card describes a simulated project dataset, so it is not a clinical validation set.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "statistics",
+      "title": "MedlinePlus diabetes statistics and research links",
+      "url": "https://medlineplus.gov/diabetes.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "medlineplus.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC BRFSS Annual Survey Data",
+      "url": "https://www.cdc.gov/brfss/annual_data/annual_data.htm",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "WHO Diabetes global estimates",
+      "url": "https://www.who.int/news-room/fact-sheets/detail/diabetes",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.who.int"
+    },
+    {
+      "kind": "guideline",
+      "title": "Standards of Care in Diabetes",
+      "url": "https://professional.diabetes.org/standards-of-care",
+      "detail": "annual/current edition",
+      "publisher": "American Diabetes Association"
+    },
+    {
+      "kind": "guideline",
+      "title": "Diabetes fact sheet and global technical guidance",
+      "url": "https://www.who.int/news-room/fact-sheets/detail/diabetes",
+      "detail": "2024 page",
+      "publisher": "World Health Organization"
+    },
+    {
+      "kind": "article",
+      "title": "Teplizumab and beta-Cell Function in Newly Diagnosed Type 1 Diabetes",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37861217/",
+      "detail": "2023",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "risk",
+      "title": "60-Second Risk Test for Type 2 Diabetes",
+      "url": "https://diabetes.org/diabetes-risk-test",
+      "detail": "",
+      "publisher": "American Diabetes Association"
+    },
+    {
+      "kind": "risk",
+      "title": "QDiabetes Web Calculator",
+      "url": "https://qdiabetes.org/",
+      "detail": "",
+      "publisher": "QResearch/QDiabetes"
+    },
+    {
+      "kind": "education",
+      "title": "Diabetes—A Global Challenge",
+      "url": "https://www.coursera.org/learn/diabetes",
+      "detail": "MOOC",
+      "publisher": "University of Copenhagen via Coursera"
+    },
+    {
+      "kind": "education",
+      "title": "Institute of Learning",
+      "url": "https://professionaleducation.diabetes.org/Catalogue/IOL",
+      "detail": "CME",
+      "publisher": "American Diabetes Association"
+    },
+    {
+      "kind": "education",
+      "title": "Advanced Management of Diabetes Online Interprofessional Certificate",
+      "url": "https://meded.ucsf.edu/ce-diabetes",
+      "detail": "certificate",
+      "publisher": "University of California, San Francisco"
+    },
+    {
+      "kind": "education",
+      "title": "Endocrinology, Diabetes, and Metabolism Fellowship",
+      "url": "https://www.cc.nih.gov/training/gme/programs/endocrinology_metabolism",
+      "detail": "fellowship",
+      "publisher": "National Institutes of Health"
+    },
+    {
+      "kind": "education",
+      "title": "Endocrinology, Diabetes, and Metabolism Program Requirements",
+      "url": "https://www.acgme.org/globalassets/pfassets/programrequirements/2025-reformatted-requirements/143_endocrinologydiabetesmetabolism_2025_reformatted.pdf",
+      "detail": "fellowship",
+      "publisher": "Accreditation Council for Graduate Medical Education"
+    },
+    {
+      "kind": "facility",
+      "title": "Joint Commission Advanced Inpatient Diabetes Certification",
+      "url": "https://www.jointcommission.org/en-us/about-us/recognizing-excellence/find-accredited-organizations",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.jointcommission.org"
+    },
+    {
+      "kind": "trial",
+      "title": "Diabetes trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Diabetes%20Mellitus",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "Age-related Macular Degeneration": [
+    {
+      "kind": "core",
+      "title": "Age-related Macular Degeneration",
+      "url": "https://medlineplus.gov/maculardegeneration.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Age-related macular degeneration",
+      "url": "https://medlineplus.gov/genetics/condition/age-related-macular-degeneration/",
+      "detail": "",
+      "publisher": "MedlinePlus Genetics (GHR)"
+    },
+    {
+      "kind": "core",
+      "title": "Aging and Your Eyes",
+      "url": "https://www.nia.nih.gov/health/vision-and-vision-loss/aging-and-your-eyes",
+      "detail": "",
+      "publisher": "NIA (NIHSeniorHealth successor)"
+    },
+    {
+      "kind": "core",
+      "title": "About Age-Related Macular Degeneration",
+      "url": "https://www.cdc.gov/vision-health/about-eye-disorders/age-related-macular-degeneration.html",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "AMDNet23: Fundus Image Dataset for Age-Related Macular Degeneration Disease Detection",
+      "url": "https://data.mendeley.com/datasets/yj35kjgrv3/1",
+      "detail": "Modality: Color fundus photographs. Size: About 2,000 images total; 400 AMD images in a four- class set. Access as catalogued: open.",
+      "publisher": "data.mendeley.com"
+    },
+    {
+      "kind": "dataset",
+      "title": "RFMiD (Retinal Fundus Multi- Disease Image Dataset)",
+      "url": "https://huggingface.co/datasets/ctmedtech/RFMID",
+      "detail": "Modality: Color fundus photographs with expert multilabel annotations. Size: 3,200 images and 46 disease labels, including AMD. Access as catalogued: open.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "dataset",
+      "title": "Harvard FairVision",
+      "url": "https://huggingface.co/datasets/harvardairobotics/FairVision",
+      "detail": "Modality: Scanning-laser fundus images plus 3-D OCT B-scans and demographic metadata. Size: About 30,000 subjects total; about 10,000 AMD subjects. Access as catalogued: open.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "tool",
+      "title": "DeepSeeNet",
+      "url": "https://github.com/ncbi-nlp/DeepSeeNet",
+      "detail": "github. NCBI/NEI-supported deep-learning framework for AREDS simplified AMD severity grading and related fundus-photo risk factors; research use only.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "FAIR-AMD-OCT-paper-dataset",
+      "url": "https://github.com/fairdataihub/FAIR-AMD-OCT-paper-dataset",
+      "detail": "github. Open metadata/inventory dataset accompanying a FAIR assessment of publicly available AMD OCT datasets; useful for discovery, not a clinical model.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC Vision and Eye Health Surveillance System (VEHSS) AMD prevalence estimates",
+      "url": "https://www.cdc.gov/vision-health-data/prevalence-estimates/amd-prevalence.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "MedlinePlus AMD topic and linked NIH statistics resources",
+      "url": "https://medlineplus.gov/maculardegeneration.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "medlineplus.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "Age-Related Macular Degeneration Preferred Practice Pattern",
+      "url": "https://www.aao.org/education/preferred-practice-pattern/age-related-macular-degeneration-ppp",
+      "detail": "2025 (online 2024 update)",
+      "publisher": "American Academy of Ophthalmology"
+    },
+    {
+      "kind": "article",
+      "title": "Age-Related Macular Degeneration: A Review",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38193957/",
+      "detail": "2024",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "Pegcetacoplan for the treatment of geographic atrophy secondary to age-related macular degeneration (OAKS and DERBY)",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37865470/",
+      "detail": "2023",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "Age-Related Macular Degeneration Preferred Practice Pattern",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39918524/",
+      "detail": "2025",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "risk",
+      "title": "AREDS simplified severity scale",
+      "url": "https://github.com/ncbi-nlp/DeepSeeNet",
+      "detail": "",
+      "publisher": "National Eye Institute / NCBI-NLP DeepSeeNet"
+    },
+    {
+      "kind": "education",
+      "title": "Neovascular AMD Courses: New Durable Anti-VEGF Therapies",
+      "url": "https://www.aao.org/education/amd-courses",
+      "detail": "CME",
+      "publisher": "American Academy of Ophthalmology"
+    },
+    {
+      "kind": "education",
+      "title": "Ophthalmology Residency Program",
+      "url": "https://medicine.osu.edu/departments/ophthalmology/education/ophthalmology-residency",
+      "detail": "residency",
+      "publisher": "The Ohio State University"
+    },
+    {
+      "kind": "education",
+      "title": "Vitreoretinal Disease and Surgery Fellowship",
+      "url": "https://medicine.osu.edu/departments/ophthalmology/education/ophthalmology-fellowships/vitreoretinal-disease-and-surgery",
+      "detail": "fellowship",
+      "publisher": "The Ohio State University"
+    },
+    {
+      "kind": "education",
+      "title": "Retina Fellowships",
+      "url": "https://eye.medicine.uiowa.edu/education/fellowships/retina",
+      "detail": "fellowship",
+      "publisher": "University of Iowa Department of Ophthalmology and Visual Sciences"
+    },
+    {
+      "kind": "facility",
+      "title": "Joint Commission Quality Check / JCI-accredited organizations directory (general accreditation; not AMD-specific)",
+      "url": "https://www.qualitycheck.org/",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.qualitycheck.org"
+    },
+    {
+      "kind": "trial",
+      "title": "Age-related Macular Degeneration trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Age-Related%20Macular%20Degeneration",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "Hemochromatosis": [
+    {
+      "kind": "core",
+      "title": "Hemochromatosis / Iron Overload",
+      "url": "https://medlineplus.gov/hemochromatosis.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Hereditary hemochromatosis",
+      "url": "https://medlineplus.gov/genetics/condition/hereditary-hemochromatosis/",
+      "detail": "",
+      "publisher": "MedlinePlus Genetics (GHR)"
+    },
+    {
+      "kind": "core",
+      "title": "Hemochromatosis type 4 / About the Disease",
+      "url": "https://rarediseases.info.nih.gov/diseases/10094/hemochromatosis-type-4",
+      "detail": "",
+      "publisher": "GARD"
+    },
+    {
+      "kind": "core",
+      "title": "Definition & Facts for Hemochromatosis",
+      "url": "https://www.niddk.nih.gov/health-information/liver-disease/hemochromatosis/definition-facts",
+      "detail": "",
+      "publisher": "NIDDK"
+    },
+    {
+      "kind": "core",
+      "title": "Common genetic disorder found to cause serious disease and disability with age",
+      "url": "https://www.nia.nih.gov/news/common-genetic-disorder-found-cause-serious-disease-and-disability-age",
+      "detail": "",
+      "publisher": "NIA (NIHSeniorHealth successor)"
+    },
+    {
+      "kind": "core",
+      "title": "Definition of hemochromatosis",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-terms/def/hemochromatosis",
+      "detail": "",
+      "publisher": "CancerGov"
+    },
+    {
+      "kind": "core",
+      "title": "Hemochromatosis and Iron Overload Screening Study (HEIRS) - Catalog",
+      "url": "https://biolincc.nhlbi.nih.gov/catalog/heirs/",
+      "detail": "",
+      "publisher": "NHLBI"
+    },
+    {
+      "kind": "core",
+      "title": "About Hereditary Hemochromatosis",
+      "url": "https://www.cdc.gov/hereditary-hemochromatosis/about/index.html",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "Hemochromatosis and Iron Overload Screening Study (HEIRS)",
+      "url": "https://biolincc.nhlbi.nih.gov/catalog/heirs/",
+      "detail": "Modality: epidemiology, questionnaire, clinical measures, transferrin saturation, ferritin, HFE genotypes, serum/plasma/DNA/buffy- coat biospecimens. Size: Initial screen about 102,000 adults; about 6,770 participants available for broader research use. Access as catalogued: controlled.",
+      "publisher": "biolincc.nhlbi.nih.gov"
+    },
+    {
+      "kind": "dataset",
+      "title": "UK Biobank",
+      "url": "https://www.ukbiobank.ac.uk/publications/common-conditions-associated-with-hereditary-haemochromatosis-genetic-variants-cohort-study-in-uk-biobank/",
+      "detail": "Modality: genotype, hospital records, cancer registry and mortality outcomes. Size: 451,243 European-ancestry participants in the cited hemochromatosis analysis; 2,890 C282Y homozygotes. Access as catalogued: registration.",
+      "publisher": "www.ukbiobank.ac.uk"
+    },
+    {
+      "kind": "dataset",
+      "title": "ClinVar hereditary hemochromatosis query",
+      "url": "https://www.ncbi.nlm.nih.gov/clinvar/?term=hereditary%20hemochromatosis",
+      "detail": "Modality: clinical variant interpretations and genotype-condition assertions. Size: 1,476 query results displayed when verified. Access as catalogued: open.",
+      "publisher": "www.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "tool",
+      "title": "JanJanJan2018/Hemochromatosis",
+      "url": "https://github.com/JanJanJan2018/Hemochromatosis",
+      "detail": "github. Public blood-sample and genotype analysis repository; not clinically validated.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "FRCBS/hemochromatosis_modeling_article",
+      "url": "https://github.com/FRCBS/hemochromatosis_modeling_article",
+      "detail": "github. Public code repository associated with hemochromatosis risk-modifier modeling.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "statistics",
+      "title": "NHLBI BioLINCC HEIRS cohort",
+      "url": "https://biolincc.nhlbi.nih.gov/catalog/heirs/",
+      "detail": "Statistics and surveillance source",
+      "publisher": "biolincc.nhlbi.nih.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "UK Biobank hemochromatosis cohort publication",
+      "url": "https://www.bmj.com/content/364/bmj.k5222",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.bmj.com"
+    },
+    {
+      "kind": "statistics",
+      "title": "NIA summary of UK Biobank hemochromatosis studies",
+      "url": "https://www.nia.nih.gov/news/common-genetic-disorder-found-cause-serious-disease-and-disability-age",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.nia.nih.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "Diagnosis and Management of Hemochromatosis",
+      "url": "https://www.aasld.org/practice-guidelines/management-hemochromatosis",
+      "detail": "2011",
+      "publisher": "American Association for the Study of Liver Diseases"
+    },
+    {
+      "kind": "guideline",
+      "title": "ACG Clinical Guideline: Hereditary Hemochromatosis",
+      "url": "https://journals.lww.com/cld/fulltext/2020/11000/acg_clinical_guideline__hereditary_hemochromatosis.1.aspx",
+      "detail": "2019",
+      "publisher": "American College of Gastroenterology"
+    },
+    {
+      "kind": "guideline",
+      "title": "EASL Clinical Practice Guidelines on haemochromatosis",
+      "url": "https://www.journal-of-hepatology.eu/article/S0168-8278(22)00211-2/fulltext",
+      "detail": "2022",
+      "publisher": "European Association for the Study of the Liver"
+    },
+    {
+      "kind": "article",
+      "title": "Hemochromatosis",
+      "url": "https://www.nejm.org/doi/full/10.1056/NEJMra2119758",
+      "detail": "2022",
+      "publisher": "www.nejm.org"
+    },
+    {
+      "kind": "article",
+      "title": "Hemochromatosis—classification update and recommendations by the BIOIRON Society",
+      "url": "https://ashpublications.org/blood/article/139/20/3018/477138/Hemochromatosis-classification-update-and",
+      "detail": "2022",
+      "publisher": "ashpublications.org"
+    },
+    {
+      "kind": "article",
+      "title": "Diagnosis and management of hereditary hemochromatosis",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11665571/",
+      "detail": "2024",
+      "publisher": "pmc.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "Rusfertide for the treatment of iron overload in HFE-related haemochromatosis: an open-label, multicentre, proof-of-concept phase 2 trial",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37863080/",
+      "detail": "2023",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "risk",
+      "title": "FIB-4 fibrosis score",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11665571/",
+      "detail": "",
+      "publisher": "Clinical liver practice; discussed in 2024 hemochromatosis review"
+    },
+    {
+      "kind": "risk",
+      "title": "APRI fibrosis score",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11665571/",
+      "detail": "",
+      "publisher": "Clinical liver practice; discussed in 2024 hemochromatosis review"
+    },
+    {
+      "kind": "education",
+      "title": "Hereditary Hemochromatosis (Online CE Course)",
+      "url": "https://www.labce.com/hereditary-hemochromatosis.aspx",
+      "detail": "CME",
+      "publisher": "LabCE/MediaLab"
+    },
+    {
+      "kind": "education",
+      "title": "LiverLearning",
+      "url": "https://www.aasld.org/clinician-resources",
+      "detail": "CME",
+      "publisher": "American Association for the Study of Liver Diseases"
+    },
+    {
+      "kind": "education",
+      "title": "Fundamentals of Liver Disease",
+      "url": "https://www.aasld.org/clinician-resources",
+      "detail": "short course",
+      "publisher": "American Association for the Study of Liver Diseases"
+    },
+    {
+      "kind": "education",
+      "title": "Transplant Hepatology Fellowship Pathways",
+      "url": "https://www.aasld.org/hepatology-training-pathways",
+      "detail": "fellowship",
+      "publisher": "American Association for the Study of Liver Diseases"
+    },
+    {
+      "kind": "education",
+      "title": "Transplant Hepatology Program Requirements",
+      "url": "https://www.acgme.org/globalassets/pfassets/programrequirements/2025-reformatted-requirements/158_transplanthepatology_2025_reformatted.pdf",
+      "detail": "fellowship",
+      "publisher": "Accreditation Council for Graduate Medical Education"
+    },
+    {
+      "kind": "facility",
+      "title": "SRTR transplant-center directory",
+      "url": "https://srtr.hrsa.gov/",
+      "detail": "Facility directory or certification reference",
+      "publisher": "srtr.hrsa.gov"
+    },
+    {
+      "kind": "facility",
+      "title": "Joint Commission accredited-organization directory",
+      "url": "https://www.jointcommission.org/en-us/about-us/recognizing-excellence/find-accredited-organizations",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.jointcommission.org"
+    },
+    {
+      "kind": "facility",
+      "title": "NPPES provider and taxonomy directory",
+      "url": "https://npiregistry.cms.hhs.gov/",
+      "detail": "Facility directory or certification reference",
+      "publisher": "npiregistry.cms.hhs.gov"
+    },
+    {
+      "kind": "trial",
+      "title": "Hemochromatosis trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Hemochromatosis",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "Diabetic Retinopathy": [
+    {
+      "kind": "core",
+      "title": "Diabetic Eye Problems",
+      "url": "https://medlineplus.gov/diabeticeyeproblems.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Diabetic Eye Disease",
+      "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/diabetic-eye-disease",
+      "detail": "",
+      "publisher": "NIDDK"
+    },
+    {
+      "kind": "core",
+      "title": "Vision Loss and Diabetes",
+      "url": "https://www.cdc.gov/diabetes/diabetes-complications/diabetes-and-vision-loss.html",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "Indian Diabetic Retinopathy Image Dataset (IDRiD)",
+      "url": "https://ieee-dataport.org/open-access/indian-diabetic-retinopathy-image-dataset-idrid",
+      "detail": "Modality: Color fundus photographs with lesion masks and DR/DME severity labels. Size: 516 disease-grading images plus 81 lesion- segmentation images. Access as catalogued: open.",
+      "publisher": "ieee-dataport.org"
+    },
+    {
+      "kind": "dataset",
+      "title": "MESSIDOR",
+      "url": "https://www.adcis.net/en/third-party/messidor/",
+      "detail": "Modality: Color posterior-pole fundus images with retinopathy and macular-edema diagnoses. Size: 1,200 images. Access as catalogued: registration.",
+      "publisher": "www.adcis.net"
+    },
+    {
+      "kind": "dataset",
+      "title": "MESSIDOR-2",
+      "url": "https://www.adcis.net/en/third-party/messidor2/",
+      "detail": "Modality: Macula-centered color fundus images, paired by examination. Size: 874 examinations and 1,748 images. Access as catalogued: registration.",
+      "publisher": "www.adcis.net"
+    },
+    {
+      "kind": "dataset",
+      "title": "APTOS 2019 Blindness Detection",
+      "url": "https://www.kaggle.com/c/aptos2019-blindness-detection",
+      "detail": "Modality: Color fundus photographs with five DR severity ratings. Size: Thousands of rural fundus images. Access as catalogued: registration.",
+      "publisher": "www.kaggle.com"
+    },
+    {
+      "kind": "tool",
+      "title": "FDU-VTS/Awesome-Diabetic-Retinopathy-Detection",
+      "url": "https://github.com/FDU-VTS/Awesome-Diabetic-Retinopathy-Detection",
+      "detail": "github. Verified repository of papers and public datasets.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "nkicsl/DDR-dataset",
+      "url": "https://github.com/nkicsl/DDR-dataset",
+      "detail": "github. Verified GitHub dataset project for DR classification, lesion segmentation, and detection.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "Kontawat/vit-diabetic-retinopathy-classification",
+      "url": "https://huggingface.co/Kontawat/vit-diabetic-retinopathy-classification",
+      "detail": "huggingface. Verified Hugging Face image-classification model.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC Vision and Eye Health Surveillance System (VEHSS): Prevalence of Diabetic Retinopathy",
+      "url": "https://www.cdc.gov/vision-health-data/prevalence-estimates/dr-prevalence.html",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.cdc.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "Lundeen et al. 2023 JAMA Ophthalmology prevalence study",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37318810/",
+      "detail": "Statistics and surveillance source",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "Standards of Care in Diabetes—2025, Section 12: Retinopathy, Neuropathy, and Foot Care",
+      "url": "https://diabetesjournals.org/care/article/48/Supplement_1/S252/157552/12-Retinopathy-Neuropathy-and-Foot-Care-Standards",
+      "detail": "2025",
+      "publisher": "American Diabetes Association Professional Practice Committee"
+    },
+    {
+      "kind": "guideline",
+      "title": "Diabetic Retinopathy Preferred Practice Pattern",
+      "url": "https://www.aao.org/education/preferred-practice-pattern/diabetic-retinopathy-ppp",
+      "detail": "2024/2025 online update",
+      "publisher": "American Academy of Ophthalmology"
+    },
+    {
+      "kind": "article",
+      "title": "Prevalence of Diabetic Retinopathy in the US in 2021",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37318810/",
+      "detail": "2023",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "risk",
+      "title": "RetinaRisk",
+      "url": "https://depts.washington.edu/diabetes/free-diabetic-retinopathy-risk-calculator/",
+      "detail": "",
+      "publisher": "RetinaRisk; linked by University of Washington Diabetes Institute"
+    },
+    {
+      "kind": "education",
+      "title": "Diabetic retinopathy",
+      "url": "https://idf.org/news-and-resources/resources/diabetic-retinopathy/",
+      "detail": "short course",
+      "publisher": "International Diabetes Federation"
+    },
+    {
+      "kind": "education",
+      "title": "Diabetes - a Global Challenge",
+      "url": "https://www.coursera.org/learn/diabetes",
+      "detail": "MOOC",
+      "publisher": "University of Copenhagen via Coursera"
+    },
+    {
+      "kind": "education",
+      "title": "Diabetic Retinopathy",
+      "url": "https://www.aao.org/education/course/diabetic-retinopathy-6",
+      "detail": "CME",
+      "publisher": "American Academy of Ophthalmology"
+    },
+    {
+      "kind": "education",
+      "title": "Vitreoretinal Surgery Fellowship",
+      "url": "https://chicago.medicine.uic.edu/ophthalmology-visual-sciences/education/fellowship-programs/vitreoretinal-surgery-fellowship/",
+      "detail": "fellowship",
+      "publisher": "University of Illinois Chicago"
+    },
+    {
+      "kind": "facility",
+      "title": "Joint Commission accreditation directory",
+      "url": "https://www.jointcommission.org/en-us/about-us/recognizing-excellence/find-accredited-organizations",
+      "detail": "Facility directory or certification reference",
+      "publisher": "www.jointcommission.org"
+    },
+    {
+      "kind": "trial",
+      "title": "Diabetic Retinopathy trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Diabetic%20Retinopathy",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ],
+  "Psoriasis": [
+    {
+      "kind": "core",
+      "title": "Psoriasis",
+      "url": "https://medlineplus.gov/psoriasis.html",
+      "detail": "",
+      "publisher": "MedlinePlus Health Topics"
+    },
+    {
+      "kind": "core",
+      "title": "Generalized pustular psoriasis",
+      "url": "https://medlineplus.gov/genetics/condition/generalized-pustular-psoriasis/",
+      "detail": "",
+      "publisher": "MedlinePlus Genetics (GHR)"
+    },
+    {
+      "kind": "core",
+      "title": "NCI Dictionary: psoriasis",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-terms/def/psoriasis",
+      "detail": "",
+      "publisher": "CancerGov"
+    },
+    {
+      "kind": "core",
+      "title": "Psoriasis (archived)",
+      "url": "https://archive.cdc.gov/www_cdc_gov/psoriasis/index.htm",
+      "detail": "",
+      "publisher": "CDC"
+    },
+    {
+      "kind": "dataset",
+      "title": "NCBI GEO GSE54456",
+      "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE54456",
+      "detail": "Modality: bulk RNA-seq of lesional psoriatic and normal skin. Size: 174 samples: 92 psoriatic, 82 normal. Access as catalogued: open.",
+      "publisher": "www.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "dataset",
+      "title": "NCBI GEO GSE13355",
+      "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE13355",
+      "detail": "Modality: Affymetrix HU133 Plus 2.0 microarray gene expression. Size: 180 arrays from 58 patients and 64 controls. Access as catalogued: open.",
+      "publisher": "www.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "dataset",
+      "title": "Diverse Dermatology Images (DDI)",
+      "url": "https://ddi-dataset.github.io/",
+      "detail": "Modality: expert-labeled clinical skin photographs with pathology confirmation. Size: 656 images from 570 unique patients; broad dermatology, not psoriasis- only. Access as catalogued: registration.",
+      "publisher": "ddi-dataset.github.io"
+    },
+    {
+      "kind": "tool",
+      "title": "vemvet/SAMCL",
+      "url": "https://github.com/vemvet/SAMCL",
+      "detail": "github. Multimodal clinical/dermoscopic inflammatory-skin model including psoriasis.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "mnansary/pySKIND",
+      "url": "https://github.com/mnansary/pySKIND",
+      "detail": "github. Eczema-versus-psoriasis image classification repository.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "zhilongjia/psoriasis",
+      "url": "https://github.com/zhilongjia/psoriasis",
+      "detail": "github. GSE13355 co-expression and drug- repositioning analysis.",
+      "publisher": "github.com"
+    },
+    {
+      "kind": "tool",
+      "title": "Psoriasis-Project-M-clip-vit-large-patch14",
+      "url": "https://huggingface.co/ahmedesmail16/Psoriasis-Project-M-clip-vit-large-patch14",
+      "detail": "huggingface. Fine-tuned CLIP image-classification model; model card says training dataset details are unavailable.",
+      "publisher": "huggingface.co"
+    },
+    {
+      "kind": "statistics",
+      "title": "CDC NHANES psoriasis data discussion (archived topic page)",
+      "url": "https://archive.cdc.gov/www_cdc_gov/psoriasis/index.htm",
+      "detail": "Statistics and surveillance source",
+      "publisher": "archive.cdc.gov"
+    },
+    {
+      "kind": "statistics",
+      "title": "NCBI GEO psoriasis expression series",
+      "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE54456",
+      "detail": "Statistics and surveillance source",
+      "publisher": "www.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "guideline",
+      "title": "Psoriasis clinical guideline",
+      "url": "https://www.aad.org/member/clinical-quality/guidelines/psoriasis",
+      "detail": "2019 update",
+      "publisher": "American Academy of Dermatology"
+    },
+    {
+      "kind": "guideline",
+      "title": "Psoriasis: assessment and management (CG153)",
+      "url": "https://www.nice.org.uk/guidance/cg153",
+      "detail": "2012; reviewed 2025",
+      "publisher": "NICE"
+    },
+    {
+      "kind": "article",
+      "title": "A New Systematic Review and Meta-Analysis of Cohort Study: psoriasis and cardiovascular outcomes",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35402553/",
+      "detail": "2022",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "Deucravacitinib versus placebo and apremilast in moderate-to-severe plaque psoriasis",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35820547/",
+      "detail": "2023",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "article",
+      "title": "Psoriasis as a Systemic Disease",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38657176/",
+      "detail": "2024",
+      "publisher": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "kind": "education",
+      "title": "Skin Care and Dermatology CME",
+      "url": "https://edhub.ama-assn.org/course/306",
+      "detail": "CME",
+      "publisher": "AMA Ed Hub"
+    },
+    {
+      "kind": "education",
+      "title": "Psoriasis Masterclass",
+      "url": "https://psoriasiscouncil.org/education/",
+      "detail": "CME",
+      "publisher": "International Psoriasis Council"
+    },
+    {
+      "kind": "education",
+      "title": "Telehealth: Dermatology Assessment",
+      "url": "https://www.coursera.org/learn/telehealth-dermatology-assessment",
+      "detail": "short course",
+      "publisher": "Duke University via Coursera"
+    },
+    {
+      "kind": "education",
+      "title": "Dermatology residency pathway",
+      "url": "https://www.acgme.org/specialties/dermatology/program-requirements-and-faqs-and-applications/",
+      "detail": "residency",
+      "publisher": "ACGME"
+    },
+    {
+      "kind": "education",
+      "title": "Psoriasis, Phototherapy Clinical Research Fellowship",
+      "url": "https://dermatology.ucsf.edu/fellowships/psoriasis-clinical-research-fellowship",
+      "detail": "fellowship",
+      "publisher": "UCSF"
+    },
+    {
+      "kind": "trial",
+      "title": "Psoriasis trial search",
+      "url": "https://clinicaltrials.gov/search?cond=Psoriasis",
+      "detail": "Search link, not an individual study or evidence of efficacy.",
+      "publisher": "ClinicalTrials.gov"
+    }
+  ]
+}

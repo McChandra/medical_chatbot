@@ -374,7 +374,7 @@ elif current_page == "chatbot":
 elif current_page == "response":
     if not st.session_state.authenticated:
 
-        st.session_state.page == "login"
+        st.session_state.page = "login"
 
         st.rerun()
     else:

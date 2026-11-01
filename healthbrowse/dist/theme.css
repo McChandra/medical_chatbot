@@ -1,0 +1,9 @@
+:root{color-scheme:light;--paper:#f8f9f3;--ink:#193d36;--dim:#53645b;--line:#cbd5c8;--surface:#fff;--panel:#edf1e5;--wash:#e8eddf;--tag:#e2ead8;--link:#225f50;--muted-green:#526e48;--action:#193d36;--on-action:white;--focus:#527833}
+:root[data-theme=dark]{color-scheme:dark;--paper:#12221e;--ink:#e3efe4;--dim:#b1c3b7;--line:#425b4f;--surface:#1b3029;--panel:#20372c;--wash:#22382f;--tag:#324d39;--link:#abdcb8;--muted-green:#b3ce98;--action:#b9d69f;--on-action:#15271c;--focus:#c9e391}
+body{background:var(--paper);color:var(--ink);overflow-wrap:anywhere}a{color:var(--link)}
+.theme-controls{display:inline-flex;align-items:center;border:1px solid var(--line);background:var(--surface);border-radius:24px;padding:3px;gap:2px;flex-shrink:0}
+.theme-controls button{font:600 13px/1 system-ui;min-height:36px;padding:0 12px;color:var(--dim);cursor:pointer;background:transparent;border:0;border-radius:20px}
+.theme-controls button[aria-pressed=true]{background:var(--action);color:var(--on-action)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.auditbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+@media print{.theme-controls{display:none}body{background:white;color:black}}

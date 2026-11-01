@@ -1,0 +1,15 @@
+{
+  "source": "https://medlineplus.gov/xml/mplus_topics_compressed_2026-10-31.zip",
+  "feed_date": "2026-10-31",
+  "checked_on": "2026-11-01",
+  "archive_sha256": "8d95315ae1a71d99dac53a841688b784b740ace015c3d46ca0ee1648eff5f6f1",
+  "index_sha256": "1644d6e2a5405df6edf3f20504ff93aa180e41c9c8248430aa295835909a6174",
+  "rights_url": "https://medlineplus.gov/about/using/usingcontent/",
+  "rights_sha256": "d3027733c49d01a317e22bec8fb47462559752701e663a2f2c7771a035933075",
+  "topic_count": 1017,
+  "changed_topic_urls": {
+    "added": [],
+    "removed": [],
+    "updated": []
+  }
+}

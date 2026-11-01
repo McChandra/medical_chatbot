@@ -208,3 +208,6 @@ artifacts/checkpoints/*
 # ------------------------------------------------------------
 docker-compose.override.yml
 /artifacts/
+
+# HealthBrowse client files are tracked source, not Python build artifacts.
+!healthbrowse/dist/

@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from backend.auth.main import router as auth_router
+from backend.copilot import router as copilot_router
 
 app = FastAPI(
     title="MedQuad AI API",
@@ -7,6 +8,7 @@ app = FastAPI(
 )
 
 app.include_router(auth_router)
+app.include_router(copilot_router)
 
 @app.get("/health")
 def health_check():

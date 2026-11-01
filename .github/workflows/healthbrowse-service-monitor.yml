@@ -1,0 +1,20 @@
+name: HealthBrowse public service probe
+on:
+  schedule:
+    - cron: '31 */6 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    if: vars.HEALTHBROWSE_PUBLIC_ORIGIN != ''
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Check public service and age of published source snapshot
+        env:
+          SITE_ORIGIN: ${{ vars.HEALTHBROWSE_PUBLIC_ORIGIN }}
+        run: python3 healthbrowse/scripts/maintenance_smoke.py "$SITE_ORIGIN"
