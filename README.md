@@ -1,21 +1,95 @@
-# MedQuad AI
-### Evidence-Grounded Medical Question Answering | Applied AI Research & MLOps
+# HealthBrowse AI and MedQuAD Medical Chatbot
 
-**University of San Diego**  
-Shiley-Marcos School of Engineering  
-**MSc in Applied Artificial Intelligence — AAI-540 Final Project**
+University of San Diego · MSc in Applied Artificial Intelligence · AAI-540  
+**Project team:** Abhay Srivastav, Chandra Mouli Mudumba, and Rahul Pawar
 
-**Project Team**
-- Abhay Srivastav
-- Chandra Mouli Mudumba
-- Rahul Pawar
+## HealthBrowse AI
 
-**Project Status:** Academic Research Prototype  
-**Clinical Validation:** Not validated
+HealthBrowse AI helps a reader investigate a medical question and inspect the sources behind the answer. Try “What is leukemia?” The browser organizes the topic into seven sections: education and taxonomy, disease identification, clinical evidence, datasets and AI resources, risk and genetics, physiology and symptoms, and pharmacies and healthcare facilities. A reader can select a section and explore related papers, registered studies, or research grants. [HealthBrowse AI](https://healthbrowseai.auralflour.chatgpt.site) · [Public research site](https://healthbrowse-public-research.auralflour.chatgpt.site)
 
-**Kaggle Dataset Link:** https://www.kaggle.com/datasets/pythonafroz/medquad-medical-question-answer-for-ai-research
+## Medical chatbot
 
----
+MedQuAD is the companion medical question-answering project. Its Streamlit interface calls a FastAPI backend. The extractive copilot takes a topic, a numbered section, and a follow-up question. It selects supporting passages from a configured index or reports that it has insufficient evidence. Its eight internal passage categories differ from the seven sections displayed by HealthBrowse. Separate notebooks investigate semantic retrieval and language models. [Copilot implementation](backend/copilot_engine.py) · [Retrieval experiments](notebooks/rag_retrieval_evaluation.ipynb)
+
+## Audience and intended use
+
+General readers and patients can explore terminology and prepare questions for a clinician. Students can investigate mechanisms and compare sources. Clinicians, educators, and researchers can inspect publication records, trial status, funding, and dataset access conditions. Reading perspectives change the level of explanation. They do not establish professional credentials or grant access to patient records. Both applications are educational research prototypes. Clinical performance and patient-specific decision support have not been validated.
+
+## Technologies and system architecture
+
+| Component | Technologies | Responsibility |
+|---|---|---|
+| HealthBrowse frontend | HTML, CSS, JavaScript, installable web app | Search, seven-section results, evidence links, account interface |
+| HealthBrowse backend | JavaScript Worker routes, Node.js standalone server | Research queries, terminology lookup, personal workspace endpoints |
+| Accounts and persistence | Supabase Auth and PostgreSQL | Google and email sign-in, account-scoped settings and saved items |
+| Medical chatbot | Python, Streamlit, FastAPI | Ask follow-up questions and return topic-scoped excerpts |
+| Model experiments | Sentence Transformers, FAISS, cross-encoder reranking, FLAN-T5, MedGemma | Compare retrieval and model behavior in research code and notebooks |
+| Delivery | GitHub Actions, Docker, Kubernetes manifests, Cloud Run workflow | Run tests, build and scan the image, prepare deployment |
+
+```mermaid
+flowchart TD
+    Q["Medical question"] --> B["HealthBrowse research desk"]
+    B --> T["Topic resolution and seven sections"]
+    T --> E["Literature and registry lookups"]
+    E --> V["Rank and check records"]
+    V --> R["Cited results or evidence unavailable"]
+    B --> A["Supabase personal workspace"]
+    C["Streamlit chatbot"] --> F["FastAPI copilot"]
+    F --> P["Topic-scoped passage index"]
+    P --> X["Source excerpt or abstention"]
+```
+
+The browser carries the active topic, section, and citations into follow-up research. Its backend queries external registries and authenticates requests for personal data. The Python chatbot has its own request path. Its extractive endpoint does not require an LLM inference server. [Browser worker](healthbrowse/worker/routes.mjs) · [Account API](healthbrowse/server/account-api.mjs) · [Chatbot API](backend/copilot.py)
+
+## Data integration and collection
+
+| Source | Collection and use | Verification boundary |
+|---|---|---|
+| MedlinePlus | A dated XML feed supplies topic names and identifiers. The project records hashes for the archive and derived index. | The recorded October 31, 2026 snapshot contains 1,017 topics. This count belongs to that snapshot. |
+| MedQuAD | The passage builder selects excerpts from a pinned upstream commit and retains the source record and attribution. | Source-specific rights and passage coverage limit what can be displayed. |
+| Europe PMC, PubMed, Crossref | Research queries retrieve publication candidates and corroborate bibliographic identifiers and metadata. | Matching a paper identifies a publication. Its study design, population, and findings still require appraisal. |
+| ClinicalTrials.gov and NIH RePORTER | The backend retrieves registered trial status and matching funded projects and institutions. | A completed trial does not establish benefit. An award record supports a funding claim for that project. |
+| NLM Clinical Tables, MedlinePlus Connect, and CMS NPI Registry | Adapters look up terminology, patient-education links, and US provider records. SNOMED CT lookup requires appropriate licensed access. | A provider record does not verify accreditation, appointment availability, or pharmacy stock. |
+
+[Source snapshot and hashes](healthbrowse/docs/source-provenance.json) · [Passage collection script](healthbrowse/scripts/build_clinical_passages.py) · [Refresh and review process](healthbrowse/docs/maintenance.md)
+
+## Algorithmic thinking and hallucination mitigation
+
+1. **Resolve the topic before retrieving.** Map the question to a supported topic using names and aliases. Keep the selected disease and section as constraints on follow-ups. Ask for clarification when the user appears to change topics.
+2. **Rank for the question.** Use relevance, publication type, and available metadata to order candidates. The research drilldown can show up to five papers and returns fewer when candidates fail its checks. A rank is a retrieval decision, not an estimate of clinical certainty.
+3. **Corroborate before display.** Compare candidate identifiers and titles with the corresponding bibliographic record and filter known retraction or correction signals. Preserve the source URL, retrieval context, and dates where available. Distinguish live results from dated fallback records.
+4. **Abstain when support is missing.** The Python copilot filters passages by topic and section, matches question terms, and returns up to two excerpts. Missing evidence, an unavailable index, and a safety-related request have distinct responses. Metadata checks and lexical matching can still miss unsupported interpretations.
+
+[Evidence ranking](healthbrowse/dist/evidence.js) · [Paper verification](healthbrowse/dist/research-papers.js) · [Copilot tests](tests/test_copilot.py)
+
+## Research questions and evaluation
+
+**Does the seven-section browser reduce the time needed to find a correctly sourced answer? Does verification reduce unsupported claims?** The proposed study compares HealthBrowse with ordinary search on matched tasks and compares retrieval with and without the verification step. Freeze the corpus, ranking revision, and question set. Have independent reviewers judge whether the cited passage supports the answer for the relevant population. Measure time to a correctly sourced answer, top-five relevance, unsupported-claim rate, and correct abstentions. Report disagreements and uncertainty alongside aggregate results. The repository contains software tests and retrieval experiments. Prospective clinical and usability outcomes remain to be measured. [Study design and pilot protocol](healthbrowse/docs/research-business.md)
+
+## Research citations and source resources
+
+- **Ben Abacha A, Demner-Fushman D (2019).** *A question-entailment approach to question answering.* BMC Bioinformatics. The authors’ MedQuAD corpus contains 47,457 question-answer pairs from 12 NIH websites. The chatbot’s selected passage index is a subset. [Paper and DOI](https://doi.org/10.1186/s12859-019-3119-4) · [Original dataset and licensing notes](https://github.com/abachaa/MedQuAD)
+- **US National Library of Medicine.** Topic XML and linked educational material underpin the topic index. [MedlinePlus XML files](https://medlineplus.gov/xml.html) · [Content reuse terms](https://medlineplus.gov/about/using/usingcontent/)
+- **EMBL-EBI, NCBI, and Crossref.** Bibliographic services support literature retrieval and record corroboration. [Europe PMC API](https://europepmc.org/RestfulWebService) · [NCBI E-utilities](https://www.ncbi.nlm.nih.gov/books/NBK25501/) · [Crossref REST API](https://www.crossref.org/documentation/retrieve-metadata/rest-api/)
+- **US National Library of Medicine and NIH.** Registrations and awards support the trial and funding views. [ClinicalTrials.gov API](https://clinicaltrials.gov/data-api/api) · [NIH RePORTER API](https://api.reporter.nih.gov/)
+- **NLM and CMS.** Clinical terminology and provider-directory adapters point readers to the original records. [Clinical Tables](https://clinicaltables.nlm.nih.gov/) · [NPI Registry](https://npiregistry.cms.hhs.gov/)
+
+## Run the project
+
+For the standalone browser, use Node 24 and run the following from the repository root:
+
+```sh
+cd healthbrowse
+npm ci
+npm run build
+npm test
+npm start
+```
+
+[Account configuration](healthbrowse/docs/ACCOUNTS.md) · [Docker and Cloud Run deployment](healthbrowse/deploy/README.md) · [Chatbot installation and development](#14-installation-and-development)
+
+<details>
+<summary>Original MedQuAD technical report, installation instructions, experiments, and academic credits</summary>
 
 ## 1. Project Overview
 
@@ -664,3 +738,5 @@ Production authentication, clinical review and privacy controls require separate
 ## HealthBrowse product workspace
 
 The [HealthBrowse project](healthbrowse/README.md) contains the public seven-section research browser, standalone server, personal account API, installable mobile web app, and deployment instructions. Start the standalone service from the `healthbrowse` directory. Repository-level GitHub Actions workflows handle CI, reviewed source updates and optional Cloud Run release.
+
+</details>
