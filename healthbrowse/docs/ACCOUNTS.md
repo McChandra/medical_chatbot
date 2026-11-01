@@ -1,0 +1,16 @@
+# Accounts and email delivery
+
+The public desk runs without Supabase. Account actions at `/account.html` require a configured Supabase project and the personal-data migration. The browser uses a locally bundled, pinned SDK and PKCE for Google sign-in. Sessions are scoped to a tab through sessionStorage. Access tokens are sent only to same-origin account endpoints, and the server must authenticate the token before serving personal data.
+
+## Provider configuration
+
+1. Enable email authentication and **Confirm email** in Supabase Auth. Configure a minimum password length of 12 on the server as well as the UI; enable leaked-password protection when available. The UI accepts passphrases within the provider's 72-byte bcrypt boundary and offers a 24-character cryptographically random suggestion. Password login and passwordless email-code login are separate sign-in methods. Email confirmation or passwordless OTP alone does not enforce second-factor authentication on password logins.
+2. Use a real SMTP service with a verified sender. In the **Confirm signup**, **Magic Link**, and **Reset password** templates include the numeric code variable `{{ .Token }}` and explain the purpose of that code. Keep the provider expiry, retry limit, and rate-limit settings appropriate for the team. Passwordless email-code login sets `shouldCreateUser: false`. To register, use the signup form and verify the emailed code.
+3. Set the Site URL to the browser's HTTPS origin. Allow redirects to the exact production URLs `https://YOUR_HOST/account.html` and `https://YOUR_HOST/account.html?flow=recovery`. List localhost test URLs separately. Recovery codes can be typed in the originating tab; a PKCE callback link also needs that original tab's verifier.
+4. In Google Cloud create a Web application OAuth client for the deployment and add the callback URL displayed by Supabase (normally `https://PROJECT.supabase.co/auth/v1/callback`). Enable Google in Supabase and enter the Google client ID and secret there. Keep the Google client secret out of frontend files, build logs, and public environment variables.
+5. Set the server's Supabase URL and public anon/publishable key. `GET /api/config` returns `supabaseUrl` and `supabaseAnonKey`; never return service-role or SMTP credentials. Allow only this Supabase origin in the account page's CSP connect-src and script-src 'self'. Run `npm ci` and `npm run build` to produce `dist/supabase-client.js`.
+6. Test from a fresh browser tab with an explicitly designated test mailbox. Exercise signup, expired and valid email codes, existing-user OTP login, password login, Google consent and return, reset and update, signout, denial without a bearer token, and user isolation. This repository's tests use fixtures and do not deliver emails.
+
+The contact form needs a server-configured mailbox and mail sender. A pending result is distinct from delivered. Feedback sentiment and type are triage fields; reviewing a source correction requires a human or the clinical verification workflow.
+
+[Supabase email OTP](https://supabase.com/docs/guides/auth/auth-email-passwordless) · [Password and recovery](https://supabase.com/docs/guides/auth/passwords) · [Google OAuth](https://supabase.com/docs/guides/auth/social-login/auth-google) · [PKCE](https://supabase.com/docs/guides/auth/sessions/pkce-flow)

@@ -1,0 +1,423 @@
+{
+  "departments": [
+    {
+      "id": "general-medicine-internal-medicine",
+      "name": "General Medicine / Internal Medicine",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "cardiology",
+      "name": "Cardiology",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "neurology",
+      "name": "Neurology",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "neurosurgery",
+      "name": "Neurosurgery",
+      "parent": "Surgical specialties"
+    },
+    {
+      "id": "oncology",
+      "name": "Oncology",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "hematology",
+      "name": "Hematology",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "endocrinology",
+      "name": "Endocrinology",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "gastroenterology",
+      "name": "Gastroenterology",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "hepatology",
+      "name": "Hepatology",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "nephrology",
+      "name": "Nephrology",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "pulmonology",
+      "name": "Pulmonology",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "rheumatology",
+      "name": "Rheumatology",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "dermatology",
+      "name": "Dermatology",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "psychiatry",
+      "name": "Psychiatry",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "pediatrics",
+      "name": "Pediatrics",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "neonatology",
+      "name": "Neonatology",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "obstetrics-and-gynecology",
+      "name": "Obstetrics and Gynecology",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "orthopedics",
+      "name": "Orthopedics",
+      "parent": "Surgical specialties"
+    },
+    {
+      "id": "ophthalmology",
+      "name": "Ophthalmology",
+      "parent": "Surgical specialties"
+    },
+    {
+      "id": "otorhinolaryngology-ent",
+      "name": "Otorhinolaryngology / ENT",
+      "parent": "Surgical specialties"
+    },
+    {
+      "id": "urology",
+      "name": "Urology",
+      "parent": "Surgical specialties"
+    },
+    {
+      "id": "infectious-diseases",
+      "name": "Infectious Diseases",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "immunology-and-allergy",
+      "name": "Immunology and Allergy",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "emergency-medicine",
+      "name": "Emergency Medicine",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "critical-care",
+      "name": "Critical Care",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "general-surgery",
+      "name": "General Surgery",
+      "parent": "Surgical specialties"
+    },
+    {
+      "id": "vascular-surgery",
+      "name": "Vascular Surgery",
+      "parent": "Surgical specialties"
+    },
+    {
+      "id": "plastic-and-reconstructive-surgery",
+      "name": "Plastic and Reconstructive Surgery",
+      "parent": "Surgical specialties"
+    },
+    {
+      "id": "radiology",
+      "name": "Radiology",
+      "parent": "Diagnostic services"
+    },
+    {
+      "id": "pathology",
+      "name": "Pathology",
+      "parent": "Diagnostic services"
+    },
+    {
+      "id": "clinical-pharmacology",
+      "name": "Clinical Pharmacology",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "medical-genetics",
+      "name": "Medical Genetics",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "geriatric-medicine",
+      "name": "Geriatric Medicine",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "rehabilitation-medicine",
+      "name": "Rehabilitation Medicine",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "preventive-medicine-and-public-health",
+      "name": "Preventive Medicine and Public Health",
+      "parent": "Medical specialties"
+    },
+    {
+      "id": "dentistry-and-oral-medicine",
+      "name": "Dentistry and Oral Medicine",
+      "parent": "Surgical specialties"
+    }
+  ],
+  "entities": [
+    {
+      "id": "HB-D0001",
+      "name": "High Blood Pressure",
+      "aliases": [
+        "hypertension",
+        "high bp"
+      ],
+      "departmentIds": [
+        "cardiology",
+        "general-medicine-internal-medicine",
+        "nephrology"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0002",
+      "name": "Breast Cancer",
+      "aliases": [],
+      "departmentIds": [
+        "oncology",
+        "general-surgery"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0003",
+      "name": "Prostate Cancer",
+      "aliases": [],
+      "departmentIds": [
+        "oncology",
+        "urology"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0004",
+      "name": "Stroke",
+      "aliases": [
+        "cerebrovascular accident"
+      ],
+      "departmentIds": [
+        "neurology",
+        "emergency-medicine",
+        "rehabilitation-medicine"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0005",
+      "name": "Skin Cancer",
+      "aliases": [],
+      "departmentIds": [
+        "oncology",
+        "dermatology"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0006",
+      "name": "Alzheimer's Disease",
+      "aliases": [],
+      "departmentIds": [
+        "neurology",
+        "geriatric-medicine"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0007",
+      "name": "Colorectal Cancer",
+      "aliases": [],
+      "departmentIds": [
+        "oncology",
+        "gastroenterology"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0008",
+      "name": "Lung Cancer",
+      "aliases": [],
+      "departmentIds": [
+        "oncology",
+        "pulmonology"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0009",
+      "name": "High Blood Cholesterol",
+      "aliases": [
+        "hyperlipidemia"
+      ],
+      "departmentIds": [
+        "cardiology",
+        "general-medicine-internal-medicine"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0010",
+      "name": "Heart Attack",
+      "aliases": [
+        "myocardial infarction"
+      ],
+      "departmentIds": [
+        "cardiology",
+        "emergency-medicine"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0011",
+      "name": "Heart Failure",
+      "aliases": [],
+      "departmentIds": [
+        "cardiology",
+        "general-medicine-internal-medicine"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0012",
+      "name": "Parkinson's Disease",
+      "aliases": [],
+      "departmentIds": [
+        "neurology",
+        "rehabilitation-medicine"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0013",
+      "name": "Leukemia",
+      "aliases": [],
+      "departmentIds": [
+        "hematology",
+        "oncology"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0014",
+      "name": "Osteoporosis",
+      "aliases": [],
+      "departmentIds": [
+        "endocrinology",
+        "rheumatology"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0015",
+      "name": "Shingles",
+      "aliases": [
+        "herpes zoster"
+      ],
+      "departmentIds": [
+        "infectious-diseases",
+        "dermatology"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0016",
+      "name": "Diabetes",
+      "aliases": [
+        "diabetes mellitus"
+      ],
+      "departmentIds": [
+        "endocrinology",
+        "general-medicine-internal-medicine"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0017",
+      "name": "Age-related Macular Degeneration",
+      "aliases": [
+        "AMD"
+      ],
+      "departmentIds": [
+        "ophthalmology"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0018",
+      "name": "Hemochromatosis",
+      "aliases": [],
+      "departmentIds": [
+        "hepatology",
+        "hematology",
+        "medical-genetics"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0019",
+      "name": "Diabetic Retinopathy",
+      "aliases": [],
+      "departmentIds": [
+        "ophthalmology",
+        "endocrinology"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    },
+    {
+      "id": "HB-D0020",
+      "name": "Psoriasis",
+      "aliases": [],
+      "departmentIds": [
+        "dermatology",
+        "rheumatology"
+      ],
+      "terminology": [],
+      "clinicalReview": "pending"
+    }
+  ]
+}

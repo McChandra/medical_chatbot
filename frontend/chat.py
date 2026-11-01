@@ -1,5 +1,6 @@
 import streamlit as st
-import time
+import httpx
+from copilot_client import api
 
 
 #----------------------------------------------------------
@@ -45,18 +46,8 @@ def logout_user():
     st.query_params.clear()
 
 # =========================================================
-# SUGGESTED QUESTIONS
 # =========================================================
 
-SUGGESTED_QUESTIONS = [
-    "What are the symptoms of dengue?",
-    "Tell me about Vitamin D deficiency",
-    "How can I improve my heart health?",
-    "What are the treatment options for type 2 diabetes?",
-]
-
-
-# =========================================================
 # MAIN CHAT PAGE
 # =========================================================
 
@@ -67,6 +58,16 @@ def render_chatbot():
         st.session_state.messages = []
 
     render_dashboard_header()
+    try:
+        context = api("GET", "context")
+    except (httpx.HTTPError, ValueError):
+        st.error("Research Copilot is unavailable. Check the API connection and sign in again.")
+        render_sidebar()
+        return
+    topic = st.selectbox("Research topic", context["topics"], key="copilot_topic")
+    st.selectbox("Research deck", range(1, len(context["decks"]) + 1),
+                 format_func=lambda number: context["decks"][number - 1], key="copilot_deck")
+    st.caption("Ask public education questions only. Omit names, records and personal health details.")
 
     # Detect browser viewport width.
     # Requires a Streamlit version supporting st.context.url
@@ -86,10 +87,17 @@ def render_chatbot():
 
     with main_col:
         render_hero()
-        render_suggestions()
+        examples = ("What is {topic}?", "Which tests identify {topic}?", "What research covers {topic}?",
+                    "Which datasets cover {topic}?", "What are risk factors for {topic}?",
+                    "What are the symptoms of {topic}?", "Which facilities cover {topic}?",
+                    "What clinical evidence covers {topic}?")
+        example = examples[st.session_state.copilot_deck - 1].format(topic=topic)
+        if st.button(example, key="copilot_example"):
+            submit_question(example)
 
     question = st.chat_input(
-        "Ask your health question...",
+        "Ask about the selected topic and deck...",
+        max_chars=500,
         key="health_question_input",
     )
 
@@ -265,64 +273,30 @@ Ask questions about symptoms, conditions, treatments, medications, and general h
 
 
 # =========================================================
-# SUGGESTED QUESTIONS
 # =========================================================
 
-def render_suggestions():
-    """Render the four question cards from screenshot 2."""
-
-    st.markdown(
-        """
-<div class="suggested-heading">
-    <span class="suggested-heading-icon">💡</span>
-    <span>Try asking...</span>
-</div>
-""",
-        unsafe_allow_html=True,
-    )
-
-    columns = st.columns(4, gap="small")
-
-    icons = [
-        ":material/stethoscope:",
-        ":material/medication:",
-        ":material/favorite:",
-        ":material/description:",
-    ]
-
-    for index, question in enumerate(SUGGESTED_QUESTIONS):
-
-        with columns[index]:
-
-            if st.button(
-                question,
-                icon=icons[index],
-                use_container_width=True,
-                key=f"suggestion_{index}",
-            ):
-                submit_question(question)
-
-
-# =========================================================
 # QUESTION SUBMISSION
 # =========================================================
 
 def submit_question(question):
-    """Store the question for the future response page."""
+    """Request a scoped answer without retaining the raw question."""
 
     question = question.strip()
 
     if not question:
         return
 
-    st.session_state.messages = [
-        {
-            "role": "user",
-            "content": question,
-        }
-    ]
-
-    # We will connect this to response.py next.
+    try:
+        reply = api("POST", "answer", json={
+            "topic": st.session_state.copilot_topic, "deck": st.session_state.copilot_deck,
+            "question": question,
+        })
+    except (httpx.HTTPError, ValueError):
+        st.error("Unable to retrieve a source response. Check your session or retry.")
+        return
+    st.session_state.messages = [{
+        "topic": st.session_state.copilot_topic, "deck": st.session_state.copilot_deck,
+        "reply": reply,
+    }]
     st.session_state.page = "response"
-
     st.rerun()

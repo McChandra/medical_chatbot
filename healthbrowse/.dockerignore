@@ -1,0 +1,15 @@
+.git
+node_modules
+**/node_modules
+dist/server
+dist/.openai
+coverage
+deploy
+.env
+.env.*
+**/.env
+**/.env.*
+**/*.pem
+**/*.key
+gha-creds-*.json
+*.log

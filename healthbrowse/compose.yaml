@@ -1,0 +1,21 @@
+services:
+  healthbrowse:
+    build: .
+    image: healthbrowse:local
+    init: true
+    environment:
+      PORT: "8080"
+    env_file:
+      - path: ./.env
+        required: false
+    ports:
+      - "127.0.0.1:8080:8080"
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 512m
+    pids_limit: 128
+    restart: unless-stopped

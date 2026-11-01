@@ -644,3 +644,23 @@ Each team member completes the individual peer evaluation required by the course
 ### Medical Disclaimer
 
 MedQuad AI is intended solely for academic research and educational demonstration. It is not a clinically validated medical device, diagnostic system, or substitute for professional medical advice. Generated responses must not be used to make diagnosis, treatment, prescription, or emergency-care decisions.
+
+### Run the contextual research Copilot locally
+
+Use the existing MedQuad FastAPI/Streamlit and Supabase configuration. Set
+`MEDQUAD_PASSAGES_PATH` in the backend environment to the absolute path of
+HealthBrowse's `dist/clinical-passages.json`. Set `BACKEND_URL` in Streamlit
+(e.g., `http://127.0.0.1:8000` for local development). From the repository root,
+start `uvicorn backend.main:app` and `streamlit run frontend/app.py` in separate
+terminals. Sign in, choose a topic and numbered deck, and ask an educational question.
+The FastAPI routes `GET /copilot/context` and `POST /copilot/answer` accept a
+validated existing browser session or a Supabase bearer token. No model or GPU is
+needed. The Copilot returns historical excerpts or an explicit abstention. It
+does not send research questions to a model service. The index must be supplied
+by the operator and is not bundled with this patch. Use
+`python -m unittest discover -s tests -p test_copilot.py -v` for fixture checks.
+Production authentication, clinical review and privacy controls require separate validation.
+
+## HealthBrowse product workspace
+
+The [HealthBrowse project](healthbrowse/README.md) contains the public seven-section research browser, standalone server, personal account API, installable mobile web app, and deployment instructions. Start the standalone service from the `healthbrowse` directory. Repository-level GitHub Actions workflows handle CI, reviewed source updates and optional Cloud Run release.
