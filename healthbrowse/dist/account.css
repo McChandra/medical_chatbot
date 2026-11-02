@@ -5,7 +5,16 @@ button.primary{background:var(--action);color:var(--on-action)}button:disabled{o
 .wordmark{display:inline-flex;align-items:center;gap:.55rem;text-decoration:none;color:var(--ink);font:700 clamp(17px,3vw,24px) Georgia,serif}
 .wordmark img{border-radius:9px;flex:none}.wordmark b{font:700 .65em system-ui;color:var(--link)}
 header .theme-controls button{min-height:40px}
-.auth-entry main{max-width:32rem;padding:clamp(28px,6vh,70px) clamp(12px,4vw,24px) 40px}
+.auth-entry{min-height:100vh;min-height:100svh;display:flex;flex-direction:column}
+.auth-entry header{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);width:100%;margin-block:0}
+.auth-entry .wordmark{grid-column:2;justify-self:center}
+.auth-entry header .theme-controls{grid-column:3;justify-self:end}
+.auth-entry main{width:100%;max-width:32rem;margin-block:auto;padding:clamp(20px,4vh,44px) clamp(12px,4vw,24px)}
+.auth-entry main>.label,.auth-entry #pageTitle,.auth-entry #intro{text-align:center}
+@media(max-width:38rem){
+  .auth-entry header{grid-template-columns:1fr;justify-items:center;gap:8px;padding-block:12px}
+  .auth-entry .wordmark,.auth-entry header .theme-controls{grid-column:1;justify-self:center}
+}
 .auth-entry header nav,.auth-entry .grid>:not(#authPanel){display:none}
 .auth-entry .grid{display:block;margin:22px 0}
 .auth-entry #pageTitle{font-size:clamp(34px,7vw,48px)}
