@@ -1,5 +1,5 @@
 import {startEmailChallenge,confirmEmailChallenge} from './account-flows.js';
-import {accountRequest,getAuthClient} from './account-client.js';
+import {accountRequest,getAuthClient,clearResearchSession} from './account-client.js';
 import {readingModes,researchUrl,suggestedPassword,validPassword} from './account-utils.js';
 
 const $=id=>document.getElementById(id);
@@ -12,16 +12,22 @@ let client,session,mode='login',challenge=null,recovering=false,authBusy=false,u
 let contactAttempt=null,hasSettings=false;
 
 const modes={
-  login:['Log in with the password for your account. To use a one-time code, choose Email code.','Log in'],
-  signup:['Create an account with a unique password. Confirm your address with the code sent by email.','Create account'],
-  otp:['Log in to an existing account using a one-time code. Choose Sign up if you need an account.','Send sign-in code'],
-  forgot:['Request a password recovery code. Use it in this tab to choose a new password.','Send recovery code'],
+  login:['Sign in','Explore medical evidence and save sources in your research desk.','Log in'],
+  signup:['Create an account','Use Google or create a login with your email and password.','Create account'],
+  otp:['Email code login','Enter the email associated with your HealthBrowse account.','Send sign-in code'],
+  forgot:['Reset your password','Enter your email to request a password recovery code.','Send recovery code'],
 };
 function updateForm(){
   const verifying=Boolean(challenge);
   const passwordNeeded=!verifying && (recovering||['signup','login'].includes(mode));
-  $('authHelp').textContent=verifying?'Enter the latest code from your email.':recovering?'Choose a new password for the recovered account.':modes[mode][0];
-  $('authSubmit').textContent=verifying?'Verify code':recovering?'Update password':modes[mode][1];
+  const title=verifying?'Check your email':recovering?'Choose a new password':modes[mode][0];
+  if(document.body.classList.contains('auth-entry')){
+    $('pageTitle').textContent=title;
+    document.title=title+' · HealthBrowse AI';
+    $('intro').textContent=verifying?'Enter the newest verification code in this tab.':recovering?'Choose a password with at least 12 characters.':modes[mode][1];
+  }
+  $('authHelp').textContent=verifying?'Code requested for '+challenge.email:'';
+  $('authSubmit').textContent=verifying?'Verify code':recovering?'Update password':modes[mode][2];
   $('email').disabled=authBusy||verifying||recovering;
   $('password').required=passwordNeeded;$('password').disabled=!passwordNeeded;
   $('password').autocomplete=mode==='login'&&!recovering?'current-password':'new-password';
@@ -29,9 +35,14 @@ function updateForm(){
   $('authSubmit').disabled=authBusy||!client;
   show('codeGroup',verifying);show('passwordGroup',passwordNeeded);
   show('suggestionGroup',passwordNeeded&&(mode==='signup'||recovering));
-  show('authModes',!verifying&&!recovering);show('cancelFlow',verifying||recovering);
-  show('google',!verifying&&!recovering);$('google').disabled=authBusy||!client;
-  for(const b of $('authModes').querySelectorAll('button')){b.disabled=authBusy||!client;b.setAttribute('aria-pressed',String(b.dataset.mode===mode))}
+  const chooseMethod=!verifying&&!recovering;
+  show('cancelFlow',!chooseMethod);
+  show('socialOptions',chooseMethod&&['login','signup'].includes(mode));
+  $('google').disabled=authBusy||!client;
+  show('forgotLink',chooseMethod&&mode==='login');
+  show('authLinks',chooseMethod&&!authBusy);
+  show('signupLink',mode==='login');show('otpLink',mode==='login');show('loginLink',mode!=='login');
+
 }
 function switchMode(value){
   mode=value;challenge=null;$('code').value='';$('password').value='';$('showPassword').checked=false;
@@ -41,6 +52,15 @@ function checked(result){if(result?.error)throw result.error;return result?.data
 async function loadAccount(){
   const generation=++userGeneration;
   const active=Boolean(session)&&!recovering;
+  if(active && !['#workspace','#help','#contact','#saved','#settings','#history'].includes(location.hash)){
+    location.replace('/');
+    return;
+  }
+  document.body.classList.toggle('auth-entry',!active);
+  if(active){
+    $('pageTitle').textContent='Your account';
+    $('intro').textContent='Manage your settings and saved research.';
+  }else updateForm();
   hasSettings=false;
   for(const id of ['signedIn','settings','saved','history'])show(id,active);
   show('authPanel',!active);show('authForm',Boolean(client));
@@ -92,7 +112,7 @@ function renderHistory(items){
   $('clearHistory').disabled=!items.length;
 }
 function clearTabData(){
-  for(const key of ['hb-context','hb-transcript','hb-reader','hb-terms','hb-welcome','hb-account-recovery'])sessionStorage.removeItem(key);
+  clearResearchSession();
   for(const id of ['feedbackForm','contactForm','authForm'])$(id).reset();
   contactAttempt=null;recovering=false;challenge=null;
 }
@@ -122,12 +142,12 @@ $('authForm').onsubmit=async e=>{
       const messages={signup:'If signup can proceed, you will receive a confirmation code.',login:'If this account can sign in, check your email for a code.',recovery:'If this email belongs to an account, check it for a recovery code or link.'};
       status('authStatus',messages[challenge.kind]);
     }
+    if(session&&!recovering)history.replaceState(null,'',location.pathname);
     await loadAccount();
   }catch(error){
     status('authStatus',failure(error,'Request unsuccessful.'));
   }finally{authBusy=false;updateForm()}
 };
-$('authModes').onclick=e=>{const b=e.target.closest('button[data-mode]');if(b)switchMode(b.dataset.mode)};
 $('cancelFlow').onclick=async()=>{
   if(recovering&&client){try{checked(await client.auth.signOut({scope:'local'}))}catch(error){status('authStatus',failure(error,'Sign-out failed.'));return}}
   recovering=false;sessionStorage.removeItem('hb-account-recovery');switchMode('login');session=null;await loadAccount();
@@ -184,6 +204,9 @@ $('contactForm').onsubmit=async e=>{
 
 async function init(){
   readingModes.forEach(r=>$('readingMode').append(new Option(r)));
+  const view=new URLSearchParams(location.search).get('view');
+  if(Object.hasOwn(modes,view))mode=view;
+  else if(location.hash==='#signup')mode='signup';
   updateForm();
   try{
     client=await getAuthClient();
