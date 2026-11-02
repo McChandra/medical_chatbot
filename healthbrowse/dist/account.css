@@ -12,8 +12,12 @@ header .theme-controls button{min-height:40px}
 .auth-entry main{width:100%;max-width:32rem;margin-block:auto;padding:clamp(20px,4vh,44px) clamp(12px,4vw,24px)}
 .auth-entry main>.label,.auth-entry #pageTitle,.auth-entry #intro{text-align:center}
 @media(max-width:38rem){
-  .auth-entry header{grid-template-columns:1fr;justify-items:center;gap:8px;padding-block:12px}
-  .auth-entry header .theme-controls{grid-column:1;justify-self:center}
+  .auth-entry header{display:flex;align-items:center;justify-content:space-between;gap:6px 10px;min-height:0;padding:8px clamp(10px,3vw,18px)}
+  .auth-entry header .theme-controls{margin-inline-start:auto}
+  .auth-entry header .theme-controls button{min-height:44px;padding-inline:8px}
+  .auth-entry main{margin-block:0;padding-block:clamp(16px,3svh,24px) 16px}
+  .auth-entry main>.label{margin:0 0 6px}
+  .auth-entry #intro{margin:6px auto 0;text-wrap:balance}
 }
 .auth-entry header nav,.auth-entry .grid>:not(#authPanel){display:none}
 .auth-entry .grid{display:block;margin:22px 0}
@@ -31,3 +35,8 @@ header .theme-controls button{min-height:40px}
 #authSubmit{margin-top:14px;background:var(--action);color:var(--on-action)}
 #cancelFlow{margin-top:8px}#authHelp:empty{display:none}
 @media(max-width:480px){header{padding:10px 12px;gap:6px}.theme-controls button{padding-inline:9px}.wordmark img{width:28px;height:28px}.grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:38rem){
+  .auth-entry .grid{margin:14px 0 0}
+  .auth-entry #authPanel{padding:clamp(12px,3.5vw,18px)}
+  .auth-entry .auth-divider{margin-block:12px}
+}
