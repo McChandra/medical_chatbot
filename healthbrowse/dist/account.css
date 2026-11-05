@@ -19,7 +19,7 @@ header .theme-controls button{min-height:40px}
   .auth-entry main>.label{margin:0 0 6px}
   .auth-entry #intro{margin:6px auto 0;text-wrap:balance}
 }
-.auth-entry header nav,.auth-entry .grid>:not(#authPanel){display:none}
+.auth-entry .grid>:not(#authPanel){display:none}
 .auth-entry .grid{display:block;margin:22px 0}
 .auth-entry #pageTitle{font-size:clamp(34px,7vw,48px)}
 #intro{margin-top:10px}.auth-entry #authPanel{padding:clamp(16px,4vw,30px);border-radius:18px}

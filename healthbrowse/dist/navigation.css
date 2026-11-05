@@ -1,28 +1,32 @@
 /* Shared site navigation; scoped so research-card headers are unaffected. */
-.site-header{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:12px;align-items:center;padding-block:12px}
+.site-header{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;padding-block:12px}
 .site-header .brand,.site-header .wordmark{min-width:0;white-space:nowrap}
 .site-header nav{display:flex;justify-content:flex-end;align-items:center;gap:6px 14px;margin:0;grid-column:2;grid-row:1}
 .site-header nav a{display:flex;align-items:center;min-height:44px;font:500 14px/1.35 system-ui;text-decoration:none;padding:8px 0;overflow-wrap:anywhere}
 .site-header nav a:hover{text-decoration:underline}
-.site-header .theme-controls{grid-column:3;grid-row:1;justify-self:end}
+.nav-appearance{display:flex;align-items:center;gap:12px}
+.nav-appearance-label{display:none}
+.site-header .theme-controls{margin:0}
 .site-header .theme-controls button{min-height:44px}
-.nav-actions{display:flex;align-items:center;gap:10px;grid-column:4;grid-row:1}
-.nav-actions button{font:600 14px/1.2 system-ui;min-height:44px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);padding:8px 14px;cursor:pointer}
+.nav-actions{display:none;align-items:center;justify-self:end;grid-column:2;grid-row:1}
+.nav-actions button,.site-header .nav-signout{font:600 14px/1.2 system-ui;min-height:44px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);padding:8px 14px;cursor:pointer;white-space:nowrap}
 .nav-actions .nav-toggle{display:none;align-items:center;gap:8px}
-.auth-entry .site-header .nav-actions{display:none}
+.auth-entry .site-header nav>a,.auth-entry .site-header .nav-signout{display:none}
 .site-header a:focus-visible,.site-header button:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
 @media(max-width:70rem){
-  .site-header{grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;padding:10px clamp(12px,3vw,24px)}
+  .site-header,.auth-entry .site-header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;padding:10px clamp(12px,3vw,24px)}
   .site-header .brand,.site-header .wordmark{grid-column:1;grid-row:1;font-size:clamp(16px,3vw,24px);gap:6px}
   .site-header .brand small{font-size:9px;padding:3px}
   .site-header .mark{width:28px;flex:none;font-size:24px;line-height:30px}
   .site-header .wordmark img{width:28px;height:28px}
-  .site-header .theme-controls{grid-column:2;grid-row:1}
   .site-header .theme-controls button{font-size:12px;padding-inline:8px}
-  .site-header .nav-actions{grid-column:1/-1;grid-row:2;justify-content:space-between}
+  .site-header.nav-ready .nav-actions{display:flex}
   .site-header.nav-ready .nav-toggle{display:inline-flex}
-  .site-header nav{grid-column:1/-1;grid-row:3;display:grid;grid-template-columns:minmax(0,1fr);gap:0;border-top:1px solid var(--line);padding-top:6px}
+  .site-header nav{grid-column:1/-1;grid-row:2;display:grid;grid-template-columns:minmax(0,1fr);gap:0;border-top:1px solid var(--line);padding-top:6px;width:100%;min-width:0}
   .site-header nav a{padding:12px;border-radius:8px;min-height:46px}
   .site-header nav a:hover{background:var(--panel)}
+  .nav-appearance{justify-content:space-between;padding:12px;gap:12px}
+  .nav-appearance-label{display:block;font:500 14px/1.35 system-ui}
+  .site-header .nav-signout{width:100%;margin-top:6px;text-align:left;padding-inline:12px}
   .site-header.nav-ready:not(.nav-open) nav{display:none}
 }
