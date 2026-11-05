@@ -1,3 +1,4 @@
+import {frameworkVersion} from '../dist/disease-framework.js';
 import {inspectInput} from '../dist/clinical-engine.js';
 const modes=['General reader','Patient','Medical student','Medical professional','Advanced professional'];
 const themes=['system','light','dark'];
@@ -70,13 +71,14 @@ export async function workspaceAPI(request,db,user){
    if(parts.length>2||(parts[1]&&parts[1]!=='turns'))fail('Chat resource unavailable.',404);
    const chat=await ownedChat(id);
    if(parts[1]==='turns'&&method==='POST'){
-    const b=await body(request);only(b,['id','question','text','deck','citations','overview','historyEpoch']);
+    const b=await body(request);only(b,['id','question','text','deck','citations','overview','historyEpoch','frameworkVersion']);
     if(!uuid.test(b.id)||!Number.isInteger(b.deck)||b.deck<1||b.deck>7||!Number.isSafeInteger(b.historyEpoch))fail('Invalid chat turn.');
     const question=publicText(b.question,2000,'question'),text=value(b.text,16000,'answer');
     if(/\b[\w.+-]+@[\w.-]+\.[a-z]{2,}\b|\b(?:MRN|SSN|medical record number|patient name)\b/i.test(text))fail('Remove personal identifiers from saved text.');
     if(!Array.isArray(b.citations)||b.citations.length>30)fail('Invalid citations.');
     const citations=b.citations.map(c=>({title:value(c?.title,500,'citation title'),url:sourceURL(c?.url)}));
-    const turn=JSON.stringify({topic:chat.topic,question,text,deck:b.deck,citations,overview:b.overview===true});
+    if(b.frameworkVersion!==undefined&&b.frameworkVersion!==frameworkVersion)fail('Unknown research framework.');
+    const turn=JSON.stringify({frameworkVersion:b.frameworkVersion||'seven-section-v1',topic:chat.topic,question,text,deck:b.deck,citations,overview:b.overview===true});
     const previous=await sql('SELECT turn_json FROM hb_chat_turns WHERE id=? AND chat_id=?',b.id,id).first();
     if(previous){if(previous.turn_json!==turn)fail('This message ID was already used.',409);return response({saved:true,id:b.id})}
     const now=new Date().toISOString();

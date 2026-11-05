@@ -1,6 +1,13 @@
 # HealthBrowse public research platform
 
-HealthBrowse is a seven-section educational medical research browser. The hosted desk opens after Supabase sign-in. Personal workspaces store profiles, preferences, saved research chats, bookmarks and activity in the hosted database. This release uses source excerpts, publication corroboration, ClinicalTrials.gov registrations and NIH funding records. Clinical validation and institutional endorsement remain separate from software tests.
+HealthBrowse is a seven-domain educational medical research browser. The hosted desk opens after Supabase sign-in. Personal workspaces store profiles, preferences, saved research chats, bookmarks and activity in the hosted database. This release uses source excerpts, publication corroboration, ClinicalTrials.gov registrations and NIH funding records. Clinical validation and institutional endorsement remain separate from software tests.
+
+## Disease framework and reading modes
+The browser and copilot share six clinical domains: **Etiology & Pathogenesis**, **Natural History & Progression**, **Clinical Presentation & Diagnosis**, **Therapeutics & Management**, **Prognosis & Complications**, and **Epidemiology & Public Health**. A seventh domain, **Research, Evidence & Resources**, retains papers, trials, funded institutions, education, datasets and care directories.
+
+General users receive plain-language headings and priority for patient education sources. Medical and advanced professionals see the specialty selector, technical headings, more detailed source passages and appraisal prompts. Selecting a reading mode changes presentation, not identity verification or access permissions. Missing evidence stays visible as a coverage gap.
+
+Clinical excerpts require a recognized publisher or a pinned historical MedQuAD record, topic agreement, record identity and an exact text match. Corrections require an explicit, unambiguous source record; otherwise the claim is withheld. These checks detect some unsupported or altered claims, but do not establish clinical accuracy, certification, completeness or currency. Historical excerpts retain their dates and subtype labels. Untreated natural history is not inferred from general progression or treated outcomes. See [framework design and validation](docs/DISEASE_FRAMEWORK.md).
 
 ## Run locally
 Use Node 24. From this directory:

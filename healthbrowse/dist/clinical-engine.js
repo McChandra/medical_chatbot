@@ -1,3 +1,5 @@
+import {verifyClaim} from './claim-check.js';
+import {orderedPassages,professionalRole,domains} from './disease-framework.js';
 // All answer generation is local. Pass arrays already scoped to the selected topic,
 // or pass the complete catalog keyed by canonical topic name.
 const plain = value => String(value ?? '').normalize('NFKC').toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
@@ -17,23 +19,26 @@ export function inspectInput(text) {
 }
 
 const groups = [
-  {id:'codes',deck:1,ask:/\b(icd(?: 9| 10| 11)?|snomed(?: ct)?|classification codes?|taxonomy codes?)\b/},
-  {id:'education',deck:1,ask:/\b(courses?|education(?:al)? programs?|universit(?:y|ies)|institutions?|fellowships?|residenc(?:ies|y)|curricula|training programs?)\b/},
-  {id:'data',deck:4,ask:/\b(datasets?|data sets?|repositories|github|open source (?:software|models?)|software|frameworks?|machine learning|ai tools?|pretrained models?|llms?|data modalities|modality|access requirements?|licen[cs]e|sample size)\b/},
+  {id:'codes',deck:3,ask:/\b(icd(?: 9| 10| 11)?|snomed(?: ct)?|classification codes?|taxonomy codes?)\b/},
+  {id:'course',deck:2,ask:/\b(natural history|disease course|progress\w*|subclinical|asymptomatic|untreated|without (?:treatment|intervention)|timeline|onset)\b/,evidence:/\b(natural history|progress\w*|asymptomatic|no symptoms|over time|grows? (?:quickly|slowly)|untreated|early stages?|onset)\b/},
+  {id:'education',deck:7,ask:/\b(courses?|education(?:al)? programs?|universit(?:y|ies)|institutions?|fellowships?|residenc(?:ies|y)|curricula|training programs?)\b/},
+  {id:'data',deck:7,ask:/\b(datasets?|data sets?|repositories|github|open source (?:software|models?)|software|frameworks?|machine learning|ai tools?|pretrained models?|llms?|data modalities|modality|access requirements?|licen[cs]e|sample size)\b/},
   {id:'facility',deck:7,ask:/\b(hospitals?|clinic(?:s)?|pharmac(?:y|ies)|specialty centers?|care facilities|facility director(?:y|ies)|provider director(?:y|ies))\b/},
-  {id:'population',deck:3,ask:/\b(study population|participants|eligibility|population studied)\b/,field:'population'},
-  {id:'authors',deck:3,ask:/\b(authors?|wrote|authored)\b/,field:'authors'},
-  {id:'design',deck:3,ask:/\b(study design|trial design|evidence category|study type)\b/,field:'studyDesign'},
-  {id:'date',deck:3,ask:/\b(publication date|published|publication year)\b/,field:'date'},
-  {id:'identifiers',deck:3,ask:/\b(doi|pmid)\b/,field:'identifier'},
-  {id:'research',deck:3,ask:/\b(publications?|studies|clinical trials?|journals?|articles?|research papers?|evidence reports?|guidelines?)\b/},
-  {id:'identify',deck:2,ask:/\b(cytogenetic analysis|immunophenotyping|diagnos\w*|testing|tests?|screen\w*|detect\w*|investigations?|biomarkers?|characteristics?|traits?|identif\w*|prediction methods?)\b/,evidence:/\b(diagnos\w*|immunophenotyping|cytogenetic|test\w*|exam\w*|detect\w*|screen\w*|imaging|measur\w*|biomarkers?|characteristics?|traits?|identif\w*)\b/},
-  {id:'genes',deck:5,ask:/\b(genes?|genetic\w*|genealog\w*|mutations?)\b/,evidence:/\b(gene\w*|mutation\w*|inherit\w*|hereditar\w*)\b/},
+  {id:'population',deck:7,ask:/\b(study population|participants|eligibility|population studied)\b/,field:'population'},
+  {id:'authors',deck:7,ask:/\b(authors?|wrote|authored)\b/,field:'authors'},
+  {id:'design',deck:7,ask:/\b(study design|trial design|evidence category|study type)\b/,field:'studyDesign'},
+  {id:'date',deck:7,ask:/\b(publication date|published|publication year)\b/,field:'date'},
+  {id:'identifiers',deck:7,ask:/\b(doi|pmid)\b/,field:'identifier'},
+  {id:'research',deck:7,ask:/\b(publications?|studies|clinical trials?|journals?|articles?|research papers?|evidence reports?|guidelines?)\b/},
+  {id:'public-health',deck:6,ask:/\b(epidemiolog\w*|prevalence|incidence|prevention|prevent\w*|vaccin\w*|social determinants|population distribution|healthcare access)\b/,evidence:/\b(epidemiolog\w*|prevalence|incidence|prevent\w*|vaccin\w*|social determinants|population|healthcare access|most common)\b/},
+  {id:'complications',deck:5,ask:/\b(complications?|outcomes?|disability|mortality)\b/,evidence:/\b(complications?|outcomes?|disability|mortality|damage|failure)\b/},
+  {id:'identify',deck:3,ask:/\b(cytogenetic analysis|immunophenotyping|diagnos\w*|testing|tests?|screen\w*|detect\w*|investigations?|biomarkers?|characteristics?|traits?|identif\w*|prediction methods?)\b/,evidence:/\b(diagnos\w*|immunophenotyping|cytogenetic|test\w*|exam\w*|detect\w*|screen\w*|imaging|measur\w*|biomarkers?|characteristics?|traits?|identif\w*)\b/},
+  {id:'genes',deck:1,ask:/\b(genes?|genetic\w*|genealog\w*|mutations?)\b/,evidence:/\b(gene\w*|mutation\w*|inherit\w*|hereditar\w*)\b/},
   {id:'prognosis',deck:5,ask:/\b(prognos\w*|staging|stages?|stratif\w*|risk (?:estimate|score|calculator|model)|survival|outlook|predict\w*|early (?:warning signs?|indicators?))\b/,evidence:/\b(prognos\w*|stag\w*|stratif\w*|risk|survival|outlook|early|predict\w*)\b/},
-  {id:'risk',deck:5,ask:/\b(risk factors?|risk|susceptibility|inherit\w*|hereditar\w*|cause\w*|etiolog\w*|epidemiolog\w*|prevalence|incidence)\b/,evidence:/\b(risk|susceptib\w*|more likely|inherit\w*|hereditar\w*|caus\w*|prevalence|incidence)\b/},
-  {id:'symptoms',deck:6,ask:/\b(symptoms?|signs?|manifestations?|clinical presentation)\b/,evidence:/\b(symptoms?|signs?|asymptomatic|manifestations?|wheezing|coughing|fatigue|shortness of breath|rash|pain)\b/},
-  {id:'mechanism',deck:6,ask:/\b(mechanism|molecular biology|pathophysiology|physiology|affect(?:s|ing)?|how does|why does)\b/,evidence:/\b(caus\w*|due to|results? from|mechanism|pathway|cells?|inflamm\w*|protein|molecular|affect\w*)\b/},
-  {id:'therapy',deck:6,ask:/\b(treatment classes|treatments?|therap\w*|drug classes|management)\b/,evidence:/\b(treat\w*|therap\w*|management|drug classes)\b/},
+  {id:'risk',deck:1,ask:/\b(risk factors?|risk|susceptibility|inherit\w*|hereditar\w*|cause\w*|etiolog\w*)\b/,evidence:/\b(risk|susceptib\w*|more likely|inherit\w*|hereditar\w*|caus\w*|prevalence|incidence)\b/},
+  {id:'symptoms',deck:3,ask:/\b(symptoms?|signs?|manifestations?|clinical presentation)\b/,evidence:/\b(symptoms?|signs?|asymptomatic|manifestations?|wheezing|coughing|fatigue|shortness of breath|rash|pain)\b/},
+  {id:'mechanism',deck:1,ask:/\b(pathogenesis|mechanism|molecular biology|pathophysiology|physiology|affect(?:s|ing)?|how does|why does)\b/,evidence:/\b(caus\w*|due to|results? from|mechanism|pathway|cells?|inflamm\w*|protein|molecular|affect\w*)\b/},
+  {id:'therapy',deck:4,ask:/\b(treatment classes|treatments?|therap\w*|drug classes|management)\b/,evidence:/\b(treat\w*|therap\w*|management|drug classes)\b/},
   {id:'definition',deck:1,ask:/\b(what (?:is|are)|defin\w*|overview|explain|classif\w*|subtypes?|taxonomy|meaning)\b/,evidence:/\b(is|are|means|refers to|classified|characterized|occurs when|types)\b/}
 ];
 export function questionDeck(question) {
@@ -60,7 +65,7 @@ function residualTerms(question, topic, intent) {
 }
 function fitsTerms(terms, text) {
   const corpus=' '+plain(text)+' ';
-  return terms.every(term=>corpus.includes(' '+term+' ') || term.length>3 && corpus.includes(' '+term.replace(/s$/,'')+'s '));
+  return terms.every(term=>corpus.includes(' '+term+' ') || term.length>3 && [term.replace(/s$/,''),term.replace(/s$/,'')+'s'].some(form=>corpus.includes(' '+form+' ')));
 }
 function selectedDeck(value){const n=Number(value);return Number.isInteger(n)&&n>=1&&n<=7?n:0;}
 function metadataAnswer(intent, question, topic, records, seen) {
@@ -103,7 +108,7 @@ function metadataAnswer(intent, question, topic, records, seen) {
   }
 }
 
-export function answerQuestion({question='',topic='',deck,passages=[],visibleTexts=[],records=[],history=[]}={}) {
+export function answerQuestion({question='',topic='',deck,passages=[],visibleTexts=[],records=[],history=[],role='General reader'}={}) {
   const prior=list(history).filter(h=>h && (!h.topic || plain(h.topic)===plain(topic)));
   let selected=selectedDeck(deck);
   const result=text=>({text,citations:[],deck:selected||1});
@@ -125,10 +130,11 @@ export function answerQuestion({question='',topic='',deck,passages=[],visibleTex
   const seen=[...list(visibleTexts),...prior.map(h=>h.text||h.answer||'')].filter(s=>typeof s==='string').map(plain);
   if(!intent.evidence)return metadataAnswer(intent,q,topic,records,seen) || noEvidence();
   const terms=residualTerms(q,topic,intent);
-  for(const p of scoped(passages,topic)) {
+  for(const p of orderedPassages(scoped(passages,topic),role,topic)) {
     const subtype=plain(p.focus).endsWith(' '+plain(topic)) && !topicLabels(topic).includes(plain(p.focus));
-    if(!(topicLabels(topic).includes(plain(p.focus)) || subtype) || selectedDeck(p.deck)!==selected || typeof p.text!=='string' || !p.text.trim() || !p.title || !p.record || !safeURL(p.url)) continue;
+    if(!(topicLabels(topic).includes(plain(p.focus)) || subtype) || (intent.id==='definition'?!p.overview:selectedDeck(p.deck)!==selected) || typeof p.text!=='string' || !p.text.trim() || !p.title || !p.record || !safeURL(p.url)) continue;
     const evidence=plain(p.text);
+    if(intent.id==='course'&&/\b(untreated|without (?:treatment|intervention))\b/.test(q)&&!/(untreated|without (?:treatment|intervention))/.test(evidence))continue;
     // Match the specific property requested, not just a deck label.
     const specific = [
       [/\bcytogenetic\b/, /\bcytogenetic\b/],
@@ -145,8 +151,9 @@ export function answerQuestion({question='',topic='',deck,passages=[],visibleTex
     if(intent.id==='therapy' && /\b(start|stop|increase|decrease|take|give|dose|must|you should)\b/.test(evidence))continue;
     if(!intent.evidence.test(evidence) || !fitsTerms(terms,evidence+' '+p.title+' '+p.focus) || modifiers.some(rx=>rx.test(q)&&!rx.test(evidence+' '+plain(p.focus))) || !novel(p.text,seen))continue;
     if(/\b(should take|you must|mg|dosage|prescribe|you should|call 911)\b/.test(evidence))continue;
-    const citation={title:p.title,url:safeURL(p.sourceRecord)||p.url};
-    return {text:subtype?p.focus+' — '+p.text:p.text,citations:[citation],deck:selected};
+    const check=verifyClaim({kind:'passage',topic,sourceUrl:p.sourceRecord||p.url,field:'text',value:p.text,record:p.record},{topic,passages:[p]});
+    if(check.status==='withheld')continue;
+    return {text:check.text,citations:[check.citation],checks:[check],deck:selected,courseContext:p.courseContext,professional:professionalRole(role)};
   }
   return noEvidence();
 }

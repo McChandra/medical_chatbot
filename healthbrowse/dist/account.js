@@ -111,7 +111,7 @@ function renderHistory(items){
   const root=$('historyItems');root.replaceChildren();
   for(const row of items){
     const line=text('div','');line.className='row';
-    const open=text('a',row.questionLabel||row.topic);open.href=researchUrl(row.topic,row.section);
+    const open=text('a',row.questionLabel||row.topic);open.href=researchUrl(row.topic);
     line.append(open,text('small',' · '+row.kind+' · '+new Date(row.created_at).toLocaleString()));root.append(line);
   }
   if(!items.length)root.append(text('p','No saved public research activity.'));

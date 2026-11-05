@@ -60,3 +60,11 @@ test('saving preference and privacy validation prevent new saved messages',async
  assert.equal((await call('chats/'+c.id+'/turns','POST',{...turn(),citations:[{title:'Unsafe',url:'javascript:alert(1)'}]})).status,400);
  assert.equal((await call('chats/'+c.id+'/turns','POST',{...turn(),user_id:users.b.id})).status,400);
 });
+test('saved chat versions preserve old deck meaning and validate the current framework',async t=>{
+ const {call}=fixture(t),c=chat();await call('chats','POST',c);
+ await call('chats/'+c.id+'/turns','POST',turn());
+ const current={...turn(),frameworkVersion:'disease-spectrum-v2'};
+ assert.equal((await call('chats/'+c.id+'/turns','POST',current)).status,201);
+ const saved=await (await call('chats/'+c.id)).json();assert.deepEqual(saved.turns.map(t=>t.frameworkVersion),['seven-section-v1','disease-spectrum-v2']);
+ assert.equal((await call('chats/'+c.id+'/turns','POST',{...turn(),frameworkVersion:'made-up'})).status,400);
+});

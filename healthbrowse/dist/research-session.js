@@ -1,3 +1,4 @@
+import {domains,domainTitle,professionalRole} from './disease-framework.js';
 import {verifyClaim} from './claim-check.js';
 import {sectionNames} from './medcard.js';
 
@@ -17,7 +18,7 @@ export function renderCheck(parent,check){
   if(!check||check.status==='withheld')return;
   const details=elt('details',null,'claim-check');
   details.append(elt('summary',check.status==='corrected'?'Source correction applied':'Show claim check'));
-  details.append(elt('p',check.reason||'Matched against the cited source record.'),link(check.citation.title,check.citation.url));parent.append(details);
+  details.append(elt('p',check.reason||'Matched against the cited source record.'),link(check.citation.title,check.citation.url));if(check.provenance)details.append(elt('p',(check.provenance.historical?'Historical archive · ':'Publisher record · ')+check.provenance.publisher+' · '+check.provenance.date,'meta'));if(check.checkedAt)details.append(elt('small','Record comparison: '+check.checkedAt+' · clinical review pending','meta'));parent.append(details);
 }
 const tracks={general:'Disease overview',genetics:'Genetics & inheritance',treatments:'Treatments & medicines'};
 export function createResearchDesk(getContext,activate){
@@ -57,33 +58,33 @@ export function createResearchDesk(getContext,activate){
   }
   function track(key){if(key!==focus){focus=key;paperTask=loadPapers()}return paperTask}
   function select(i,move=true){
-    section=i;activate(i,false);if(i===5)track('genetics');else if(i===6)track('treatments');else if(i===3)track('general');draw();
+    section=i;activate(i,false);if(i===1)track('genetics');else if(i===4)track('treatments');else if(i===7)track('general');draw();
     if(move)root.querySelector('.deep-dive')?.scrollIntoView({block:'nearest'});
   }
   function draw(){
     const c=getContext();if(!c||c.topic!==current)return;
     root.replaceChildren();root.append(elt('div','RESEARCH BRIEF','eyebrow'),elt('h3',c.topic));
-    const intro=checkedPassage(c.topic,c.passages,c.passages.find(p=>p.deck===1));
+    const intro=checkedPassage(c.topic,c.passages,c.passages.find(p=>p.overview));
     if(intro){root.append(elt('p',intro.text),link(intro.citation.title,intro.citation.url));renderCheck(root,intro)}
     root.append(elt('p','Would you like to dig deeper into one of these seven sections? Choose a section to see its research sources.'));
     const nav=elt('div',null,'brief-nav');
-    sectionNames.forEach((title,i)=>{const btn=action((i+1)+' · '+title,()=>select(i+1));btn.setAttribute('aria-pressed',String(section===i+1));const p=c.passages.find(p=>p.deck===i+1);
+    sectionNames.forEach((title,i)=>{const btn=action((i+1)+' · '+domainTitle(i+1,c.role),()=>select(i+1));btn.setAttribute('aria-pressed',String(section===i+1));const p=c.passages.find(p=>p.deck===i+1&&!p.overview);
       const preview=checkedPassage(c.topic,c.passages,p);
       const card=elt('div',null,'brief-section-choice');card.append(btn);
       if(preview){const first=preview.text.match(/^.*?[.!?](?:\s|$)/)?.[0]?.trim()||preview.text;card.append(elt('small',first,'meta'),link('Source',preview.citation.url))}
       else{const source=c.sections?.[i]?.[0];if(source)card.append(link(source.title,source.url));else card.append(elt('small','Open this section to inspect coverage.','meta'))}
       nav.append(card)});root.append(nav);
     if(section){
-      const box=elt('section',null,'deep-dive');box.append(elt('h4',section+' · '+sectionNames[section-1]));
+      const box=elt('section',null,'deep-dive');box.append(elt('h4',section+' · '+domainTitle(section,c.role)));
       const seen=new Set();let count=0;
-      for(const p of c.passages.filter(p=>p.deck===section)){
+      for(const p of c.passages.filter(p=>p.deck===section&&!p.overview)){
         const claim=checkedPassage(c.topic,c.passages,p);
         if(!claim||seen.has(claim.text)||count>=4)continue;seen.add(claim.text);count++;
         box.append(elt('p',claim.text),link(claim.citation.title,claim.citation.url));renderCheck(box,claim);
       }
       const resources=c.sections?.[section-1]||[];
       for(const record of resources.slice(0,3)){const row=elt('p');row.append(link(record.title,record.url));if(record.detail)row.append(elt('small',record.detail,'meta'));box.append(row)}
-      if(!count&&!resources.length)box.append(elt('p','No section-specific source was found. The research records below cover the wider topic.'));
+      if(!count)box.append(elt('p',domains[section-1].empty));if(section===2)box.append(elt('p','A progression excerpt does not establish an untreated timeline. Check intervention exposure and population in the original source.','meta'));if(professionalRole(c.role))box.append(elt('p','Appraisal: '+domains[section-1].professional,'clinical-lens'));
       root.append(box);
     }
     const papersBox=elt('section',null,'research-block');papersBox.append(elt('h4','Five ranked research papers'));
@@ -161,7 +162,7 @@ export function createResearchDesk(getContext,activate){
     const records=[],checks=[],citations=[];
     if(award||trial){
       await activityTask;if(current!==start)return null;
-      if(!activity)return {text:'The registry could not be checked. Use Retry registries in the research brief.',citations,checks,deck:3};
+      if(!activity)return {text:'The registry could not be checked. Use Retry registries in the research brief.',citations,checks,deck:7};
       if(activity.snapshot)records.push('Registry snapshot checked '+activity.checkedAt.slice(0,10)+'. Current status may have changed.');
       const items=[];
       if(award)items.push(['NIH-funded award','grant',activity.grants,'institution']);
@@ -195,7 +196,7 @@ export function createResearchDesk(getContext,activate){
       }
       if(!papers?.records?.length)records.push(paperError?'Publication verification was unavailable.':'No papers passed the topic and verification checks.');
     }
-    return {deck:3,text:records.join('\n\n'),citations,checks};
+    return {deck:7,text:records.join('\n\n'),citations,checks};
   }
   return {sync(){const c=getContext();if(!c)return;if(!current || current!==c.topic){begin(c.topic);return}const key=c.topic+'|'+c.role;if(key!==lastScope){lastScope=key;draw()}},select,track,answer,reset(){controller?.abort();current='';root.replaceChildren()}};
 }

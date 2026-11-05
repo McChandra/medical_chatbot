@@ -1,23 +1,8 @@
 import {inspectInput,answerQuestion,questionDeck} from './clinical-engine.js';
 
-export const deckNames = [
-  'Education, definitions & taxonomy',
-  'Disease characteristics & identification',
-  'Medical research, journals & evidence',
-  'Datasets, software & AI resources',
-  'Prediction, early indicators & genetics',
-  'Physiology, symptoms, conditions & treatments',
-  'Pharmacy & hospitals',
-];
-const questions = [
-  'Which education programs are cataloged?',
-  'Which diagnostic tests are described?',
-  'What study design was used?',
-  'Which datasets are cataloged?',
-  'Which risk factors are described?',
-  'Which symptoms are described?',
-  'Which facility directories are cataloged?',
-];
+import {frameworkVersion,domains,domainTitle,roleLabel,professionalRole} from './disease-framework.js';
+export const deckNames=domains.map(d=>d.title);
+const questions=['Which risk factors are described?','What is known about the untreated disease course?','Which diagnostic tests are described?','What treatment classes are described?','Which complications are described?','What prevention information is available?','Which research papers are available?'];
 const $=id=>document.getElementById(id);
 const node=(tag,text)=>Object.assign(document.createElement(tag),{textContent:text});
 export function guardMessage(status){
@@ -34,7 +19,7 @@ export function setupCopilot(getContext,actions={}){
   controls.forEach(control=>control.disabled=true);
   function sync(){
     const c=getContext();if(!c)return;controls.forEach(control=>control.disabled=false);
-    const scope='seven-section|'+c.topic+'|'+c.role;
+    const scope=frameworkVersion+'|'+c.topic+'|'+c.role;
     if(identity!==scope){
       history=[];publicTurns=[];++sequence;$('scopeQuestion').replaceChildren();
       const last=readSession('hb-context',{});active=last.scope===scope && Number.isInteger(last.deck)?Math.max(1,Math.min(last.deck,deckNames.length)):1;
@@ -42,13 +27,14 @@ export function setupCopilot(getContext,actions={}){
       identity=scope;
     }
     save('hb-context',{topic:c.topic,role:c.role,scope,deck:active});save('hb-transcript',publicTurns);
-    $('deckSelect').value=String(active);$('copilotScope').textContent=c.topic+' · '+c.role;
-    $('copilotHint').textContent='Section '+active+' · '+deckNames[active-1]+'. Answers use the selected sources and flag missing evidence.';
+    [...$('deckSelect').options].forEach((option,i)=>option.textContent=(i+1)+' · '+domainTitle(i+1,c.role));
+    $('deckSelect').value=String(active);$('copilotScope').textContent=c.topic+' · '+roleLabel(c.role);
+    $('copilotHint').textContent='Section '+active+' · '+domainTitle(active,c.role)+'. Answers use the selected sources and flag missing evidence.';
     $('thread').replaceChildren();
-    for(const t of history){const turn=node('div','');turn.className='turn';turn.append(node('strong',t.question),node('p',t.text));
+    for(const t of history){const turn=node('div','');turn.className='turn';turn.append(node('strong',t.question),node('p',t.text));if(t.frameworkVersion!==frameworkVersion)turn.append(node('small','Saved using the previous deck framework. Section numbers refer to that version.'));
       for(const cite of t.citations){let url;try{url=new URL(cite.url);if(!['https:','http:'].includes(url.protocol)||url.username||url.password)continue}catch{continue}const a=node('a',cite.title+' ↗');a.href=url.href;a.target='_blank';a.rel='noopener noreferrer';turn.append(a)}for(const check of t.checks||[])renderCheck(turn,check);
-      if(t.overview){const list=node('div','');list.className='brief-nav';
-        deckNames.forEach((name,i)=>{const b=node('button',(i+1)+'. '+name);b.type='button';b.className='act';b.onclick=()=>actions.expand?.(i+1);list.append(b)});turn.append(list)}
+      if(t.overview&&t.frameworkVersion===frameworkVersion){const list=node('div','');list.className='brief-nav';
+        deckNames.forEach((name,i)=>{const b=node('button',(i+1)+'. '+domainTitle(i+1,c.role));b.type='button';b.className='act';b.onclick=()=>actions.expand?.(i+1);list.append(b)});turn.append(list)}
       $('thread').append(turn)}
     $('followups').replaceChildren();const suggestion=node('button',questions[active-1]);suggestion.className='act';suggestion.onclick=()=>ask(questions[active-1],true);$('followups').append(suggestion);
   }
@@ -92,7 +78,7 @@ export function setupCopilot(getContext,actions={}){
     }
     const overview=status==='ok' && !researchAnswer && /^(?:what is|tell me about|give me an overview|summari[sz]e)\b/i.test(q.trim()) && (q.toLowerCase().includes(c.topic.toLowerCase()) || /\b(it|this disease|this condition)\b/i.test(q));
     if(overview){
-      const p=c.passages.find(p=>p.deck===1);
+      const p=c.passages.find(p=>p.overview);
       if(p){
         const check=verifyClaim({kind:'passage',topic:c.topic,sourceUrl:p.sourceRecord||p.url,field:'text',value:p.text,record:p.record},{topic:c.topic,passages:c.passages});
         if(check.status!=='withheld'){answer.text=check.text;checks=[check];answer.citations=[check.citation]}
@@ -104,7 +90,9 @@ export function setupCopilot(getContext,actions={}){
       answer.text='Ask a question about '+c.topic+', such as “'+questions[active-1]+'”. I can look across the sections and cite a matching passage.';
     }
     if(status==='ok')active=answer.deck;
-    const turn={topic:c.topic,question:status==='ok'?q:'Input withheld',deck:answer.deck,text:'Section '+answer.deck+' · '+answer.text,citations:answer.citations,checks,overview};
+    if(answer.courseContext==='unspecified')answer.text+=' Treatment exposure is not established; this is not a verified untreated timeline.';
+    if(professionalRole(c.role)&&answer.citations.length&&answer.deck<7)answer.text+=' Appraisal: '+domains[answer.deck-1].professional+' Check current guidance and local applicability before clinical use.';
+    const turn={frameworkVersion,topic:c.topic,question:status==='ok'?q:'Input withheld',deck:answer.deck,text:'Section '+answer.deck+' · '+answer.text,citations:answer.citations,checks,overview};
     if(status==='ok'){void actions.onChat?.(c,answer.deck);try{void actions.onTurn?.(turn)}catch{/* Saving must not suppress a research answer. */}}
     history=[...history.slice(-9),turn];if(fromSuggestion)publicTurns=[...publicTurns.slice(-9),turn];
     sync();$('thread').lastElementChild?.scrollIntoView({block:'nearest'});
@@ -116,5 +104,5 @@ export function setupCopilot(getContext,actions={}){
   };
   $('ask').onsubmit=e=>{e.preventDefault();ask($('question').value)};
   $('clearChat').onclick=()=>{sequence++;$('scopeQuestion').replaceChildren();history=[];publicTurns=[];sync()};
-  return {sync,clear(){sequence++;history=[];publicTurns=[];$('scopeQuestion').replaceChildren();save('hb-transcript',[]);sync()},restore(turns){sequence++;history=turns;publicTurns=[];active=turns.at(-1)?.deck||1;sync()},activate(deck,focus=false){active=deck;sync();if(focus){$('copilot').scrollIntoView({block:'nearest'});$('question').focus({preventScroll:true})}}};
+  return {sync,clear(){sequence++;history=[];publicTurns=[];$('scopeQuestion').replaceChildren();save('hb-transcript',[]);sync()},restore(turns){sequence++;history=turns;publicTurns=[];active=turns.at(-1)?.frameworkVersion===frameworkVersion?turns.at(-1).deck:1;sync()},activate(deck,focus=false){active=deck;sync();if(focus){$('copilot').scrollIntoView({block:'nearest'});$('question').focus({preventScroll:true})}}};
 }

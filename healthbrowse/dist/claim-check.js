@@ -2,6 +2,17 @@
 // Clinical claims must be complete extracts. Metadata claims must name one field.
 // Example: verifyClaim({kind:'trial',topic,sourceUrl:row.url,field:'status',
 //   value:row.status}, {topic,trials:[row]}). No network call or clinical grading.
+import {authorityFor} from './authorities.js';
+export function clinicalProvenance(row){
+  const original=address(row.url),archive=address(row.sourceRecord);
+  const pinnedArchive=/^https:\/\/github\.com\/abachaa\/MedQuAD\/blob\/[a-f0-9]{40}\/.+\.xml$/.test(archive);
+  const retired=/^https?:\/\/(?:www\.)?(?:nihseniorhealth\.gov|ghr\.nlm\.nih\.gov)\//.test(original);
+  const publisher=authorityFor(original);
+  if(archive&&archive!==original&&!pinnedArchive)return null;
+  if(!publisher&&!(pinnedArchive&&retired))return null;
+  return {publisher:publisher?.name||'Archived NIH education source',historical:pinnedArchive,
+    date:row.vintage||'Source date unverified.',clinicalReview:'Not independently clinically reviewed'};
+}
 const fields = {
   passage: ['text'],
   paper: ['title','pmid','doi','journal','authors','date','studyDesign','category','population','abstractExcerpt'],
@@ -32,7 +43,7 @@ function rowScope(row,kind,topic) {
   return focus===topic || focus.endsWith(' '+topic);
 }
 function identifiable(row,kind) {
-  if(kind==='passage')return Boolean(clean(row.text) && clean(row.record));
+  if(kind==='passage')return Boolean(clean(row.text) && clean(row.record) && clinicalProvenance(row));
   if(kind==='paper')return /^[1-9]\d*$/.test(String(row.pmid)) &&
     address(row.url)==='https://pubmed.ncbi.nlm.nih.gov/'+row.pmid+'/' &&
     (row.doi==null || /^10\.\d{4,9}\/\S+$/i.test(row.doi));
@@ -69,7 +80,8 @@ export function verifyClaim(claim={},evidence={}) {
   if(!selected)return fail('No matching source field supports this claim.');
   const citation={title:clean(selected.title)||'Source record',url:address(selected.sourceRecord)||address(selected.url)};
   const subtype=kind==='passage' && topicKey(selected.focus)!==topic;
-  return {status:exact?'supported':'corrected',field,citation,
+  return {status:exact?'supported':'corrected',field,citation,checkedAt:new Date().toISOString(),
+    ...(kind==='passage'?{provenance:clinicalProvenance(selected)}:{}),
     text:(subtype?selected.focus+' — ':'')+fieldText(selected,field),
-    reason:exact?'Matched the retrieved source '+(kind==='passage'?'passage.':'field.'):'Replaced the proposed value with the value from the identified source record.'};
+    reason:(exact?'Matched the '+(kind==='passage'?'stored source excerpt.':'retrieved source field.'):'Replaced the proposed value with the value from the identified source record.')+' This is a source consistency check, not independent clinical validation.'};
 }

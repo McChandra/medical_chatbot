@@ -1,3 +1,4 @@
+import {frameworkVersion} from './disease-framework.js';
 import {accountRequest} from './account-client.js';
 // getRandomValues also supports local HTTP development previews.
 function newId(){const bytes=crypto.getRandomValues(new Uint8Array(16));bytes[6]=(bytes[6]&15)|64;bytes[8]=(bytes[8]&63)|128;const hex=Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');return [hex.slice(0,8),hex.slice(8,12),hex.slice(12,16),hex.slice(16,20),hex.slice(20)].join('-')}
@@ -40,7 +41,7 @@ export function createChatHistory(getContext){
     if(run!==generation)return;setCurrent(created.chat);
    }
    const id=current.id;
-   await accountRequest('/api/me/chats/'+encodeURIComponent(id)+'/turns',{method:'POST',body:{id:turnId,question:turn.question,text:turn.text,deck:turn.deck,citations:turn.citations||[],overview:!!turn.overview,historyEpoch:epoch}});
+   await accountRequest('/api/me/chats/'+encodeURIComponent(id)+'/turns',{method:'POST',body:{id:turnId,frameworkVersion,question:turn.question,text:turn.text,deck:turn.deck,citations:turn.citations||[],overview:!!turn.overview,historyEpoch:epoch}});
    if(run===generation){message('Saved to your account.');await refresh()}
   }).catch(error=>{if(run===generation)message('Not saved: '+error.message+' Your answer remains visible.');});
   return queue;
