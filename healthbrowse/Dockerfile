@@ -1,9 +1,12 @@
 # syntax=docker/dockerfile:1
 FROM node:26-bookworm-slim@sha256:bc0a2afd3b74ce12222fc8bab99271e66257f021078f5f4a5d687a77d280c1d9 AS base
-# Apply Debian security updates to APT (CVE-2026-109518) in both stages.
-RUN sed -i 's|http://deb.debian.org|https://deb.debian.org|g' /etc/apt/sources.list.d/debian.sources \
-    && apt-get update \
-    && apt-get install --no-install-recommends --only-upgrade -y apt libapt-pkg6.0 \
+# Bootstrap HTTPS trust from Node's bundled roots, then install Debian security fixes.
+RUN mkdir -p /etc/ssl/certs \
+    && node -e "require('node:fs').writeFileSync('/etc/ssl/certs/ca-certificates.crt', require('node:tls').rootCertificates.join('\\n'))" \
+    && sed -i 's|http://deb.debian.org|https://deb.debian.org|g' /etc/apt/sources.list.d/debian.sources \
+    && apt-get -o APT::Update::Error-Mode=any update \
+    && apt-get install --no-install-recommends -y apt libapt-pkg6.0 ca-certificates \
+    && dpkg --compare-versions "$(dpkg-query -W -f='\${Version}' apt)" ge 2.6.2 \
     && rm -rf /var/lib/apt/lists/*
 
 FROM base AS build
