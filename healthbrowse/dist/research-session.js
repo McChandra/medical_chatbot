@@ -1,3 +1,4 @@
+import {generalMode,fetchJSON} from './search-experience.js';
 import {domains,domainTitle,professionalRole} from './disease-framework.js';
 import {verifyClaim} from './claim-check.js';
 import {sectionNames} from './medcard.js';
@@ -28,9 +29,7 @@ export function createResearchDesk(getContext,activate){
   let seedRequest;
   async function request(path,signal){
     try{
-      const response=await fetch(path,{signal,cache:'no-store'});
-      if(!response.ok)throw Error('Source unavailable');
-      return await response.json();
+      return await fetchJSON(path,{signal,timeout:12000});
     }catch(error){
       if(signal.aborted||current.toLowerCase()!=='leukemia')throw error;
       seedRequest??=fetch('research-example.json').then(response=>{if(!response.ok)throw error;return response.json()}).catch(e=>{seedRequest=null;throw e});
@@ -64,6 +63,7 @@ export function createResearchDesk(getContext,activate){
   function draw(){
     const c=getContext();if(!c||c.topic!==current)return;
     root.replaceChildren();root.append(elt('div','RESEARCH BRIEF','eyebrow'),elt('h3',c.topic));
+    if(!generalMode(c.role)){
     const intro=checkedPassage(c.topic,c.passages,c.passages.find(p=>p.overview));
     if(intro){root.append(elt('p',intro.text),link(intro.citation.title,intro.citation.url));renderCheck(root,intro)}
     root.append(elt('p','Would you like to dig deeper into one of these seven sections? Choose a section to see its research sources.'));
@@ -86,6 +86,7 @@ export function createResearchDesk(getContext,activate){
       for(const record of resources.slice(0,3)){const row=elt('p');row.append(link(record.title,record.url));if(record.detail)row.append(elt('small',record.detail,'meta'));box.append(row)}
       if(!count)box.append(elt('p',domains[section-1].empty));if(section===2)box.append(elt('p','A progression excerpt does not establish an untreated timeline. Check intervention exposure and population in the original source.','meta'));if(professionalRole(c.role))box.append(elt('p','Appraisal: '+domains[section-1].professional,'clinical-lens'));
       root.append(box);
+    }
     }
     const papersBox=elt('section',null,'research-block');papersBox.append(elt('h4','Five ranked research papers'));
     const bar=elt('div',null,'research-filters');for(const [key,title] of Object.entries(tracks)){

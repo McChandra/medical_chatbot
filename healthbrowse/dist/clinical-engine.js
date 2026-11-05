@@ -37,9 +37,9 @@ const groups = [
   {id:'prognosis',deck:5,ask:/\b(prognos\w*|staging|stages?|stratif\w*|risk (?:estimate|score|calculator|model)|survival|outlook|predict\w*|early (?:warning signs?|indicators?))\b/,evidence:/\b(prognos\w*|stag\w*|stratif\w*|risk|survival|outlook|early|predict\w*)\b/},
   {id:'risk',deck:1,ask:/\b(risk factors?|risk|susceptibility|inherit\w*|hereditar\w*|cause\w*|etiolog\w*)\b/,evidence:/\b(risk|susceptib\w*|more likely|inherit\w*|hereditar\w*|caus\w*|prevalence|incidence)\b/},
   {id:'symptoms',deck:3,ask:/\b(symptoms?|signs?|manifestations?|clinical presentation)\b/,evidence:/\b(symptoms?|signs?|asymptomatic|manifestations?|wheezing|coughing|fatigue|shortness of breath|rash|pain)\b/},
+  {id:'therapy',deck:4,ask:/\b(treatment classes|treat\w*|therap\w*|drug classes|management)\b/,evidence:/\b(treat\w*|therap\w*|management|drug classes)\b/},
   {id:'mechanism',deck:1,ask:/\b(pathogenesis|mechanism|molecular biology|pathophysiology|physiology|affect(?:s|ing)?|how does|why does)\b/,evidence:/\b(caus\w*|due to|results? from|mechanism|pathway|cells?|inflamm\w*|protein|molecular|affect\w*)\b/},
-  {id:'therapy',deck:4,ask:/\b(treatment classes|treatments?|therap\w*|drug classes|management)\b/,evidence:/\b(treat\w*|therap\w*|management|drug classes)\b/},
-  {id:'definition',deck:1,ask:/\b(what (?:is|are)|defin\w*|overview|explain|classif\w*|subtypes?|taxonomy|meaning)\b/,evidence:/\b(is|are|means|refers to|classified|characterized|occurs when|types)\b/}
+  {id:'definition',deck:1,ask:/\b(what (?:is|are)|defin\w*|overview|explain|classif\w*|subtypes?|taxonomy|meaning|mean|tell me about|help me understand)\b/,evidence:/\b(is|are|means|refers to|classified|characterized|occurs when|types)\b/}
 ];
 export function questionDeck(question) {
   return groups.find(group=>group.ask.test(plain(question)))?.deck || null;

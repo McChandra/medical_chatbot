@@ -12,6 +12,12 @@ HealthBrowse uses `disease-spectrum-v2` for new conversations. Six requested cli
 | Epidemiology & Public Health | Distribution, prevention and access | No prevalence/incidence estimate without a source; feed date is not the observation period |
 | Research, Evidence & Resources | Publications, trials, grants, education, datasets and directories | Show available records and failures; do not invent papers, funding or provider availability |
 
+## General-user search and buddy
+
+General mode displays a direct answer before decks 1–6. Research resources remain in a separate expandable area, while professional modes retain seven decks. The direct answer is matched to the question's intent and checked against a stored source passage; a definition cannot substitute for a requested treatment or diagnostic answer. Unknown conditions and unsupported properties show a visible gap rather than an invented answer. Successive main searches do not require chat-style topic confirmation.
+
+The buddy is a user-opened native dialog with six guided questions, source-linked excerpts, free-text follow-ups, and existing private chat history controls. On narrow screens it fills the viewport; closing or pressing Escape returns focus to its opener. Publication discovery is deferred until requested. Local topic files and remote requests have bounded waits; available medical excerpts do not depend on a successful publication lookup. Automated tests cover common question wording, spelling corrections, independent topic resolution, excerpt verification and cancellation. Browser verification of this dialog is pending because the browser testing service timed out during this release.
+
 ## Source handling
 
 Existing source excerpts remain intact. Original annotations constrain domain placement: a diagnostic immunophenotyping excerpt is not classified as disease causation, and prior chemotherapy described as a risk factor is not presented as treatment advice. Limited term-based expansion identifies related progression/population content but is not a clinical interpretation or validated NLP classifier. A qualified reviewer must assess corpus coverage and placement before clinical deployment.
