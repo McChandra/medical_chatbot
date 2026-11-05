@@ -6,7 +6,7 @@ RUN mkdir -p /etc/ssl/certs \
     && sed -i 's|http://deb.debian.org|https://deb.debian.org|g' /etc/apt/sources.list.d/debian.sources \
     && apt-get -o APT::Update::Error-Mode=any update \
     && apt-get install --no-install-recommends -y apt libapt-pkg6.0 ca-certificates \
-    && dpkg --compare-versions "$(dpkg-query -W -f='\${Version}' apt)" ge 2.6.2 \
+    && dpkg --compare-versions "$(dpkg-query -W -f='${Version}' apt)" ge 2.6.2 \
     && rm -rf /var/lib/apt/lists/*
 
 FROM base AS build
