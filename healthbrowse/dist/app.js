@@ -1,3 +1,4 @@
+import {createChatHistory} from './chat-history.js';
 import {saveControls,recordTopic} from './personal.js';
 import {inspectInput,questionDeck} from './clinical-engine.js';
 import {setupCopilot,readSession,guardMessage} from './workspace.js';
@@ -59,12 +60,20 @@ function switchPrompt(container,input,target,continueSearch){
   prompt.append(el('p','You’re researching '+topic+'. Switch the workspace to '+target+'?'));
   prompt.append(button('Switch topic',()=>{container.replaceChildren();continueSearch()}),button('Stay on '+topic,()=>{container.replaceChildren();$('notice').textContent='Continuing with '+topic+'.'}));container.append(prompt);prompt.scrollIntoView({block:'nearest'});
 }
+const chats=createChatHistory(currentContext);
 const copilot=setupCopilot(currentContext,{
-  onChat:(c,section)=>recordTopic(c.topic,'chat',section),scopeChoice,confirm:(q,name)=>switchPrompt($('scopeQuestion'),q,name,()=>search(q,name,true)),
+  onChat:(c,section)=>recordTopic(c.topic,'chat',section),onTurn:turn=>chats.saveTurn(turn),scopeChoice,confirm:(q,name)=>switchPrompt($('scopeQuestion'),q,name,()=>search(q,name,true)),
   research:q=>research.answer(q),expand:n=>research.select(n),
   show:()=>{$('researchBrief').scrollIntoView({block:'start'})}
 });
 const research=createResearchDesk(currentContext,(n,focus)=>copilot.activate(n,focus));
+chats.setHandlers({newChat:()=>copilot.clear(),restore:async data=>{
+  role=Math.max(0,roles.indexOf(data.chat.readingMode));$('role').selectedIndex=role;
+  if(Object.hasOwn(catalog,data.chat.topic)||allowedTopics.has(data.chat.topic.toLowerCase())){
+    topic=data.chat.topic;activeQuery=topic;unresolved=false;live=null;codes=null;$('query').value=topic;render();
+  }else await search(data.chat.topic,null,true);
+  copilot.restore(data.turns);
+}});
 document.addEventListener('research-ready',()=>{activeResearchReady=true;if(currentContext())research.sync()});
 function reference(parent,title,url){
   if(!url||!/^https?:\/\//.test(url))return;
@@ -273,9 +282,12 @@ try{const res=await fetch('catalog.json');if(!res.ok)throw Error();catalog=await
   const last=readSession('hb-context',{});if(Object.hasOwn(passages,last.topic)||Object.hasOwn(catalog,last.topic)||allowedTopics.has(String(last.topic).toLowerCase()))topic=last.topic;
   activeQuery=topic;
 depts=taxonomy.departments.map(d=>d.name);assignments=Object.fromEntries(taxonomy.entities.map(e=>[e.name,e.departmentIds.map(id=>taxonomy.departments.findIndex(d=>d.id===id))]));Object.keys(catalog).forEach(t=>$('topics').append(new Option(t)));roles.forEach(r=>$('role').append(new Option(r)));role=Math.max(0,roles.indexOf(readSession('hb-reader','')));$('role').selectedIndex=role;$('dept').append(new Option('Select a specialty',''));taxonomy.departments.forEach(d=>$('dept').append(new Option(d.name,d.name)));$('find').onsubmit=e=>{e.preventDefault();search($('query').value.trim())};document.querySelectorAll('[data-topic]').forEach(b=>b.onclick=()=>choose(b.dataset.topic));$('role').onchange=()=>{role=$('role').selectedIndex;try{sessionStorage.setItem('hb-reader',JSON.stringify(roles[role]))}catch{}render()};$('dept').onchange=departments;departments();render();
+await chats.init();
 const params=new URLSearchParams(location.search);
 const requested=params.get('topic'),section=Number(params.get('section'));
-if(requested && (Object.hasOwn(catalog,requested)||allowedTopics.has(requested.toLowerCase()))){
+if(params.get('chat'))await chats.load(params.get('chat'));
+else if(params.get('newchat')==='1')chats.reset();
+if(!params.get('chat') && requested && (Object.hasOwn(catalog,requested)||allowedTopics.has(requested.toLowerCase()))){
   await search(requested,null,true);if(Number.isInteger(section)&&section>=1&&section<=7)research.select(section);
 }
 }catch{$('notice').textContent='The research catalog could not be loaded. Refresh to retry.'}

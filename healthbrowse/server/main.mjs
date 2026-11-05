@@ -3,6 +3,8 @@ import http from 'node:http';
 import {randomUUID} from 'node:crypto';
 import worker from '../dist/server/index.js';
 
+const runtime={...process.env};
+if(process.env.WORKSPACE_DB_PATH){const {openWorkspace}=await import('./sqlite-workspace.mjs');runtime.DB=openWorkspace(process.env.WORKSPACE_DB_PATH)}
 const port=Number(process.env.PORT||8080);
 let draining=false;
 const server=http.createServer(async (incoming,outgoing)=>{
@@ -25,7 +27,7 @@ const server=http.createServer(async (incoming,outgoing)=>{
     }
     const request=new Request(url,{method:incoming.method,headers,
       body:['GET','HEAD'].includes(incoming.method)?undefined:Buffer.concat(chunks)});
-    const result=await worker.fetch(request,process.env);status=result.status;
+    const result=await worker.fetch(request,runtime);status=result.status;
     const responseHeaders=Object.fromEntries(result.headers);responseHeaders['x-request-id']=requestId;
     outgoing.writeHead(status,responseHeaders);
     outgoing.end(incoming.method==='HEAD'?undefined:Buffer.from(await result.arrayBuffer()));

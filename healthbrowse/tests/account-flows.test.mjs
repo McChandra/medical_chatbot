@@ -87,3 +87,10 @@ test('home callback keeps recovery and provider errors but drops unrelated URL d
  await assert.rejects(completeAuthCallback({},new URL(rejected)),{code:'access_denied'});
  assert.match(authErrorMessage({code:'access_denied'}),/Google denied access/);
 });
+
+test('email change only requests a verified-account update and preserves provider failures',async()=>{
+ const {requestEmailChange}=await import('../dist/account-flows.js');
+ let sent;await requestEmailChange({updateUser:async(...args)=>{sent=args;return {data:{}}}},' new@example.test ','https://site.test/account.html');
+ assert.deepEqual(sent,[{email:'new@example.test'},{emailRedirectTo:'https://site.test/account.html'}]);
+ await assert.rejects(requestEmailChange({updateUser:async()=>({error:new Error('Confirmation unavailable')})},'new@example.test','https://site.test/account.html'),/Confirmation unavailable/);
+});

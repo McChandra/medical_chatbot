@@ -1,4 +1,4 @@
-import {startEmailChallenge,confirmEmailChallenge,passwordLogin,updateRecoveredPassword,completeAuthCallback,authErrorMessage} from './account-flows.js';
+import {startEmailChallenge,confirmEmailChallenge,passwordLogin,updateRecoveredPassword,completeAuthCallback,authErrorMessage,requestEmailChange} from './account-flows.js';
 import {accountRequest,getAuthClient,clearResearchSession} from './account-client.js';
 import {readingModes,researchUrl,suggestedPassword} from './account-utils.js';
 
@@ -56,17 +56,17 @@ async function loadAccount(){
   const generation=++userGeneration;
   const active=Boolean(session)&&!recovering;
   if(recovering&&session?.user.email)$('email').value=session.user.email;
-  if(active && !['#workspace','#help','#contact','#saved','#settings','#history'].includes(location.hash)){
+  if(active && !['#workspace','#help','#contact','#saved','#settings','#history','#profile','#chats'].includes(location.hash)){
     location.replace('/');
     return;
   }
   document.body.classList.toggle('auth-entry',!active);
   if(active){
-    $('pageTitle').textContent='Your account';
+    $('pageTitle').textContent='Your account';document.title='Your account · HealthBrowse AI';
     $('intro').textContent='Manage your settings and saved research.';
   }else updateForm();
   hasSettings=false;
-  for(const id of ['signedIn','settings','saved','history'])show(id,active);
+  for(const id of ['signedIn','profile','settings','saved','history','chats','deleteHistory'])show(id,active);
   show('authPanel',!active);show('authForm',Boolean(client));
   $('feedbackForm').querySelector('button').disabled=!active;$('contactForm').querySelector('button').disabled=!active;
   for(const id of ['feedbackStatus','contactStatus'])status(id,active?'':'Sign in to submit.');
@@ -78,11 +78,13 @@ async function loadAccount(){
   $('contactEmail').value=session.user.email||'';
   const loaders=[
     ['settingsStatus','/api/me/settings',data=>{
-      const s=data.settings;$('readingMode').value=s.readingMode;$('savedTheme').value=s.theme;$('saveHistory').checked=s.saveHistory;
+      const s=data.settings;$('saveChats').checked=s.saveChats??true;$('readingMode').value=s.readingMode;$('savedTheme').value=s.theme;$('saveHistory').checked=s.saveHistory;
       hasSettings=true;$('settingsForm').querySelector('button').disabled=false;
     }],
     ['savedStatus','/api/me/saved',data=>renderSaved(data.items)],
     ['historyStatus','/api/me/history',data=>renderHistory(data.items)],
+    ['nameStatus','/api/me/profile',data=>{ $('displayName').value=data.profile.name;$('profileEmail').value=data.profile.email;$('currentEmail').textContent='Current email: '+data.profile.email;if(data.profile.pendingEmail)status('emailStatus','Confirmation pending for '+data.profile.pendingEmail+'.');}],
+    ['chatsStatus','/api/me/chats',data=>renderChats(data.items)],
   ];
   await Promise.all(loaders.map(async([id,path,draw])=>{
     try{const data=await accountRequest(path);if(generation===userGeneration)draw(data)}
@@ -176,7 +178,7 @@ $('settingsForm').onsubmit=async e=>{
   e.preventDefault();if(!hasSettings)return;
   const generation=userGeneration,submit=$('settingsForm').querySelector('button');submit.disabled=true;
   try{
-    const settings={saveHistory:$('saveHistory').checked,readingMode:$('readingMode').value,theme:$('savedTheme').value};
+    const settings={saveChats:$('saveChats').checked,saveHistory:$('saveHistory').checked,readingMode:$('readingMode').value,theme:$('savedTheme').value};
     await accountRequest('/api/me/settings',{method:'PATCH',body:settings});
     if(generation===userGeneration){sessionStorage.setItem('hb-reader',JSON.stringify(settings.readingMode));
       if(settings.theme==='system')localStorage.removeItem('healthbrowse-theme');else localStorage.setItem('healthbrowse-theme',settings.theme);
@@ -222,13 +224,14 @@ async function init(){
     const url=new URL(location.href),fragment=new URLSearchParams(url.hash.slice(1));
     if(url.searchParams.has('code')||url.searchParams.has('error')||fragment.has('error'))history.replaceState(null,'',url.pathname);
     const callback=await completeAuthCallback(client.auth,url);
+    if(callback&&sessionStorage.getItem('hb-email-change')){sessionStorage.removeItem('hb-email-change');history.replaceState(null,'','/account.html#profile')}
     if(callback?.recovering){recovering=true;sessionStorage.setItem('hb-account-recovery','1')}
     session=checked(await client.auth.getSession()).session;
     recovering=Boolean(session)&&sessionStorage.getItem('hb-account-recovery')==='1';
     client.auth.onAuthStateChange((event,newSession)=>{
       if(authBusy)return;
       if(event==='SIGNED_OUT'){clearTabData();session=null;setTimeout(()=>loadAccount(),0)}
-      else if(newSession?.user.id===session?.user.id){session=newSession}
+      else if(newSession?.user.id===session?.user.id){session=newSession;if(event==='USER_UPDATED')setTimeout(()=>{if(!authBusy)loadAccount()},0)}
     });
     status('authStatus','');await loadAccount();
   }catch(error){status('authStatus',authErrorMessage(error))}
@@ -237,3 +240,46 @@ async function init(){
 init();
 // Returning from Google must not restore a disabled, in-progress form from bfcache.
 window.addEventListener('pageshow',event=>{if(event.persisted)location.reload()});
+
+function renderChats(items){
+ const root=$('accountChats');root.replaceChildren();
+ for(const chat of items){
+  const row=text('div','');row.className='row';const open=text('a',chat.title);open.href='/?chat='+encodeURIComponent(chat.id);
+  const detail=text('p',chat.topic+' · '+new Date(chat.updatedAt).toLocaleString());detail.className='muted';
+  const actions=text('div','');actions.className='chat-actions';
+  const rename=text('button','Rename'),remove=text('button','Delete');rename.type=remove.type='button';
+  const form=document.createElement('form');form.hidden=true;
+  const label=text('label','Chat name');const input=document.createElement('input');input.id='rename-'+chat.id;input.maxLength=160;input.required=true;input.value=chat.title;label.htmlFor=input.id;
+  const save=text('button','Save name'),cancel=text('button','Cancel');save.type='submit';cancel.type='button';form.append(label,input,save,cancel);
+  rename.onclick=()=>{form.hidden=false;input.focus()};cancel.onclick=()=>{form.hidden=true};
+  form.onsubmit=async event=>{event.preventDefault();save.disabled=true;try{const data=await accountRequest('/api/me/chats/'+chat.id,{method:'PATCH',body:{title:input.value.trim()}});open.textContent=data.chat.title;form.hidden=true;status('chatsStatus','Chat renamed.')}catch(error){status('chatsStatus',error.message)}finally{save.disabled=false}};
+  remove.onclick=async()=>{if(!confirm('Delete this chat and all its messages? This cannot be undone.'))return;remove.disabled=true;try{await accountRequest('/api/me/chats/'+chat.id,{method:'DELETE'});row.remove();if(!root.children.length)root.append(text('p','No saved chats yet.'));status('chatsStatus','Chat deleted.')}catch(error){remove.disabled=false;status('chatsStatus',error.message)}};
+  actions.append(rename,remove);row.append(open,detail,actions,form);root.append(row);
+ }
+ if(!items.length)root.append(text('p','No saved chats yet. Start a research chat on the desk.'));
+}
+$('nameForm').onsubmit=async event=>{
+ event.preventDefault();const button=event.target.querySelector('button');button.disabled=true;
+ try{await accountRequest('/api/me/profile',{method:'PATCH',body:{name:$('displayName').value.trim()}});status('nameStatus','Name saved.')}
+ catch(error){status('nameStatus',error.message)}finally{button.disabled=false}
+};
+$('emailForm').onsubmit=async event=>{
+ event.preventDefault();if(!client||!session)return;const button=event.target.querySelector('button');button.disabled=true;
+ const email=$('profileEmail').value.trim();
+ try{
+  if(email.toLowerCase()===session.user.email?.toLowerCase()){status('emailStatus','This is already your account email.');return}
+  await requestEmailChange(client.auth,email,accountURL);
+  sessionStorage.setItem('hb-email-change','1');
+  status('emailStatus','Change requested. Check the current and new email inboxes for confirmation instructions.');
+ }catch(error){status('emailStatus',authErrorMessage(error))}finally{button.disabled=false}
+};
+$('deleteAllChats').onclick=()=>$('deleteChatsDialog').showModal();
+$('cancelDeleteChats').onclick=()=>$('deleteChatsDialog').close();
+$('confirmDeleteChats').onclick=async()=>{
+ const button=$('confirmDeleteChats');button.disabled=true;
+ try{
+  await accountRequest('/api/me/chats',{method:'DELETE',body:{confirmation:'DELETE_ALL_CHATS'}});
+  clearResearchSession();localStorage.setItem('hb-history-cleared',String(Date.now()));renderChats([]);renderHistory([]);
+  status('deleteChatsStatus','All saved chats, messages, and research activity were deleted.');$('deleteChatsDialog').close();
+ }catch(error){status('deleteChatsStatus',error.message);$('deleteChatsDialog').close()}finally{button.disabled=false}
+};

@@ -1,6 +1,6 @@
 import {accountRequest,getAccessToken} from './account-client.js';
 
-// Raw questions and chat transcripts never cross the account boundary.
+// This activity endpoint stores topic references; saved conversations use chat-history.js.
 export async function recordTopic(topic,kind,section=1){
   try{
     if(!sessionStorage.getItem('hb-supabase-session') || !await getAccessToken())return;

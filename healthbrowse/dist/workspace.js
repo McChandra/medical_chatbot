@@ -46,7 +46,7 @@ export function setupCopilot(getContext,actions={}){
     $('copilotHint').textContent='Section '+active+' · '+deckNames[active-1]+'. Answers use the selected sources and flag missing evidence.';
     $('thread').replaceChildren();
     for(const t of history){const turn=node('div','');turn.className='turn';turn.append(node('strong',t.question),node('p',t.text));
-      for(const cite of t.citations){const a=node('a',cite.title+' ↗');a.href=cite.url;a.target='_blank';a.rel='noopener noreferrer';turn.append(a)}for(const check of t.checks||[])renderCheck(turn,check);
+      for(const cite of t.citations){let url;try{url=new URL(cite.url);if(!['https:','http:'].includes(url.protocol)||url.username||url.password)continue}catch{continue}const a=node('a',cite.title+' ↗');a.href=url.href;a.target='_blank';a.rel='noopener noreferrer';turn.append(a)}for(const check of t.checks||[])renderCheck(turn,check);
       if(t.overview){const list=node('div','');list.className='brief-nav';
         deckNames.forEach((name,i)=>{const b=node('button',(i+1)+'. '+name);b.type='button';b.className='act';b.onclick=()=>actions.expand?.(i+1);list.append(b)});turn.append(list)}
       $('thread').append(turn)}
@@ -105,7 +105,7 @@ export function setupCopilot(getContext,actions={}){
     }
     if(status==='ok')active=answer.deck;
     const turn={topic:c.topic,question:status==='ok'?q:'Input withheld',deck:answer.deck,text:'Section '+answer.deck+' · '+answer.text,citations:answer.citations,checks,overview};
-    if(status==='ok')void actions.onChat?.(c,answer.deck);
+    if(status==='ok'){void actions.onChat?.(c,answer.deck);try{void actions.onTurn?.(turn)}catch{/* Saving must not suppress a research answer. */}}
     history=[...history.slice(-9),turn];if(fromSuggestion)publicTurns=[...publicTurns.slice(-9),turn];
     sync();$('thread').lastElementChild?.scrollIntoView({block:'nearest'});
   }
@@ -116,5 +116,5 @@ export function setupCopilot(getContext,actions={}){
   };
   $('ask').onsubmit=e=>{e.preventDefault();ask($('question').value)};
   $('clearChat').onclick=()=>{sequence++;$('scopeQuestion').replaceChildren();history=[];publicTurns=[];sync()};
-  return {sync,activate(deck,focus=false){active=deck;sync();if(focus){$('copilot').scrollIntoView({block:'nearest'});$('question').focus({preventScroll:true})}}};
+  return {sync,clear(){sequence++;history=[];publicTurns=[];$('scopeQuestion').replaceChildren();save('hb-transcript',[]);sync()},restore(turns){sequence++;history=turns;publicTurns=[];active=turns.at(-1)?.deck||1;sync()},activate(deck,focus=false){active=deck;sync();if(focus){$('copilot').scrollIntoView({block:'nearest'});$('question').focus({preventScroll:true})}}};
 }

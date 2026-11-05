@@ -94,3 +94,10 @@ export function authErrorMessage(error){
   if(/fetch|network/i.test(error?.message||''))return 'Could not reach the sign-in service. Check your connection and try again.';
   return error?.message||'Request unsuccessful. Please try again.';
 }
+
+export async function requestEmailChange(auth,email,redirectTo){
+  const address=String(email||'').trim();
+  if(address.length>254||!/^[^\s<>@]+@[^\s<>@]+\.[^\s<>@]+$/.test(address))throw new Error('Enter a valid email address.');
+  const {error}=await auth.updateUser({email:address},{emailRedirectTo:redirectTo});
+  if(error)throw error;
+}
