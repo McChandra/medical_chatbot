@@ -1,6 +1,6 @@
-import {startEmailChallenge,confirmEmailChallenge} from './account-flows.js';
+import {startEmailChallenge,confirmEmailChallenge,passwordLogin,updateRecoveredPassword,completeAuthCallback,authErrorMessage} from './account-flows.js';
 import {accountRequest,getAuthClient,clearResearchSession} from './account-client.js';
-import {readingModes,researchUrl,suggestedPassword,validPassword} from './account-utils.js';
+import {readingModes,researchUrl,suggestedPassword} from './account-utils.js';
 
 const $=id=>document.getElementById(id);
 const text=(tag,value)=>Object.assign(document.createElement(tag),{textContent:value});
@@ -15,7 +15,7 @@ const modes={
   login:['Sign in','Explore medical evidence and save sources in your research desk.','Log in'],
   signup:['Create an account','Use Google or create a login with your email and password.','Create account'],
   otp:['Email code login','Enter the email associated with your HealthBrowse account.','Send sign-in code'],
-  forgot:['Reset your password','Enter your email to request a password recovery code.','Send recovery code'],
+  forgot:['Reset your password','Enter your account email and we’ll send password reset instructions.','Send reset email'],
 };
 function updateForm(){
   const verifying=Boolean(challenge);
@@ -24,14 +24,16 @@ function updateForm(){
   if(document.body.classList.contains('auth-entry')){
     $('pageTitle').textContent=title;
     document.title=title+' · HealthBrowse AI';
-    $('intro').textContent=verifying?'Enter the newest verification code in this tab.':recovering?'Choose a password with at least 12 characters.':modes[mode][1];
+    $('intro').textContent=verifying?'Follow the confirmation instructions in your newest email.':recovering?'Choose a password with at least 12 characters.':modes[mode][1];
   }
-  $('authHelp').textContent=verifying?'Code requested for '+challenge.email:'';
-  $('authSubmit').textContent=verifying?'Verify code':recovering?'Update password':modes[mode][2];
+  $('authHelp').textContent=verifying?'Email requested for '+challenge.email:'';
+  $('authSubmit').textContent=authBusy?'Please wait…':verifying?'Verify code':recovering?'Update password':modes[mode][2];
+  $('authForm').setAttribute('aria-busy',String(authBusy));
   $('email').disabled=authBusy||verifying||recovering;
-  $('password').required=passwordNeeded;$('password').disabled=!passwordNeeded;
+  $('password').required=passwordNeeded;$('password').disabled=authBusy||!passwordNeeded;
   $('password').autocomplete=mode==='login'&&!recovering?'current-password':'new-password';
-  $('code').disabled=!verifying;$('code').required=verifying;
+  $('code').disabled=authBusy||!verifying;$('code').required=verifying;
+  $('cancelFlow').disabled=authBusy;$('generate').disabled=authBusy;$('showPassword').disabled=authBusy;
   $('authSubmit').disabled=authBusy||!client;
   show('codeGroup',verifying);show('passwordGroup',passwordNeeded);
   show('suggestionGroup',passwordNeeded&&(mode==='signup'||recovering));
@@ -46,12 +48,14 @@ function updateForm(){
 }
 function switchMode(value){
   mode=value;challenge=null;$('code').value='';$('password').value='';$('showPassword').checked=false;
+  history.replaceState(null,'',value==='login'?'/account.html':'/account.html?view='+value);
   $('password').type='password';status('authStatus','');updateForm();
 }
 function checked(result){if(result?.error)throw result.error;return result?.data}
 async function loadAccount(){
   const generation=++userGeneration;
   const active=Boolean(session)&&!recovering;
+  if(recovering&&session?.user.email)$('email').value=session.user.email;
   if(active && !['#workspace','#help','#contact','#saved','#settings','#history'].includes(location.hash)){
     location.replace('/');
     return;
@@ -117,8 +121,8 @@ function clearTabData(){
   contactAttempt=null;recovering=false;challenge=null;
 }
 async function finishRecovery(){
-  sessionStorage.removeItem('hb-account-recovery');recovering=false;
-  checked(await client.auth.signOut({scope:'local'}));session=null;clearTabData();
+  checked(await client.auth.signOut({scope:'local'}));session=null;
+  sessionStorage.removeItem('hb-account-recovery');recovering=false;clearTabData();
   switchMode('login');status('authStatus','Password updated. Sign in with your new password.');
 }
 $('authForm').onsubmit=async e=>{
@@ -131,21 +135,20 @@ $('authForm').onsubmit=async e=>{
       session=await confirmEmailChallenge(client.auth,challenge,$('code').value);challenge=null;$('code').value='';
       if(kind==='recovery'){recovering=true;sessionStorage.setItem('hb-account-recovery','1');status('authStatus','Code verified. Choose a new password.')}
     }else if(recovering){
-      if(!validPassword(password))throw new Error('Use at least 12 characters and no more than 72 UTF-8 bytes.');
-      checked(await client.auth.updateUser({password}));await finishRecovery();
+      await updateRecoveredPassword(client.auth,password);await finishRecovery();
     }else if(mode==='login'){
-      const result=checked(await client.auth.signInWithPassword({email,password}));session=result.session;
+      session=await passwordLogin(client.auth,email,password);
       $('password').value='';
     }else{
       challenge=await startEmailChallenge(client.auth,mode,email,password,accountURL);
       $('password').value='';
-      const messages={signup:'If signup can proceed, you will receive a confirmation code.',login:'If this account can sign in, check your email for a code.',recovery:'If this email belongs to an account, check it for a recovery code or link.'};
+      const messages={signup:'If signup can proceed, you will receive a confirmation email.',login:'If this account can sign in, check your email for a code or link.',recovery:'If this email belongs to an account, check it for password reset instructions.'};
       status('authStatus',messages[challenge.kind]);
     }
     if(session&&!recovering)history.replaceState(null,'',location.pathname);
     await loadAccount();
   }catch(error){
-    status('authStatus',failure(error,'Request unsuccessful.'));
+    status('authStatus',authErrorMessage(error));
   }finally{authBusy=false;updateForm()}
 };
 $('cancelFlow').onclick=async()=>{
@@ -159,10 +162,11 @@ $('google').onclick=async()=>{
   try{checked(await client.auth.signInWithOAuth({provider:'google',options:{redirectTo:accountURL}}))}
   catch(error){status('authStatus',failure(error,'Google sign-in failed.'));updateForm()}
 };
-$('logout').onclick=async()=>{
+const signOut=async()=>{
   try{checked(await client.auth.signOut({scope:'local'}));session=null;clearTabData();switchMode('login');await loadAccount()}
   catch(error){status('settingsStatus',failure(error,'Sign-out failed. Try again.'))}
 };
+$('logout').onclick=signOut;$('accountSignOut').onclick=signOut;
 $('settingsForm').onsubmit=async e=>{
   e.preventDefault();if(!hasSettings)return;
   const generation=userGeneration,submit=$('settingsForm').querySelector('button');submit.disabled=true;
@@ -210,14 +214,10 @@ async function init(){
   updateForm();
   try{
     client=await getAuthClient();
-    const url=new URL(location.href),code=url.searchParams.get('code'),err=url.searchParams.get('error');
-    if(code||err){const safe=new URL(url);safe.search='';safe.hash='';history.replaceState(null,'',safe.pathname)}
-    if(err)throw new Error('Account authorization was cancelled or could not complete. You may retry.');
-    if(code){
-      const data=checked(await client.auth.exchangeCodeForSession(code));
-      if(!data.session)throw new Error('The sign-in link has expired. Request a new one.');
-      if(url.searchParams.get('flow')==='recovery'){recovering=true;sessionStorage.setItem('hb-account-recovery','1')}
-    }
+    const url=new URL(location.href),fragment=new URLSearchParams(url.hash.slice(1));
+    if(url.searchParams.has('code')||url.searchParams.has('error')||fragment.has('error'))history.replaceState(null,'',url.pathname);
+    const callback=await completeAuthCallback(client.auth,url);
+    if(callback?.recovering){recovering=true;sessionStorage.setItem('hb-account-recovery','1')}
     session=checked(await client.auth.getSession()).session;
     recovering=Boolean(session)&&sessionStorage.getItem('hb-account-recovery')==='1';
     client.auth.onAuthStateChange((event,newSession)=>{
@@ -226,7 +226,7 @@ async function init(){
       else if(newSession?.user.id===session?.user.id){session=newSession}
     });
     status('authStatus','');await loadAccount();
-  }catch(error){status('authStatus',failure(error,'Account sign-in is unavailable.'))}
+  }catch(error){status('authStatus',authErrorMessage(error))}
   finally{show('authForm',Boolean(client));updateForm()}
 }
 init();
