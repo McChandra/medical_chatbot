@@ -15,12 +15,12 @@ The contact form needs a server-configured mailbox and mail sender. A pending re
 
 ## Current hosted callbacks and manual acceptance test
 
-For the current deployment, use Site URL `https://healthbrowseai.auralflour.chatgpt.site` and allow both:
+For the current deployment, use Site URL `https://healthbrowseai.abhaysrivastava518.chatgpt.site` and allow both:
 
-- `https://healthbrowseai.auralflour.chatgpt.site/account.html`
-- `https://healthbrowseai.auralflour.chatgpt.site/account.html?flow=recovery`
+- `https://healthbrowseai.abhaysrivastava518.chatgpt.site/account.html`
+- `https://healthbrowseai.abhaysrivastava518.chatgpt.site/account.html?flow=recovery`
 
-Do not leave only the former `healthbrowse-public-research` hostname in the allowlist. A successful request means the provider accepted it; it does not prove inbox delivery. Supabase's default sender only delivers to authorized organization members. Public signup and recovery require a configured SMTP provider or Send Email hook. The public Auth settings endpoint does not reveal SMTP configuration or redirect allowlists.
+The hosting provider now returns this `abhaysrivastava518` host as the production URL. Keep any still-used legacy callbacks, but do not leave only the former `auralflour` hostnames in the allowlist. A successful request means the provider accepted it; it does not prove inbox delivery. Supabase's default sender only delivers to authorized organization members. Public signup and recovery require a configured SMTP provider or Send Email hook. The public Auth settings endpoint does not reveal SMTP configuration or redirect allowlists.
 
 1. Use a designated mailbox and a unique test password. Create an account, confirm the newest email code, and verify arrival at the research desk.
 2. Sign out from the header; log in with email/password. Check that an incorrect password keeps you on login and gives a useful error.
