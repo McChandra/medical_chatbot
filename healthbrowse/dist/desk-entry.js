@@ -1,6 +1,9 @@
 import {getAuthClient,clearResearchSession} from './account-client.js';
+import {authCallbackDestination} from './account-flows.js';
 
 async function enterDesk(){
+  const callback=authCallbackDestination(new URL(location.href));
+  if(callback){location.replace(callback);return}
   let client, session;
   try{
     client=await getAuthClient();

@@ -40,11 +40,25 @@ export async function updateRecoveredPassword(auth,password){
   if(error)throw error;
 }
 
+// Supabase can use Site URL (the home page) when redirectTo is not allowlisted.
+// Keep the callback on this origin and preserve only authentication parameters.
+export function authCallbackDestination(url){
+  if(url.pathname==='/account.html')return null;
+  const fragment=new URLSearchParams(url.hash.slice(1));
+  if(!url.searchParams.has('code')&&!url.searchParams.has('error')&&!fragment.has('error'))return null;
+  const destination=new URL('/account.html',url.origin);
+  for(const key of ['code','sb_flow_id','flow','error','error_code']){
+    const value=url.searchParams.get(key)??fragment.get(key);
+    if(value!==null)destination.searchParams.set(key,value);
+  }
+  return destination.href;
+}
+
 // Capture callback parameters before removing them from browser history.
 export async function completeAuthCallback(auth,url){
   const fragment=new URLSearchParams(url.hash.slice(1));
   if(url.searchParams.has('error')||fragment.has('error')){
-    const code=url.searchParams.get('error_code')||fragment.get('error_code');
+    const code=url.searchParams.get('error_code')||fragment.get('error_code')||url.searchParams.get('error')||fragment.get('error');
     throw Object.assign(new Error('This sign-in link could not be used. Request a new email or try signing in again.'),{code});
   }
   const code=url.searchParams.get('code');
@@ -70,7 +84,10 @@ export function authErrorMessage(error){
     same_password:'Choose a new password that differs from your current password.',
     flow_state_expired:'This sign-in request has expired. Please start again.',
     flow_state_not_found:'This sign-in request is no longer available. Please start again.',
-    pkce_verifier_not_found:'Open this email link in the original tab where you requested it, or return there and enter the email code. If that tab is closed, start again.',
+    access_denied:'Sign-in was cancelled or Google denied access. Try again and complete the Google sign-in steps.',
+    bad_oauth_callback:'Google could not finish signing you in. Try again. If this repeats, the site operator needs to check the Google OAuth configuration.',
+    provider_disabled:'Google sign-in is currently unavailable. Please use email sign-in.',
+    pkce_verifier_not_found:'Return to the original tab and site address where you started sign-in, then try again. For email sign-in, you can enter the code in that tab.',
   };
   if(error?.code&&messages[error.code])return messages[error.code];
   if(/code verifier|PKCE/i.test(error?.message||''))return messages.pkce_verifier_not_found;

@@ -158,9 +158,14 @@ $('cancelFlow').onclick=async()=>{
 $('showPassword').onchange=()=>{$('password').type=$('showPassword').checked?'text':'password'};
 $('generate').onclick=()=>{ $('password').value=suggestedPassword();$('showPassword').checked=true;$('password').type='text';status('authStatus','Suggested password generated. Save it in your password manager.'); };
 $('google').onclick=async()=>{
-  $('google').disabled=true;
+  if(!client||authBusy)return;
+  authBusy=true;updateForm();
+  $('google').textContent='Opening Google…';status('authStatus','Continue on Google’s sign-in page.');
   try{checked(await client.auth.signInWithOAuth({provider:'google',options:{redirectTo:accountURL}}))}
-  catch(error){status('authStatus',failure(error,'Google sign-in failed.'));updateForm()}
+  catch(error){
+    authBusy=false;$('google').textContent='Continue with Google';
+    status('authStatus',authErrorMessage(error));updateForm();
+  }
 };
 const signOut=async()=>{
   try{checked(await client.auth.signOut({scope:'local'}));session=null;clearTabData();switchMode('login');await loadAccount()}
@@ -230,3 +235,5 @@ async function init(){
   finally{show('authForm',Boolean(client));updateForm()}
 }
 init();
+// Returning from Google must not restore a disabled, in-progress form from bfcache.
+window.addEventListener('pageshow',event=>{if(event.persisted)location.reload()});

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {startEmailChallenge,confirmEmailChallenge,passwordLogin,updateRecoveredPassword,completeAuthCallback,authErrorMessage} from '../dist/account-flows.js';
+import {startEmailChallenge,confirmEmailChallenge,passwordLogin,updateRecoveredPassword,completeAuthCallback,authErrorMessage,authCallbackDestination} from '../dist/account-flows.js';
 const email='test@example.org',origin='https://health.example/account.html';
 test('password signup waits for a code; sign-in OTP cannot register a new account',async()=>{
  let opts;
@@ -67,4 +67,23 @@ test('auth failures give actionable feedback without echoing callback URL secret
  assert.match(authErrorMessage({code:'pkce_verifier_not_found'}),/original tab/);
  assert.match(authErrorMessage({code:'email_address_not_authorized'}),/email sender/);
  assert.match(authErrorMessage(new Error('Failed to fetch')),/connection/);
+});
+test('home-page OAuth callback reaches the exchange page without losing its verifier identity',async()=>{
+ const incoming=new URL('https://health.example/?code=fixture&sb_flow_id=flow-fixture&redirect_to=https://untrusted.example&topic=Asthma');
+ const next=authCallbackDestination(incoming);
+ assert.equal(next,'https://health.example/account.html?code=fixture&sb_flow_id=flow-fixture');
+ let received;
+ const result=await completeAuthCallback({exchangeCodeForSession:async(...args)=>(received=args,{data:{session:{user:{email}}}})},new URL(next));
+ assert.deepEqual(received,['fixture',{flowId:'flow-fixture'}]);assert.equal(result.session.user.email,email);
+ assert.equal(authCallbackDestination(new URL(next)),null);
+ assert.equal(authCallbackDestination(new URL('https://health.example/?topic=Asthma')),null);
+});
+test('home callback keeps recovery and provider errors but drops unrelated URL data',async()=>{
+ const reset=new URL(authCallbackDestination(new URL('https://health.example/?code=fixture&flow=recovery')));
+ const result=await completeAuthCallback({exchangeCodeForSession:async()=>({data:{session:{user:{email}}}})},reset);
+ assert.equal(result.recovering,true);
+ const rejected=authCallbackDestination(new URL('https://health.example/#error=access_denied&error_description=private-detail'));
+ assert.equal(rejected,'https://health.example/account.html?error=access_denied');
+ await assert.rejects(completeAuthCallback({},new URL(rejected)),{code:'access_denied'});
+ assert.match(authErrorMessage({code:'access_denied'}),/Google denied access/);
 });
