@@ -1,6 +1,6 @@
 # Disease framework, evidence checks and research interpretation
 
-HealthBrowse uses `disease-spectrum-v2` for new conversations. Six requested clinical domains form decks 1–6; deck 7 preserves research and discovery resources. The same registry drives browser titles, the copilot selector and the research brief. General/patient views use plain-language labels with the medical domain name underneath. Professional views use medical headings, prefer detailed technical excerpts when available and expose the specialty selector. Specialty is cleared when returning to a nonprofessional reading mode. Reading-mode selection grants no additional data permissions.
+HealthBrowse uses `disease-spectrum-v2` for new conversations. Six requested clinical domains form decks 1–6; deck 7 preserves research and discovery resources. The same registry drives browser titles, the copilot selector and the research brief. General/patient views use plain-language labels with the medical domain name underneath. Student and professional views use medical headings. Only medical and advanced professionals expose the specialty selector. Specialty is cleared when returning to a nonprofessional reading mode. Reading-mode selection grants no additional data permissions.
 
 | Deck | Evidence sought | Missing evidence behavior |
 | --- | --- | --- |
@@ -12,11 +12,15 @@ HealthBrowse uses `disease-spectrum-v2` for new conversations. Six requested cli
 | Epidemiology & Public Health | Distribution, prevention and access | No prevalence/incidence estimate without a source; feed date is not the observation period |
 | Research, Evidence & Resources | Publications, trials, grants, education, datasets and directories | Show available records and failures; do not invent papers, funding or provider availability |
 
-## General-user search and buddy
+## Role-aware answers and buddy
 
-General mode displays a direct answer before decks 1–6. Research resources remain in a separate expandable area, while professional modes retain seven decks. The direct answer is matched to the question's intent and checked against a stored source passage; a definition cannot substitute for a requested treatment or diagnostic answer. Unknown conditions and unsupported properties show a visible gap rather than an invented answer. Successive main searches do not require chat-style topic confirmation.
+All five reading modes display a direct answer before six clinical decks. Research resources remain in a separate expandable area. Browser and buddy share `searchAnswer`; the buddy does not suppress a requested answer because it is already visible. Clinical passages stay source-matched while role profiles select depth and supplemental context: concise general explanation; patient education and care questions; student mechanisms and learning prompts; professional diagnostic/management material with brief explanation; advanced source detail and appraisal. A patient-education corpus cannot provide specialist guideline recommendations that it does not contain.
 
-The buddy is a user-opened native dialog with six guided questions, source-linked excerpts, free-text follow-ups, and existing private chat history controls. On narrow screens it fills the viewport; closing or pressing Escape returns focus to its opener. Publication discovery is deferred until requested. Local topic files and remote requests have bounded waits; available medical excerpts do not depend on a successful publication lookup. Automated tests cover common question wording, spelling corrections, independent topic resolution, excerpt verification and cancellation. Browser verification of this dialog is pending because the browser testing service timed out during this release.
+Question normalization handles polite wording, inverted definitions, known synonyms and spelling variants. Explicit compound questions are split into independently supported parts. Unmatched qualifiers, populations, costs and numerical claims remain evidence gaps. Matching a diagnosis word does not confirm a diagnosis. The selected deck does not override a new question's intent.
+
+The buddy is a closed native dialog in every reading mode, with six audience-specific prompts, cited replies, free-text follow-ups and existing private history controls. It opens on user action and restores focus when closed. Narrow screens use a full-viewport layout. Source discovery is loaded when requested, rather than blocking ordinary questions. Browser visual QA remains unverified because the browser testing service timed out; automated integration and source-contract checks are reported separately.
+
+The importer retains headed source paragraphs and complete associated lists. This fixes missing cause, diagnostic and treatment text caused by taking only the first match for a combined symptoms/treatment preview. The legacy preview fields remain for compatibility. New blocks have deterministic content IDs, publisher headings and explicit intent/domain annotations. No facts are generated to complete a missing domain.
 
 ## Source handling
 
@@ -37,7 +41,7 @@ New turn JSON stores `frameworkVersion: disease-spectrum-v2`; legacy turns remai
 - Funkhouser WK. *Pathology: the clinical description of human disease*. 2020. [PMC7380242](https://pmc.ncbi.nlm.nih.gov/articles/PMC7380242/). Discusses disease causes, biological development, clinical identification and outcomes. The linked PMC version is the 2020 chapter; the separately supplied ScienceDirect identifier may represent another edition.
 - Jewell NP. *Natural History of Diseases: Statistical Designs and Issues*. 2016. [PMC5017909](https://pmc.ncbi.nlm.nih.gov/articles/PMC5017909/), [PMID 27393601](https://pubmed.ncbi.nlm.nih.gov/27393601/), DOI 10.1002/cpt.423. Distinguishes disease course from effects of intervention and discusses study-design limitations.
 
-These publications inform conceptual organization. They do not validate this seven-deck interface or certify its medical responses. Their full text is not copied into the application.
+These publications inform conceptual organization. They do not validate this interface or certify its medical responses. Their full text is not copied into the application.
 
 ## Verification
 

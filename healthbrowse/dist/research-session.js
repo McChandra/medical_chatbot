@@ -32,7 +32,7 @@ export function createResearchDesk(getContext,activate){
       return await fetchJSON(path,{signal,timeout:12000});
     }catch(error){
       if(signal.aborted||current.toLowerCase()!=='leukemia')throw error;
-      seedRequest??=fetch('research-example.json').then(response=>{if(!response.ok)throw error;return response.json()}).catch(e=>{seedRequest=null;throw e});
+      seedRequest??=fetchJSON('research-example.json',{timeout:8000}).catch(e=>{seedRequest=null;throw e});
       const saved=await seedRequest;
       const url=new URL(path,location.origin);
       const record=url.pathname.endsWith('/activity')?saved.activity:saved.papers[url.searchParams.get('focus')];
@@ -63,31 +63,6 @@ export function createResearchDesk(getContext,activate){
   function draw(){
     const c=getContext();if(!c||c.topic!==current)return;
     root.replaceChildren();root.append(elt('div','RESEARCH BRIEF','eyebrow'),elt('h3',c.topic));
-    if(!generalMode(c.role)){
-    const intro=checkedPassage(c.topic,c.passages,c.passages.find(p=>p.overview));
-    if(intro){root.append(elt('p',intro.text),link(intro.citation.title,intro.citation.url));renderCheck(root,intro)}
-    root.append(elt('p','Would you like to dig deeper into one of these seven sections? Choose a section to see its research sources.'));
-    const nav=elt('div',null,'brief-nav');
-    sectionNames.forEach((title,i)=>{const btn=action((i+1)+' · '+domainTitle(i+1,c.role),()=>select(i+1));btn.setAttribute('aria-pressed',String(section===i+1));const p=c.passages.find(p=>p.deck===i+1&&!p.overview);
-      const preview=checkedPassage(c.topic,c.passages,p);
-      const card=elt('div',null,'brief-section-choice');card.append(btn);
-      if(preview){const first=preview.text.match(/^.*?[.!?](?:\s|$)/)?.[0]?.trim()||preview.text;card.append(elt('small',first,'meta'),link('Source',preview.citation.url))}
-      else{const source=c.sections?.[i]?.[0];if(source)card.append(link(source.title,source.url));else card.append(elt('small','Open this section to inspect coverage.','meta'))}
-      nav.append(card)});root.append(nav);
-    if(section){
-      const box=elt('section',null,'deep-dive');box.append(elt('h4',section+' · '+domainTitle(section,c.role)));
-      const seen=new Set();let count=0;
-      for(const p of c.passages.filter(p=>p.deck===section&&!p.overview)){
-        const claim=checkedPassage(c.topic,c.passages,p);
-        if(!claim||seen.has(claim.text)||count>=4)continue;seen.add(claim.text);count++;
-        box.append(elt('p',claim.text),link(claim.citation.title,claim.citation.url));renderCheck(box,claim);
-      }
-      const resources=c.sections?.[section-1]||[];
-      for(const record of resources.slice(0,3)){const row=elt('p');row.append(link(record.title,record.url));if(record.detail)row.append(elt('small',record.detail,'meta'));box.append(row)}
-      if(!count)box.append(elt('p',domains[section-1].empty));if(section===2)box.append(elt('p','A progression excerpt does not establish an untreated timeline. Check intervention exposure and population in the original source.','meta'));if(professionalRole(c.role))box.append(elt('p','Appraisal: '+domains[section-1].professional,'clinical-lens'));
-      root.append(box);
-    }
-    }
     const papersBox=elt('section',null,'research-block');papersBox.append(elt('h4','Five ranked research papers'));
     const bar=elt('div',null,'research-filters');for(const [key,title] of Object.entries(tracks)){
       const btn=action(title,()=>track(key));btn.setAttribute('aria-pressed',String(key===focus));bar.append(btn)

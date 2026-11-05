@@ -11,7 +11,7 @@ const read=name=>JSON.parse(readFileSync(new URL('../dist/'+name+'.json',import.
 const feed=read('medline-topics'),lookup=medlineIndex(feed),archive=remapPassages(read('clinical-passages')),taxonomy=read('taxonomy');
 const context=topic=>({topic,role:'General reader',aliases:taxonomy.entities.find(e=>e.name===topic)?.aliases||[],passages:[...medlinePassages(lookup.find(topic),topic,feed),...(archive[topic]||[])],records:[]});
 test('general browsing has six clinical decks and six explicit buddy prompts',()=>{
- assert.equal(deckCount('General reader'),6);assert.equal(deckCount('Medical professional'),7);
+ assert.equal(deckCount('General reader'),6);assert.equal(deckCount('Medical professional'),6);
  assert.deepEqual(buddyQuestions.map(q=>q.deck),[1,2,3,4,5,6]);
 });
 test('ordinary question wording, spelling corrections and aliases produce supported direct answers',()=>{
@@ -34,7 +34,7 @@ test('guided exploration returns intact checked passages or a visible evidence g
  for(const topic of ['Leukemia','Diabetes','Asthma'])for(const n of [1,2,3,4,5,6]){
   const answer=domainAnswer(context(topic),n);assert.equal(answer.deck,n);assert.ok(answer.text.length);assert.equal(answer.citations.length,answer.checks.length);assert.ok(answer.checks.every(c=>c.status==='supported'));
  }
- assert.match(domainAnswer({...context('Leukemia'),passages:[]},4).text,/don’t have enough/);
+ assert.match(domainAnswer({...context('Leukemia'),passages:[]},4).text,/No source passage/);
  assert.equal(domainAnswer(context('Leukemia'),7),null);
 });
 test('full browser questions resolve independently of the previously selected topic',()=>{

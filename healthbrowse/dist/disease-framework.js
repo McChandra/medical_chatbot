@@ -1,3 +1,4 @@
+import {roleIndex} from './reading-profiles.js';
 // Stable identifiers keep saved conversations distinct from the previous taxonomy.
 export const frameworkVersion='disease-spectrum-v2';
 export const domains=[
@@ -15,7 +16,7 @@ export const frameworkReferences=[
 ];
 export const professionalRole=role=>role===3||role===4||role==='Medical professional'||role==='Advanced professional';
 export const roleLabel=role=>role==='General reader'?'General user':role;
-export const domainTitle=(number,role)=>professionalRole(role)?domains[number-1].title:domains[number-1].plain;
+export const domainTitle=(number,role)=>roleIndex(role)>=2?domains[number-1].title:domains[number-1].plain;
 
 // Route intact excerpts, never synthesize disease facts from a domain label.
 // A progression passage does not establish that its subjects were untreated.
@@ -44,15 +45,21 @@ export function routePassage(p,origin='medquad'){
 }
 export function medlinePassages(record,topic,feed={}){
  if(!record)return [];
+ if(record.knowledge?.length)return record.knowledge.map(p=>({...p,focus:topic,frameworkVersion,
+  title:record.title+' · MedlinePlus'+(p.heading?' · '+p.heading:''),url:record.url,record:record.url+'#summary-'+p.id,
+  vintage:'MedlinePlus feed snapshot · '+(feed.feedDate||feed.retrievedAt||'date unavailable'),sourceType:'patient-education',
+  ...(p.deck===2?{courseContext:/untreated|without (?:treatment|intervention)|not treated/i.test(p.text)?'untreated':'unspecified'}:{})}));
  return Object.entries(record.sections||{}).flatMap(([number,value])=>(Array.isArray(value)?value:[value])
   .filter(t=>typeof t==='string'&&t.trim()).flatMap((text,i)=>routePassage({deck:Number(number),text,
    title:record.title+' · MedlinePlus',url:record.url,focus:topic,record:record.url+'#'+number+'-'+i,
    vintage:'MedlinePlus feed snapshot · '+(feed.feedDate||feed.retrievedAt||'date unavailable'),sourceType:'patient-education'},'medline')));
 }
 export function orderedPassages(rows,role,topic){
- const professional=professionalRole(role);
+ const level=roleIndex(role),professional=level>=3;
  return rows.map((p,i)=>({p,i,score:
-  (professional?(p.focus!==topic?5:0)+(/cytogenetic|immunophenotyp|biomarker|prognos|mechanism/i.test(p.text)?3:0):0)
+  (professional?(p.focus!==topic?(level===4?4:2):0)+(/cytogenetic|immunophenotyp|biomarker|prognos|mechanism/i.test(p.text)?(level===4?5:3):0):0)
+  +(level===2&&/mechanism|classification/.test(p.intent||'')?3:0)
+  +(level===1&&/emergency|urgent|follow.up|health care provider/i.test(p.text)?2:0)
   +(/medlineplus\.gov/.test(p.url)?(professional?1:6):0)
   +(professional?Math.min((p.text||'').length/1000,1):0)}))
   .sort((a,b)=>b.score-a.score||a.i-b.i).map(x=>x.p);

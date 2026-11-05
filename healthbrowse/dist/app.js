@@ -1,4 +1,6 @@
-import {generalMode,deckCount,searchAnswer,fetchJSON} from './search-experience.js';
+import {readingProfile} from './reading-profiles.js';
+import {renderAnswer} from './answer-view.js';
+import {generalMode,deckCount,searchAnswer,domainAnswer,fetchJSON} from './search-experience.js';
 import {setupBuddy} from './buddy.js';
 import {domains,frameworkVersion,frameworkReferences,professionalRole,roleLabel,domainTitle,medlinePassages,orderedPassages,sectionLinks} from './disease-framework.js';
 import {createChatHistory} from './chat-history.js';
@@ -37,7 +39,7 @@ let activeResearchReady=false;
 function currentContext(){
   if(!topic||!catalog||unresolved)return null;
   const resources=catalog[topic]||[];
-  return {topic,frameworkVersion,role:roles[role],query:activeQuery,department:professionalRole(role)?$('dept').value:'',
+  return {topic,frameworkVersion,role:roles[role],query:activeQuery,aliases:[...(medicalRecord(topic)?.aliases||[]),...(taxonomy?.entities.find(e=>e.name===topic)?.aliases||[])],department:professionalRole(role)?$('dept').value:'',
     passages:textRecords(),records:[...resources,...(live?.records||[]),...(codes?.rows||[]).map(r=>({...r,kind:'terminology',title:r.label}))],
     sections:sectionNames.map((_,i)=>sectionSources(i+1,resources,activeQuery,role).map(x=>x.r)),
     visibleTexts:[...$('card').querySelectorAll('.excerpt')].filter(e=>e.getClientRects().length).map(e=>e.textContent)};
@@ -66,9 +68,9 @@ chats.setHandlers({newChat:()=>copilot.clear(),restore:async data=>{
   }else await search(data.chat.topic,null,true);
   copilot.restore(data.turns);
 }});
-document.addEventListener('research-ready',()=>{activeResearchReady=true;if(currentContext()&&!generalMode(role))research.sync()});
+document.addEventListener('research-ready',()=>{activeResearchReady=true});
 $('buddyResearch').addEventListener('toggle',()=>{if($('buddyResearch').open&&currentContext())research.sync()});
-function openDomain(n){buddy.show(document.activeElement);if(generalMode(role)){copilot.activate(n);copilot.askDomain(n)}else{research.sync();research.select(n)}}
+function openDomain(n){buddy.show(document.activeElement);copilot.activate(n);copilot.askDomain(n)}
 function reference(parent,title,url){
   if(!url||!/^https?:\/\//.test(url))return;
   const a=el('a',title+' ↗');a.href=url;a.target='_blank';a.rel='noopener noreferrer';parent.append(a);
@@ -87,46 +89,36 @@ function renderCodes(body){
 function render(){
   updateRoleControls();
   const general=generalMode(role),count=deckCount(role);
-  document.body.classList.toggle('general-reader',general);$('deskTitle').textContent=general?'Understand your health':'Clinical research desk';$('deskIntro').textContent=general?'Ask a question. Get a clear answer, explore six areas, and go deeper with your buddy.':'Understand the condition, explore seven disease domains, and follow the evidence.';$('copilot-heading').textContent=general?'HealthBrowse buddy':'Research copilot';$('card').setAttribute('aria-label',general?'Six-deck medical response':'Seven-section medical response');
+  const profile=readingProfile(role);document.body.classList.add('buddy-enabled');$('deskTitle').textContent=role<2?'Understand your health':'Clinical research desk';$('deskIntro').textContent='Ask a question, explore six clinical areas, and go deeper with your buddy.';$('copilot-heading').textContent='HealthBrowse buddy';$('card').setAttribute('aria-label','Six-deck medical response');
   const deck=$('card'),opened=new Set([...deck.querySelectorAll('details[open][data-section]')].map(d=>d.dataset.section));
   deck.replaceChildren();
   const header=el('div',undefined,'cardhead');header.append(el('span','HEALTHBROWSE / MEDCARD','eyebrow'),el('h2',unresolved?'Topic not resolved':topic),el('p',count+' areas to explore · '+roleLabel(roles[role]),'deck-subtitle'));
   if(!unresolved && assignments[topic])header.append(el('span',assignments[topic].map(i=>depts[i]).join(' · '),'badge'));
   if(!unresolved){
-    const sources=textRecords(),context={topic,role:roles[role],aliases:[...(medicalRecord(topic)?.aliases||[]),...(taxonomy.entities.find(e=>e.name===topic)?.aliases||[])],passages:sources,records:catalog[topic]||[]};
+    const sources=textRecords(),context={...currentContext(),topic,role:roles[role],aliases:[...(medicalRecord(topic)?.aliases||[]),...(taxonomy.entities.find(e=>e.name===topic)?.aliases||[])],passages:sources,records:currentContext()?.records||[]};
     const overview=el('div',undefined,'overview-note search-answer');overview.append(el('h3','Your answer'),el('p',activeQuery||topic,'answer-question'));
     const direct=searchAnswer(context,activeQuery||topic);
-    overview.append(el('p',direct.text,direct.supported?'answer-text':'coverage-gap'));
-    for(const cite of direct.citations)reference(overview,cite.title,cite.url);
-    for(const check of direct.checks||[])renderCheck(overview,check);
+    renderAnswer(overview,direct,renderCheck);
     if(!direct.supported){const intro=checkedPassage(topic,sources,sources.find(p=>p.overview));if(intro){const basic=el('details');basic.append(el('summary','About '+topic),el('p',intro.text));renderCheck(basic,intro);overview.append(basic)}}
     header.append(overview,saveControls(topic));
-    const framework=el('details',undefined,'source-directory');framework.append(el('summary',general?'About these six areas':'About the seven-domain framework'),el('p','Six clinical domains plus research resources. These references inform the organization; they do not validate this application or certify its answers.'));for(const ref of frameworkReferences){const row=el('p');reference(row,ref.title,ref.url);framework.append(row)}header.append(framework);
+    const framework=el('details',undefined,'source-directory');framework.append(el('summary','About these six areas'),el('p','Six clinical domains plus research resources. These references inform the organization; they do not validate this application or certify its answers.'));for(const ref of frameworkReferences){const row=el('p');reference(row,ref.title,ref.url);framework.append(row)}header.append(framework);
     const guide=el('details',undefined,'source-directory');guide.append(el('summary','Source guide · 10 medical and public-health organizations'),el('p','These organizations have different responsibilities. A publisher citation does not mean it reviewed or certified this HealthBrowse response.'));
     for(const a of authorities){const item=el('p');reference(item,a.name,a.url);item.append(document.createTextNode(' · '+a.scope));guide.append(item)}header.append(guide)
   }
   header.append(el('p','Publisher sources are linked. Independent clinical review is pending.','meta'));deck.append(header);
-  const grid=el('div',undefined,'deck-grid');deck.append(grid);$('roleHint').textContent=prompts[role];
+  const grid=el('div',undefined,'deck-grid');deck.append(grid);$('roleHint').textContent=profile.guide;
   $('clinicalNotice').textContent=professionalRole(role)?'Professional research reference. Check current guidelines, patient context and local protocols before clinical use. This tool is not clinically validated.':'HealthBrowse provides general education, not a diagnosis or an individual treatment plan. Discuss care with a licensed healthcare professional.';
   const texts=textRecords(),resources=unresolved?[]:catalog[topic]||[];
   sectionNames.forEach((label,i)=>{
-    const number=i+1,extra=general&&number===7,box=el('section',undefined,extra?'research-resource':'med-section');box.dataset.number=String(number);
-    const title=el('div',undefined,'sectionTitle');title.append(el('span',String(number).padStart(2,'0'),'num'),el('h3',domainTitle(number,role)));box.append(title,el('p',professionalRole(role)?domains[i].professional:domains[i].scope,'meta'));if(!professionalRole(role))box.append(el('small',label,'domain-label'));
+    const number=i+1,extra=number===7,box=el('section',undefined,extra?'research-resource':'med-section');box.dataset.number=String(number);
+    const title=el('div',undefined,'sectionTitle');title.append(el('span',String(number).padStart(2,'0'),'num'),el('h3',domainTitle(number,role)));box.append(title,el('p',professionalRole(role)?domains[i].professional:domains[i].scope,'meta'));if(role<2)box.append(el('small',label,'domain-label'));
     const rows=texts.filter(r=>r.deck===number&&!r.overview);
     const ranked=sectionSources(number,resources,activeQuery,role);
     const officialLinks=sectionLinks(medicalRecord(topic),number);
     if(unresolved){if(!extra){box.append(el('p','Search for a medical topic to explore this area.'));if(number===1&&codes)renderCodes(box);grid.append(box)}return}
     const preferred=rows.find(r=>checkedPassage(topic,texts,r));
     const claim=checkedPassage(topic,texts,preferred);
-    if(claim){
-      box.append(el('p',claim.text,'excerpt'));
-      reference(box,preferred.title,preferred.sourceRecord||preferred.url);box.append(el('p',preferred.vintage||'Publication date unverified.','meta'));
-      if(preferred.attribution){const credit=el('p',preferred.attribution+' ','meta');reference(credit,'License',preferred.license);box.append(credit)}
-    }
-    if(!claim)box.append(el('p',domains[i].empty,'coverage-gap'));
-    if(number===2)box.append(el('p',preferred?.courseContext==='untreated'?'This excerpt explicitly mentions the absence of treatment. It does not establish a complete timeline.':'Treatment exposure is not established by the excerpts here. Do not interpret them as an untreated timeline.','meta'));
-    if(professionalRole(role)&&number<7)box.append(el('p','Check the source population, date and local applicability. Missing criteria, estimates and recommendations are not inferred.','clinical-lens'));
-    if(claim)renderCheck(box,claim);
+    if(number<7){const response=domainAnswer(currentContext(),number,{detail:false});renderAnswer(box,response,renderCheck)}else if(claim){box.append(el('p',claim.text,'excerpt'));renderCheck(box,claim)}
     const drawer=el('details',undefined,'research-drawer');drawer.dataset.section=String(number);drawer.open=opened.has(String(number));drawer.append(el('summary','Sources and further reading'));
     const cardBox=box;
     for(const officialLink of officialLinks){const row=el('p');reference(row,officialLink.title+' · '+officialLink.publisher,officialLink.url);drawer.append(row)}
@@ -144,9 +136,9 @@ function render(){
       if(ranked.length>3){const more=el('details',undefined,'resource-list');more.dataset.section=String(number);more.open=opened.has(String(number));more.append(el('summary','More source records ('+(ranked.length-3)+')'));ranked.slice(3).forEach(item=>more.append(linkRecord(item.r)));drawer.append(more)}
       if(!ranked.length && number===7){for(const [title,url] of [['NCBI GEO datasets','https://www.ncbi.nlm.nih.gov/gds/?term='],['Hugging Face datasets','https://huggingface.co/datasets?search='],['GitHub research repositories','https://github.com/search?type=repositories&q=']]){const row=el('p');reference(row,'Search '+title,url+encodeURIComponent(topic));drawer.append(row)}}
     }
-    cardBox.append(drawer);if(extra){const shelf=el('details',undefined,'resource-shelf');shelf.append(el('summary','Research papers, datasets & care resources'),cardBox);deck.append(shelf)}else{cardBox.append(button(general?'Ask buddy about this':'Explore this domain with copilot',()=>openDomain(number)));grid.append(cardBox)}
+    cardBox.append(drawer);if(extra){const shelf=el('details',undefined,'resource-shelf');shelf.append(el('summary','Research papers, datasets & care resources'),cardBox);deck.append(shelf)}else{cardBox.append(button('Ask buddy about this',()=>openDomain(number)));grid.append(cardBox)}
   });
-  buddy.sync(general,!unresolved);if(!unresolved){copilot.sync();if(!general&&(activeResearchReady||!$('welcome').open))research.sync()}else research.reset();
+  buddy.sync(true,!unresolved);if(!unresolved){copilot.sync();if($('buddyResearch').open)research.sync()}else research.reset();
 }
 let searchRequest;
 function choose(t){search(t)}
@@ -180,7 +172,7 @@ async function performSearch(input,chosenTopic,confirmed=false){
   const status=explicitCode?'ok':inspectInput(input);
   if(status!=='ok'){
     $('query').value='';$('notice').textContent=guardMessage(status);$('results').hidden=true;
-    if(status==='emergency'){$('card').hidden=true;buddy.sync(generalMode(role),false)}
+    if(status==='emergency'){$('card').hidden=true;buddy.sync(true,false)}
     return;
   }
   $('card').hidden=false;$('copilot').hidden=false;

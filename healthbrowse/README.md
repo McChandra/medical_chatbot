@@ -1,13 +1,25 @@
 # HealthBrowse public research platform
 
-HealthBrowse is an educational medical research browser. General users see a question-specific answer followed by six clinical decks and a click-to-open HealthBrowse buddy. Other reading modes retain the seven-domain research workspace. The hosted desk opens after Supabase sign-in. Personal workspaces store profiles, preferences, saved research chats, bookmarks and activity in the hosted database. This release uses source excerpts, publication corroboration, ClinicalTrials.gov registrations and NIH funding records. Clinical validation and institutional endorsement remain separate from software tests.
+HealthBrowse is an educational medical research browser. Every reading mode shows a question-specific answer followed by six clinical decks and a click-to-open HealthBrowse buddy. Research and discovery resources remain separately expandable. The hosted desk opens after Supabase sign-in. Personal workspaces store profiles, preferences, saved research chats, bookmarks and activity in the hosted database. This release uses source excerpts, publication corroboration, ClinicalTrials.gov registrations and NIH funding records. Clinical validation and institutional endorsement remain separate from software tests.
 
 ## Disease framework and reading modes
 The browser and copilot share six clinical domains: **Etiology & Pathogenesis**, **Natural History & Progression**, **Clinical Presentation & Diagnosis**, **Therapeutics & Management**, **Prognosis & Complications**, and **Epidemiology & Public Health**. A seventh domain, **Research, Evidence & Resources**, retains papers, trials, funded institutions, education, datasets and care directories.
 
-General users receive plain-language headings and priority for patient education sources. Medical and advanced professionals see the specialty selector, technical headings, more detailed source passages and appraisal prompts. Selecting a reading mode changes presentation, not identity verification or access permissions. Missing evidence stays visible as a coverage gap.
+The browser and buddy use the same question-answering and audience profiles:
 
-In general mode, the floating buddy opens with six questions covering causes, disease course, symptoms/tests, treatment, outlook and prevention. A deck's “Ask buddy about this” button opens its detailed, cited source excerpts. Research papers, datasets and care resources remain available below the six decks, with publication discovery loaded on demand inside the buddy. The main search accepts new topics directly; only a new topic proposed in chat asks for confirmation. Topic loading and source requests have time limits and visible retry messages. This is deterministic retrieval from the available source corpus, not an unrestricted generative chatbot; unsupported questions remain explicit evidence gaps.
+| Reading mode | Answer behavior |
+| --- | --- |
+| General user | One concise source explanation with plain-language headings |
+| Patient | Care-oriented explanation, relevant source context and questions to discuss safely with a clinician |
+| Medical student | Definition plus mechanism, presentation and study prompts |
+| Medical professional | Clinical passages, diagnostic/management context and brief educational interpretation |
+| Advanced professional | More source detail, classification/subtype distinctions and evidence appraisal |
+
+All five modes use the floating buddy, which stays closed until clicked. Its six guided questions adapt to the reading mode, and each deck has an “Ask buddy about this” action. Research papers, datasets and care resources remain separately available. A mode selection changes source selection, depth and learning guidance, not identity verification or data permissions. Only medical and advanced professional modes show the specialty selector.
+
+Conversational phrasing, known synonyms and spelling corrections are normalized before intent matching. Explicit multipart questions are answered clause by clause, with unsupported parts identified. Answers do not exclude material merely because it is visible in a deck. Each clinical passage retains its citation and exact stored-source check; role-specific study prompts and safety reminders are separately labeled. Source coverage limits still apply: the application has no unrestricted generative LLM service or clinically validated diagnostic capability.
+
+The MedlinePlus importer now retains complete headed summary blocks, including diagnosis and treatment sections that the previous first-paragraph preview omitted. The 5 November 2026 feed contains 1,017 topics and 5,752 indexed blocks. Original publisher terms, attribution and provenance hashes are retained. Local topic loading and external requests have time limits; an account-history outage cannot block a research answer.
 
 Clinical excerpts require a recognized publisher or a pinned historical MedQuAD record, topic agreement, record identity and an exact text match. Corrections require an explicit, unambiguous source record; otherwise the claim is withheld. These checks detect some unsupported or altered claims, but do not establish clinical accuracy, certification, completeness or currency. Historical excerpts retain their dates and subtype labels. Untreated natural history is not inferred from general progression or treated outcomes. See [framework design and validation](docs/DISEASE_FRAMEWORK.md).
 

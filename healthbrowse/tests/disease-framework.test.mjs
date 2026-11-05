@@ -38,9 +38,9 @@ test('source checks deny impersonated publishers and unpinned archives',()=>{
 test('all existing MedlinePlus topics retain intact excerpts, source IDs and overview provenance',()=>{
  const feed=JSON.parse(readFileSync(new URL('../dist/medline-topics.json',import.meta.url)));
  for(const record of feed.topics){
-  const rows=medlinePassages(record,record.title,feed),originals=Object.values(record.sections).flat();
+  const rows=medlinePassages(record,record.title,feed),originals=record.knowledge?.length?record.knowledge.map(p=>p.text):Object.values(record.sections).flat();
   for(const row of rows){assert.ok(originals.includes(row.text));assert.equal(row.frameworkVersion,frameworkVersion);assert.ok(row.deck>=1&&row.deck<=7);assert.ok(row.record.startsWith(record.url+'#'))}
-  if(record.sections['1'])assert.ok(rows.some(p=>p.overview),record.title);
+  if(record.knowledge?.some(p=>p.overview)||!record.knowledge&&record.sections['1'])assert.ok(rows.some(p=>p.overview),record.title);
  }
 });
 test('claim correction cannot silently cross topics or source records',()=>{
