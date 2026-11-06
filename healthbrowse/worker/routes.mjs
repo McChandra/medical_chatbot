@@ -3,6 +3,7 @@ import {accountAPI} from '../server/account-api.mjs';
 import {lookupTerminology,patientEducationForCode} from './terminology.mjs';
 import {researchRoute} from './research-routes.mjs';
 import {careLookup} from './care.mjs';
+import {modelAPI} from '../server/model-api.mjs';
 export async function respond(request,env,assets) {
   if(request.cf?.tlsVersion && request.cf.tlsVersion!=='TLSv1.3')
     return new Response('TLS 1.3 is required.',{status:426});
@@ -16,6 +17,7 @@ export async function respond(request,env,assets) {
   if(url.pathname==='/api/config'){
     return Response.json(browserConfig(env),{headers});
   }
+  if(url.pathname.startsWith('/api/ai/'))return modelAPI(request,env,assets);
   if(url.pathname.startsWith('/api/me/')||['/api/feedback','/api/contact'].includes(url.pathname)){
     return accountAPI(request,env);
   }

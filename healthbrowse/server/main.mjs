@@ -38,7 +38,7 @@ const server=http.createServer(async (incoming,outgoing)=>{
     if(route!=='/healthz'&&route!=='/readyz')console.info(JSON.stringify({requestId,route,status,elapsedMs:Math.round(performance.now()-start)}));
   }
 });
-server.headersTimeout=15000;server.requestTimeout=30000;
+server.headersTimeout=15000;server.requestTimeout=140000;
 server.on('clientError',(_error,socket)=>socket.end('HTTP/1.1 400 Bad Request\r\n\r\n'));
 server.listen(port,'0.0.0.0',()=>console.info(JSON.stringify({service:'healthbrowse',port})));
 for(const event of ['SIGTERM','SIGINT'])process.on(event,()=>{

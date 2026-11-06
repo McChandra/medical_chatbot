@@ -6,3 +6,7 @@
 @media(prefers-reduced-motion:reduce){#buddyDialog *{scroll-behavior:auto}}
 
 .answer-mode{display:inline-block;padding:4px 10px;border:1px solid var(--line);border-radius:20px;font-size:12px;font-weight:650;color:var(--link)}.answer-block{margin:14px 0;min-width:0}.answer-block h4{margin:0 0 6px;font-size:15px}.answer-block p{margin:5px 0 9px;white-space:pre-line}.answer-block>a{display:block;font-size:12px}.reading-guidance{padding:12px;border-left:3px solid var(--link);background:var(--panel);font-size:13px;margin-top:12px}.reading-guidance p{margin:4px 0}.buddy-enabled .med-section .answer-mode{margin-bottom:2px}.buddy-enabled .med-section h4{font-size:14px}.buddy-enabled .med-section .reading-guidance{font-size:12px}
+/* Source passages remain readable while a model answer is prepared. */
+.model-notice{border-inline-start:3px solid var(--accent, #74935c);padding:.7rem 1rem;margin:1rem 0;line-height:1.55}
+.source-evidence{margin:.55rem 0;font-size:.85rem;overflow-wrap:anywhere}
+.source-evidence blockquote{margin:.65rem 0;padding-inline-start:1rem;border-inline-start:2px solid currentColor;white-space:pre-line}

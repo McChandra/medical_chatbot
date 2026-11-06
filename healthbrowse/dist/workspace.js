@@ -1,6 +1,7 @@
 import {deckCount,domainAnswer,searchAnswer,isOverviewQuestion} from './search-experience.js';
 import {inspectInput} from './clinical-engine.js';
 import {readingProfile,roleQuestions} from './reading-profiles.js';
+import {requestSynthesis} from './model-client.js';
 import {renderAnswer} from './answer-view.js';
 import {frameworkVersion,domains,domainTitle,roleLabel} from './disease-framework.js';
 import {renderCheck} from './research-session.js';
@@ -11,13 +12,13 @@ export function guardMessage(status){return status==='emergency'?'If these sympt
 function save(key,value){try{sessionStorage.setItem(key,JSON.stringify(value))}catch{}}
 export function readSession(key,fallback){try{return JSON.parse(sessionStorage.getItem(key))??fallback}catch{return fallback}}
 export function setupCopilot(getContext,actions={}){
- let sequence=0,active=1,history=[],identity='',publicTurns=[],busy=false;
+ let sequence=0,active=1,history=[],identity='',publicTurns=[],busy=false,modelRequest=null;
  const controls=[$('deckSelect'),$('question'),$('ask').querySelector('button')];
  controls.forEach(control=>control.disabled=true);
  function sync(){
   const c=getContext();if(!c)return;
   const profile=readingProfile(c.role),scope=frameworkVersion+'|audience-v1|'+c.topic+'|'+c.role;
-  if(identity!==scope){history=[];publicTurns=[];busy=false;++sequence;$('scopeQuestion').replaceChildren();const last=readSession('hb-context',{});active=last.scope===scope&&Number.isInteger(last.deck)?Math.max(1,Math.min(last.deck,6)):1;if(last.scope===scope)history=publicTurns=readSession('hb-transcript',[]);identity=scope}
+  if(identity!==scope){modelRequest?.abort();history=[];publicTurns=[];busy=false;++sequence;$('scopeQuestion').replaceChildren();const last=readSession('hb-context',{});active=last.scope===scope&&Number.isInteger(last.deck)?Math.max(1,Math.min(last.deck,6)):1;if(last.scope===scope)history=publicTurns=readSession('hb-transcript',[]);identity=scope}
   controls.forEach(control=>control.disabled=busy);
   save('hb-context',{topic:c.topic,role:c.role,scope,deck:active});save('hb-transcript',publicTurns);
   [...$('deckSelect').options].forEach((option,i)=>{option.textContent=(i+1)+' · '+domainTitle(i+1,c.role);option.hidden=i>=deckCount(c.role)});
@@ -44,7 +45,13 @@ export function setupCopilot(getContext,actions={}){
   if(choices.length){actions.confirm(q,choices.join(' / '));return}
   let researchAnswer=null;
   if(status==='ok'&&!guidedDeck){try{researchAnswer=await actions.research?.(q)}catch{}if(run!==sequence||identity!==scope)return}
-  const answer=status!=='ok'?{text:guardMessage(status),citations:[],checks:[],deck:active}:guidedDeck?domainAnswer(c,guidedDeck):researchAnswer||searchAnswer(c,q,{detail:true,activeDeck:active});
+  let answer=status!=='ok'?{text:guardMessage(status),citations:[],checks:[],deck:active}:guidedDeck?domainAnswer(c,guidedDeck):researchAnswer||searchAnswer(c,q,{detail:true,activeDeck:active});
+  if(status==='ok'&&!researchAnswer){
+   modelRequest?.abort();modelRequest=new AbortController();
+   const result=await requestSynthesis(c,q,{mode:'chat',deck:guidedDeck||active,history,signal:modelRequest.signal});
+   if(run!==sequence||identity!==scope)return;
+   if(result.status==='generated')answer=result.answer;else answer={...answer,modelNotice:result.message};
+  }
   if(!answer)return;
   if(status==='ok')active=answer.deck||active;
   const turn={...answer,frameworkVersion,topic:c.topic,question:status==='ok'?q:'Input withheld',overview:isOverviewQuestion(c,q)};
@@ -52,14 +59,14 @@ export function setupCopilot(getContext,actions={}){
   history=[...history.slice(-9),turn];if(fromSuggestion)publicTurns=[...publicTurns.slice(-9),turn];
  }
  async function ask(q,fromSuggestion=false,guidedDeck=0){
-  if(busy||!q.trim())return;busy=true;sync();let failed=false;
+  if(busy||!q.trim())return;busy=true;sync();let failed=false;const scope=identity;
   try{await respond(q,fromSuggestion,guidedDeck)}catch{failed=true}
-  finally{busy=false;sync();if(failed){const error=node('p','This answer could not be loaded. Please try again.');error.setAttribute('role','status');$('thread').append(error)}$('thread').lastElementChild?.scrollIntoView({block:'nearest'})}
+  finally{if(scope===identity){busy=false;sync();if(failed&&!modelRequest?.signal.aborted){const error=node('p','This answer could not be loaded. Please try again.');error.setAttribute('role','status');$('thread').append(error)}$('thread').lastElementChild?.scrollIntoView({block:'nearest'})}}
  }
  deckNames.forEach((name,i)=>$('deckSelect').append(new Option((i+1)+' · '+name,String(i+1))));
  $('deckSelect').onchange=()=>{active=Number($('deckSelect').value);sync()};
  $('question').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();$('ask').requestSubmit()}};
  $('ask').onsubmit=e=>{e.preventDefault();ask($('question').value)};
- $('clearChat').onclick=()=>{sequence++;$('scopeQuestion').replaceChildren();history=[];publicTurns=[];sync()};
+  $('clearChat').onclick=()=>{sequence++;modelRequest?.abort();$('scopeQuestion').replaceChildren();history=[];publicTurns=[];sync()};
  return {sync,askDomain(n){const choice=roleQuestions(getContext()?.role)[n-1];if(choice)void ask(choice.prompt,true,n)},clear(){sequence++;history=[];publicTurns=[];$('scopeQuestion').replaceChildren();save('hb-transcript',[]);sync()},restore(turns){sequence++;history=turns;publicTurns=[];active=turns.at(-1)?.frameworkVersion===frameworkVersion?turns.at(-1).deck:1;sync()},activate(deck,focus=false){active=deck;sync();if(focus)$('question').focus({preventScroll:true})}};
 }

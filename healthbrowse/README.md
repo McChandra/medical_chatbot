@@ -1,5 +1,8 @@
 # HealthBrowse public research platform
 
+Model-backed answers: [integration, hosting and LoRA/QLoRA guide](docs/model-integration.md). The browser and buddy now have a server-side model gateway for cited answers and six decks. **Inference endpoints and fine-tuned adapters are not yet connected or clinically validated.** Until configured, the site explicitly shows source excerpts.
+
+
 HealthBrowse is an educational medical research browser. Every reading mode shows a question-specific answer followed by six clinical decks and a click-to-open HealthBrowse buddy. Research and discovery resources remain separately expandable. The hosted desk opens after Supabase sign-in. Personal workspaces store profiles, preferences, saved research chats, bookmarks and activity in the hosted database. This release uses source excerpts, publication corroboration, ClinicalTrials.gov registrations and NIH funding records. Clinical validation and institutional endorsement remain separate from software tests.
 
 ## Disease framework and reading modes

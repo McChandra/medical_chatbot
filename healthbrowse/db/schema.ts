@@ -1,5 +1,9 @@
 import {sql} from 'drizzle-orm';
 import {sqliteTable,text,integer,index,primaryKey} from 'drizzle-orm/sqlite-core';
+// One bounded request counter per account; no prompts, answers or model secrets.
+export const modelLimits=sqliteTable('hb_model_limits',{
+ userId:text('user_id').primaryKey(),bucket:integer('bucket').notNull(),requests:integer('requests').notNull()
+});
 export const accounts=sqliteTable('hb_accounts',{
  userId:text('user_id').primaryKey(),displayName:text('display_name').notNull().default(''),
  saveChats:integer('save_chats').notNull().default(1),saveHistory:integer('save_history').notNull().default(0),

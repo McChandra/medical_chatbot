@@ -1,4 +1,5 @@
 import {readingProfile} from './reading-profiles.js';
+import {requestSynthesis,synthesisKey} from './model-client.js';
 import {renderAnswer} from './answer-view.js';
 import {generalMode,deckCount,searchAnswer,domainAnswer,fetchJSON} from './search-experience.js';
 import {setupBuddy} from './buddy.js';
@@ -36,6 +37,15 @@ function textRecords(){
   return orderedPassages([...medlinePassages(record,topic,feed),...(Object.hasOwn(passages,topic)?passages[topic]:[])],role,topic);
 }
 let activeResearchReady=false;
+let synthesis=null,synthesisController=null,aiRequested=false;
+function refreshSynthesis(context){
+ const key=synthesisKey(context);if(!context||!aiRequested||synthesis?.key===key)return;
+ synthesisController?.abort();const controller=new AbortController();synthesisController=controller;synthesis={key,status:'loading'};
+ void requestSynthesis(context,context.query||context.topic,{signal:controller.signal}).then(result=>{
+  if(controller!==synthesisController||key!==synthesisKey(currentContext()))return;
+  synthesis={key,...result};render();
+ }).catch(()=>{});
+}
 function currentContext(){
   if(!topic||!catalog||unresolved)return null;
   const resources=catalog[topic]||[];
@@ -97,7 +107,9 @@ function render(){
   if(!unresolved){
     const sources=textRecords(),context={...currentContext(),topic,role:roles[role],aliases:[...(medicalRecord(topic)?.aliases||[]),...(taxonomy.entities.find(e=>e.name===topic)?.aliases||[])],passages:sources,records:currentContext()?.records||[]};
     const overview=el('div',undefined,'overview-note search-answer');overview.append(el('h3','Your answer'),el('p',activeQuery||topic,'answer-question'));
-    const direct=searchAnswer(context,activeQuery||topic);
+    refreshSynthesis(context);
+    const direct=synthesis?.key===synthesisKey(context)&&synthesis.status==='generated'?synthesis.answer:searchAnswer(context,activeQuery||topic);
+    direct.modelNotice=synthesis?.key===synthesisKey(context)?(synthesis.status==='loading'?'Preparing an answer and six decks from cited sources… Source excerpts are available while you wait.':synthesis.message||''):'';
     renderAnswer(overview,direct,renderCheck);
     if(!direct.supported){const intro=checkedPassage(topic,sources,sources.find(p=>p.overview));if(intro){const basic=el('details');basic.append(el('summary','About '+topic),el('p',intro.text));renderCheck(basic,intro);overview.append(basic)}}
     header.append(overview,saveControls(topic));
@@ -118,7 +130,7 @@ function render(){
     if(unresolved){if(!extra){box.append(el('p','Search for a medical topic to explore this area.'));if(number===1&&codes)renderCodes(box);grid.append(box)}return}
     const preferred=rows.find(r=>checkedPassage(topic,texts,r));
     const claim=checkedPassage(topic,texts,preferred);
-    if(number<7){const response=domainAnswer(currentContext(),number,{detail:false});renderAnswer(box,response,renderCheck)}else if(claim){box.append(el('p',claim.text,'excerpt'));renderCheck(box,claim)}
+    if(number<7){const generated=synthesis?.key===synthesisKey(currentContext())&&synthesis.status==='generated'?synthesis.decks.find(d=>d.id===number):null;const response=generated||domainAnswer(currentContext(),number,{detail:true});renderAnswer(box,response,renderCheck)}else if(claim){box.append(el('p',claim.text,'excerpt'));renderCheck(box,claim)}
     const drawer=el('details',undefined,'research-drawer');drawer.dataset.section=String(number);drawer.open=opened.has(String(number));drawer.append(el('summary','Sources and further reading'));
     const cardBox=box;
     for(const officialLink of officialLinks){const row=el('p');reference(row,officialLink.title+' · '+officialLink.publisher,officialLink.url);drawer.append(row)}
@@ -164,6 +176,7 @@ async function search(input,chosenTopic,confirmed=false){
   finally{if(sequence===searchSequence){$('searchSubmit').textContent='Search ↗';$('find').setAttribute('aria-busy','false')}}
 }
 async function performSearch(input,chosenTopic,confirmed=false){
+  synthesisController?.abort();synthesisController=null;synthesis=null;aiRequested=false;
   $('searchSwitch').replaceChildren();$('scopeQuestion').replaceChildren();
 
   searchRequest?.abort(); controller?.abort();controller=null;
@@ -214,6 +227,7 @@ async function performSearch(input,chosenTopic,confirmed=false){
     choices.forEach(name=>$('resultsBody').append(button(name,()=>search(input,name,true))));return;
   }
   const subject=choices[0]||exact,match=Object.hasOwn(catalog,subject)?subject:null;
+  aiRequested=true;
   codes=codeResult;activeQuery=input;topic=subject;void recordTopic(subject,'search',questionDeck(input)||1);activeResearchReady=true;live={message:'Searching Europe PMC…'};
   $('card').querySelectorAll('details[open]').forEach(d=>d.open=false);
   render();
