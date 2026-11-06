@@ -1,6 +1,6 @@
 # Accounts and email delivery
 
-The public desk runs without Supabase. Account actions at `/account.html` require a configured Supabase project and the personal-data migration. The browser uses a locally bundled, pinned SDK and PKCE for Google sign-in. Sessions are scoped to a tab through sessionStorage. Access tokens are sent only to same-origin account endpoints, and the server must authenticate the token before serving personal data.
+The hosted research desk redirects signed-out visitors to `/account.html`. Login requires a configured Supabase project; the hosted personal workspace uses the D1 migration described in [Workspace storage](WORKSPACE.md). The browser uses a locally bundled, pinned SDK and PKCE for Google and email links. Sessions are scoped to a tab through sessionStorage. Access tokens are sent only to same-origin account endpoints, and the server must authenticate the token before serving personal data.
 
 ## Provider configuration
 
@@ -13,4 +13,27 @@ The public desk runs without Supabase. Account actions at `/account.html` requir
 
 The contact form needs a server-configured mailbox and mail sender. A pending result is distinct from delivered. Feedback sentiment and type are triage fields; reviewing a source correction requires a human or the clinical verification workflow.
 
+## Current hosted callbacks and manual acceptance test
+
+For the current deployment, use Site URL `https://healthbrowseai.abhaysrivastava518.chatgpt.site` and allow both:
+
+- `https://healthbrowseai.abhaysrivastava518.chatgpt.site/account.html`
+- `https://healthbrowseai.abhaysrivastava518.chatgpt.site/account.html?flow=recovery`
+
+The hosting provider now returns this `abhaysrivastava518` host as the production URL. Keep any still-used legacy callbacks, but do not leave only the former `auralflour` hostnames in the allowlist. A successful request means the provider accepted it; it does not prove inbox delivery. Supabase's default sender only delivers to authorized organization members. Public signup and recovery require a configured SMTP provider or Send Email hook. The public Auth settings endpoint does not reveal SMTP configuration or redirect allowlists.
+
+1. Use a designated mailbox and a unique test password. Create an account, confirm the newest email code, and verify arrival at the research desk.
+2. Sign out from the header; log in with email/password. Check that an incorrect password keeps you on login and gives a useful error.
+3. Sign out, choose **Forgot password?**, and request a reset email. Verify a code or open the email link in the originating tab. The code verifier is tab-scoped, so opening a PKCE link in another tab/browser may fail; enter the numeric code in the original tab instead. Include `{{ .Token }}` in the Reset password template.
+4. Confirm that recovery opens **Choose a new password**, not the desk. Enter a new password privately. Confirm that the old password fails and the new one signs in.
+5. Check expired/used codes and links, email rate limits, and a mobile menu opened/closed with touch and keyboard. Confirm that **Sign out** and Light/Dark controls appear inside the mobile menu.
+
+Automated flow tests and browser fixtures simulate provider responses. They do not send or read emails and cannot certify SMTP delivery, real user sessions, or production redirect configuration.
+
 [Supabase email OTP](https://supabase.com/docs/guides/auth/auth-email-passwordless) · [Password and recovery](https://supabase.com/docs/guides/auth/passwords) · [Google OAuth](https://supabase.com/docs/guides/auth/social-login/auth-google) · [PKCE](https://supabase.com/docs/guides/auth/sessions/pkce-flow)
+
+## Profile and chat settings
+
+The Settings page edits the display name in the owner-scoped workspace database. Email changes use Supabase `auth.updateUser({ email })`, never an editable database identity column. Keep **Secure email change** enabled in Supabase; confirmation delivery depends on your configured email sender. The UI reports a requested change, not delivery or successful verification. A pending email is displayed separately from the current email.
+
+Saved conversations are distinct from the opt-in topic activity list. See [Workspace storage](WORKSPACE.md) for deletion, retention, and cross-account tests.

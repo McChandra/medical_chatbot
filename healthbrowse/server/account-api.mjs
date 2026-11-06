@@ -1,3 +1,4 @@
+import {workspaceAPI} from './workspace-api.mjs';
 // No service key, authorization header, contact body or feedback body is logged.
 const modes=['General reader','Patient','Medical student','Medical professional','Advanced professional'];
 const themes=['system','light','dark'];
@@ -103,7 +104,8 @@ export async function accountAPI(request,env){
     const base=config(env),headers=credentials(env.SUPABASE_ANON_KEY,token);
     const auth=await freshFetch(base+'/auth/v1/user',{headers});
     if(!auth.ok)reject(auth.status===401||auth.status===403?401:503,'The account session could not be verified.');
-    const user=(await auth.json()).id;if(!uuid.test(user||''))reject(401,'Invalid account session.');
+    const identity=await auth.json(),user=identity.id;if(!uuid.test(user||''))reject(401,'Invalid account session.');
+    if(env.DB&&path.startsWith('/api/me/'))return workspaceAPI(request,env.DB,identity);
     const db=(...args)=>database(base,headers,...args);
     const owner='user_id=eq.'+user;
     if(path==='/api/me/settings'){

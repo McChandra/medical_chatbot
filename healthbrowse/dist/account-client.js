@@ -45,3 +45,9 @@ export async function accountRequest(path,{method='GET',body,signal}={}){
   if(!response.ok)throw new Error(typeof data.error==='string'?data.error:'Account request failed. Try again.');
   return data;
 }
+
+export function clearResearchSession(){
+  for(const key of ['hb-context','hb-transcript','hb-reader','hb-terms','hb-welcome','hb-account-recovery','hb-email-change']){
+    sessionStorage.removeItem(key);
+  }
+}

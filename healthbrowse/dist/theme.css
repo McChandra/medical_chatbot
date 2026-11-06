@@ -1,5 +1,5 @@
 :root{color-scheme:light;--paper:#f8f9f3;--ink:#193d36;--dim:#53645b;--line:#cbd5c8;--surface:#fff;--panel:#edf1e5;--wash:#e8eddf;--tag:#e2ead8;--link:#225f50;--muted-green:#526e48;--action:#193d36;--on-action:white;--focus:#527833}
-:root[data-theme=dark]{color-scheme:dark;--paper:#12221e;--ink:#e3efe4;--dim:#b1c3b7;--line:#425b4f;--surface:#1b3029;--panel:#20372c;--wash:#22382f;--tag:#324d39;--link:#abdcb8;--muted-green:#b3ce98;--action:#b9d69f;--on-action:#15271c;--focus:#c9e391}
+:root[data-theme=dark]{color-scheme:dark;--paper:#12221e;--ink:#f3f8f4;--dim:#d0ddd4;--line:#425b4f;--surface:#1b3029;--panel:#20372c;--wash:#22382f;--tag:#324d39;--link:#c3efcf;--muted-green:#c5dfa8;--action:#b9d69f;--on-action:#15271c;--focus:#c9e391}
 body{background:var(--paper);color:var(--ink);overflow-wrap:anywhere}a{color:var(--link)}
 .theme-controls{display:inline-flex;align-items:center;border:1px solid var(--line);background:var(--surface);border-radius:24px;padding:3px;gap:2px;flex-shrink:0}
 .theme-controls button{font:600 13px/1 system-ui;min-height:36px;padding:0 12px;color:var(--dim);cursor:pointer;background:transparent;border:0;border-radius:20px}
@@ -7,3 +7,16 @@ body{background:var(--paper);color:var(--ink);overflow-wrap:anywhere}a{color:var
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 .auditbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
 @media print{.theme-controls{display:none}body{background:white;color:black}}
+
+/* Keep secondary copy and native form text readable on dark surfaces. */
+:root[data-theme=dark] input:not([type=checkbox]):not([type=radio]),
+:root[data-theme=dark] textarea,
+:root[data-theme=dark] select,
+:root[data-theme=dark] option{color:var(--ink);background-color:var(--paper);caret-color:var(--ink)}
+:root[data-theme=dark] input::placeholder,
+:root[data-theme=dark] textarea::placeholder{color:#bfd0c4;opacity:1}
+:root[data-theme=dark] .panel button:disabled{opacity:1;color:var(--dim);background:var(--panel)}
+:root[data-theme=dark] input:autofill{box-shadow:0 0 0 1000px var(--paper) inset;-webkit-text-fill-color:var(--ink);caret-color:var(--ink)}
+:root[data-theme=dark] .domain-label,
+:root[data-theme=dark] .clinical-lens,
+:root[data-theme=dark] .coverage-gap{color:var(--dim)}
