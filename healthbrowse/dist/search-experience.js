@@ -2,9 +2,9 @@ import {answerQuestion,questionDeck,inspectInput,normalizeQuestion} from './clin
 import {verifyClaim} from './claim-check.js';
 import {correctSpelling} from './medcard.js';
 import {domains,orderedPassages} from './disease-framework.js';
-import {readingProfile,readingGuidance} from './reading-profiles.js';
+import {readingProfile,readingGuidance,roleIndex} from './reading-profiles.js';
 
-export const generalMode=role=>role===0||role==='General reader';
+export const generalMode=role=>roleIndex(role)===0;
 export const deckCount=()=>6;
 export function isOverviewQuestion(context,query){
  const normalize=value=>String(value).toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9]+/g,' ').trim();
@@ -66,8 +66,8 @@ export function searchAnswer(context,query,{detail=false,activeDeck=1}={}){
  // It is separately labeled and never used to fill an unsupported direct answer.
  if(matches.length&&primaryIntent==='definition'&&profile.index>0){
   const seen=new Set(matches.map(m=>m.check.text));
-  const extra=profile.index===1?[[4,1]]:profile.index===2?[[1,1,'mechanism'],[3,1]]:profile.index===3?[[3,1],[4,1]]:[[1,2,'classification'],[1,1,'mechanism'],[3,1],[4,1]];
-  for(const [n,count,intent] of extra)matches.push(...supplemental(context,n,count,seen,intent).map(m=>({...m,title:profile.index===1?'Care information':domains[n-1].title})));
+  const extra=[[3,1],[4,1]];
+  for(const [n,count,intent] of extra)matches.push(...supplemental(context,n,count,seen,intent).map(m=>({...m,title:domains[n-1].title})));
  }
  const response=compose(context,matches,primaryDeck,{detail,gaps});
  if(!response.supported)response.text='I found '+context.topic+', but cannot support a direct answer to this question from the indexed sources. '+gaps.join(' ')+' The six decks show the information that is available.';

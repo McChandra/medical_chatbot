@@ -31,7 +31,7 @@ export async function respond(request,env,assets) {
     return Response.json(result,{headers});
   }
   if(url.pathname.startsWith('/api/research/'))return researchRoute(url,assets,headers);
-  if(url.pathname==='/api/profile')return Response.json({readingModes:5},{headers});
+  if(url.pathname==='/api/profile')return Response.json({readingModes:2,labels:['General','Clinicians']},{headers});
   if(url.pathname==='/api/clinical-lens'){
     const tier=Number(url.searchParams.get('tier'));
     if(!Number.isInteger(tier)||tier<3||tier>5)return new Response('Unknown reading mode.',{status:400,headers});

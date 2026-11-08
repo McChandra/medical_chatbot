@@ -68,3 +68,15 @@ test('saved chat versions preserve old deck meaning and validate the current fra
  const saved=await (await call('chats/'+c.id)).json();assert.deepEqual(saved.turns.map(t=>t.frameworkVersion),['seven-section-v1','disease-spectrum-v2']);
  assert.equal((await call('chats/'+c.id+'/turns','POST',{...turn(),frameworkVersion:'made-up'})).status,400);
 });
+
+test('legacy settings and saved chats normalize into the two available reading modes',async t=>{
+ const {call,DB}=fixture(t);await call('profile');
+ for(const [old,expected] of [['Patient','General reader'],['Medical student','General reader'],['Advanced professional','Medical professional']]){
+  await DB.prepare('UPDATE hb_accounts SET reading_mode=?').bind(old).run();
+  assert.equal((await (await call('settings')).json()).settings.readingMode,expected);
+  const c={...chat(),readingMode:expected};await call('chats','POST',c);
+  await DB.prepare('UPDATE hb_chats SET reading_mode=? WHERE id=?').bind(old,c.id).run();
+  assert.equal((await (await call('chats/'+c.id)).json()).chat.readingMode,expected);
+  assert.equal((await call('chats','POST',c)).status,200);
+ }
+});

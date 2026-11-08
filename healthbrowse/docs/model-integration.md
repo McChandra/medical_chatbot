@@ -8,13 +8,12 @@ The site previously used deterministic excerpt selection and audience guidance. 
 
 ## Model choice
 
-| Audience | Initial generator | Adaptation |
+| User type | Generator route | Response style |
 |---|---|---|
-| General user | `meta-llama/Llama-3.1-8B-Instruct` | Reviewed plain-language RAG examples; LoRA or QLoRA |
-| Patient | General endpoint with patient education and safety prompt | Separately evaluate safety and readability; no individual prescribing |
-| Medical student | General endpoint with supervised educational prompt | Separately evaluate mechanisms, explanation and educational reasoning |
-| Medical professional | `google/medgemma-4b-it` | Clinical terminology and evidence-focused prompt; evaluate against current guidelines |
-| Advanced professional | Same MedGemma endpoint, separate technical prompt | Evaluate subtype distinctions, uncertainty and methodological appraisal |
+| General | `meta-llama/Llama-3.1-8B-Instruct` | Plain-language, cited education; reviewed LoRA/QLoRA examples |
+| Clinicians | `google/medgemma-4b-it` | Clinical terminology, diagnostic considerations and evidence limitations |
+
+Only these two choices appear in the research desk and account settings. The specialty selector has been removed. Existing Patient/Medical student preferences map to General, and Medical professional/Advanced professional preferences map to Clinicians. Stored IDs remain `General reader` and `Medical professional` for account compatibility.
 
 Model IDs are configurable: use the exact model ID served by the endpoint. An adapter is loaded on the inference service; the browser cannot select arbitrary models or adapters. A reading-mode choice changes presentation, not credential verification or permission to access patient data.
 

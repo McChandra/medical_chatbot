@@ -27,10 +27,7 @@ export function evidenceFor(assets,topic,role,question){
 }
 export const audienceInstructions={
  'General reader':'Answer in everyday English for a general reader. Explain unfamiliar words. Direct answer: 2–4 short sentences. Each deck: 2–4 short sentences. No speculative diagnosis or individual treatment advice.',
- Patient:'Give compassionate patient education. Explain what findings mean, safety considerations and questions for the care team when supported. Never instruct the reader to start, stop or change treatment.',
- 'Medical student':'Use a supervised educational style: mechanisms, phenotype, investigations and treatment principles. Explain clinical terms and distinguish hypothetical reasoning from patient care.',
  'Medical professional':'Use precise clinical language with concise educational explanation. Separate diagnosis, differential considerations and management evidence; preserve subtype, population and date limitations. No patient-specific prescription or dose.',
- 'Advanced professional':'Use technical biomedical language. Appraise mechanisms, diagnostic uncertainty, treatment evidence and study limitations where the supplied evidence permits. Do not turn patient education into a guideline or invent molecular markers, effect sizes or trials.'
 };
 export function generationMessages(input,evidence,repair){
  const rules=`You are HealthBrowse, a medical education and research assistant. ${audienceInstructions[input.role]}

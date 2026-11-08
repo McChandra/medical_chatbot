@@ -1,4 +1,4 @@
-import {readingProfile} from './reading-profiles.js';
+import {readingProfile,readingRoles,normalizeReadingRole} from './reading-profiles.js';
 import {requestSynthesis,synthesisKey} from './model-client.js';
 import {renderAnswer} from './answer-view.js';
 import {generalMode,deckCount,searchAnswer,domainAnswer,fetchJSON} from './search-experience.js';
@@ -19,8 +19,7 @@ import {searchEvidence} from './evidence.js';
 const $=id=>document.getElementById(id);
 function el(tag,txt,cls){let e=document.createElement(tag);if(txt!==undefined)e.textContent=txt;if(cls)e.className=cls;return e}
 function button(text,fn,cls='act'){let b=el('button',text,cls);b.onclick=fn;return b}
-const roles=['General reader','Patient','Medical student','Medical professional','Advanced professional'];
-const prompts=['Start with the condition overview and the meaning of unfamiliar terms.','Prepare for your visit. Which symptoms or changes should you discuss, and what questions would you like answered?','Trace the mechanism, compare investigations, and discuss a hypothetical case with a supervisor.','Review the guideline population, exclusions, publication date, and local applicability.','Compare study design, reference standards, uncertainty, subgroup effects, and external validity.'];
+const roles=readingRoles;
 let taxonomy, depts, assignments;
 let catalog,topic='Leukemia',role=0,live=null,controller=null;
 const provenance='Document B · inventory dated 31 Oct 2026 · independent clinical review pending';
@@ -49,7 +48,7 @@ function refreshSynthesis(context){
 function currentContext(){
   if(!topic||!catalog||unresolved)return null;
   const resources=catalog[topic]||[];
-  return {topic,frameworkVersion,role:roles[role],query:activeQuery,aliases:[...(medicalRecord(topic)?.aliases||[]),...(taxonomy?.entities.find(e=>e.name===topic)?.aliases||[])],department:professionalRole(role)?$('dept').value:'',
+  return {topic,frameworkVersion,role:roles[role],query:activeQuery,aliases:[...(medicalRecord(topic)?.aliases||[]),...(taxonomy?.entities.find(e=>e.name===topic)?.aliases||[])],
     passages:textRecords(),records:[...resources,...(live?.records||[]),...(codes?.rows||[]).map(r=>({...r,kind:'terminology',title:r.label}))],
     sections:sectionNames.map((_,i)=>sectionSources(i+1,resources,activeQuery,role).map(x=>x.r)),
     visibleTexts:[...$('card').querySelectorAll('.excerpt')].filter(e=>e.getClientRects().length).map(e=>e.textContent)};
@@ -72,7 +71,7 @@ const copilot=setupCopilot(currentContext,{
 });
 const research=createResearchDesk(currentContext,(n,focus)=>copilot.activate(n,focus));
 chats.setHandlers({newChat:()=>copilot.clear(),restore:async data=>{
-  role=Math.max(0,roles.indexOf(data.chat.readingMode));$('role').selectedIndex=role;
+  role=Math.max(0,roles.indexOf(normalizeReadingRole(data.chat.readingMode)));$('role').selectedIndex=role;
   if(Object.hasOwn(catalog,data.chat.topic)||allowedTopics.has(data.chat.topic.toLowerCase())){
     topic=data.chat.topic;activeQuery=topic;unresolved=false;live=null;codes=null;$('query').value=topic;render();
   }else await search(data.chat.topic,null,true);
@@ -97,9 +96,8 @@ function renderCodes(body){
   box.append(el('p',codes?.snomedStatus||'SNOMED CT lookup requires licensed terminology access.','meta'));body.append(box);
 }
 function render(){
-  updateRoleControls();
   const general=generalMode(role),count=deckCount(role);
-  const profile=readingProfile(role);document.body.classList.add('buddy-enabled');$('deskTitle').textContent=role<2?'Understand your health':'Clinical research desk';$('deskIntro').textContent='Ask a question, explore six clinical areas, and go deeper with your buddy.';$('copilot-heading').textContent='HealthBrowse buddy';$('card').setAttribute('aria-label','Six-deck medical response');
+  const profile=readingProfile(role);document.body.classList.add('buddy-enabled');$('deskTitle').textContent=role===0?'Understand your health':'Clinical research desk';$('deskIntro').textContent='Ask a question, explore six clinical areas, and go deeper with your buddy.';$('copilot-heading').textContent='HealthBrowse buddy';$('card').setAttribute('aria-label','Six-deck medical response');
   const deck=$('card'),opened=new Set([...deck.querySelectorAll('details[open][data-section]')].map(d=>d.dataset.section));
   deck.replaceChildren();
   const header=el('div',undefined,'cardhead');header.append(el('span','HEALTHBROWSE / MEDCARD','eyebrow'),el('h2',unresolved?'Topic not resolved':topic),el('p',count+' areas to explore · '+roleLabel(roles[role]),'deck-subtitle'));
@@ -123,7 +121,7 @@ function render(){
   const texts=textRecords(),resources=unresolved?[]:catalog[topic]||[];
   sectionNames.forEach((label,i)=>{
     const number=i+1,extra=number===7,box=el('section',undefined,extra?'research-resource':'med-section');box.dataset.number=String(number);
-    const title=el('div',undefined,'sectionTitle');title.append(el('span',String(number).padStart(2,'0'),'num'),el('h3',domainTitle(number,role)));box.append(title,el('p',professionalRole(role)?domains[i].professional:domains[i].scope,'meta'));if(role<2)box.append(el('small',label,'domain-label'));
+    const title=el('div',undefined,'sectionTitle');title.append(el('span',String(number).padStart(2,'0'),'num'),el('h3',domainTitle(number,role)));box.append(title,el('p',professionalRole(role)?domains[i].professional:domains[i].scope,'meta'));if(role===0)box.append(el('small',label,'domain-label'));
     const rows=texts.filter(r=>r.deck===number&&!r.overview);
     const ranked=sectionSources(number,resources,activeQuery,role);
     const officialLinks=sectionLinks(medicalRecord(topic),number);
@@ -269,8 +267,6 @@ async function performSearch(input,chosenTopic,confirmed=false){
   ]);
   clearTimeout(timeout);
 }
-function updateRoleControls(){const enabled=professionalRole(role);$('specialtyPicker').hidden=!enabled;$('dept').disabled=!enabled;$('deptTopics').hidden=!enabled;if(!enabled){$('dept').value='';$('deptTopics').replaceChildren()}}
-function departments(){const wrap=$('deptTopics');wrap.replaceChildren();if(!$('dept').value)return;const matches=Object.keys(assignments).filter(t=>assignments[t].includes(depts.indexOf($('dept').value)));if(!matches.length)wrap.append(el('p','This department has no indexed condition records yet.'));matches.forEach(t=>wrap.append(button(t,()=>{choose(t)})))}
 async function runLive(){controller?.abort();const c=new AbortController();controller=c;live={message:'Searching Europe PMC…'};render();const timer=setTimeout(()=>c.abort(),15000);try{const result=await searchEvidence(topic,c.signal,!Object.hasOwn(catalog,topic));if(controller!==c)return;live={...result,message:result.records.length+' qualifying records · metadata retrieved '+result.queriedAt+' · clinical appraisal pending.'}}catch{if(controller!==c)return;live={message:'The live search could not be completed. The cataloged reading list remains available. Retry the search or open the publisher directly.'}}finally{clearTimeout(timer)}render()}
 function download(){const url=URL.createObjectURL(new Blob([JSON.stringify({topic,source:'Europe PMC',...live},null,2)],{type:'application/json'}));const a=el('a');a.href=url;a.download='healthbrowse-evidence.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 for(let i=0;i<20;i++){let p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d','M 0 '+(95-i*2)+' C 42 '+(125-i*4)+' 62 '+(8+i)+' 100 '+(18+i*3)+' S 159 '+(145-i*3)+' 210 '+(80-i*2));$('waves').append(p)}
@@ -289,7 +285,7 @@ try{
 
   const last=readSession('hb-context',{});if(Object.hasOwn(passages,last.topic)||Object.hasOwn(catalog,last.topic)||allowedTopics.has(String(last.topic).toLowerCase()))topic=last.topic;
   activeQuery=topic;
-depts=taxonomy.departments.map(d=>d.name);assignments=Object.fromEntries(taxonomy.entities.map(e=>[e.name,e.departmentIds.map(id=>taxonomy.departments.findIndex(d=>d.id===id))]));Object.keys(catalog).forEach(t=>$('topics').append(new Option(t)));roles.forEach(r=>$('role').append(new Option(roleLabel(r),r)));role=Math.max(0,roles.indexOf(readSession('hb-reader','')));$('role').selectedIndex=role;$('dept').append(new Option('Select a specialty',''));taxonomy.departments.forEach(d=>$('dept').append(new Option(d.name,d.name)));$('find').onsubmit=e=>{e.preventDefault();search($('query').value.trim())};document.querySelectorAll('[data-topic]').forEach(b=>b.onclick=()=>choose(b.dataset.topic));$('role').onchange=()=>{role=$('role').selectedIndex;try{sessionStorage.setItem('hb-reader',JSON.stringify(roles[role]))}catch{}render()};$('dept').onchange=departments;departments();render();
+depts=taxonomy.departments.map(d=>d.name);assignments=Object.fromEntries(taxonomy.entities.map(e=>[e.name,e.departmentIds.map(id=>taxonomy.departments.findIndex(d=>d.id===id))]));Object.keys(catalog).forEach(t=>$('topics').append(new Option(t)));roles.forEach(r=>$('role').append(new Option(roleLabel(r),r)));role=Math.max(0,roles.indexOf(normalizeReadingRole(readSession('hb-reader',''))));$('role').selectedIndex=role;$('find').onsubmit=e=>{e.preventDefault();search($('query').value.trim())};document.querySelectorAll('[data-topic]').forEach(b=>b.onclick=()=>choose(b.dataset.topic));$('role').onchange=()=>{role=$('role').selectedIndex;try{sessionStorage.setItem('hb-reader',JSON.stringify(roles[role]))}catch{}render()};render();
 $('searchSubmit').disabled=false;$('searchSubmit').textContent='Search ↗';$('notice').textContent='Ready. Ask a question about a medical topic.';
 void chats.init();
 const params=new URLSearchParams(location.search);

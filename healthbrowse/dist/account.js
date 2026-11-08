@@ -1,6 +1,6 @@
 import {startEmailChallenge,confirmEmailChallenge,passwordLogin,updateRecoveredPassword,completeAuthCallback,authErrorMessage,requestEmailChange} from './account-flows.js';
 import {accountRequest,getAuthClient,clearResearchSession} from './account-client.js';
-import {readingModes,researchUrl,suggestedPassword} from './account-utils.js';
+import {readingModes,researchUrl,suggestedPassword,normalizeReadingRole,readingLabel} from './account-utils.js';
 
 const $=id=>document.getElementById(id);
 const text=(tag,value)=>Object.assign(document.createElement(tag),{textContent:value});
@@ -78,7 +78,7 @@ async function loadAccount(){
   $('contactEmail').value=session.user.email||'';
   const loaders=[
     ['settingsStatus','/api/me/settings',data=>{
-      const s=data.settings;$('saveChats').checked=s.saveChats??true;$('readingMode').value=s.readingMode;$('savedTheme').value=s.theme;$('saveHistory').checked=s.saveHistory;
+      const s=data.settings;$('saveChats').checked=s.saveChats??true;$('readingMode').value=normalizeReadingRole(s.readingMode);$('savedTheme').value=s.theme;$('saveHistory').checked=s.saveHistory;
       hasSettings=true;$('settingsForm').querySelector('button').disabled=false;
     }],
     ['savedStatus','/api/me/saved',data=>renderSaved(data.items)],
@@ -214,7 +214,7 @@ $('contactForm').onsubmit=async e=>{
 };
 
 async function init(){
-  readingModes.forEach(r=>$('readingMode').append(new Option(r)));
+  readingModes.forEach(r=>$('readingMode').append(new Option(readingLabel(r),r)));
   const view=new URLSearchParams(location.search).get('view');
   if(Object.hasOwn(modes,view))mode=view;
   else if(location.hash==='#signup')mode='signup';

@@ -1,4 +1,4 @@
-import {readingRoles} from '../dist/reading-profiles.js';
+import {isReadingRole,normalizeReadingRole} from '../dist/reading-profiles.js';
 import {inspectInput} from '../dist/clinical-engine.js';
 import {evidenceFor,generationMessages,validateDraft,reviewMessages,reviewPasses,presentDraft} from './model-evidence.mjs';
 const headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'};
@@ -53,11 +53,12 @@ export async function modelAPI(request,env,assets){
   if(!request.headers.get('content-type')?.startsWith('application/json'))fail(415,'body','Use JSON.');
   let b;try{b=await boundedJSON(request.body,12000)}catch{fail(400,'body','Invalid or oversized question.')}
   if(!b||Array.isArray(b)||Object.keys(b).some(k=>!['topic','question','role','mode','deck','history','searchQuery'].includes(k)))fail(400,'body','Unexpected input.');
-  if(typeof b.topic!=='string'||b.topic.length>160||typeof b.question!=='string'||!b.question.trim()||b.question.length>1600||!readingRoles.includes(b.role)||!['search','chat'].includes(b.mode)||!Number.isInteger(b.deck)||b.deck<0||b.deck>6)fail(400,'body','Check the topic, question and reading mode.');
+  if(typeof b.topic!=='string'||b.topic.length>160||typeof b.question!=='string'||!b.question.trim()||b.question.length>1600||!isReadingRole(b.role)||!['search','chat'].includes(b.mode)||!Number.isInteger(b.deck)||b.deck<0||b.deck>6)fail(400,'body','Check the topic, question and reading mode.');
   if(b.history!==undefined&&(!Array.isArray(b.history)||b.history.length>4||b.history.some(q=>typeof q!=='string'||q.length>1600)))fail(400,'body','Invalid follow-up context.');
   if(b.searchQuery!==undefined&&(typeof b.searchQuery!=='string'||b.searchQuery.length>1600))fail(400,'body','Invalid browser context.');
   for(const text of [b.question,b.topic,b.searchQuery||'',...(b.history||[])]){const status=inspectInput(text);if(status!=='ok')fail(422,status,status==='emergency'?'If this danger is happening now, contact local emergency services. Do not wait for an AI response.':'Remove personal identifiers and ask a general educational question.')}
-  const route=readingRoles.indexOf(b.role)>=3?'professional':'general',config=endpoint(env,route);
+  b.role=normalizeReadingRole(b.role);
+  const route=b.role==='Medical professional'?'professional':'general',config=endpoint(env,route);
   if(!config)fail(503,'model_not_configured','AI synthesis is not connected yet. Showing source excerpts instead.');
   const user=await identity(request,env),evidence=evidenceFor(assets,b.topic,b.role,b.question);
   if(!evidence?.sources.length)fail(422,'no_evidence','No indexed sources support this topic.');

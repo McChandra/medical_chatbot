@@ -34,8 +34,8 @@ test('model response returns a direct answer and exactly six source-linked decks
  for(const b of [r.answer,...r.decks].flatMap(s=>s.blocks)){assert.ok(b.references.length);assert.ok(b.references.every(s=>s.text.includes(s.quote)));assert.match(b.verification,/Not independent/)}
  assert.equal(r.answer.checks.length,0,'Do not falsely label paraphrases as exact source matches');
 });
-test('medical modes route to MedGemma; student remains educational on general route',async t=>{
- const {call,calls}=fixture(t);for(const role of ['Patient','Medical student','Medical professional','Advanced professional']){const r=await call({...input,role});assert.equal(r.status,200);assert.equal(calls.at(-1).body.model,role.includes('professional')?'medgemma':'llama-adapter')}
+test('both model routes accept the two labels and normalize legacy roles',async t=>{
+ const {call,calls}=fixture(t);for(const role of ['General','Clinicians','Patient','Medical student','Medical professional','Advanced professional']){const r=await call({...input,role});assert.equal(r.status,200);assert.equal(calls.at(-1).body.model,(role.includes('professional')||role==='Clinicians')?'medgemma':'llama-adapter')}
  assert.notEqual(generationMessages(input,evidence)[0].content,generationMessages({...input,role:'Medical professional'},evidence)[0].content);
 });
 test('server owns retrieval and citations; rejects fabricated citations, altered quotes and misfiled decks',()=>{

@@ -1,4 +1,4 @@
-import {roleIndex} from './reading-profiles.js';
+import {roleIndex,readingLabel} from './reading-profiles.js';
 // Stable identifiers keep saved conversations distinct from the previous taxonomy.
 export const frameworkVersion='disease-spectrum-v2';
 export const domains=[
@@ -14,9 +14,9 @@ export const frameworkReferences=[
  {title:'Funkhouser · Pathology: the clinical description of human disease (2020)',url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC7380242/'},
  {title:'Jewell · Natural History of Diseases: Statistical Designs and Issues (2016)',url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC5017909/'}
 ];
-export const professionalRole=role=>role===3||role===4||role==='Medical professional'||role==='Advanced professional';
-export const roleLabel=role=>role==='General reader'?'General user':role;
-export const domainTitle=(number,role)=>roleIndex(role)>=2?domains[number-1].title:domains[number-1].plain;
+export const professionalRole=role=>roleIndex(role)===1;
+export const roleLabel=readingLabel;
+export const domainTitle=(number,role)=>roleIndex(role)===1?domains[number-1].title:domains[number-1].plain;
 
 // Route intact excerpts, never synthesize disease facts from a domain label.
 // A progression passage does not establish that its subjects were untreated.
@@ -55,11 +55,9 @@ export function medlinePassages(record,topic,feed={}){
    vintage:'MedlinePlus feed snapshot · '+(feed.feedDate||feed.retrievedAt||'date unavailable'),sourceType:'patient-education'},'medline')));
 }
 export function orderedPassages(rows,role,topic){
- const level=roleIndex(role),professional=level>=3;
+ const level=roleIndex(role),professional=level===1;
  return rows.map((p,i)=>({p,i,score:
-  (professional?(p.focus!==topic?(level===4?4:2):0)+(/cytogenetic|immunophenotyp|biomarker|prognos|mechanism/i.test(p.text)?(level===4?5:3):0):0)
-  +(level===2&&/mechanism|classification/.test(p.intent||'')?3:0)
-  +(level===1&&/emergency|urgent|follow.up|health care provider/i.test(p.text)?2:0)
+  (professional?(p.focus!==topic?2:0)+(/cytogenetic|immunophenotyp|biomarker|prognos|mechanism/i.test(p.text)?3:0):0)
   +(/medlineplus\.gov/.test(p.url)?(professional?1:6):0)
   +(professional?Math.min((p.text||'').length/1000,1):0)}))
   .sort((a,b)=>b.score-a.score||a.i-b.i).map(x=>x.p);

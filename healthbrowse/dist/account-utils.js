@@ -1,4 +1,4 @@
-export const readingModes=['General reader','Patient','Medical student','Medical professional','Advanced professional'];
+export {readingRoles as readingModes,normalizeReadingRole,readingLabel} from './reading-profiles.js';
 export function validPassword(password){
   return Array.from(password).length>=12&&new TextEncoder().encode(password).length<=72;
 }

@@ -21,7 +21,7 @@ export function sectionSources(section,records,query,role){
     const issuer=/(^|\.)(nih\.gov|cdc\.gov|fda\.gov|cancer\.gov|clinicaltrials\.gov|nhs\.uk|who\.int)$/.test(host);
     const hits=(r.title.toLowerCase().match(/[a-z]{3,}/g)||[]).filter(w=>requested.has(w)).length;
     const weight=(kinds.length-kinds.indexOf(r.kind))*2 + (issuer?2:0) + Math.min(hits,3)
-      + (role<2 && /medlineplus/i.test(r.publisher)?3:0);
+      + (role===0 && /medlineplus/i.test(r.publisher)?3:0);
     return {r,weight,index,why:[r.kind+' resource',issuer?'public health or government publisher':null,hits?'title matches search terms':null].filter(Boolean).join(' · ')};
   }).filter(Boolean).sort((a,b)=>b.weight-a.weight || a.index-b.index);
 }

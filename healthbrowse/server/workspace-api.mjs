@@ -1,6 +1,6 @@
 import {frameworkVersion} from '../dist/disease-framework.js';
 import {inspectInput} from '../dist/clinical-engine.js';
-const modes=['General reader','Patient','Medical student','Medical professional','Advanced professional'];
+import {isReadingRole,normalizeReadingRole} from '../dist/reading-profiles.js';
 const themes=['system','light','dark'];
 const uuid=/^[\da-f]{8}-[\da-f]{4}-[1-8][\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i;
 const response=(data,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'private, no-store','Referrer-Policy':'no-referrer','X-Content-Type-Options':'nosniff'}});
@@ -18,8 +18,8 @@ async function body(request){
  let data;try{data=JSON.parse(raw+decoder.decode())}catch{fail('Invalid JSON.')}
  if(!data||typeof data!=='object'||Array.isArray(data))fail('Invalid request.');return data;
 }
-function preferences(row){return {readingMode:row.reading_mode,theme:row.theme,saveHistory:!!row.save_history,saveChats:!!row.save_chats,historyEpoch:row.history_epoch}}
-const chatView=row=>({id:row.id,title:row.title,topic:row.topic,readingMode:row.reading_mode,createdAt:row.created_at,updatedAt:row.updated_at});
+function preferences(row){return {readingMode:normalizeReadingRole(row.reading_mode),theme:row.theme,saveHistory:!!row.save_history,saveChats:!!row.save_chats,historyEpoch:row.history_epoch}}
+const chatView=row=>({id:row.id,title:row.title,topic:row.topic,readingMode:normalizeReadingRole(row.reading_mode),createdAt:row.created_at,updatedAt:row.updated_at});
 export async function workspaceAPI(request,db,user){
  try{
   const path=new URL(request.url).pathname,method=request.method,owner=user.id;
@@ -37,7 +37,7 @@ export async function workspaceAPI(request,db,user){
    if(method==='PATCH'){
     const b=await body(request);only(b,['saveChats','saveHistory','readingMode','theme']);
     for(const key of ['saveChats','saveHistory'])if(b[key]!==undefined&&typeof b[key]!=='boolean')fail('Invalid history preference.');
-    if(b.readingMode!==undefined&&!modes.includes(b.readingMode))fail('Invalid reading mode.');if(b.theme!==undefined&&!themes.includes(b.theme))fail('Invalid theme.');
+    if(b.readingMode!==undefined){if(!isReadingRole(b.readingMode))fail('Invalid reading mode.');b.readingMode=normalizeReadingRole(b.readingMode)}if(b.theme!==undefined&&!themes.includes(b.theme))fail('Invalid theme.');
     const stmts=[sql('UPDATE hb_accounts SET save_chats=COALESCE(?,save_chats),save_history=COALESCE(?,save_history),reading_mode=COALESCE(?,reading_mode),theme=COALESCE(?,theme) WHERE user_id=?',b.saveChats===undefined?null:Number(b.saveChats),b.saveHistory===undefined?null:Number(b.saveHistory),b.readingMode??null,b.theme??null,owner)];
     if(b.saveHistory===false)stmts.push(sql('DELETE FROM hb_research_history WHERE user_id=?',owner));
     await db.batch(stmts);return response({settings:preferences(await sql('SELECT * FROM hb_accounts WHERE user_id=?',owner).first())});
@@ -49,10 +49,10 @@ export async function workspaceAPI(request,db,user){
    }
    if(method==='POST'){
     const b=await body(request);only(b,['id','topic','readingMode','historyEpoch']);if(!uuid.test(b.id))fail('Invalid chat.');
-    const topic=publicText(b.topic,160,'topic');if(!modes.includes(b.readingMode))fail('Invalid reading mode.');
+    const topic=publicText(b.topic,160,'topic');if(!isReadingRole(b.readingMode))fail('Invalid reading mode.');b.readingMode=normalizeReadingRole(b.readingMode);
     if(!Number.isSafeInteger(b.historyEpoch))fail('Reload chat history.');
     const existing=await sql('SELECT * FROM hb_chats WHERE id=? AND user_id=?',b.id,owner).first();
-    if(existing){if(existing.topic!==topic||existing.reading_mode!==b.readingMode)fail('Chat changed. Start a new chat.',409);return response({chat:chatView(existing)})}
+    if(existing){if(existing.topic!==topic||normalizeReadingRole(existing.reading_mode)!==b.readingMode)fail('Chat changed. Start a new chat.',409);return response({chat:chatView(existing)})}
     const now=new Date().toISOString();
     const saved=await sql(`INSERT OR IGNORE INTO hb_chats (id,user_id,title,topic,reading_mode,created_at,updated_at)
      SELECT ?,user_id,?,?,?, ?,? FROM hb_accounts WHERE user_id=? AND save_chats=1 AND history_epoch=?

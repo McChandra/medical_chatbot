@@ -1,6 +1,6 @@
 import {workspaceAPI} from './workspace-api.mjs';
 // No service key, authorization header, contact body or feedback body is logged.
-const modes=['General reader','Patient','Medical student','Medical professional','Advanced professional'];
+import {isReadingRole,normalizeReadingRole} from '../dist/reading-profiles.js';
 const themes=['system','light','dark'];
 const sections=['Education and definitions','Identification','Research and evidence','Data and AI resources','Prediction and genetics','Physiology, symptoms and treatments','Care facilities'];
 const uuid=/^[\da-f]{8}-[\da-f]{4}-[1-8][\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i;
@@ -48,7 +48,7 @@ async function database(base,headers,path,method='GET',body,prefer){
   }
   const text=await res.text();return text?JSON.parse(text):null;
 }
-function settings(row){return {saveHistory:row?.save_history??false,readingMode:row?.reading_mode??modes[0],theme:row?.theme??'system'}}
+function settings(row){return {saveHistory:row?.save_history??false,readingMode:normalizeReadingRole(row?.reading_mode),theme:row?.theme??'system'}}
 function historyItem(row){
   const name=sections[row.section-1],q=row.kind==='chat'?'Explore '+name+' for '+row.topic:'Research '+row.topic+' · '+name;
   return {...row,questionLabel:q,href:'/?'+new URLSearchParams({topic:row.topic,section:String(row.section)})};
@@ -112,7 +112,7 @@ export async function accountAPI(request,env){
       if(method==='GET')return reply({settings:settings((await db('hb_settings?'+owner+'&select=save_history,reading_mode,theme'))[0])});
       if(method==='PATCH'){const b=await jsonBody(request);only(b,['saveHistory','readingMode','theme']);
         if(b.saveHistory!==undefined&&typeof b.saveHistory!=='boolean')reject(400,'Invalid history setting.');
-        if(b.readingMode!==undefined)oneOf(b.readingMode,modes,'reading mode');if(b.theme!==undefined)oneOf(b.theme,themes,'theme');
+        if(b.readingMode!==undefined){if(!isReadingRole(b.readingMode))reject(400,'Invalid reading mode.');b.readingMode=normalizeReadingRole(b.readingMode)}if(b.theme!==undefined)oneOf(b.theme,themes,'theme');
         const rows=await db('rpc/hb_update_settings','POST',{p_history:b.saveHistory??null,p_mode:b.readingMode??null,p_theme:b.theme??null});
         return reply({settings:settings(rows[0])});}
     }else if(path==='/api/me/saved'){

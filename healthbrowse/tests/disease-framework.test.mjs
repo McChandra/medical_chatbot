@@ -24,8 +24,8 @@ test('general and professional modes prioritize appropriate source passages with
  assert.equal(orderedPassages([basic,technical],'Medical professional',topic)[0],technical);
  assert.equal(answerQuestion({topic,question:'Which diagnostic tests are described?',role:'General reader',passages:[technical,basic]}).text,basic.text);
  assert.equal(answerQuestion({topic,question:'Which diagnostic tests are described?',role:'Medical professional',passages:[basic,technical]}).text,technical.text);
- for(const r of ['General reader','Patient','Medical student',0,1,2])assert.equal(professionalRole(r),false);
- for(const r of ['Medical professional','Advanced professional',3,4])assert.equal(professionalRole(r),true);
+ for(const r of ['General reader','Patient','Medical student','General',0,2])assert.equal(professionalRole(r),false);
+ for(const r of ['Medical professional','Advanced professional','Clinicians',1,3,4])assert.equal(professionalRole(r),true);
 });
 test('source checks deny impersonated publishers and unpinned archives',()=>{
  for(const url of ['https://medlineplus.gov.evil.test/article','https://medlineplus.gov@evil.test/article','https://example.com/article']){

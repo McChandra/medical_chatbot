@@ -5,22 +5,21 @@ import {medlinePassages} from '../dist/disease-framework.js';
 import {medlineIndex} from '../dist/medline.js';
 import {remapPassages} from '../dist/medcard.js';
 import {searchAnswer,domainAnswer,deckCount} from '../dist/search-experience.js';
-import {readingRoles,roleQuestions} from '../dist/reading-profiles.js';
+import {readingRoles,roleQuestions,readingLabel,normalizeReadingRole} from '../dist/reading-profiles.js';
 const read=name=>JSON.parse(readFileSync(new URL('../dist/'+name+'.json',import.meta.url)));
 const feed=read('medline-topics'),index=medlineIndex(feed),archive=remapPassages(read('clinical-passages'));
 const context=(topic,role='General reader')=>({topic,role,aliases:index.find(topic)?.aliases||[],passages:[...medlinePassages(index.find(topic),topic,feed),...(archive[topic]||[])],records:[]});
-test('all five audiences get answers to conversational and multipart questions',()=>{
+test('both audiences get answers to conversational and multipart questions',()=>{
  for(const role of readingRoles)for(const topic of ['Leukemia','Asthma','Diabetes','High Blood Pressure'])for(const query of [
   'Can you tell me what '+topic+' is?', 'What are the causes of '+topic+'?', 'How is '+topic+' diagnosed?', 'How is '+topic+' treated?', 'What is '+topic+' and how is it treated?', topic+' symptoms and treatment'
  ]){const result=searchAnswer(context(topic,role),query);assert.equal(result.supported,true,role+' '+query);assert.equal(result.gaps.length,0,role+' '+query);assert.ok(result.checks.every(c=>c.status==='supported'));assert.ok(result.blocks.every(b=>b.text===b.check.text))}
 });
 test('reading modes differ in clinical depth and supporting context, not just headings',()=>{
  const answers=readingRoles.map(role=>searchAnswer(context('Leukemia',role),'What is leukemia?'));
- assert.equal(new Set(answers.map(a=>a.text)).size,5);
- assert.equal(new Set(answers.map(a=>a.blocks.map(b=>b.text).join('\n'))).size,5);
- assert.equal(answers[0].blocks.length,1);assert.match(answers[1].guidance.text,/care plan|treatment/);
- assert.match(answers[2].guidance.text,/learning/);assert.match(answers[3].guidance.text,/local protocols/);assert.match(answers[4].guidance.text,/comparator/);
- assert.ok(answers[4].blocks.length>answers[0].blocks.length);
+ assert.equal(new Set(answers.map(a=>a.text)).size,2);
+ assert.equal(new Set(answers.map(a=>a.blocks.map(b=>b.text).join('\n'))).size,2);
+ assert.equal(answers[0].blocks.length,1);assert.match(answers[1].guidance.text,/local protocols/);
+ assert.ok(answers[1].blocks.length>answers[0].blocks.length);
  for(const role of readingRoles){assert.equal(deckCount(role),6);assert.equal(roleQuestions(role).length,6)}
 });
 test('a direct answer cannot be replaced by unrelated contextual detail',()=>{
@@ -46,4 +45,10 @@ test('heading-aware ingestion retains treatment and diagnosis after symptoms',()
   const record=index.find(topic);for(const intent of ['definition','risk','identify','symptoms','therapy'])assert.ok(record.knowledge.some(p=>p.intent===intent),topic+' '+intent);
  }
  const diabetes=index.find('Diabetes');assert.ok(diabetes.knowledge.some(p=>p.intent==='public-health'&&p.text.includes("can't be prevented")));
+});
+
+test('only General and Clinicians are selectable and old preferences map to those choices',()=>{
+ assert.deepEqual(readingRoles.map(readingLabel),['General','Clinicians']);
+ for(const saved of ['General reader','Patient','Medical student','General'])assert.equal(normalizeReadingRole(saved),readingRoles[0]);
+ for(const saved of ['Medical professional','Advanced professional','Clinicians'])assert.equal(normalizeReadingRole(saved),readingRoles[1]);
 });

@@ -17,7 +17,7 @@ export function setupCopilot(getContext,actions={}){
  controls.forEach(control=>control.disabled=true);
  function sync(){
   const c=getContext();if(!c)return;
-  const profile=readingProfile(c.role),scope=frameworkVersion+'|audience-v1|'+c.topic+'|'+c.role;
+  const profile=readingProfile(c.role),scope=frameworkVersion+'|audience-v2|'+c.topic+'|'+c.role;
   if(identity!==scope){modelRequest?.abort();history=[];publicTurns=[];busy=false;++sequence;$('scopeQuestion').replaceChildren();const last=readSession('hb-context',{});active=last.scope===scope&&Number.isInteger(last.deck)?Math.max(1,Math.min(last.deck,6)):1;if(last.scope===scope)history=publicTurns=readSession('hb-transcript',[]);identity=scope}
   controls.forEach(control=>control.disabled=busy);
   save('hb-context',{topic:c.topic,role:c.role,scope,deck:active});save('hb-transcript',publicTurns);
