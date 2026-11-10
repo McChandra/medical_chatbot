@@ -1,0 +1,22 @@
+{
+  "cross-encoder/ms-marco-MiniLM-L-6-v2": {
+    "license": "apache-2.0",
+    "provider": "https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2",
+    "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a"
+  },
+  "ncbi/MedCPT-Article-Encoder": {
+    "license": "other",
+    "provider": "https://huggingface.co/ncbi/MedCPT-Article-Encoder",
+    "revision": "d05a736da4bb84ee4057b7f7999485be6ed85465"
+  },
+  "ncbi/MedCPT-Query-Encoder": {
+    "license": "other",
+    "provider": "https://huggingface.co/ncbi/MedCPT-Query-Encoder",
+    "revision": "d83a36cc6b8e3a5c5e9d9d6ba156808c1643dcbc"
+  },
+  "sentence-transformers/all-MiniLM-L6-v2": {
+    "license": "apache-2.0",
+    "provider": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2",
+    "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+  }
+}

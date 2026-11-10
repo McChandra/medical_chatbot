@@ -1,0 +1,192 @@
+{
+  "baseline_commit": "87bc6f1586657a0a92f43a3a3c15b1434d64b650",
+  "interpretation": "Coverage is returned excerpts, not question relevance, safety or accuracy.",
+  "legacy_after": {
+    "by_question_type": {
+      "causes": {
+        "covered": 5,
+        "queries": 32
+      },
+      "complications": {
+        "covered": 0,
+        "queries": 2
+      },
+      "considerations": {
+        "covered": 2,
+        "queries": 3
+      },
+      "exams and tests": {
+        "covered": 0,
+        "queries": 34
+      },
+      "frequency": {
+        "covered": 0,
+        "queries": 8
+      },
+      "genetic changes": {
+        "covered": 0,
+        "queries": 4
+      },
+      "information": {
+        "covered": 86,
+        "queries": 191
+      },
+      "inheritance": {
+        "covered": 0,
+        "queries": 6
+      },
+      "outlook": {
+        "covered": 0,
+        "queries": 8
+      },
+      "prevention": {
+        "covered": 0,
+        "queries": 32
+      },
+      "research": {
+        "covered": 0,
+        "queries": 35
+      },
+      "stages": {
+        "covered": 0,
+        "queries": 4
+      },
+      "susceptibility": {
+        "covered": 43,
+        "queries": 66
+      },
+      "symptoms": {
+        "covered": 45,
+        "queries": 53
+      },
+      "treatment": {
+        "covered": 5,
+        "queries": 103
+      }
+    },
+    "coverage": {
+      "ci95": [
+        0.23734364669513786,
+        0.4073100060809634
+      ],
+      "clusters": 21,
+      "mean": 0.32013769363166955,
+      "queries": 581,
+      "resamples": 2000,
+      "seed": 42,
+      "unit": "cluster",
+      "warning": null
+    }
+  },
+  "legacy_before": {
+    "by_question_type": {
+      "causes": {
+        "covered": 5,
+        "queries": 32
+      },
+      "complications": {
+        "covered": 0,
+        "queries": 2
+      },
+      "considerations": {
+        "covered": 3,
+        "queries": 3
+      },
+      "exams and tests": {
+        "covered": 0,
+        "queries": 34
+      },
+      "frequency": {
+        "covered": 0,
+        "queries": 8
+      },
+      "genetic changes": {
+        "covered": 0,
+        "queries": 4
+      },
+      "information": {
+        "covered": 191,
+        "queries": 191
+      },
+      "inheritance": {
+        "covered": 0,
+        "queries": 6
+      },
+      "outlook": {
+        "covered": 0,
+        "queries": 8
+      },
+      "prevention": {
+        "covered": 0,
+        "queries": 32
+      },
+      "research": {
+        "covered": 0,
+        "queries": 35
+      },
+      "stages": {
+        "covered": 0,
+        "queries": 4
+      },
+      "susceptibility": {
+        "covered": 0,
+        "queries": 66
+      },
+      "symptoms": {
+        "covered": 45,
+        "queries": 53
+      },
+      "treatment": {
+        "covered": 0,
+        "queries": 103
+      }
+    },
+    "coverage": {
+      "ci95": [
+        0.3707437496580776,
+        0.4827586206896552
+      ],
+      "clusters": 21,
+      "mean": 0.4199655765920826,
+      "queries": 581,
+      "resamples": 2000,
+      "seed": 42,
+      "unit": "cluster",
+      "warning": null
+    }
+  },
+  "paired_coverage_comparison": {
+    "difference_right_minus_left": {
+      "ci95": [
+        -0.21119208039937568,
+        0.007954312627568476
+      ],
+      "clusters": 21,
+      "mean": -0.09982788296041308,
+      "queries": 581,
+      "resamples": 5000,
+      "seed": 42,
+      "unit": "cluster",
+      "warning": null
+    },
+    "p_two_sided": 0.09038192361527694,
+    "randomizations": 5000,
+    "test": "paired cluster sign randomization"
+  },
+  "query_sha256": "e4bc6bab0e4abe00bbb6f512bcc15c0abb81d5a738f50046596de512990524ff",
+  "scope": "Legacy Python eight-deck excerpt engine only; not the current hosted six-deck browser or model gateway.",
+  "synthetic_provenance_control": {
+    "alterations_rejected": {
+      "focus": 100,
+      "hash": 100,
+      "offset": 100,
+      "record": 100,
+      "source_url": 100,
+      "text": 100
+    },
+    "limitation": "Synthetic integrity attacks, not naturally occurring hallucinations. Intact but irrelevant/outdated quotes can pass.",
+    "no_verification_control_accepted": 700,
+    "valid_accepted": 100,
+    "valid_passages": 100
+  }
+}

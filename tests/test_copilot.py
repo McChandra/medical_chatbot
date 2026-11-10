@@ -39,6 +39,21 @@ class EngineTest(unittest.TestCase):
         self.path.unlink()
         self.assertEqual(answer(**QUESTION)["status"], "unavailable")
 
+    def test_empty_residual_does_not_accept_arbitrary_deck_one_passage(self):
+        with patch('backend.copilot_engine.read_passages', return_value=[{**ROW, 'deck': 1}]):
+            self.assertEqual(answer('Leukemia', 1, 'What is leukemia?')['status'], 'unsupported')
+        with patch('backend.copilot_engine.read_passages', return_value=[
+                {**ROW, 'deck': 1, 'text': 'Leukemia is a cancer of blood-forming tissue.'}]):
+            self.assertEqual(answer('Leukemia', 1, 'What is leukemia?')['status'], 'excerpt')
+
+    def test_plural_treatment_and_risk_question_vocabulary(self):
+        with patch('backend.copilot_engine.read_passages', return_value=[
+                {**ROW, 'deck': 7, 'text': 'Treatment varies by subtype.'}]):
+            self.assertEqual(answer('Leukemia', 7, 'What are the treatments for leukemia?')['status'], 'excerpt')
+        with patch('backend.copilot_engine.read_passages', return_value=[
+                {**ROW, 'deck': 2, 'text': 'Risk factors differ.'}]):
+            self.assertEqual(answer('Leukemia', 2, 'Who is at risk for leukemia?')['status'], 'excerpt')
+
     @patch("backend.copilot_engine.read_passages", side_effect=AssertionError("safety must precede retrieval"))
     def test_safety_precedes_retrieval(self, _reader):
         for question, status in [("My chest pain is severe.", "urgent"),

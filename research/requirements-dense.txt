@@ -1,0 +1,6 @@
+-r requirements.txt
+# Optional. Freeze the resolved environment with pip freeze in each experiment.
+# All model weights MUST additionally be pinned by full repository revision.
+torch>=2.6,<3
+transformers>=4.40,<5
+sentence-transformers>=3,<6
