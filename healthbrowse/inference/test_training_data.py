@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from train_adapter import load_examples, validate_split
+from model_settings import GENERAL_BASE, validate_base, validate_adapter
 
 
 def example(topic="Topic A", url="https://medlineplus.gov/topic-a.html"):
@@ -17,6 +18,27 @@ def example(topic="Topic A", url="https://medlineplus.gov/topic-a.html"):
 
 
 class TrainingDataTests(unittest.TestCase):
+    def test_base_model_and_context_match_requested_llama(self):
+        sha = "a" * 40
+        validate_base(GENERAL_BASE, sha, 8192)
+        for model, revision, length in [(GENERAL_BASE + ":featherless-ai", sha, 8192),
+                                        (GENERAL_BASE, "main", 8192),
+                                        (GENERAL_BASE, sha, 16384)]:
+            with self.assertRaises(ValueError):
+                validate_base(model, revision, length)
+
+    def test_adapter_requires_matching_base_and_revision(self):
+        sha = "a" * 40
+        with tempfile.TemporaryDirectory() as directory:
+            Path(directory, "adapter_config.json").write_text(json.dumps({"base_model_name_or_path": GENERAL_BASE}))
+            manifest = {"base_model": GENERAL_BASE, "revision": sha}
+            Path(directory, "training-manifest.json").write_text(json.dumps(manifest))
+            self.assertEqual(validate_adapter(directory, GENERAL_BASE, sha), manifest)
+            with self.assertRaises(ValueError):
+                validate_adapter(directory, "google/medgemma-4b-it", sha)
+            with self.assertRaises(ValueError):
+                validate_adapter(directory, GENERAL_BASE, "b" * 40)
+
     def load(self, row):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory, "data.jsonl")

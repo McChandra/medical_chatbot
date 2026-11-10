@@ -10,6 +10,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Header, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
+from model_settings import validate_base, validate_adapter
 
 state = {}
 lock = asyncio.Lock()
@@ -26,18 +27,21 @@ async def lifespan(app):
     if not torch.cuda.is_available():
         raise RuntimeError("A CUDA GPU is required for this serving profile")
     revision = os.environ.get("MODEL_REVISION")
-    if not revision:
-        raise RuntimeError("Pin MODEL_REVISION to the reviewed model commit")
+    validate_base(model_id, revision)
+    adapter = os.environ.get("ADAPTER_PATH")
+    if adapter:
+        validate_adapter(adapter, model_id, revision)
     kwargs = {"revision": revision, "token": os.environ.get("HF_TOKEN"), "trust_remote_code": False}
     medical = "medgemma" in model_id.lower()
     processor = (AutoProcessor if medical else AutoTokenizer).from_pretrained(model_id, **kwargs)
     model = (AutoModelForImageTextToText if medical else AutoModelForCausalLM).from_pretrained(
         model_id, torch_dtype=torch.bfloat16, device_map="auto", **kwargs)
-    adapter = os.environ.get("ADAPTER_PATH")
     if adapter:
         model = PeftModel.from_pretrained(model, adapter)
     model.eval()
-    state.update(model=model, processor=processor, model_id=model_id, medical=medical)
+    text_config = getattr(model.config, "text_config", model.config)
+    state.update(model=model, processor=processor, model_id=model_id, medical=medical,
+                 context_tokens=text_config.max_position_embeddings)
     yield
     state.clear()
 
@@ -99,7 +103,9 @@ def generate(body):
         messages = [{**m, "content": [{"type": "text", "text": m["content"]}]} for m in messages]
     inputs = processor.apply_chat_template(messages, tokenize=True, add_generation_prompt=True,
                                           return_dict=True, return_tensors="pt")
-    if inputs["input_ids"].shape[-1] > int(os.environ.get("MAX_INPUT_TOKENS", "16000")):
+    prompt_length = inputs["input_ids"].shape[-1]
+    if (prompt_length > int(os.environ.get("MAX_INPUT_TOKENS", str(state["context_tokens"])))
+            or prompt_length + body.max_tokens > state["context_tokens"]):
         raise ValueError("Context too large")
     inputs = {k: v.to(state["model"].device) for k, v in inputs.items()}
     with torch.inference_mode():

@@ -10,6 +10,7 @@ import hashlib
 import json
 from pathlib import Path
 from urllib.parse import urlsplit
+from model_settings import GENERAL_BASE, GENERAL_CONTEXT, validate_base
 
 
 def load_examples(path):
@@ -58,23 +59,29 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--train", required=True)
     parser.add_argument("--validation", required=True)
-    parser.add_argument("--model", default="meta-llama/Llama-3.1-8B-Instruct")
+    parser.add_argument("--model", default=GENERAL_BASE)
     parser.add_argument("--revision", required=True, help="Reviewed base-model commit")
     parser.add_argument("--method", choices=["lora", "qlora"], default="qlora")
     parser.add_argument("--output", required=True)
-    parser.add_argument("--max-length", type=int, default=16384)
+    parser.add_argument("--max-length", type=int, default=GENERAL_CONTEXT)
     parser.add_argument("--validate-only", action="store_true")
     args = parser.parse_args()
+    validate_base(args.model, args.revision, args.max_length)
     train, validation = load_examples(args.train), load_examples(args.validation)
     validate_split(train, validation)
     if args.validate_only:
-        print(json.dumps({"train_examples": len(train), "validation_examples": len(validation), "split_check": "passed"}))
+        print(json.dumps({"base_model": args.model, "method": args.method, "max_length": args.max_length,
+                          "train_examples": len(train), "validation_examples": len(validation),
+                          "split_check": "passed", "token_lengths_checked": False, "training_run": False}))
         return
     import torch
-    from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, Trainer, TrainingArguments, DataCollatorForSeq2Seq
+    from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, Trainer, TrainingArguments, DataCollatorForSeq2Seq
     from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
     if not torch.cuda.is_available():
         raise RuntimeError("This training profile requires a CUDA GPU")
+    config = AutoConfig.from_pretrained(args.model, revision=args.revision, trust_remote_code=False)
+    if args.max_length > config.max_position_embeddings:
+        raise ValueError("Training length exceeds the base model's context window")
     tokenizer = AutoTokenizer.from_pretrained(args.model, revision=args.revision, trust_remote_code=False)
     tokenizer.pad_token = tokenizer.eos_token
     quant = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_use_double_quant=True,
@@ -109,7 +116,7 @@ def main():
     trainer.train()
     trainer.save_model(args.output)
     tokenizer.save_pretrained(args.output)
-    manifest = {"base_model": args.model, "revision": args.revision, "method": args.method,
+    manifest = {"base_model": args.model, "revision": args.revision, "method": args.method, "max_length": args.max_length,
                 "train_sha256": hashlib.sha256(Path(args.train).read_bytes()).hexdigest(),
                 "validation_sha256": hashlib.sha256(Path(args.validation).read_bytes()).hexdigest(),
                 "clinical_release_approved": False}

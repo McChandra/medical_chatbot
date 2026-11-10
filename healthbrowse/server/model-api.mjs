@@ -1,17 +1,12 @@
 import {isReadingRole,normalizeReadingRole} from '../dist/reading-profiles.js';
 import {inspectInput} from '../dist/clinical-engine.js';
 import {evidenceFor,generationMessages,validateDraft,reviewMessages,reviewPasses,presentDraft} from './model-evidence.mjs';
+import {modelEndpoint as endpoint} from './model-provider.mjs';
+import {compactGeneration,compactReviews,ContextLimit} from './model-context.mjs';
 const headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'};
 const reply=(body,status=200)=>Response.json(body,{status,headers});
 class Failure extends Error{constructor(status,code,message){super(message);this.status=status;this.code=code}}
 const fail=(status,code,message)=>{throw new Failure(status,code,message)};
-function endpoint(env,route){
- const prefix=route==='professional'?'MODEL_PROFESSIONAL_':'MODEL_GENERAL_';
- const url=env[prefix+'URL'],key=env[prefix+'KEY'],model=env[prefix+'ID'];
- if(!url||!key||!model)return null;
- try{const u=new URL(url);if(u.protocol!=='https:'||u.username||u.password||u.hash||u.search||!u.hostname.includes('.')||/^(?:[\d.]+|\[)/.test(u.hostname)||/\.(?:local|internal|localhost)$/.test(u.hostname))return null}catch{return null}
- return {url,key,model};
-}
 export function modelStatus(env){return {general:{configured:!!endpoint(env,'general')},professional:{configured:!!endpoint(env,'professional')},validation:'Automated support review; independent clinical validation pending'};}
 async function boundedJSON(stream,max){
  const reader=stream?.getReader();if(!reader)throw Error('Missing body');const decoder=new TextDecoder();let n=0,text='';
@@ -38,7 +33,14 @@ async function reserve(env,user){
 async function complete(config,messages,signal,maxTokens=6000){
  const res=await fetch(config.url,{method:'POST',headers:{Authorization:'Bearer '+config.key,'Content-Type':'application/json'},redirect:'error',signal,
   body:JSON.stringify({model:config.model,messages,temperature:0,max_tokens:maxTokens,stream:false,response_format:{type:'json_object'}})});
- if(!res.ok)throw Error('Inference service unavailable');
+ // Configuration/credit failures are not hallucinations; do not repeat billable requests.
+ if(!res.ok){
+  if(res.status===401||res.status===403)fail(503,'provider_access','The AI provider rejected access. The site owner must check the token and model access.');
+  if(res.status===402)fail(503,'provider_credits','AI provider credits are unavailable. Showing source excerpts instead.');
+  if(res.status===429)fail(503,'provider_busy','The AI provider is busy or rate-limited. Please try again shortly.');
+  if(res.status===400||res.status===404||res.status===422)fail(503,'provider_configuration','The AI provider could not accept this model request. Showing source excerpts instead.');
+  fail(503,'provider_unavailable','The AI provider is temporarily unavailable. Showing source excerpts instead.');
+ }
  const data=await boundedJSON(res.body,120000),content=data.choices?.[0]?.message?.content;
  if(data.choices?.[0]?.finish_reason==='length'||typeof content!=='string')throw Error('Incomplete model response');
  return JSON.parse(content.replace(/^```(?:json)?\s*/,'').replace(/\s*```$/,''));
@@ -68,11 +70,22 @@ export async function modelAPI(request,env,assets){
   let reason='';
   for(let attempt=0;attempt<2;attempt++){
    try{
-    const raw=await complete(config,generationMessages(b,evidence,reason),signal);
-    const draft=validateDraft(raw,b,evidence),review=await complete(config,reviewMessages(draft,evidence,b),signal,2500);
-    if(!reviewPasses(review,draft)){reason='The direct answer was incomplete or a claim was unsupported. '+JSON.stringify(review).slice(0,1200);continue}
-    return reply(presentDraft(draft,evidence,b,config.model,attempt>0));
-   }catch(error){if(signal.aborted)throw error;reason='The draft failed validation: '+error.message}
+    const prepared=config.compact?compactGeneration(b,evidence,reason):{messages:generationMessages(b,evidence,reason),evidence,maxTokens:6000};
+    const raw=await complete(config,prepared.messages,signal,prepared.maxTokens);
+    const draft=validateDraft(raw,b,prepared.evidence);
+    const batches=config.compact?compactReviews(draft,prepared.evidence,b):[{draft,messages:reviewMessages(draft,prepared.evidence,b),maxTokens:2500}];
+    let passed=true;
+    for(const batch of batches){
+     const review=await complete(config,batch.messages,signal,batch.maxTokens);
+     if(!reviewPasses(review,batch.draft)){passed=false;reason='The direct answer was incomplete or a claim was unsupported. '+JSON.stringify(review).slice(0,300);break}
+    }
+    if(!passed)continue;
+    return reply(presentDraft(draft,prepared.evidence,b,config.model,attempt>0));
+   }catch(error){
+    if(error instanceof ContextLimit)fail(422,'context_limit','This question and its evidence exceed the model context. Try a shorter question or explore one deck with the buddy.');
+    if(signal.aborted||error instanceof Failure)throw error;
+    reason='The draft failed validation: '+error.message;
+   }
   }
   fail(502,'verification_failed','The generated answer did not pass source checks. Showing source excerpts instead.');
  }catch(error){return reply({status:'unavailable',code:error.code||'model_unavailable',error:error instanceof Failure?error.message:'AI synthesis is temporarily unavailable. Showing source excerpts instead.'},error.status||503)}

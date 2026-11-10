@@ -5,6 +5,8 @@ import {modelAPI,modelStatus} from '../server/model-api.mjs';
 import {evidenceFor,validateDraft,reviewPasses,generationMessages} from '../server/model-evidence.mjs';
 import {openWorkspace} from '../server/sqlite-workspace.mjs';
 import {requestSynthesis,synthesisKey} from '../dist/model-client.js';
+import {modelEndpoint,HF_CHAT_URL,GENERAL_MODEL} from '../server/model-provider.mjs';
+import {compactGeneration,compactReviews,contextCost,ContextLimit} from '../server/model-context.mjs';
 const assets=Object.fromEntries(['medline-topics','clinical-passages'].map(name=>['/'+name+'.json',{text:readFileSync(new URL('../dist/'+name+'.json',import.meta.url),'utf8')}]));
 const input={topic:'Leukemia',question:'What is leukemia?',role:'General reader',mode:'search',deck:0};
 const evidence=evidenceFor(assets,input.topic,input.role,input.question);
@@ -19,7 +21,7 @@ function fixture(t,provider){
  const calls=[];
  t.mock.method(globalThis,'fetch',async(url,opts)=>{
   if(url==='https://auth.example/auth/v1/user')return opts.headers.Authorization.endsWith('invalid-token')?Response.json({}, {status:401}):Response.json({id:'11111111-1111-4111-8111-111111111111'});
-  const b=JSON.parse(opts.body);calls.push({url,body:b});
+  const b=JSON.parse(opts.body);calls.push({url,body:b,authorization:opts.headers.Authorization});
   if(provider)return provider(b,calls);
   const data=JSON.parse(b.messages[1].content);
   const output=data.draft?{questionAnswered:true,checks:[...data.draft.answer.claims,...data.draft.decks.flatMap(d=>d.claims)].map(c=>({id:c.id,verdict:'supported'}))}:draftFor({sources:data.evidence},data.mode);
@@ -81,4 +83,100 @@ test('an unresponsive AI capability check falls back after five seconds',async t
  const pending=requestSynthesis({...input,query:input.question},input.question,{fetcher:()=>new Promise(()=>{})});
  t.mock.timers.tick(5001);
  const result=await pending;assert.equal(result.status,'unavailable');assert.match(result.message,/Source excerpts/);
+});
+
+test('HF_TOKEN connects only General to the exact requested hosted model',async t=>{
+ const {call,env,calls}=fixture(t);
+ for(const k of Object.keys(env))if(k.startsWith('MODEL_'))delete env[k];
+ assert.equal(modelStatus(env).general.configured,false);
+ env.HF_TOKEN='hf_fixture_only_not_a_real_token';
+ assert.equal(modelStatus(env).general.configured,true);
+ assert.equal(modelStatus(env).professional.configured,false);
+ const result=await (await call()).json();
+ assert.equal(result.status,'generated');assert.equal(result.decks.length,6);
+ assert.equal(result.model,GENERAL_MODEL);
+ for(const c of calls){
+  assert.equal(c.url,HF_CHAT_URL);assert.equal(c.body.model,GENERAL_MODEL);
+  assert.equal(c.authorization,'Bearer '+env.HF_TOKEN);
+  assert.ok(contextCost(c.body.messages,c.body.max_tokens)<=8192);
+ }
+ assert.doesNotMatch(JSON.stringify(modelStatus(env)),/hf_fixture|huggingface/);
+ const previous=calls.length;
+ assert.equal((await call({...input,role:'Clinicians'})).status,503);
+ assert.equal(calls.length,previous);
+});
+
+test('HF_TOKEN cannot leak to a custom or clinician endpoint',()=>{
+ const env={HF_TOKEN:'sensitive-token',MODEL_GENERAL_URL:'https://another.example/v1/chat/completions',MODEL_GENERAL_ID:'custom'};
+ assert.equal(modelEndpoint(env,'general'),null);
+ env.MODEL_GENERAL_KEY='dedicated-key';
+ assert.equal(modelEndpoint(env,'general').key,'dedicated-key');
+ assert.equal(modelEndpoint({...env,MODEL_PROFESSIONAL_URL:HF_CHAT_URL,MODEL_PROFESSIONAL_ID:GENERAL_MODEL},'professional'),null);
+ for(const url of ['http://router.huggingface.co/v1/chat/completions','https://router.huggingface.co.evil.test/v1/chat/completions',HF_CHAT_URL+'?key=bad']){
+  assert.equal(modelEndpoint({HF_TOKEN:'sensitive-token',MODEL_GENERAL_URL:url},'general'),null);
+ }
+});
+
+test('short-context retrieval preserves complete passages and checks all claims in bounded reviews',()=>{
+ const p=compactGeneration(input,evidence);
+ assert.ok(contextCost(p.messages,p.maxTokens)<=8192);
+ assert.ok(p.evidence.sources.length>0);
+ assert.ok(p.evidence.sources.every(s=>evidence.sources.some(original=>original.id===s.id&&original.text===s.text)));
+ const d=validateDraft(draftFor(p.evidence),input,p.evidence),batches=compactReviews(d,p.evidence,input);
+ const checked=new Set();
+ for(const b of batches){
+  assert.ok(contextCost(b.messages,b.maxTokens)<=8192);
+  for(const claim of [b.draft.answer,...b.draft.decks].flatMap(s=>s.claims))checked.add(claim.id);
+ }
+ assert.deepEqual(checked,new Set([d.answer,...d.decks].flatMap(s=>s.claims.map(c=>c.id))));
+ assert.throws(()=>compactGeneration({...input,question:'long '.repeat(6000)},evidence),ContextLimit);
+});
+
+test('HF buddy shares the model but returns only the requested follow-up',async t=>{
+ const {call,env,calls}=fixture(t);
+ env.MODEL_GENERAL_URL=HF_CHAT_URL;env.MODEL_GENERAL_ID=GENERAL_MODEL;
+ const result=await (await call({...input,mode:'chat',deck:4,question:'Explain treatment options',searchQuery:input.question})).json();
+ assert.equal(result.status,'generated');assert.deepEqual(result.decks,[]);
+ assert.equal(JSON.parse(calls[0].body.messages[1].content).activeDeck,4);
+});
+
+test('provider access errors are specific and are not retried or exposed verbatim',async t=>{
+ const {call,calls}=fixture(t,()=>Response.json({error:'internal sensitive provider detail'},{status:401}));
+ const r=await call();assert.equal(r.status,503);
+ const body=await r.json();assert.equal(body.code,'provider_access');
+ assert.equal(calls.length,1);assert.doesNotMatch(JSON.stringify(body),/internal sensitive/);
+});
+
+test('DR7 Clinicians use their own endpoint, key and clinical prompts',async t=>{
+ const {call,env,calls}=fixture(t);
+ env.MODEL_PROFESSIONAL_URL='https://dr7.ai/api/v1/medical/chat/completions';
+ env.MODEL_PROFESSIONAL_ID='medgemma-4b-it';env.MODEL_PROFESSIONAL_KEY='dr7-test-fixture';
+ const r=await (await call({...input,role:'Clinicians'})).json();
+ assert.equal(r.status,'generated');assert.equal(r.decks.length,6);
+ for(const c of calls){assert.equal(c.url,env.MODEL_PROFESSIONAL_URL);assert.equal(c.body.model,'medgemma-4b-it');assert.equal(c.authorization,'Bearer dr7-test-fixture')}
+ assert.match(calls[0].body.messages[0].content,/precise clinical language/);
+ const p=JSON.parse(calls[0].body.messages[1].content);assert.equal(p.role,'Medical professional');
+ assert.equal((await call({...input,role:'Clinicians',mode:'chat',deck:3,question:'Explain the diagnostic evidence'})).status,200);
+});
+
+test('insufficient provider credit produces a useful error without repeat charges',async t=>{
+ const {call,calls}=fixture(t,()=>Response.json({error:{code:'insufficient_balance'}},{status:402}));
+ const r=await call({...input,role:'Clinicians'});
+ assert.equal((await r.json()).code,'provider_credits');assert.equal(calls.length,1);
+});
+
+test('large claim reviews are batched without losing any claims or question context',()=>{
+ const sources=Array.from({length:6},(_,i)=>({id:'S'+i,deck:i+1,text:'An intact source passage. '.repeat(22),focus:'Test',date:'2026',historical:false}));
+ const claim=(n,s)=>({id:'C'+n,text:'A supported statement. '.repeat(15),support:[{id:s.id,quote:s.text}]});
+ const draft={answer:{id:0,claims:[claim(0,sources[0])]},decks:sources.map((s,i)=>({id:i+1,claims:[claim(i+1,s)]}))};
+ const batches=compactReviews(draft,{sources},input);
+ assert.ok(batches.length>1);
+ const seen=new Set();
+ for(const b of batches){
+  assert.ok(contextCost(b.messages,b.maxTokens)<=8192);
+  const payload=JSON.parse(b.messages[1].content);assert.equal(payload.question,input.question);
+  assert.equal(payload.draft.answer.claims[0].id,'C0');
+  for(const c of [b.draft.answer,...b.draft.decks].flatMap(s=>s.claims))seen.add(c.id);
+ }
+ assert.equal(seen.size,7);
 });
