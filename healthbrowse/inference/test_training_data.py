@@ -3,7 +3,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from train_adapter import load_examples, validate_split
+from train_adapter import load_examples, validate_split, precision_flags, check_resume
 from model_settings import GENERAL_BASE, validate_base, validate_adapter
 
 
@@ -18,6 +18,28 @@ def example(topic="Topic A", url="https://medlineplus.gov/topic-a.html"):
 
 
 class TrainingDataTests(unittest.TestCase):
+    def test_colab_precision_avoids_emulated_bf16(self):
+        self.assertEqual(precision_flags(7, True), {"bf16": False, "fp16": True})
+        self.assertEqual(precision_flags(8, True), {"bf16": True, "fp16": False})
+        self.assertEqual(precision_flags(8, False), {"bf16": False, "fp16": True})
+
+    def test_resume_rejects_changed_data_or_unrelated_checkpoints(self):
+        manifest = {"revision": "a" * 40, "train_sha256": "original", "clinical_release_approved": False}
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory, "run")
+            check_resume(output, None, manifest)
+            checkpoint = output / "checkpoint-25"
+            checkpoint.mkdir(parents=True)
+            (checkpoint / "trainer_state.json").write_text("{}")
+            (output / "training-manifest.json").write_text(json.dumps(manifest))
+            check_resume(output, checkpoint, manifest)
+            with self.assertRaises(ValueError):
+                check_resume(output, checkpoint, {**manifest, "train_sha256": "changed"})
+            with self.assertRaises(ValueError):
+                check_resume(output, None, manifest)
+            with self.assertRaises(ValueError):
+                check_resume(output, Path(directory, "unrelated"), manifest)
+
     def test_base_model_and_context_match_requested_llama(self):
         sha = "a" * 40
         validate_base(GENERAL_BASE, sha, 8192)

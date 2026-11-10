@@ -13,6 +13,25 @@ from urllib.parse import urlsplit
 from model_settings import GENERAL_BASE, GENERAL_CONTEXT, validate_base
 
 
+def precision_flags(major, bf16_available):
+    """Use native BF16 only; T4/older CUDA cards use FP16 mixed precision."""
+    bf16 = major >= 8 and bf16_available
+    return {"bf16": bf16, "fp16": not bf16}
+
+
+def check_resume(output, checkpoint, manifest):
+    output = Path(output)
+    recorded = output / "training-manifest.json"
+    if checkpoint:
+        checkpoint = Path(checkpoint).resolve()
+        if checkpoint.parent != output.resolve() or not (checkpoint / "trainer_state.json").is_file():
+            raise ValueError("Resume from a Trainer checkpoint in this output directory")
+        if not recorded.is_file() or json.loads(recorded.read_text()) != manifest:
+            raise ValueError("Resume requires the same base, data, training settings and output directory")
+    elif output.exists() and any(output.iterdir()):
+        raise ValueError("Output is not empty; choose a new directory or explicitly resume a checkpoint")
+
+
 def load_examples(path):
     rows = [json.loads(line) for line in Path(path).read_text().splitlines() if line.strip()]
     if not rows:
@@ -64,36 +83,43 @@ def main():
     parser.add_argument("--method", choices=["lora", "qlora"], default="qlora")
     parser.add_argument("--output", required=True)
     parser.add_argument("--max-length", type=int, default=GENERAL_CONTEXT)
+    parser.add_argument("--max-steps", type=int, default=-1, help="Positive step limit overrides epochs")
+    parser.add_argument("--epochs", type=float, default=2)
+    parser.add_argument("--save-steps", type=int, default=25)
+    parser.add_argument("--lora-rank", type=int, default=16)
+    parser.add_argument("--resume-from-checkpoint")
     parser.add_argument("--validate-only", action="store_true")
     args = parser.parse_args()
+    if args.max_steps == 0 or args.max_steps < -1 or args.epochs <= 0 or args.save_steps < 1 or args.lora_rank < 1:
+        parser.error("Use positive epochs, save steps and rank; max steps is -1 or positive")
     validate_base(args.model, args.revision, args.max_length)
     train, validation = load_examples(args.train), load_examples(args.validation)
     validate_split(train, validation)
+    manifest = {"base_model": args.model, "revision": args.revision, "method": args.method, "max_length": args.max_length,
+                "train_sha256": hashlib.sha256(Path(args.train).read_bytes()).hexdigest(),
+                "validation_sha256": hashlib.sha256(Path(args.validation).read_bytes()).hexdigest(),
+                "training_settings": {"max_steps": args.max_steps, "epochs": args.epochs, "lora_rank": args.lora_rank,
+                                      "save_steps": args.save_steps, "seed": 42},
+                "clinical_release_approved": False}
+    check_resume(args.output, args.resume_from_checkpoint, manifest)
     if args.validate_only:
         print(json.dumps({"base_model": args.model, "method": args.method, "max_length": args.max_length,
                           "train_examples": len(train), "validation_examples": len(validation),
                           "split_check": "passed", "token_lengths_checked": False, "training_run": False}))
         return
     import torch
-    from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, Trainer, TrainingArguments, DataCollatorForSeq2Seq
+    from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, Trainer, TrainingArguments, DataCollatorForSeq2Seq, set_seed
     from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
     if not torch.cuda.is_available():
         raise RuntimeError("This training profile requires a CUDA GPU")
+    flags = precision_flags(torch.cuda.get_device_capability()[0], torch.cuda.is_bf16_supported())
+    dtype = torch.bfloat16 if flags["bf16"] else torch.float16
+    set_seed(42)
     config = AutoConfig.from_pretrained(args.model, revision=args.revision, trust_remote_code=False)
     if args.max_length > config.max_position_embeddings:
         raise ValueError("Training length exceeds the base model's context window")
     tokenizer = AutoTokenizer.from_pretrained(args.model, revision=args.revision, trust_remote_code=False)
     tokenizer.pad_token = tokenizer.eos_token
-    quant = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_use_double_quant=True,
-                              bnb_4bit_compute_dtype=torch.bfloat16) if args.method == "qlora" else None
-    model = AutoModelForCausalLM.from_pretrained(args.model, revision=args.revision, trust_remote_code=False,
-                                               torch_dtype=torch.bfloat16, quantization_config=quant, device_map={"": 0})
-    if quant:
-        model = prepare_model_for_kbit_training(model)
-    model = get_peft_model(model, LoraConfig(task_type="CAUSAL_LM", r=16, lora_alpha=32,
-                                           lora_dropout=0.05, target_modules="all-linear"))
-    model.config.use_cache = False
-
     def encode(rows):
         result = []
         for row in rows:
@@ -107,20 +133,33 @@ def main():
                            "labels": [-100] * len(prefix) + full[len(prefix):]})
         return result
 
-    training = TrainingArguments(output_dir=args.output, num_train_epochs=2, per_device_train_batch_size=1,
+    # Validate actual lengths before allocating the large model. Never truncate citations.
+    encoded_train, encoded_validation = encode(train), encode(validation)
+    quant = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_use_double_quant=True,
+                              bnb_4bit_compute_dtype=dtype) if args.method == "qlora" else None
+    model = AutoModelForCausalLM.from_pretrained(args.model, revision=args.revision, trust_remote_code=False,
+                                               torch_dtype=dtype, quantization_config=quant, device_map={"": 0})
+    if quant:
+        model = prepare_model_for_kbit_training(model, gradient_checkpointing_kwargs={"use_reentrant": False})
+    model = get_peft_model(model, LoraConfig(task_type="CAUSAL_LM", r=args.lora_rank, lora_alpha=2 * args.lora_rank,
+                                           lora_dropout=0.05, target_modules="all-linear"))
+    model.config.use_cache = False
+    training = TrainingArguments(output_dir=args.output, num_train_epochs=args.epochs, max_steps=args.max_steps, per_device_train_batch_size=1,
         per_device_eval_batch_size=1, gradient_accumulation_steps=8, gradient_checkpointing=True,
-        learning_rate=2e-4, bf16=True, logging_steps=10, eval_strategy="epoch", save_strategy="epoch",
+        gradient_checkpointing_kwargs={"use_reentrant": False},
+        learning_rate=2e-4, **flags, logging_steps=5, eval_strategy="steps", eval_steps=args.save_steps,
+        save_strategy="steps", save_steps=args.save_steps, prediction_loss_only=True,
+        optim="paged_adamw_8bit" if args.method == "qlora" else "adamw_torch",
         save_total_limit=2, report_to="none", seed=42)
-    trainer = Trainer(model=model, args=training, train_dataset=encode(train), eval_dataset=encode(validation),
+    trainer = Trainer(model=model, args=training, train_dataset=encoded_train, eval_dataset=encoded_validation,
                       processing_class=tokenizer, data_collator=DataCollatorForSeq2Seq(tokenizer, padding=True))
-    trainer.train()
+    Path(args.output).mkdir(parents=True, exist_ok=True)
+    Path(args.output, "training-manifest.json").write_text(json.dumps(manifest, indent=2))
+    result = trainer.train(resume_from_checkpoint=args.resume_from_checkpoint)
     trainer.save_model(args.output)
     tokenizer.save_pretrained(args.output)
-    manifest = {"base_model": args.model, "revision": args.revision, "method": args.method, "max_length": args.max_length,
-                "train_sha256": hashlib.sha256(Path(args.train).read_bytes()).hexdigest(),
-                "validation_sha256": hashlib.sha256(Path(args.validation).read_bytes()).hexdigest(),
-                "clinical_release_approved": False}
-    Path(args.output, "training-manifest.json").write_text(json.dumps(manifest, indent=2))
+    trainer.save_metrics("train", result.metrics)
+    trainer.save_metrics("eval", trainer.evaluate())
 
 
 if __name__ == "__main__":

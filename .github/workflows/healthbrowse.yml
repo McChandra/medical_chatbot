@@ -36,6 +36,8 @@ jobs:
           cache-dependency-path: healthbrowse/package-lock.json
       - run: npm ci
       - run: npm run build && npm test
+      - name: Check QLoRA data guards, recovery and notebook syntax without a GPU
+        run: python3 -m unittest discover -s inference -p 'test_*.py' -v
       - run: npm audit --audit-level=high
       - name: Validate deployment descriptors
         run: |
