@@ -23,6 +23,9 @@ export async function respond(request,env,assets) {
   }
   if(url.pathname==='/api/care')return careLookup(request,headers);
   if(!['GET','HEAD'].includes(request.method))return new Response(null,{status:405,headers});
+  // Older shared search links used /search?q=... . Preserve the question and
+  // load the canonical desk so relative asset paths remain correct.
+  if(url.pathname==='/search'||url.pathname==='/search/')return new Response(null,{status:307,headers:{...headers,Location:'/'+url.search}});
   if(url.pathname==='/api/terminology'){
     const term=url.searchParams.get('term')||'';
     const result=await lookupTerminology(term,env);

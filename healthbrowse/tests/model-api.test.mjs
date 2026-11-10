@@ -76,3 +76,9 @@ test('browser gracefully labels unconfigured models and cancels superseded authe
  const controller=new AbortController();const pending=requestSynthesis(context,input.question,{signal:controller.signal,fetcher:async()=>Response.json({general:{configured:true}}),tokenProvider:()=>new Promise(()=>{})});controller.abort();await assert.rejects(pending);
  assert.notEqual(synthesisKey(context),synthesisKey({...context,role:'Patient'}));assert.notEqual(synthesisKey(context),synthesisKey({...context,query:'How is it treated?'}));
 });
+test('an unresponsive AI capability check falls back after five seconds',async t=>{
+ t.mock.timers.enable({apis:['setTimeout']});
+ const pending=requestSynthesis({...input,query:input.question},input.question,{fetcher:()=>new Promise(()=>{})});
+ t.mock.timers.tick(5001);
+ const result=await pending;assert.equal(result.status,'unavailable');assert.match(result.message,/Source excerpts/);
+});

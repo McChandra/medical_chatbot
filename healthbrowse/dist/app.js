@@ -1,4 +1,5 @@
 import {readingProfile,readingRoles,normalizeReadingRole} from './reading-profiles.js';
+import {searchUI} from './search-startup.js';
 import {requestSynthesis,synthesisKey} from './model-client.js';
 import {renderAnswer} from './answer-view.js';
 import {generalMode,deckCount,searchAnswer,domainAnswer,fetchJSON} from './search-experience.js';
@@ -102,6 +103,11 @@ function render(){
   deck.replaceChildren();
   const header=el('div',undefined,'cardhead');header.append(el('span','HEALTHBROWSE / MEDCARD','eyebrow'),el('h2',unresolved?'Topic not resolved':topic),el('p',count+' areas to explore · '+roleLabel(roles[role]),'deck-subtitle'));
   if(!unresolved && assignments[topic])header.append(el('span',assignments[topic].map(i=>depts[i]).join(' · '),'badge'));
+  if(unresolved){
+    const feedback=el('div',undefined,'overview-note search-answer');
+    feedback.append(el('h3','Let’s clarify your question'),el('p',activeQuery||$('query').value,'answer-question'),el('p','I could not confidently match this to one medical topic. Enter a disease name, choose a focus area above, or select a matching topic when options are shown.'));
+    header.append(feedback);
+  }
   if(!unresolved){
     const sources=textRecords(),context={...currentContext(),topic,role:roles[role],aliases:[...(medicalRecord(topic)?.aliases||[]),...(taxonomy.entities.find(e=>e.name===topic)?.aliases||[])],passages:sources,records:currentContext()?.records||[]};
     const overview=el('div',undefined,'overview-note search-answer');overview.append(el('h3','Your answer'),el('p',activeQuery||topic,'answer-question'));
@@ -151,7 +157,6 @@ function render(){
   buddy.sync(true,!unresolved);if(!unresolved){copilot.sync();if($('buddyResearch').open)research.sync()}else research.reset();
 }
 let searchRequest;
-function choose(t){search(t)}
 function resultGroup(label){
   const group=el('details'),summary=el('summary',label),body=el('div');
   group.open=false;group.append(summary,body);$('resultsBody').append(group);
@@ -209,9 +214,9 @@ async function performSearch(input,chosenTopic,confirmed=false){
       }
     }
     if(!exact&&!choices.length){
-      unresolved=true;topic='';codes=codeResult;live=null;activeQuery='';
+      unresolved=true;topic='';codes=codeResult;live=null;activeQuery=input;
       $('notice').textContent=codeResult?.message||(code?.toUpperCase().startsWith('SNOMED')?codeResult?.snomedStatus:null)||'No exact disease or code was verified. Choose a focus area or enter a specific disease name.';
-      $('results').hidden=true;render();return;
+      $('results').hidden=true;render();$('card').focus({preventScroll:true});$('card').scrollIntoView({block:'start',behavior:'smooth'});return;
     }
   }
   unresolved=false;
@@ -270,7 +275,6 @@ async function performSearch(input,chosenTopic,confirmed=false){
 async function runLive(){controller?.abort();const c=new AbortController();controller=c;live={message:'Searching Europe PMC…'};render();const timer=setTimeout(()=>c.abort(),15000);try{const result=await searchEvidence(topic,c.signal,!Object.hasOwn(catalog,topic));if(controller!==c)return;live={...result,message:result.records.length+' qualifying records · metadata retrieved '+result.queriedAt+' · clinical appraisal pending.'}}catch{if(controller!==c)return;live={message:'The live search could not be completed. The cataloged reading list remains available. Retry the search or open the publisher directly.'}}finally{clearTimeout(timer)}render()}
 function download(){const url=URL.createObjectURL(new Blob([JSON.stringify({topic,source:'Europe PMC',...live},null,2)],{type:'application/json'}));const a=el('a');a.href=url;a.download='healthbrowse-evidence.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 for(let i=0;i<20;i++){let p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d','M 0 '+(95-i*2)+' C 42 '+(125-i*4)+' 62 '+(8+i)+' 100 '+(18+i*3)+' S 159 '+(145-i*3)+' 210 '+(80-i*2));$('waves').append(p)}
-$('find').onsubmit=e=>{e.preventDefault();if(!lookupIndex){$('notice').textContent='Medical topics are still loading. Please try again in a moment.';return}void search($('query').value)};
 try{
   const files=['catalog.json','taxonomy.json','clinical-passages.json','topic-list.json','medline-topics.json'];
   const loaded=await Promise.allSettled(files.map(file=>fetchJSON(file)));
@@ -285,14 +289,15 @@ try{
 
   const last=readSession('hb-context',{});if(Object.hasOwn(passages,last.topic)||Object.hasOwn(catalog,last.topic)||allowedTopics.has(String(last.topic).toLowerCase()))topic=last.topic;
   activeQuery=topic;
-depts=taxonomy.departments.map(d=>d.name);assignments=Object.fromEntries(taxonomy.entities.map(e=>[e.name,e.departmentIds.map(id=>taxonomy.departments.findIndex(d=>d.id===id))]));Object.keys(catalog).forEach(t=>$('topics').append(new Option(t)));roles.forEach(r=>$('role').append(new Option(roleLabel(r),r)));role=Math.max(0,roles.indexOf(normalizeReadingRole(readSession('hb-reader',''))));$('role').selectedIndex=role;$('find').onsubmit=e=>{e.preventDefault();search($('query').value.trim())};document.querySelectorAll('[data-topic]').forEach(b=>b.onclick=()=>choose(b.dataset.topic));$('role').onchange=()=>{role=$('role').selectedIndex;try{sessionStorage.setItem('hb-reader',JSON.stringify(roles[role]))}catch{}render()};render();
-$('searchSubmit').disabled=false;$('searchSubmit').textContent='Search ↗';$('notice').textContent='Ready. Ask a question about a medical topic.';
+depts=taxonomy.departments.map(d=>d.name);assignments=Object.fromEntries(taxonomy.entities.map(e=>[e.name,e.departmentIds.map(id=>taxonomy.departments.findIndex(d=>d.id===id))]));Object.keys(catalog).forEach(t=>$('topics').append(new Option(t)));roles.forEach(r=>$('role').append(new Option(roleLabel(r),r)));role=Math.max(0,roles.indexOf(normalizeReadingRole(readSession('hb-reader',''))));$('role').selectedIndex=role;$('role').onchange=()=>{role=$('role').selectedIndex;try{sessionStorage.setItem('hb-reader',JSON.stringify(roles[role]))}catch{}render()};render();
+$('notice').textContent='Ready. Ask a question about a medical topic.';
+const queued=searchUI.ready(search);
 void chats.init();
 const params=new URLSearchParams(location.search);
-const requested=params.get('topic'),section=Number(params.get('section'));
+const requested=params.get('q')||params.get('topic'),section=Number(params.get('section'));
 if(params.get('chat'))await chats.load(params.get('chat'));
 else if(params.get('newchat')==='1')chats.reset();
-if(!params.get('chat') && requested && (Object.hasOwn(catalog,requested)||allowedTopics.has(requested.toLowerCase()))){
+if(!queued && !params.get('chat') && requested){
   await search(requested,null,true);if(Number.isInteger(section)&&section>=1&&section<=7)research.select(section);
 }
-}catch{$('notice').textContent='Medical topics could not be loaded. Check your connection and reload this page to retry.';$('searchSubmit').textContent='Reload topics';$('searchSubmit').disabled=false;$('find').onsubmit=e=>{e.preventDefault();location.reload()}}
+}catch{searchUI.fail()}

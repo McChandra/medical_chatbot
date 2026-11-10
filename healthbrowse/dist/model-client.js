@@ -5,11 +5,14 @@ export async function requestSynthesis(context,question,{mode='search',deck=0,hi
  const controller=new AbortController(),abort=()=>controller.abort();
  if(signal?.aborted)abort();else signal?.addEventListener('abort',abort,{once:true});
  const timer=setTimeout(abort,135000);
+ let statusTimer;
  try{
   const route=normalizeReadingRole(context.role)==='Medical professional'?'professional':'general';
-  const status=await fetcher('/api/ai/status',{signal:controller.signal,cache:'no-store'});
+  statusTimer=setTimeout(abort,5000);
+  const status=await abortable(Promise.resolve().then(()=>fetcher('/api/ai/status',{signal:controller.signal,cache:'no-store'})),controller.signal);
   if(!status.ok)throw Error('AI synthesis is temporarily unavailable.');
-  if(!(await status.json())[route]?.configured)return {status:'unavailable',message:'AI synthesis is not connected yet. These are source excerpts, not a model-generated answer.'};
+  const capabilities=await abortable(status.json(),controller.signal);clearTimeout(statusTimer);
+  if(!capabilities[route]?.configured)return {status:'unavailable',message:'AI synthesis is not connected yet. These are source excerpts, not a model-generated answer.'};
   const token=await abortable(Promise.resolve().then(tokenProvider),controller.signal);if(!token)return {status:'unavailable',message:'Sign in to use AI synthesis. Source excerpts are available below.'};
   if(controller.signal.aborted)throw new DOMException('Aborted','AbortError');
   const response=await fetcher('/api/ai/answer',{method:'POST',redirect:'error',signal:controller.signal,cache:'no-store',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},
@@ -19,6 +22,6 @@ export async function requestSynthesis(context,question,{mode='search',deck=0,hi
   if(data.status!=='generated'||!data.answer||!Array.isArray(data.decks))throw Error('Invalid AI response');
   return data;
  }catch(error){if(signal?.aborted)throw error;return {status:'unavailable',message:'AI synthesis could not finish. Source excerpts are shown below.'}}
- finally{clearTimeout(timer);signal?.removeEventListener('abort',abort)}
+ finally{clearTimeout(timer);clearTimeout(statusTimer);signal?.removeEventListener('abort',abort)}
 }
 export const synthesisKey=c=>JSON.stringify([c?.topic,c?.role,c?.query]);

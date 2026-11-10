@@ -1,5 +1,6 @@
 import {getAuthClient,clearResearchSession} from './account-client.js';
 import {authCallbackDestination} from './account-flows.js';
+import {searchUI} from './search-startup.js';
 
 async function enterDesk(){
   const callback=authCallbackDestination(new URL(location.href));
@@ -35,8 +36,10 @@ async function enterDesk(){
     }
   };
   document.documentElement.classList.remove('checking-session');
+ try{
   await import('./entry.js');
   await import('./app.js');
+ }catch{searchUI.fail()}
 }
 enterDesk();
 window.addEventListener('pageshow',event=>{if(event.persisted)location.reload()});
