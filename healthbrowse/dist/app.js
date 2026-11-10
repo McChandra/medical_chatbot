@@ -7,7 +7,8 @@ import {setupBuddy} from './buddy.js';
 import {domains,frameworkVersion,frameworkReferences,professionalRole,roleLabel,domainTitle,medlinePassages,orderedPassages,sectionLinks} from './disease-framework.js';
 import {createChatHistory} from './chat-history.js';
 import {saveControls,recordTopic} from './personal.js';
-import {inspectInput,questionDeck} from './clinical-engine.js';
+import {questionDeck} from './clinical-engine.js';
+import {prepareQuery} from './query-input.js';
 import {setupCopilot,readSession,guardMessage} from './workspace.js';
 import {resolveSearch,findFigures,topicIndex} from './discovery.js';
 import {newSubjects,inScopeChoices} from './topic-scope.js';
@@ -27,7 +28,7 @@ const provenance='Document B · inventory dated 31 Oct 2026 · independent clini
 function linkRecord(r){const box=el('div',undefined,'item'),a=el('a',r.title+' ↗');let u=new URL(r.url);if(!['http:','https:'].includes(u.protocol))return box;a.href=u.href;a.target='_blank';a.rel='noopener noreferrer';box.append(el('div',(r.publisher||'Europe PMC')+' · '+(r.kind||'Publication'),'meta'),a);if(r.detail)box.append(el('p',r.detail));return box}
 const filtered=(...k)=>(Object.hasOwn(catalog,topic)?catalog[topic]:[]).filter(r=>k.includes(r.kind));
 function panel(parent,text){parent.append(el('div',text,'panel'))}
-let passages={},allowedTopics=new Map(),activeQuery='',lookupIndex;
+let passages={},allowedTopics=new Map(),activeQuery='',lookupIndex,queryNotice='';
 let medlineLookup=medlineIndex({topics:[]}),codes=null,carePanel=null,careTopic=null,unresolved=false;
 let feed={topics:[]};
 function medicalRecord(name){return medlineLookup.find(name)}
@@ -72,6 +73,7 @@ const copilot=setupCopilot(currentContext,{
 });
 const research=createResearchDesk(currentContext,(n,focus)=>copilot.activate(n,focus));
 chats.setHandlers({newChat:()=>copilot.clear(),restore:async data=>{
+  queryNotice='';
   role=Math.max(0,roles.indexOf(normalizeReadingRole(data.chat.readingMode)));$('role').selectedIndex=role;
   if(Object.hasOwn(catalog,data.chat.topic)||allowedTopics.has(data.chat.topic.toLowerCase())){
     topic=data.chat.topic;activeQuery=topic;unresolved=false;live=null;codes=null;$('query').value=topic;render();
@@ -111,6 +113,7 @@ function render(){
   if(!unresolved){
     const sources=textRecords(),context={...currentContext(),topic,role:roles[role],aliases:[...(medicalRecord(topic)?.aliases||[]),...(taxonomy.entities.find(e=>e.name===topic)?.aliases||[])],passages:sources,records:currentContext()?.records||[]};
     const overview=el('div',undefined,'overview-note search-answer');overview.append(el('h3','Your answer'),el('p',activeQuery||topic,'answer-question'));
+    if(queryNotice)overview.append(el('p',queryNotice,'query-interpretation'));
     refreshSynthesis(context);
     const direct=synthesis?.key===synthesisKey(context)&&synthesis.status==='generated'?synthesis.answer:searchAnswer(context,activeQuery||topic);
     direct.modelNotice=synthesis?.key===synthesisKey(context)?(synthesis.status==='loading'?'Preparing an answer and six decks from cited sources… Source excerpts are available while you wait.':synthesis.message||''):'';
@@ -180,17 +183,23 @@ async function search(input,chosenTopic,confirmed=false){
 }
 async function performSearch(input,chosenTopic,confirmed=false){
   synthesisController?.abort();synthesisController=null;synthesis=null;aiRequested=false;
+  queryNotice='';
   $('searchSwitch').replaceChildren();$('scopeQuestion').replaceChildren();
 
   searchRequest?.abort(); controller?.abort();controller=null;
   const request=new AbortController();searchRequest=request;
   const explicitCode=/^(?:what is |look up |search for )?(?:icd|snomed)/i.test(input.trim()) && codeQuery(input);
-  const status=explicitCode?'ok':inspectInput(input);
+  const prepared=explicitCode?{status:'ok',query:input}:prepareQuery(input),status=prepared.status;
   if(status!=='ok'){
-    $('query').value='';$('notice').textContent=guardMessage(status);$('results').hidden=true;
-    if(status==='emergency'){$('card').hidden=true;buddy.sync(true,false)}
+    $('notice').textContent=guardMessage(status);$('results').hidden=true;$('resultsBody').replaceChildren();
+    topic='';unresolved=true;activeQuery='';live=null;codes=null;buddy.sync(true,false);
+    const message=el('div',undefined,'overview-note search-answer');
+    message.setAttribute('role','alert');message.append(el('h2',status==='emergency'?'Get urgent help now':'Let’s rephrase this as a general question'),el('p',guardMessage(status)));
+    if(status!=='emergency')message.append(el('p','For example: “What causes a sore throat?” or “How is a sore throat treated?”'),button('Explore sore throat',()=>search('Sore Throat')));
+    $('card').hidden=false;$('card').replaceChildren(message);$('card').focus({preventScroll:true});$('card').scrollIntoView({block:'start'});
     return;
   }
+  input=prepared.query;queryNotice=prepared.notice||'';
   $('card').hidden=false;$('copilot').hidden=false;
   const corrected=correctSpelling(input),code=codeQuery(input);
   let {choices,keywords}=resolveSearch(corrected,lookupIndex);choices=inScopeChoices(choices);

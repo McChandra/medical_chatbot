@@ -54,7 +54,8 @@ export function searchAnswer(context,query,{detail=false,activeDeck=1}={}){
  if(/^(?:hi|hello|hey|help|what can you do)[?!. ]*$/i.test(question))return {text:'Choose one of the six questions, or ask about '+context.topic+'. I’ll use the '+profile.label.toLowerCase()+' reading mode and link the sources.',deck:activeDeck,citations:[],checks:[],blocks:[],supported:false};
  const normalized=normalizeQuestion(question,context.topic,context.aliases||[]);
  const bare=[context.topic,...(context.aliases||[])].some(name=>normalized===normalizeQuestion(name));
- const parts=requestedParts(bare?'What is '+context.topic+'?':normalized),matches=[],gaps=[];
+ // Split before normalization removes question marks and sentence boundaries.
+ const parts=requestedParts(bare?'What is '+context.topic+'?':question).map(part=>normalizeQuestion(part,context.topic,context.aliases||[])),matches=[],gaps=[];
  let primaryDeck=questionDeck(normalized)||activeDeck,primaryIntent=null;
  for(const part of parts){
   const answer=answerQuestion({...context,question:part,visibleTexts:[],history:[],deck:undefined,limit:detail?profile.detail:profile.summary});

@@ -1,5 +1,5 @@
 import {deckCount,domainAnswer,searchAnswer,isOverviewQuestion} from './search-experience.js';
-import {inspectInput} from './clinical-engine.js';
+import {prepareQuery} from './query-input.js';
 import {readingProfile,roleQuestions} from './reading-profiles.js';
 import {requestSynthesis} from './model-client.js';
 import {renderAnswer} from './answer-view.js';
@@ -40,7 +40,7 @@ export function setupCopilot(getContext,actions={}){
  }
  async function respond(q,fromSuggestion=false,guidedDeck=0){
   const c=getContext();if(!c||!q.trim())return;
-  const status=inspectInput(q);$('question').value='';$('scopeQuestion').replaceChildren();
+  const prepared=prepareQuery(q),status=prepared.status;q=prepared.query;$('question').value='';$('scopeQuestion').replaceChildren();
   const run=++sequence,scope=identity;
   const choices=status==='ok'&&!guidedDeck?actions.scopeChoice?.(q)||[]:[];
   if(choices.length){actions.confirm(q,choices.join(' / '));return}

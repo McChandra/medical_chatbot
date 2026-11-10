@@ -5,7 +5,7 @@ import {orderedPassages,professionalRole,domains} from './disease-framework.js';
 const plain = value => String(value ?? '').normalize('NFKC').toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
 const words = value => plain(value).split(' ').filter(Boolean);
 const list = value => Array.isArray(value) ? value : [];
-const emergencySigns = /\b(stroke|heart attack|chest pain|chest pressure|face droop\w*|sudden(?:ly)? (?:weakness|numbness|confused|unable to speak)|slurred speech|cant breathe|cannot breathe|unable to breathe|struggling to breathe|not breathing|overdos\w*|unconscious|kill myself|suicid\w*)\b/;
+const emergencySigns = /\b(stroke|heart attack|chest pain|chest pressure|face droop\w*|sudden(?:ly)? (?:weakness|numbness|confused|unable to speak)|slurred speech|cant breathe|cannot breathe|unable to breathe|struggling to breathe|difficulty breathing|trouble breathing|cant swallow|cannot swallow|unable to swallow|not breathing|overdos\w*|unconscious|kill myself|suicid\w*)\b/;
 const personal = /\b(i (?:have|had|am|feel|felt|think|suspect|took|take|cant|cannot|was|noticed|developed|might|may)|im (?:having|feeling|taking|experiencing|unable|dizzy)|my (?!research\b|question\b|course\b|assignment\b|presentation\b|project\b|search\b)|our patient|a patient (?:presents|reports|has|with)|he is|she is|this patient|patient (?:name|id)|am i|ive been|should i (?:take|stop|start|change|increase|reduce|go to)|someone (?:is|has|just)|\d{1,3} year old (?:man|woman|male|female|patient) (?:with|has|presents|reports))\b/;
 const dateIdentifier = /\b(?:\d{4}[-/]\d{1,2}[-/]\d{1,2}|\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}|(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\.?\s+\d{1,2}(?:st|nd|rd|th)?[,]?\s+\d{4}|\d{1,2}\s+(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\.?\s+\d{4})\b/i;
 const selfHarmStatement = /\b(?:i (?:want|intend|plan) to (?:die|(?:kill|hurt|harm) myself)|i(?:m| am) (?:feeling )?suicidal|i (?:have|am having|keep having) (?:active )?suicidal thoughts|i (?:might|will) (?:kill|hurt|harm) myself|(?:im having |having |experiencing |^)(?:active suicidal thoughts|thoughts of suicide right now))\b/;
@@ -157,7 +157,7 @@ export function answerQuestion({question='',topic='',deck,passages=[],visibleTex
       [/\b(classif\w*)\b/, /\b(classif\w*|subtypes?|types)\b/]
     ];
     if(specific.some(([ask,required])=>ask.test(q)&&!required.test(evidence)))continue;
-    if(intent.id==='risk' && /\bcaus\w*/.test(q) && !/\bcause/.test(plain(p.heading)) && !/\b(caused by|due to|results? from|cause of|causes? of|cause is|cause .*unknown|cause .*known|no one knows why)\b/.test(evidence))continue;
+    if(intent.id==='risk' && /\bcaus\w*/.test(q) && !/\bcause/.test(plain(p.heading)) && !/\b(caused by|due to|results? from|cause of|causes? of|causes? (?:can |may )?include|cause is|cause .*unknown|cause .*known|no one knows why)\b/.test(evidence))continue;
     if(!(p.intent===intent.id||intent.evidence.test(evidence)) || !fitsTerms(terms,evidence+' '+p.title+' '+p.focus+' '+(p.heading||'')) || modifiers.some(rx=>rx.test(q)&&!rx.test(evidence+' '+plain(p.focus))) || !novel(p.text,seen))continue;
     if(/\b(should take|you must|mg|dosage|prescribe|you should|call 911)\b/.test(evidence))continue;
     const check=verifyClaim({kind:'passage',topic,sourceUrl:p.sourceRecord||p.url,field:'text',value:p.text,record:p.record},{topic,passages:[p]});
