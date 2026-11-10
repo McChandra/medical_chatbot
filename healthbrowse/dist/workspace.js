@@ -1,5 +1,5 @@
 import {deckCount,domainAnswer,searchAnswer,isOverviewQuestion} from './search-experience.js';
-import {prepareQuery} from './query-input.js';
+import {prepareQuery,canSaveResearchQuestion} from './query-input.js';
 import {readingProfile,roleQuestions} from './reading-profiles.js';
 import {requestSynthesis} from './model-client.js';
 import {renderAnswer} from './answer-view.js';
@@ -8,17 +8,17 @@ import {renderCheck} from './research-session.js';
 export const deckNames=domains.map(d=>d.title);
 const $=id=>document.getElementById(id);
 const node=(tag,text)=>Object.assign(document.createElement(tag),{textContent:text});
-export function guardMessage(status){return status==='emergency'?'If these symptoms or immediate danger are happening now, contact local emergency services now or ask someone nearby to call. Do not wait for a search response.':'Remove personal details and ask a general educational question. This input was not used for retrieval.'}
+export function guardMessage(status){return status==='emergency'?'If these symptoms or immediate danger are happening now, contact local emergency services now or ask someone nearby to call. Do not wait for a search response.':'Please remove identifying details such as names, contact information, birth dates or record numbers. You can still describe symptoms in your own words. This input was not sent for retrieval.'}
 function save(key,value){try{sessionStorage.setItem(key,JSON.stringify(value))}catch{}}
 export function readSession(key,fallback){try{return JSON.parse(sessionStorage.getItem(key))??fallback}catch{return fallback}}
 export function setupCopilot(getContext,actions={}){
- let sequence=0,active=1,history=[],identity='',publicTurns=[],busy=false,modelRequest=null;
+ let sequence=0,active=1,history=[],identity='',publicTurns=[],busy=false,modelRequest=null,privateConversation=false;
  const controls=[$('deckSelect'),$('question'),$('ask').querySelector('button')];
  controls.forEach(control=>control.disabled=true);
  function sync(){
   const c=getContext();if(!c)return;
   const profile=readingProfile(c.role),scope=frameworkVersion+'|audience-v2|'+c.topic+'|'+c.role;
-  if(identity!==scope){modelRequest?.abort();history=[];publicTurns=[];busy=false;++sequence;$('scopeQuestion').replaceChildren();const last=readSession('hb-context',{});active=last.scope===scope&&Number.isInteger(last.deck)?Math.max(1,Math.min(last.deck,6)):1;if(last.scope===scope)history=publicTurns=readSession('hb-transcript',[]);identity=scope}
+  if(identity!==scope){modelRequest?.abort();history=[];publicTurns=[];privateConversation=false;busy=false;++sequence;$('scopeQuestion').replaceChildren();const last=readSession('hb-context',{});active=last.scope===scope&&Number.isInteger(last.deck)?Math.max(1,Math.min(last.deck,6)):1;if(last.scope===scope)history=publicTurns=readSession('hb-transcript',[]);identity=scope}
   controls.forEach(control=>control.disabled=busy);
   $('buddyStop').hidden=!busy;
   save('hb-context',{topic:c.topic,role:c.role,scope,deck:active});save('hb-transcript',publicTurns);
@@ -41,6 +41,8 @@ export function setupCopilot(getContext,actions={}){
  async function respond(q,fromSuggestion=false,guidedDeck=0){
   const c=getContext();if(!c||!q.trim())return;
   const prepared=prepareQuery(q),status=prepared.status;q=prepared.query;$('question').value='';$('scopeQuestion').replaceChildren();
+  if(status==='ok'&&(prepared.ephemeral||!canSaveResearchQuestion(q,c.query)))privateConversation=true;
+  const saveable=status==='ok'&&!privateConversation;
   const run=++sequence,scope=identity;
   const choices=status==='ok'&&!guidedDeck?actions.scopeChoice?.(q)||[]:[];
   if(choices.length){actions.confirm(q,choices.join(' / '));return}
@@ -50,10 +52,10 @@ export function setupCopilot(getContext,actions={}){
   // can enrich this same turn without holding the conversation blank.
   const turn={...answer,frameworkVersion,topic:c.topic,question:status==='ok'?q:'Input withheld',overview:isOverviewQuestion(c,q)};
   if(status==='ok'){active=answer.deck||active;turn.modelNotice='Checking for additional evidence. You can read the cited response below.'}
-  history=[...history.slice(-9),turn];if(fromSuggestion)publicTurns=[...publicTurns.slice(-9),turn];
+  history=[...history.slice(-9),turn];if(fromSuggestion&&saveable)publicTurns=[...publicTurns.slice(-9),turn];
   sync();$('thread').lastElementChild?.scrollIntoView({block:'nearest'});
   let researchAnswer=null;
-  if(status==='ok'&&!guidedDeck){try{researchAnswer=await actions.research?.(q)}catch{}if(run!==sequence||identity!==scope)return}
+  if(status==='ok'&&!guidedDeck&&!prepared.ephemeral){try{researchAnswer=await actions.research?.(q)}catch{}if(run!==sequence||identity!==scope)return}
   if(researchAnswer)answer=researchAnswer;
   else if(status==='ok'){
    modelRequest?.abort();modelRequest=new AbortController();
@@ -67,7 +69,8 @@ export function setupCopilot(getContext,actions={}){
   // so an enriched answer cannot inherit an obsolete coverage-gap message.
   for(const key of Object.keys(turn))delete turn[key];
   Object.assign(turn,answer,{frameworkVersion,topic:c.topic,question:status==='ok'?q:'Input withheld',overview:isOverviewQuestion(c,q)});
-  if(status==='ok'){void actions.onChat?.(c,active);try{void actions.onTurn?.(turn)}catch{}}
+  if(status==='ok'&&saveable){void actions.onChat?.(c,active);try{void actions.onTurn?.(turn)}catch{}}
+  else if(status==='ok')$('chatSaveStatus').textContent='Personal questions stay in this tab and are not saved to your account.';
  }
  async function ask(q,fromSuggestion=false,guidedDeck=0){
   if(busy||!q.trim())return;busy=true;sync();let failed=false;const scope=identity;
@@ -80,6 +83,6 @@ export function setupCopilot(getContext,actions={}){
  $('question').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();$('ask').requestSubmit()}};
  $('ask').onsubmit=e=>{e.preventDefault();ask($('question').value)};
   $('buddyStop').onclick=()=>{sequence++;modelRequest?.abort();busy=false;if(history.at(-1))history.at(-1).modelNotice='Additional lookup stopped. The available cited response is shown below.';sync()};
-  $('clearChat').onclick=()=>{sequence++;modelRequest?.abort();busy=false;$('scopeQuestion').replaceChildren();history=[];publicTurns=[];sync()};
- return {sync,askDomain(n){const choice=roleQuestions(getContext()?.role)[n-1];if(choice)void ask(choice.prompt,true,n)},clear(){sequence++;modelRequest?.abort();busy=false;history=[];publicTurns=[];$('scopeQuestion').replaceChildren();save('hb-transcript',[]);sync()},restore(turns){sequence++;modelRequest?.abort();busy=false;history=turns;publicTurns=[];active=turns.at(-1)?.frameworkVersion===frameworkVersion?turns.at(-1).deck:1;sync()},activate(deck,focus=false){active=deck;sync();if(focus)$('question').focus({preventScroll:true})}};
+  $('clearChat').onclick=()=>{sequence++;modelRequest?.abort();busy=false;$('scopeQuestion').replaceChildren();history=[];publicTurns=[];privateConversation=false;sync()};
+ return {sync,askDomain(n){const choice=roleQuestions(getContext()?.role)[n-1];if(choice)void ask(choice.prompt,true,n)},clear(){sequence++;modelRequest?.abort();busy=false;history=[];publicTurns=[];privateConversation=false;$('scopeQuestion').replaceChildren();save('hb-transcript',[]);sync()},restore(turns){sequence++;modelRequest?.abort();busy=false;history=turns;publicTurns=[];privateConversation=turns.some(t=>!canSaveResearchQuestion(t.question));active=turns.at(-1)?.frameworkVersion===frameworkVersion?turns.at(-1).deck:1;sync()},activate(deck,focus=false){active=deck;sync();if(focus)$('question').focus({preventScroll:true})}};
 }

@@ -1,8 +1,8 @@
-import {inspectInput} from './clinical-engine.js';
+import {inspectInput,inspectQuery} from './clinical-engine.js';
 
 // Convert only complete, simple symptom statements into public topic questions.
 // This is local intent recognition, not diagnosis or a general PHI scrubber.
-// Extra identifiers, histories, medicines and qualifiers must not be discarded.
+// Richer symptom questions stay intact and ephemeral; identifiers remain blocked.
 const symptoms=new Map([
  ['sore throat','Sore Throat'],['throat pain','Sore Throat'],
  ['cough','Cough'],['coughing','Cough'],['headache','Headache'],
@@ -13,8 +13,8 @@ const symptoms=new Map([
  ['dizzy','Dizziness and Vertigo'],['dizziness','Dizziness and Vertigo']
 ]);
 export function prepareQuery(input){
- const original=String(input??'').trim(),status=inspectInput(original);
- if(status==='emergency')return {status,query:''};
+ const original=String(input??'').trim(),status=inspectQuery(original);
+ if(status!=='ok')return {status,query:''};
  const simple=original.toLowerCase().replace(/[’]/g,"'").replace(/[.!?]+$/,'').trim();
  const match=simple.match(/^(?:i have|i am having|i'm having|i am experiencing|i'm experiencing|i have got|i've got|i feel|i am|i'm)\s+(?:a\s+|an\s+)?([a-z ]+)$/);
  const symptom=match&&symptoms.get(match[1].trim());
@@ -25,5 +25,11 @@ export function prepareQuery(input){
   return {status:'ok',symptom,query:'What causes '+name+'? How is '+name+' treated?',
    notice:'Showing general information about '+name+'. This does not determine the cause of your symptoms.'};
  }
- return {status,query:status==='ok'?original:''};
+ if(inspectInput(original)==='private')return {status:'ok',query:original,ephemeral:true,
+  notice:'You can ask in your own words. This is general educational information, not an assessment of your symptoms. Personal questions are not saved to chat history.'};
+ return {status:'ok',query:original};
+}
+
+export function canSaveResearchQuestion(question,browserQuestion=''){
+ return inspectInput(question)==='ok'&&(!browserQuestion||inspectInput(browserQuestion)==='ok');
 }

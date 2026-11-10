@@ -1,4 +1,4 @@
-import {answerQuestion,questionDeck,inspectInput,normalizeQuestion} from './clinical-engine.js';
+import {answerQuestion,questionDeck,inspectInput,inspectQuery,normalizeQuestion} from './clinical-engine.js';
 import {verifyClaim} from './claim-check.js';
 import {correctSpelling} from './medcard.js';
 import {domains,orderedPassages} from './disease-framework.js';
@@ -48,8 +48,19 @@ function supplemental(context,deck,limit,exclude=new Set(),intent){
 }
 export function searchAnswer(context,query,{detail=false,activeDeck=1}={}){
  const question=correctSpelling(query).trim(),profile=readingProfile(context.role);
- const status=inspectInput(question);
- if(status!=='ok')return {text:status==='emergency'?'If these symptoms or immediate danger are happening now, contact local emergency services now. Do not wait for a search response.':'Remove personal details and ask a general educational question.',citations:[],checks:[],blocks:[],supported:false,deck:activeDeck};
+ const status=inspectQuery(question);
+ if(status!=='ok')return {text:status==='emergency'?'If these symptoms or immediate danger are happening now, contact local emergency services now. Do not wait for a search response.':'Remove identifying details such as names, contact information, birth dates or record numbers. You can still describe symptoms in your own words.',citations:[],checks:[],blocks:[],supported:false,deck:activeDeck};
+ if(inspectInput(question)==='private'){
+  if(/\b(?:dos(?:e|es|age|ing)|prescrib\w*|(?:should|can|may) i (?:take|start|stop|change|increase|reduce)|how much should|which (?:medicine|medication|drug))\b/i.test(question))return {text:'I cannot choose a medicine, dose or treatment change for you. A clinician or pharmacist needs to check your circumstances. You can explore the cited general treatment information in Deck 4.',citations:[],checks:[],blocks:[],supported:false,deck:4};
+  // Keep the original question intact for the model; the local fallback can
+  // only explain public evidence, never evaluate the person's clinical details.
+  const clause=question.match(/(?:^|[.!?,]\s*|\band\s+)((?:what|how|why|when|which|can|does|is|are)\b[^]*?)$/i)?.[1]?.trim();
+  const publicClause=clause?.replace(/\b(?:it|this condition|this disease)\b/gi,context.topic);
+  const referenceQuestion=publicClause&&inspectInput(publicClause)==='ok'&&questionDeck(publicClause)?publicClause:'What causes '+context.topic+'? How is '+context.topic+' treated?';
+  const response=searchAnswer(context,referenceQuestion,{detail,activeDeck});
+  const scope='These sources explain '+context.topic+' in general. They do not determine the cause of your symptoms or assess your duration, medicines, age or other individual circumstances.';
+  return {...response,text:scope+'\n\n'+response.text,gaps:[...(response.gaps||[]),scope],educationalOnly:true};
+ }
  if(/^(?:more|tell me more|more details|go on|continue|explain more)[?!. ]*$/i.test(question))return domainAnswer(context,Math.min(6,activeDeck),{detail:true});
  if(/^(?:hi|hello|hey|help|what can you do)[?!. ]*$/i.test(question))return {text:'Choose one of the six questions, or ask about '+context.topic+'. I’ll use the '+profile.label.toLowerCase()+' reading mode and link the sources.',deck:activeDeck,citations:[],checks:[],blocks:[],supported:false};
  const normalized=normalizeQuestion(question,context.topic,context.aliases||[]);

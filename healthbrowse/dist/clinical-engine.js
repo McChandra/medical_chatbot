@@ -10,12 +10,20 @@ const personal = /\b(i (?:have|had|am|feel|felt|think|suspect|took|take|cant|can
 const dateIdentifier = /\b(?:\d{4}[-/]\d{1,2}[-/]\d{1,2}|\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}|(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\.?\s+\d{1,2}(?:st|nd|rd|th)?[,]?\s+\d{4}|\d{1,2}\s+(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\.?\s+\d{4})\b/i;
 const selfHarmStatement = /\b(?:i (?:want|intend|plan) to (?:die|(?:kill|hurt|harm) myself)|i(?:m| am) (?:feeling )?suicidal|i (?:have|am having|keep having) (?:active )?suicidal thoughts|i (?:might|will) (?:kill|hurt|harm) myself|(?:im having |having |experiencing |^)(?:active suicidal thoughts|thoughts of suicide right now))\b/;
 const identifiers = /(?:[\w.+-]+@[\w.-]+\.[a-z]{2,}|\b(?:mrn|dob|ssn|patient id|patient name|date of birth|medical record number|my name is|home address)\b|\b\d{3}-\d{2}-\d{4}\b|(?:^|\s)(?:\+?\d[ ().-]*){10,15}(?!\d)|\b(?:phone|mobile|telephone)\s*[:=]?\s*\d)/i;
-export function inspectInput(text) {
+// Search admission and saved-research screening have different purposes.
+// First-person symptoms are not identifying details by themselves. Keep the
+// stricter rule for persistence, but do not make it a prerequisite for asking.
+const namedCase = /\b(?:(?:[Mm]y|[Oo]ur|[Tt]his|[Tt]he) patient\s+(?!(?:has|is|with|reports|presents|was|had|needs|takes|feels)\b)[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?|(?:[Pp]atient|[Pp]erson) (?:named|called)\s+\w+|(?:[Ii] am|[Ii]'m)\s+(?!(?:Having|Feeling|Experiencing|Suffering|Sick|Tired|Dizzy|Pregnant|Worried|Concerned)\b)[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?(?=\s*[,.;]|\s+and\b|$))|\b\d+\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?\s+(?:Street|Road|Avenue|Lane|Drive)\b/;
+export function inspectQuery(text) {
   const value = plain(text);
   if (selfHarmStatement.test(value)) return 'emergency';
   if (emergencySigns.test(value) && (personal.test(value) || /\b(help me|right now|what do i do|happening now|please help|collapsed|not breathing|cant breathe|cannot breathe|kill myself)\b/.test(value))) return 'emergency';
-  if (dateIdentifier.test(String(text ?? '')) || identifiers.test(String(text ?? '')) || personal.test(value)) return 'private';
+  if (dateIdentifier.test(String(text ?? '')) || identifiers.test(String(text ?? '')) || namedCase.test(String(text ?? ''))) return 'private';
   return 'ok';
+}
+export function inspectInput(text) {
+  const status=inspectQuery(text);
+  return status==='ok'&&personal.test(plain(text))?'private':status;
 }
 
 const groups = [

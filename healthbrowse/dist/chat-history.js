@@ -1,5 +1,6 @@
 import {frameworkVersion} from './disease-framework.js';
 import {accountRequest} from './account-client.js';
+import {canSaveResearchQuestion} from './query-input.js';
 // getRandomValues also supports local HTTP development previews.
 function newId(){const bytes=crypto.getRandomValues(new Uint8Array(16));bytes[6]=(bytes[6]&15)|64;bytes[8]=(bytes[8]&63)|128;const hex=Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');return [hex.slice(0,8),hex.slice(8,12),hex.slice(12,16),hex.slice(16,20),hex.slice(20)].join('-')}
 const $=id=>document.getElementById(id);
@@ -31,6 +32,7 @@ export function createChatHistory(getContext){
  }
  function saveTurn(turn){
   const context=getContext();if(!context)return;const run=generation,turnId=newId();
+  if(!canSaveResearchQuestion(turn.question,context.query)){message('Personal questions stay in this tab and are not saved to your account.');return Promise.resolve()}
   queue=queue.catch(()=>{}).then(async()=>{
    if(run!==generation)return;
    if(!available)await refresh();if(run!==generation)return;

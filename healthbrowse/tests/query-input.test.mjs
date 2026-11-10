@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {prepareQuery} from '../dist/query-input.js';
+import {prepareQuery,canSaveResearchQuestion} from '../dist/query-input.js';
 import {topicIndex,resolveSearch} from '../dist/discovery.js';
 import {medlinePassages} from '../dist/disease-framework.js';
 import {searchAnswer,domainAnswer} from '../dist/search-experience.js';
@@ -33,12 +33,37 @@ test('common symptom wording is recognized without treating it as a confirmed di
   const prepared=prepareQuery(input);assert.equal(prepared.status,'ok');assert.equal(prepared.symptom,topic);assert.match(prepared.notice,/does not determine/);
  }
 });
-test('extra clinical context or identifiers cannot be silently stripped from a symptom statement',()=>{
- for(const input of ['I have a sore throat and my name is Jane','I have a sore throat alex@example.org','I have a sore throat for 3 weeks','I have a sore throat and take warfarin','I have a sore throat and a fever','My child has a sore throat','I have diabetes']){
+test('identifiers remain blocked while ordinary symptom questions retain their wording',()=>{
+ for(const input of ['I have a sore throat and my name is Jane','I have a sore throat alex@example.org','My patient Jane has a sore throat','I am John Smith, I have a sore throat','I have a sore throat, DOB 18/12/1994']){
   const prepared=prepareQuery(input);assert.equal(prepared.status,'private',input);assert.equal(prepared.query,'');
+ }
+ for(const input of ['I have a sore throat for 3 weeks','I have a sore throat and take warfarin','I have a sore throat and a fever','My child has a sore throat','I have diabetes']){
+  const prepared=prepareQuery(input);assert.equal(prepared.status,'ok',input);assert.equal(prepared.query,input);assert.equal(prepared.ephemeral,true);
+  assert.equal(canSaveResearchQuestion(input),false);
  }
  for(const input of ['I have a sore throat and cannot breathe','I have a sore throat and cannot swallow','I have a sore throat and difficulty breathing','I have chest pain'])assert.equal(prepareQuery(input).status,'emergency',input);
  assert.equal(prepareQuery('What causes difficulty swallowing?').status,'ok');
+});
+test('natural symptom questions receive cited educational answers instead of a rephrase wall',()=>{
+ for(const question of ['I have a sore throat, what should I do?','I have been having a sore throat for three days. Can you help?','Why is my throat sore?','My throat hurts','My child has a sore throat','I have a sore throat and take warfarin']){
+  const p=prepareQuery(question);assert.equal(p.status,'ok',question);
+  assert.deepEqual(resolveSearch(p.query,index).choices,['Sore Throat'],question);
+  for(const role of ['General reader','Medical professional']){
+   const answer=searchAnswer({...context,role},p.query);
+   assert.equal(answer.supported,true,question);assert.ok(answer.citations.length);
+   assert.match(answer.text,/Other causes can include/);assert.match(answer.text,/Treatment depends on the cause/);
+   assert.match(answer.text,/do not determine the cause/);
+   assert.doesNotMatch(answer.text,/rephrase|Remove personal details/);
+   for(let n=1;n<=6;n++)assert.ok(domainAnswer({...context,role},n).text);
+  }
+ }
+ assert.equal(canSaveResearchQuestion('Explain the causes','I have a sore throat for 3 days'),false);
+ assert.equal(canSaveResearchQuestion('What causes sore throat?','Sore Throat'),true);
+});
+test('an explicit public follow-up keeps its requested intent',()=>{
+ const answer=searchAnswer({...context,role:'General reader'},'I have a sore throat. How is it treated?');
+ assert.equal(answer.supported,true);assert.match(answer.text,/Treatment depends/);
+ assert.doesNotMatch(answer.blocks.map(b=>b.text).join(' '),/Other causes can include/);
 });
 test('ordinary disease questions stay intact, including separate question clauses',()=>{
  assert.deepEqual(prepareQuery('What is leukemia?'),{status:'ok',query:'What is leukemia?'});

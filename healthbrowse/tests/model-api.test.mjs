@@ -36,6 +36,19 @@ test('model response returns a direct answer and exactly six source-linked decks
  for(const b of [r.answer,...r.decks].flatMap(s=>s.blocks)){assert.ok(b.references.length);assert.ok(b.references.every(s=>s.text.includes(s.quote)));assert.match(b.verification,/Not independent/)}
  assert.equal(r.answer.checks.length,0,'Do not falsely label paraphrases as exact source matches');
 });
+test('non-identifying symptom wording reaches the model intact in either reading mode',async t=>{
+ const {call,calls}=fixture(t),question='I have a sore throat for three days, what should I do?';
+ for(const role of ['General','Clinicians']){
+  const r=await (await call({...input,topic:'Sore Throat',question,searchQuery:question,role})).json();
+  assert.equal(r.status,'generated');assert.equal(r.decks.length,6);
+  const generation=calls.at(-2).body;
+  assert.equal(JSON.parse(generation.messages[1].content).question,question);
+  assert.match(generation.messages[0].content,/No invented citations.*individual diagnosis/);
+ }
+ const before=calls.length;
+ for(const question of ['My patient Jane has a sore throat','I have a sore throat and my name is John','I have a sore throat and cannot breathe'])assert.equal((await call({...input,question})).status,422);
+ assert.equal(calls.length,before);
+});
 test('both model routes accept the two labels and normalize legacy roles',async t=>{
  const {call,calls}=fixture(t);for(const role of ['General','Clinicians','Patient','Medical student','Medical professional','Advanced professional']){const r=await call({...input,role});assert.equal(r.status,200);assert.equal(calls.at(-1).body.model,(role.includes('professional')||role==='Clinicians')?'medgemma':'llama-adapter')}
  assert.notEqual(generationMessages(input,evidence)[0].content,generationMessages({...input,role:'Medical professional'},evidence)[0].content);

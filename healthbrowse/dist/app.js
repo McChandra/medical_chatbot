@@ -194,8 +194,8 @@ async function performSearch(input,chosenTopic,confirmed=false){
     $('notice').textContent=guardMessage(status);$('results').hidden=true;$('resultsBody').replaceChildren();
     topic='';unresolved=true;activeQuery='';live=null;codes=null;buddy.sync(true,false);
     const message=el('div',undefined,'overview-note search-answer');
-    message.setAttribute('role','alert');message.append(el('h2',status==='emergency'?'Get urgent help now':'Let’s rephrase this as a general question'),el('p',guardMessage(status)));
-    if(status!=='emergency')message.append(el('p','For example: “What causes a sore throat?” or “How is a sore throat treated?”'),button('Explore sore throat',()=>search('Sore Throat')));
+    message.setAttribute('role','alert');message.append(el('h2',status==='emergency'?'Get urgent help now':'Remove identifying details to continue'),el('p',guardMessage(status)));
+    if(status!=='emergency')message.append(button('Edit question',()=>{$('query').focus();$('query').scrollIntoView({block:'center'})}));
     $('card').hidden=false;$('card').replaceChildren(message);$('card').focus({preventScroll:true});$('card').scrollIntoView({block:'start'});
     return;
   }

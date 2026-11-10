@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {inspectInput,answerQuestion} from '../dist/clinical-engine.js';
+import {inspectInput,inspectQuery,answerQuestion} from '../dist/clinical-engine.js';
 // Isolated fixtures verify contract behavior independently of catalog revisions.
 const makePassage=(deck,text,focus='Asthma')=>({deck,text,focus,title:'Test passage '+deck,url:'https://medlineplus.gov/asthma.html',record:'fixture.xml#'+deck,overview:text.startsWith('Asthma is')});
 const passages={Asthma:[
@@ -15,10 +15,17 @@ const passages={Asthma:[
 const base={topic:'Asthma',passages};
 const ask=(question,extras={})=>answerQuestion({...base,question,...extras});
 
-test('educational topic searches remain public; personal cases and identifiers do not',()=>{
+test('educational topic searches remain public; personal cases and identifiers cannot be persisted',()=>{
   for(const input of ['What are stroke symptoms?', 'What is a heart attack?','How is asthma diagnosed?','What are suicidal thoughts?'])assert.equal(inspectInput(input),'ok');
   for(const input of ['I have diabetes','My son is coughing','DOB 18/12/1994','2020-07-12','12 July 2020','June 2, 1980','Patient ID: 582','alex@example.org','Reach me at +1 (555) 431-0000'])assert.equal(inspectInput(input),'private');
   for(const input of ['I think I am having a stroke','My father has chest pain','I want to kill myself','I am having active suicidal thoughts','active suicidal thoughts','I might hurt myself','I cannot breathe','My speech is slurred and my face droops right now']) assert.equal(inspectInput(input),'emergency',input);
+});
+test('search admission accepts non-identifying symptoms without weakening persistence or emergencies',()=>{
+ for(const q of ['I have a sore throat for three days','My child has a sore throat','I have diabetes','My patient has a cough']){
+  assert.equal(inspectQuery(q),'ok',q);assert.equal(inspectInput(q),'private',q);
+ }
+ for(const q of ['My patient Jane has a sore throat','I am John Smith, I have a cough','DOB: 12/02/1994','MRN 99887','me@example.org'])assert.equal(inspectQuery(q),'private',q);
+ for(const q of ['I have a sore throat and cannot breathe','My father has chest pain','I might hurt myself'])assert.equal(inspectQuery(q),'emergency',q);
 });
 test('educational roles cite an actual archived record and do not change permissions',()=>{
   for(const role of [0,1,2,3,4]){

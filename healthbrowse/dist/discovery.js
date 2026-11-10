@@ -11,6 +11,9 @@ export function topicIndex(entities, vocabulary = []) {
   for (const entity of entities) for (const label of [entity.name,...entity.aliases]) {
     index.set(words(label).join(' '), entity.name);
   }
+  // Match everyday symptom descriptions to the symptom topic, not a diagnosis.
+  const throat=index.get('sore throat');
+  if(throat)for(const phrase of ['throat hurts','throat is sore','throat sore','throat pain'])index.set(phrase,throat);
   return index;
 }
 export function resolveSearch(input, entitiesOrIndex) {
