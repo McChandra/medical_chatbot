@@ -1,0 +1,61 @@
+{
+  "code_commit": "87bc6f1586657a0a92f43a3a3c15b1434d64b650",
+  "code_file_sha256": {
+    "research/__init__.py": "9ec80490849dc56579e82a8566f0e30bc1c93204dc8f1d35aabc7ef5608de986",
+    "research/annotations.py": "e607c4b935d2c518d9c23c1da5369afde32c348247b36a0682c940a00e11cdcf",
+    "research/archive.py": "0cd51e6030adef34384f2bd9c5a062d2f2999d89247cfe4fbe79e50635e0a151",
+    "research/compare.py": "650f9678a88aa8e9bfae692fe1519d688a2408e7f1a70a4c0ede5281e72e9fab",
+    "research/data.py": "d146fb2bd97505e90ee4eb02029e10761d6bcb6fdd9486c9c558732b457d82e1",
+    "research/diagnostics.py": "5bde6be04b5094484cf453ff0decda4f77efb10822889162a1333312889a5f2b",
+    "research/evaluate.py": "e6cff437b63b6bf90d805b51f40b0994cd2ee8d766f8596e77ed979506077c7f",
+    "research/metrics.py": "fc4037bce7782d128f9d91ede4c7fa3ac3fa52bc6ecd4cf84a717b21936ba65c",
+    "research/retrieval.py": "7d45ec29d7d1982d6eaf0cdd756b8ca82984bda6932f864dc2911cb1121604b4",
+    "research/smoke_models.py": "7ac124da998d48b7e9d94ccfab57ec76c270cb7d1f884fa36a9541444af53679",
+    "research/statistics.py": "82f52626e4f87c359a9383430731ec4065e7689d94d138363fba1183a36e9364"
+  },
+  "compact_ranks_file": "gate-1000.ranks.json",
+  "compact_ranks_sha256": "805acdf235ec9b80a36e9846ff35f5dcda4ae7b34c27e9096154c8900de9d482",
+  "config": {
+    "article_revision": null,
+    "cache_dir": "artifacts/phase-iv/model-cache",
+    "command": "run",
+    "dataset": "artifacts/phase-iv/dataset",
+    "depth": 50,
+    "device": "cpu",
+    "encoder": null,
+    "encoder_revision": null,
+    "function": "run",
+    "limit": 0,
+    "medcpt": false,
+    "output": "artifacts/phase-iv/gate-5000.json",
+    "prefix": false,
+    "query_revision": null,
+    "reranker": null,
+    "reranker_revision": null,
+    "resamples": 2000,
+    "seed": 42,
+    "split": "validation",
+    "verification": true,
+    "vocabulary_gate": 5000
+  },
+  "environment": {
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "python": "3.12.14",
+    "scikit-learn": "1.8.0",
+    "scipy": "1.17.0",
+    "sentence-transformers": "not installed",
+    "torch": "not installed",
+    "transformers": "not installed"
+  },
+  "passages_sha256": "c7efef295c746daa87a953446e1ab4c71746bbcda1c36cb40f99b8c86be84e3f",
+  "protocol": "phase-iv-v1",
+  "query_manifest_sha256": "6f52b3166df5c07d5b7ddc34ff3a6a259367a30598506d98694987e076d11971",
+  "records_sha256": "fe8b5ac22228a1e5ca5669b42f5d4c5d210249df7190df6fceb622e8aadbfb97",
+  "split_sha256": "d09e83e481742bbf3540dd78ad454e185106648c95152563cc1ed5f68767e744",
+  "warnings": [
+    "Public retrieval corpus intentionally includes held-out gold answers; this is not closed-book generalization.",
+    "Gold-record metrics are automatic recovery proxies, not human relevance or clinical correctness.",
+    "Verification here checks stored provenance/offsets only, not semantic support or medical currency."
+  ]
+}

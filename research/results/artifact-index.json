@@ -1,0 +1,22 @@
+{
+  "gate-1000": {
+    "full_run_sha256": "8b82c1a43d8f37b80f15303413943ca3ac318aa2560dc7e4880b056b9af0cd8c",
+    "ranks": "gate-1000.ranks.json"
+  },
+  "gate-5000": {
+    "full_run_sha256": "e94e1eef0fb455bc946e4f247865ed3462c7cec108c091e0f3c2fed3bdb9492d",
+    "ranks": "gate-1000.ranks.json"
+  },
+  "lexical": {
+    "full_run_sha256": "91739507f7aa04e43c1091ac0fc0bf35f3684ead2a6a63225906a6f10dbba331",
+    "ranks": "gate-1000.ranks.json"
+  },
+  "no-verification": {
+    "full_run_sha256": "b6818ffe186c90210f04705868b5c35b11074d186de21cc320adc8967960863a",
+    "ranks": "gate-1000.ranks.json"
+  },
+  "prefix": {
+    "full_run_sha256": "5d9c150c149a426687eba41db7f0a54153dd8a884777743f9f74d8a90e2dcab0",
+    "ranks": "prefix.ranks.json"
+  }
+}

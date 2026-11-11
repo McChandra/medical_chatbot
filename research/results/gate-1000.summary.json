@@ -1,0 +1,246 @@
+{
+  "graded_relevance": "not measured; two independent reviewers required",
+  "paired_comparisons": [
+    {
+      "difference_right_minus_left": {
+        "ci95": [
+          -0.04421367860811993,
+          -0.014573954012805547
+        ],
+        "clusters": 421,
+        "mean": -0.029347028613352897,
+        "queries": 1363,
+        "resamples": 2000,
+        "seed": 42,
+        "unit": "cluster",
+        "warning": null
+      },
+      "left": "bm25",
+      "metric": "gold_record_hit@5",
+      "p_holm": 0.0009995002498750624,
+      "p_two_sided": 0.0009995002498750624,
+      "randomizations": 2000,
+      "right": "fusion_bm25_tfidf",
+      "test": "paired cluster sign randomization"
+    },
+    {
+      "difference_right_minus_left": {
+        "ci95": [
+          -0.09240819193774992,
+          -0.04904016584089543
+        ],
+        "clusters": 421,
+        "mean": -0.07043286867204696,
+        "queries": 1363,
+        "resamples": 2000,
+        "seed": 42,
+        "unit": "cluster",
+        "warning": null
+      },
+      "left": "bm25",
+      "metric": "gold_record_hit@5",
+      "p_holm": 0.0009995002498750624,
+      "p_two_sided": 0.0004997501249375312,
+      "randomizations": 2000,
+      "right": "tfidf",
+      "test": "paired cluster sign randomization"
+    }
+  ],
+  "passages_sha256": "c7efef295c746daa87a953446e1ab4c71746bbcda1c36cb40f99b8c86be84e3f",
+  "query_count": 1363,
+  "query_manifest_sha256": "6f52b3166df5c07d5b7ddc34ff3a6a259367a30598506d98694987e076d11971",
+  "string_lookup_focus_accuracy": {
+    "ci95": [
+      0.989690531721733,
+      0.9977612774428899
+    ],
+    "clusters": 421,
+    "mean": 0.9941305942773294,
+    "queries": 1363,
+    "resamples": 2000,
+    "seed": 42,
+    "unit": "cluster",
+    "warning": null
+  },
+  "systems": {
+    "bm25": {
+      "focus_match@5": {
+        "ci95": [
+          0.8885806374286072,
+          0.9424175987677011
+        ],
+        "clusters": 421,
+        "excluded_unjudged_queries": 0,
+        "mean": 0.9163609684519443,
+        "queries": 1363,
+        "resamples": 2000,
+        "seed": 42,
+        "unit": "cluster",
+        "warning": null
+      },
+      "gold_record_hit@5": {
+        "ci95": [
+          0.5817578763526939,
+          0.6669335629016857
+        ],
+        "clusters": 421,
+        "excluded_unjudged_queries": 0,
+        "mean": 0.6243580337490829,
+        "queries": 1363,
+        "resamples": 2000,
+        "seed": 42,
+        "unit": "cluster",
+        "warning": null
+      },
+      "gold_record_mrr@5": {
+        "ci95": [
+          0.37307228928171615,
+          0.4349626640699036
+        ],
+        "clusters": 421,
+        "excluded_unjudged_queries": 0,
+        "mean": 0.4044631939349474,
+        "queries": 1363,
+        "resamples": 2000,
+        "seed": 42,
+        "unit": "cluster",
+        "warning": null
+      },
+      "returned": {
+        "ci95": [
+          5.0,
+          5.0
+        ],
+        "clusters": 421,
+        "excluded_unjudged_queries": 0,
+        "mean": 5.0,
+        "queries": 1363,
+        "resamples": 2000,
+        "seed": 42,
+        "unit": "cluster",
+        "warning": null
+      }
+    },
+    "fusion_bm25_tfidf": {
+      "focus_match@5": {
+        "ci95": [
+          0.8844273087074624,
+          0.9381437602320898
+        ],
+        "clusters": 421,
+        "excluded_unjudged_queries": 0,
+        "mean": 0.9126925898752751,
+        "queries": 1363,
+        "resamples": 2000,
+        "seed": 42,
+        "unit": "cluster",
+        "warning": null
+      },
+      "gold_record_hit@5": {
+        "ci95": [
+          0.5526290190456687,
+          0.6384466929502909
+        ],
+        "clusters": 421,
+        "excluded_unjudged_queries": 0,
+        "mean": 0.59501100513573,
+        "queries": 1363,
+        "resamples": 2000,
+        "seed": 42,
+        "unit": "cluster",
+        "warning": null
+      },
+      "gold_record_mrr@5": {
+        "ci95": [
+          0.3425590592898823,
+          0.4034285544760053
+        ],
+        "clusters": 421,
+        "excluded_unjudged_queries": 0,
+        "mean": 0.3720347273171925,
+        "queries": 1363,
+        "resamples": 2000,
+        "seed": 42,
+        "unit": "cluster",
+        "warning": null
+      },
+      "returned": {
+        "ci95": [
+          5.0,
+          5.0
+        ],
+        "clusters": 421,
+        "excluded_unjudged_queries": 0,
+        "mean": 5.0,
+        "queries": 1363,
+        "resamples": 2000,
+        "seed": 42,
+        "unit": "cluster",
+        "warning": null
+      }
+    },
+    "tfidf": {
+      "focus_match@5": {
+        "ci95": [
+          0.8467328690616664,
+          0.9155393797830532
+        ],
+        "clusters": 421,
+        "excluded_unjudged_queries": 0,
+        "mean": 0.8826118855465884,
+        "queries": 1363,
+        "resamples": 2000,
+        "seed": 42,
+        "unit": "cluster",
+        "warning": null
+      },
+      "gold_record_hit@5": {
+        "ci95": [
+          0.5089008050949291,
+          0.60080624501086
+        ],
+        "clusters": 421,
+        "excluded_unjudged_queries": 0,
+        "mean": 0.5539251650770359,
+        "queries": 1363,
+        "resamples": 2000,
+        "seed": 42,
+        "unit": "cluster",
+        "warning": null
+      },
+      "gold_record_mrr@5": {
+        "ci95": [
+          0.3061868879896083,
+          0.3648278915840098
+        ],
+        "clusters": 421,
+        "excluded_unjudged_queries": 0,
+        "mean": 0.3350819271215456,
+        "queries": 1363,
+        "resamples": 2000,
+        "seed": 42,
+        "unit": "cluster",
+        "warning": null
+      },
+      "returned": {
+        "ci95": [
+          5.0,
+          5.0
+        ],
+        "clusters": 421,
+        "excluded_unjudged_queries": 0,
+        "mean": 5.0,
+        "queries": 1363,
+        "resamples": 2000,
+        "seed": 42,
+        "unit": "cluster",
+        "warning": null
+      }
+    }
+  },
+  "warnings": [
+    "Public retrieval corpus intentionally includes held-out gold answers; this is not closed-book generalization.",
+    "Gold-record metrics are automatic recovery proxies, not human relevance or clinical correctness.",
+    "Verification here checks stored provenance/offsets only, not semantic support or medical currency."
+  ]
+}

@@ -1,5 +1,8 @@
 # HealthBrowse AI and MedQuAD Medical Chatbot
 
+> **Research status — Phase IV revision (10 November 2026):** Retrieval results are being reframed around evaluation validity and provenance-gated retrieval, not system superiority. The historical MQ-017/MQ-018 scores and the notebook's 15,864-record figure are unverified. Focus-label matching and gold-record recovery do not establish relevance or clinical accuracy. See the [reproducible evaluation](research/README.md), [audit response](research/AUDIT_RESPONSE.md), and [related-work review](research/RELATED_WORK.md).
+
+
 University of San Diego · MSc in Applied Artificial Intelligence · AAI-540  
 **Project team:** Abhay Srivastav, Chandra Mouli Mudumba, and Rahul Pawar
 
@@ -247,8 +250,10 @@ The project uses the **MedQuAD medical question-answering dataset**, sourced fro
 
 | Processing stage | Records |
 |---|---:|
-| Cleaned medical question-answer pairs | 16,359 |
-| Processed retrieval passages | 38,544 |
+| Historical four-column cleaning (reproduced) | 16,359 |
+| New evaluation records with known focus and stable IDs | 16,345 |
+| Historical notebook passages (not reconstructed) | 38,544 |
+| New deterministic 160-word-bounded chunks | 29,345 |
 
 ### 6.2 Data Processing
 
@@ -278,7 +283,7 @@ The project includes:
 
 **Evidence:** [Data Quality Report](monitoring/reports/medquad_data_quality_report.json)
 
-These results measure configured data-quality properties, not medical correctness.
+These historical results measure configured data-quality properties, not medical correctness. The original 38,544-passage artifact has not been reconstructed; the new evaluation uses a separately hashed corpus and must not be compared as if it were the same experiment.
 
 ---
 
@@ -295,14 +300,14 @@ The project investigates retrieval-based evidence selection for medical question
 5. Evidence filtering
 6. Context preparation for language model experiments
 
-### Preliminary Retrieval Evaluation
+### Historical Retrieval Evaluation — not independently reproduced
 
 | Retrieval method | Precision@5 |
 |---|---:|
 | FAISS retrieval | 30% |
 | FAISS with reranking | 42% |
 
-The results are preliminary and based on a limited evaluation sample. They do not represent clinical accuracy or a comprehensive benchmark.
+The archived Precision@5 figures use only 10 regression-selected questions (50 correlated passages) and a single reviewer. Original evaluation artifacts are missing. They are retained as historical reports, not confirmed results or evidence that reranking improves relevance. MQ-017 focus-label scores are likewise unverified. Overlapping confidence intervals alone are not a significance test. New comparisons require identical query IDs, query/cluster-level paired analysis, blinded relevance judgments and multiplicity correction. See [the replacement protocol](research/PROTOCOL.md).
 
 **Research Notebook:** [RAG Retrieval Evaluation](notebooks/rag_retrieval_evaluation.ipynb)
 

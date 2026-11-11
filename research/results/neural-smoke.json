@@ -1,0 +1,71 @@
+{
+  "device": "cpu",
+  "environment": {
+    "numpy": "2.3.5",
+    "scikit-learn": "1.8.0",
+    "scipy": "1.17.0",
+    "sentence-transformers": "5.7.0",
+    "torch": "2.15.0+cpu",
+    "transformers": "4.57.6"
+  },
+  "input_record_ids": [
+    "1_CancerGov_QA/0000001_5.xml#0000001_5-8",
+    "3_GHR_QA/0001020.xml#0001020-3",
+    "7_SeniorHealth_QA/0000063.xml#0000063-22",
+    "3_GHR_QA/0000869.xml#0000869-2",
+    "2_GARD_QA/0001618.xml#0001618-2",
+    "7_SeniorHealth_QA/0000033.xml#0000033-11",
+    "4_MPlus_Health_Topics_QA/0000133.xml#0000133-1",
+    "2_GARD_QA/0002884.xml#0002884-1",
+    "2_GARD_QA/0000395.xml#0000395-1",
+    "5_NIDDK_QA/0000167.xml#0000167-11",
+    "2_GARD_QA/0004797.xml#0004797-1",
+    "2_GARD_QA/0002895.xml#0002895-1",
+    "3_GHR_QA/0000049.xml#0000049-5",
+    "2_GARD_QA/0006041.xml#0006041-1",
+    "2_GARD_QA/0005124.xml#0005124-2",
+    "3_GHR_QA/0000662.xml#0000662-4",
+    "3_GHR_QA/0001101.xml#0001101-2",
+    "2_GARD_QA/0003814.xml#0003814-2",
+    "3_GHR_QA/0000144.xml#0000144-4",
+    "2_GARD_QA/0003705.xml#0003705-1",
+    "6_NINDS_QA/0000032.xml#0000032-1",
+    "9_CDC_QA/0000272.xml#0000272-2",
+    "5_NIDDK_QA/0000107.xml#0000107-9",
+    "2_GARD_QA/0000618.xml#0000618-1",
+    "3_GHR_QA/0000058.xml#0000058-4",
+    "8_NHLBI_QA_XML/0000022.xml#0000022-6",
+    "2_GARD_QA/0005694.xml#0005694-1",
+    "2_GARD_QA/0000666.xml#0000666-1",
+    "2_GARD_QA/0004005.xml#0004005-1",
+    "3_GHR_QA/0000206.xml#0000206-5",
+    "2_GARD_QA/0003593.xml#0003593-1",
+    "2_GARD_QA/0005946.xml#0005946-1"
+  ],
+  "model_revisions": {
+    "cross-encoder/ms-marco-MiniLM-L-6-v2": {
+      "license": "apache-2.0",
+      "provider": "https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2",
+      "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a"
+    },
+    "ncbi/MedCPT-Article-Encoder": {
+      "license": "other",
+      "provider": "https://huggingface.co/ncbi/MedCPT-Article-Encoder",
+      "revision": "d05a736da4bb84ee4057b7f7999485be6ed85465"
+    },
+    "ncbi/MedCPT-Query-Encoder": {
+      "license": "other",
+      "provider": "https://huggingface.co/ncbi/MedCPT-Query-Encoder",
+      "revision": "d83a36cc6b8e3a5c5e9d9d6ba156808c1643dcbc"
+    },
+    "sentence-transformers/all-MiniLM-L6-v2": {
+      "license": "apache-2.0",
+      "provider": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2",
+      "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+    }
+  },
+  "passages": 32,
+  "queries": 3,
+  "scope": "Adapter execution only; not retrieval quality or historical replication",
+  "status": "passed"
+}

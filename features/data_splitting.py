@@ -1,373 +1,53 @@
+"""Disease/answer/question-grouped splits for generation research.
+
+The old question-only protocol remains explicitly opt-in for historical replication.
+Never compare its scores directly with the new held-out-disease protocol.
 """
-data_splitting.py
-
-Purpose:
-    Split the feature-engineered MedQuAD dataset into
-    training, validation, and test datasets and optionally
-    save those datasets for model training.
-
-Responsibilities:
-    - Validate the input dataset
-    - Create train/validation/test splits
-    - Keep identical questions in the same split
-    - Reduce train/test data leakage
-    - Make splitting reproducible
-    - Generate a splitting report
-    - Save the resulting datasets as CSV files
-
-Important:
-    Splitting is performed using the question as a grouping
-    variable so repeated questions cannot appear across
-    different dataset splits.
-"""
-
 from pathlib import Path
-
 import pandas as pd
-from sklearn.model_selection import GroupShuffleSplit
+from research.data import digest, grouped_split
+
+TRAIN_SIZE, VALIDATION_SIZE, TEST_SIZE, RANDOM_STATE = .8, .1, .1, 42
+
+
+def split_data(dataframe, train_size=TRAIN_SIZE, validation_size=VALIDATION_SIZE,
+               test_size=TEST_SIZE, random_state=RANDOM_STATE, *, protocol="grouped"):
+    if not isinstance(dataframe, pd.DataFrame) or dataframe.empty:
+        raise ValueError("A nonempty Pandas DataFrame is required")
+    sizes = (train_size, validation_size, test_size)
+    if any(x <= 0 for x in sizes) or abs(sum(sizes)-1) > 1e-8:
+        raise ValueError("Positive split fractions must sum to one")
+    required = ["question"] if protocol == "legacy_question" else ["question", "answer", "focus_area"]
+    if any(c not in dataframe.columns for c in required) or dataframe[required].isna().any().any():
+        raise ValueError("Missing required split columns or values: " + str(required))
+    frame = dataframe.copy()
+    if protocol == "legacy_question":
+        from sklearn.model_selection import GroupShuffleSplit
+        first = GroupShuffleSplit(n_splits=1, train_size=train_size, random_state=random_state)
+        a, temp = next(first.split(frame, groups=frame["question"]))
+        second = GroupShuffleSplit(n_splits=1, train_size=validation_size/(validation_size+test_size), random_state=random_state)
+        b, c = next(second.split(frame.iloc[temp], groups=frame.iloc[temp]["question"]))
+        parts = [frame.iloc[a], frame.iloc[temp[b]], frame.iloc[temp[c]]]
+        report = {"protocol": protocol, "warning": "Question-only replication permits focus and answer overlap; not a generation generalization benchmark."}
+    elif protocol == "grouped":
+        # Preserve stable source IDs when supplied; content hashes are a fallback.
+        if "record_id" not in frame:
+            frame["record_id"] = [digest([str(row.get(k, "")) for k in ("question","answer","focus_area","source")])
+                                  for row in frame.to_dict("records")]
+        input_count = len(frame)
+        frame = frame.drop_duplicates(subset=["question", "answer", "focus_area"]).copy()
+        report = grouped_split(frame.to_dict("records"), sizes, random_state)
+        report["duplicate_rows_removed"] = input_count-len(frame)
+        parts = [frame[frame.record_id.map(report["assignments"]) == name] for name in ("train","validation","test")]
+    else:
+        raise ValueError("Unknown protocol; use grouped or legacy_question")
+    report.update({"total_records": len(frame), "random_state": random_state})
+    for name, part in zip(("train","validation","test"), parts):
+        report[name+"_records"] = len(part)
+        report[name+"_percentage"] = round(100*len(part)/len(frame), 2)
+        report[name+"_unique_questions"] = part.question.nunique()
+    return *(part.reset_index(drop=True).copy() for part in parts), report
 
-
-# ------------------------------------------------------------------
-# SPLIT CONFIGURATION
-# ------------------------------------------------------------------
-
-TRAIN_SIZE = 0.80
-VALIDATION_SIZE = 0.10
-TEST_SIZE = 0.10
-
-RANDOM_STATE = 42
-
-
-# ------------------------------------------------------------------
-# VALIDATE DATAFRAME
-# ------------------------------------------------------------------
-
-def _validate_dataframe(
-    dataframe: pd.DataFrame
-) -> None:
-    """
-    Validate the dataset before splitting.
-    """
-
-    if not isinstance(dataframe, pd.DataFrame):
-        raise TypeError(
-            "Data splitting expects a Pandas DataFrame."
-        )
-
-    if dataframe.empty:
-        raise ValueError(
-            "Cannot split an empty DataFrame."
-        )
-
-    if "question" not in dataframe.columns:
-        raise ValueError(
-            "The dataset must contain a 'question' column."
-        )
-
-
-# ------------------------------------------------------------------
-# GROUP-AWARE DATA SPLITTING
-# ------------------------------------------------------------------
-
-def split_data(
-    dataframe: pd.DataFrame,
-    train_size: float = TRAIN_SIZE,
-    validation_size: float = VALIDATION_SIZE,
-    test_size: float = TEST_SIZE,
-    random_state: int = RANDOM_STATE
-) -> tuple[
-    pd.DataFrame,
-    pd.DataFrame,
-    pd.DataFrame,
-    dict
-]:
-    """
-    Split MedQuAD into train, validation, and test datasets.
-
-    Repeated questions are kept together to reduce data leakage.
-
-    Default split:
-        Train      = 80%
-        Validation = 10%
-        Test       = 10%
-
-    Parameters
-    ----------
-    dataframe : pd.DataFrame
-        Feature-engineered MedQuAD dataset.
-
-    train_size : float
-        Proportion assigned to training.
-
-    validation_size : float
-        Proportion assigned to validation.
-
-    test_size : float
-        Proportion assigned to testing.
-
-    random_state : int
-        Random seed for reproducibility.
-
-    Returns
-    -------
-    train_df : pd.DataFrame
-        Training dataset.
-
-    validation_df : pd.DataFrame
-        Validation dataset.
-
-    test_df : pd.DataFrame
-        Test dataset.
-
-    report : dict
-        Summary of the splitting operation.
-    """
-
-    # --------------------------------------------------------------
-    # STEP 1: Validate DataFrame
-    # --------------------------------------------------------------
-
-    _validate_dataframe(dataframe)
-
-
-    # --------------------------------------------------------------
-    # STEP 2: Validate split percentages
-    # --------------------------------------------------------------
-
-    total_size = (
-        train_size
-        + validation_size
-        + test_size
-    )
-
-    if abs(total_size - 1.0) > 1e-8:
-        raise ValueError(
-            "train_size + validation_size + test_size "
-            "must equal 1.0."
-        )
-
-    if (
-        train_size <= 0
-        or validation_size <= 0
-        or test_size <= 0
-    ):
-        raise ValueError(
-            "All split sizes must be greater than 0."
-        )
-
-
-    # --------------------------------------------------------------
-    # STEP 3: First split
-    #
-    # Separate training data from the temporary dataset.
-    #
-    # 80% -> Train
-    # 20% -> Temporary
-    # --------------------------------------------------------------
-
-    groups = dataframe["question"]
-
-    first_split = GroupShuffleSplit(
-        n_splits=1,
-        train_size=train_size,
-        random_state=random_state
-    )
-
-    train_index, temp_index = next(
-        first_split.split(
-            dataframe,
-            groups=groups
-        )
-    )
-
-    train_df = dataframe.iloc[
-        train_index
-    ].copy()
-
-    temp_df = dataframe.iloc[
-        temp_index
-    ].copy()
-
-
-    # --------------------------------------------------------------
-    # STEP 4: Split temporary dataset
-    #
-    # The remaining 20% is divided into:
-    #
-    # 10% -> Validation
-    # 10% -> Test
-    # --------------------------------------------------------------
-
-    relative_validation_size = (
-        validation_size
-        / (validation_size + test_size)
-    )
-
-    temp_groups = temp_df["question"]
-
-    second_split = GroupShuffleSplit(
-        n_splits=1,
-        train_size=relative_validation_size,
-        random_state=random_state
-    )
-
-    validation_index, test_index = next(
-        second_split.split(
-            temp_df,
-            groups=temp_groups
-        )
-    )
-
-    validation_df = temp_df.iloc[
-        validation_index
-    ].copy()
-
-    test_df = temp_df.iloc[
-        test_index
-    ].copy()
-
-
-    # --------------------------------------------------------------
-    # STEP 5: Reset indexes
-    # --------------------------------------------------------------
-
-    train_df = train_df.reset_index(
-        drop=True
-    )
-
-    validation_df = validation_df.reset_index(
-        drop=True
-    )
-
-    test_df = test_df.reset_index(
-        drop=True
-    )
-
-
-    # --------------------------------------------------------------
-    # STEP 6: Check for question leakage
-    # --------------------------------------------------------------
-
-    train_questions = set(
-        train_df["question"]
-    )
-
-    validation_questions = set(
-        validation_df["question"]
-    )
-
-    test_questions = set(
-        test_df["question"]
-    )
-
-    train_validation_overlap = (
-        train_questions
-        & validation_questions
-    )
-
-    train_test_overlap = (
-        train_questions
-        & test_questions
-    )
-
-    validation_test_overlap = (
-        validation_questions
-        & test_questions
-    )
-
-
-    # --------------------------------------------------------------
-    # STEP 7: Safety check
-    #
-    # GroupShuffleSplit should prevent identical questions from
-    # appearing in different splits. If leakage is detected,
-    # stop the pipeline rather than silently continuing.
-    # --------------------------------------------------------------
-
-    if (
-        train_validation_overlap
-        or train_test_overlap
-        or validation_test_overlap
-    ):
-        raise RuntimeError(
-            "Question leakage detected between dataset splits."
-        )
-
-
-    # --------------------------------------------------------------
-    # STEP 8: Create splitting report
-    # --------------------------------------------------------------
-
-    total_records = len(dataframe)
-
-    report = {
-
-        "total_records":
-            total_records,
-
-        "train_records":
-            len(train_df),
-
-        "validation_records":
-            len(validation_df),
-
-        "test_records":
-            len(test_df),
-
-        "train_percentage": round(
-            len(train_df)
-            / total_records
-            * 100,
-            2
-        ),
-
-        "validation_percentage": round(
-            len(validation_df)
-            / total_records
-            * 100,
-            2
-        ),
-
-        "test_percentage": round(
-            len(test_df)
-            / total_records
-            * 100,
-            2
-        ),
-
-        "train_unique_questions":
-            train_df["question"].nunique(),
-
-        "validation_unique_questions":
-            validation_df["question"].nunique(),
-
-        "test_unique_questions":
-            test_df["question"].nunique(),
-
-        "train_validation_question_overlap":
-            len(train_validation_overlap),
-
-        "train_test_question_overlap":
-            len(train_test_overlap),
-
-        "validation_test_question_overlap":
-            len(validation_test_overlap),
-
-        "random_state":
-            random_state,
-    }
-
-    return (
-        train_df,
-        validation_df,
-        test_df,
-        report
-    )
-
-
-# ------------------------------------------------------------------
-# SAVE DATASET SPLITS
-# ------------------------------------------------------------------
 
 def save_splits(
     train_df: pd.DataFrame,

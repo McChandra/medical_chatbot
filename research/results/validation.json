@@ -1,0 +1,32 @@
+{
+  "executed_on": "2026-11-10",
+  "methodology_tests": {
+    "passed": 25
+  },
+  "legacy_copilot_tests": {
+    "passed": 5,
+    "skipped": 1,
+    "skip_reason": "Missing itsdangerous application dependency for HTTP test"
+  },
+  "checks": [
+    "Python compilation",
+    "git diff --check",
+    "archived query/rank/code hashes and gold-record scores recomputed",
+    "clinical-passages.json rebuilt byte-identically from pinned source"
+  ],
+  "sha256": {
+    "backend/copilot_engine.py": "bbb5f002350ea809811e7ac4a6d81046eca024eb35fb8fec1daedd73b38e7a95",
+    "research/diagnostics.py": "5bde6be04b5094484cf453ff0decda4f77efb10822889162a1333312889a5f2b",
+    "healthbrowse/dist/clinical-passages.json": "5c8c33590e6ca0c775b24a1b4f10e69db836e3cfd3ae582aa055f612538a49c4",
+    "tests/test_copilot.py": "fa81727feebf6291bde3a9621cd6087f8ea071ce1647b6655f3370189c09c552",
+    "research/tests/test_evaluation.py": "218b85e645bfb0369b4d940bd435ed966609bacb1e63ddb264afefc3e22b61b1",
+    "features/data_splitting.py": "6dc99efa9a1c600faf602a2cfb8812a1453243243021c4333b851a59bdcfb3d3"
+  },
+  "not_verified": [
+    "Live application authentication or deployment",
+    "Clinical accuracy",
+    "Human relevance grades",
+    "Full neural retrieval performance",
+    "Historical MQ-017/MQ-018 replication"
+  ]
+}

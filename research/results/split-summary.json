@@ -1,0 +1,35 @@
+{
+  "component_count": 4214,
+  "counts": {
+    "test": 1191,
+    "train": 13791,
+    "validation": 1363
+  },
+  "largest_component_records": 2117,
+  "normalized_overlap_counts": {
+    "answer": {
+      "train/test": 0,
+      "train/validation": 0,
+      "validation/test": 0
+    },
+    "focus_area": {
+      "train/test": 0,
+      "train/validation": 0,
+      "validation/test": 0
+    },
+    "question": {
+      "train/test": 0,
+      "train/validation": 0,
+      "validation/test": 0
+    }
+  },
+  "protocol": "connected-focus-question-answer-v1",
+  "record_count": 16345,
+  "records_sha256": "fe8b5ac22228a1e5ca5669b42f5d4c5d210249df7190df6fceb622e8aadbfb97",
+  "seed": 42,
+  "target_group_fractions": [
+    0.8,
+    0.1,
+    0.1
+  ]
+}

@@ -30,13 +30,14 @@ PRIVATE = re.compile(
 )
 PERSONAL = re.compile(r"\b(i|i'm|my|mine|me|we|our|patient's|this patient|prescribe|dosage|dose|should take)\b", re.I)
 WORDS = re.compile(r"[a-z]+")
-STOP = set("a an the are is of for in on to this that and do does what how which give explain show describe tell about please common from it can may some people adults get why have with typical".split())
+STOP = set("a an the are is of for in on at to this that and do does what who how which give explain show describe tell about please common from it can may some people adults get why have with typical".split())
 GROUPS = (
     ("symptoms", "symptom", "symptoms", "sign", "signs"),
     ("test", "test", "tests", "testing", "investigation", "investigations"),
     ("risk", "risk", "risks", "factor", "factors"),
     ("genetic", "genetic", "genetics", "gene", "genes", "hereditary", "inherited"),
     ("definition", "definition", "define", "overview", "summary"),
+    ("treatment", "treatment", "treatments", "treat", "treated", "therapy", "therapies", "therapeutics"),
 )
 NORMAL = {word: group[0] for group in GROUPS for word in group[1:]}
 
@@ -106,7 +107,11 @@ def answer(topic, deck, question):
         terms = tokens(passage["title"] + " " + passage["text"])
         # A heading is useful only for explicitly generic overview questions.
         if not wanted or wanted == {"definition"}:
-            if deck == 1:
+            # An empty residual is not evidence: require a definition-like clause
+            # naming the source focus in the actual body, not just a deck heading.
+            definition = re.search(r"\b" + re.escape(passage['focus']) +
+                                   r"\s+(?:is|are|refers to|means)\b", passage['text'], re.I)
+            if deck == 1 and definition:
                 matches.append(passage)
         elif wanted <= terms:
             matches.append(passage)

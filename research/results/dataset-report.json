@@ -1,0 +1,59 @@
+{
+  "archive_sha256": "9dd2db77967323da64d1514e0125b44fcce2e59ab5b2da16eba99245649c64a8",
+  "chunk_words": 160,
+  "cleaning": {
+    "duplicate_records_removed": 48,
+    "missing_required_ids": [
+      "2_GARD_QA/0002079.xml#0002079-1",
+      "2_GARD_QA/0002080.xml#0002080-1",
+      "2_GARD_QA/0002253.xml#0002253-1",
+      "2_GARD_QA/0002747.xml#0002747-1",
+      "2_GARD_QA/0006509.xml#0006509-1",
+      "9_CDC_QA/0000199.xml#0000199-12",
+      "9_CDC_QA/0000199.xml#0000199-14",
+      "9_CDC_QA/0000199.xml#0000199-19",
+      "9_CDC_QA/0000199.xml#0000199-20",
+      "9_CDC_QA/0000423.xml#0000423-1",
+      "9_CDC_QA/0000423.xml#0000423-2",
+      "9_CDC_QA/0000423.xml#0000423-6",
+      "9_CDC_QA/0000423.xml#0000423-8",
+      "9_CDC_QA/0000424.xml#0000424-1",
+      "9_CDC_QA/0000424.xml#0000424-2",
+      "9_CDC_QA/0000424.xml#0000424-3",
+      "9_CDC_QA/0000424.xml#0000424-4",
+      "9_CDC_QA/0000424.xml#0000424-5",
+      "9_CDC_QA/0000424.xml#0000424-7"
+    ]
+  },
+  "duplicated_normalized_answer_groups": 51,
+  "excluded_copyright_xml_files": 5777,
+  "focus_in_question_fraction": 1.0,
+  "legacy_four_column_preprocessing": {
+    "duplicate_rows_found": 48,
+    "empty_answers_removed": 0,
+    "empty_questions_removed": 0,
+    "empty_rows_found": 0,
+    "final_columns": 4,
+    "final_rows": 16359,
+    "missing_answers_removed": 5,
+    "missing_focus_areas_filled": 14,
+    "missing_questions_removed": 0,
+    "original_columns": 4,
+    "original_rows": 16412,
+    "remaining_missing_values": 0,
+    "rows_removed": 53,
+    "text_columns_cleaned": [
+      "question",
+      "answer",
+      "source",
+      "focus_area"
+    ]
+  },
+  "limitation": "New reproducible protocol, not a reconstruction of undocumented notebook rows or chunking.",
+  "passages": 29345,
+  "passages_sha256": "c7efef295c746daa87a953446e1ab4c71746bbcda1c36cb40f99b8c86be84e3f",
+  "raw_records": 16412,
+  "records": 16345,
+  "records_sha256": "fe8b5ac22228a1e5ca5669b42f5d4c5d210249df7190df6fceb622e8aadbfb97",
+  "revision": "577bd37b96c02d1833b2c9eed2de9f96964e96cb"
+}
