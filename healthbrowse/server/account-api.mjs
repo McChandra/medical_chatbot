@@ -35,7 +35,7 @@ async function jsonBody(request){
 }
 function only(value,keys){if(Object.keys(value).some(k=>!keys.includes(k)))reject(400,'Unexpected request field.')}
 function credentials(key,token){return {apikey:key,Authorization:'Bearer '+token,'Content-Type':'application/json'}}
-function freshFetch(url,options){return fetch(url,{...options,redirect:'error',cache:'no-store',signal:AbortSignal.timeout(8000)})}
+function freshFetch(url,options){return fetch(url,{...options,headers:{...options.headers,'Cache-Control':'no-store'},redirect:'manual',signal:AbortSignal.timeout(8000)})}
 async function database(base,headers,path,method='GET',body,prefer){
   const res=await freshFetch(base+'/rest/v1/'+path,{method,headers:{...headers,...(prefer?{Prefer:prefer}:{})},
     ...(body===undefined?{}:{body:JSON.stringify(body)})});

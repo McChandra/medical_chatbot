@@ -2,7 +2,7 @@
 
 ## Current path: Groq
 
-Both reading modes use `openai/gpt-oss-120b` through Groq. General requests plain English; Clinicians requests clinical terminology and evidence limitations. A second request to `openai/gpt-oss-20b` checks each claim and can correct incomplete citation assignments. This is automated support review, not independent clinical validation. The QLoRA experiment is preserved separately and is not needed to run the website.
+Both reading modes use `openai/gpt-oss-120b` through Groq. General requests plain English; Clinicians requests clinical terminology and evidence limitations. A second request to the same `openai/gpt-oss-120b` model checks each claim and can correct incomplete citation assignments. This is automated support review, not independent clinical validation. The QLoRA experiment is preserved separately and is not needed to run the website.
 
 Set these values in the **server runtime**, then redeploy:
 

@@ -19,7 +19,7 @@ async function identity(request,env){
  const token=request.headers.get('authorization')?.match(/^Bearer ([^\s]{10,8192})$/i)?.[1];
  if(!token)fail(401,'sign_in','Sign in to use AI synthesis.');
  let base;try{base=new URL(env.SUPABASE_URL);if(base.protocol!=='https:'||base.username||base.password||base.pathname!=='/'||base.search||base.hash)throw Error()}catch{fail(503,'auth_unavailable','The sign-in service is not configured.')}
- const res=await fetch(base.origin+'/auth/v1/user',{headers:{apikey:env.SUPABASE_ANON_KEY,Authorization:'Bearer '+token},redirect:'error',signal:AbortSignal.timeout(8000)});
+ const res=await fetch(base.origin+'/auth/v1/user',{headers:{apikey:env.SUPABASE_ANON_KEY,Authorization:'Bearer '+token},redirect:'manual',signal:AbortSignal.timeout(8000)});
  if(!res.ok)fail(res.status===401||res.status===403?401:503,'auth_unavailable','Sign-in could not be verified.');
  const user=await res.json();if(!/^[a-f\d-]{36}$/i.test(user.id||''))fail(401,'sign_in','Invalid sign-in session.');return user.id;
 }
@@ -34,7 +34,7 @@ async function reserve(env,user){
 }
 async function complete(config,messages,signal,maxTokens=6000,schema){
  const payload=config.protocol==='groq-cited-v1'&&schema?{model:config.model,messages,temperature:0,max_completion_tokens:maxTokens,stream:false,reasoning_effort:'low',include_reasoning:false,response_format:{type:'json_schema',json_schema:{name:'healthbrowse_answer',strict:true,schema}}}:{model:config.model,messages,temperature:0,max_tokens:maxTokens,stream:false,response_format:schema?{type:'json_schema',json_schema:{name:'healthbrowse',strict:true,schema}}:{type:'json_object'}};
- const res=await fetch(config.url,{method:'POST',headers:{Authorization:'Bearer '+config.key,'Content-Type':'application/json'},redirect:'error',signal,
+ const res=await fetch(config.url,{method:'POST',headers:{Authorization:'Bearer '+config.key,'Content-Type':'application/json'},redirect:'manual',signal,
   body:JSON.stringify(payload)});
  // Configuration/credit failures are not hallucinations; do not repeat billable requests.
  if(!res.ok){
@@ -53,6 +53,7 @@ export async function modelAPI(request,env,assets){
  if(url.pathname==='/api/ai/status'&&request.method==='GET')return reply(modelStatus(env));
  if(url.pathname!=='/api/ai/answer')return reply({error:'Unknown AI route.'},404);
  if(request.method!=='POST')return reply({error:'Use POST.'},405);
+ let phase='input';
  try{
   if(request.headers.get('origin')&&request.headers.get('origin')!==url.origin)fail(403,'origin','Cross-origin requests are not supported.');
   if(!request.headers.get('content-type')?.startsWith('application/json'))fail(415,'body','Use JSON.');
@@ -68,17 +69,25 @@ export async function modelAPI(request,env,assets){
   if(!config)fail(503,'model_not_configured','AI synthesis is not connected yet. Showing source excerpts instead.');
   const reviewer=modelReviewEndpoint(env,route);
   if(!reviewer)fail(503,'reviewer_not_configured','The support reviewer is not configured. Showing source excerpts instead.');
+  phase='authentication';
   const user=await identity(request,env),grounded=config.protocol==='grounded-v2';
+  phase='evidence';
   const evidence=config.protocol==='groq-cited-v1'?citedEvidence(assets,b):grounded?groundedEvidence(assets,b):evidenceFor(assets,b.topic,b.role,b.question);
   if(!evidence?.sources.length)fail(422,'no_evidence','No indexed sources support this topic.');
+  phase='quota';
   await reserve(env,user);
   // The deadline includes both generation, review and one possible repair.
-  const started=Date.now(),signal=AbortSignal.any([request.signal,AbortSignal.timeout(120000)]);
+  const started=Date.now(),deadline=AbortSignal.timeout(120000);
+  // Incoming Request.signal is absent on older Workers compatibility dates.
+  const signal=request.signal?AbortSignal.any([request.signal,deadline]):deadline;
   if(config.protocol==='groq-cited-v1'){
    const prepared=prepareCited(b,evidence);
+   phase='generation';
    const raw=await complete(config,prepared.messages,signal,prepared.maxTokens,prepared.schema);
    const check=prepareCitedReview(raw,prepared,b);
-   const review=check.claims.length?await complete({...config,model:'openai/gpt-oss-20b'},check.messages,signal,check.maxTokens,check.schema):{checks:[]};
+   phase='support_review';
+   const review=check.claims.length?await complete(config,check.messages,signal,check.maxTokens,check.schema):{checks:[]};
+   phase='presentation';
    return reply(presentCited(applyCitedReview(review,check,prepared,b),prepared,b,config.model));
   }
   let reason='';
@@ -111,7 +120,7 @@ export async function modelAPI(request,env,assets){
    }catch(error){
     if(error instanceof ContextLimit)fail(422,'context_limit','This question and its evidence exceed the model context. Try a shorter question or explore one deck with the buddy.');
     if(signal.aborted){
-     if(request.signal.aborted)fail(499,'request_cancelled','The request was cancelled.');
+     if(request.signal?.aborted)fail(499,'request_cancelled','The request was cancelled.');
      fail(503,'model_timeout','AI generation and verification exceeded the response deadline. Showing source excerpts instead.');
     }
     if(error instanceof Failure)throw error;
@@ -119,5 +128,8 @@ export async function modelAPI(request,env,assets){
    }
   }
   fail(502,'verification_failed','The generated answer did not pass source checks. Showing source excerpts instead.');
- }catch(error){return reply({status:'unavailable',code:error.code||'model_unavailable',error:error instanceof Failure?error.message:'AI synthesis is temporarily unavailable. Showing source excerpts instead.'},error.status||503)}
+ }catch(error){
+  // Never log questions, tokens, provider bodies, identities or error messages.
+  if(!(error instanceof Failure))console.error(JSON.stringify({event:'ai_request_failed',phase,kind:['TypeError','SyntaxError','TimeoutError','AbortError'].includes(error?.name)?error.name:'Error'}));
+  return reply({status:'unavailable',code:error.code||'model_unavailable',error:error instanceof Failure?error.message:'AI synthesis is temporarily unavailable. Showing source excerpts instead.'},error.status||503)}
 }

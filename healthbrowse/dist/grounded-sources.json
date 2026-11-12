@@ -142,6 +142,57 @@
       "retrievedAt": "2026-11-12",
       "textSha256": "dc11949589030cccdd1f685e652a37a81c77f4af84b2d91f9432ed98654b667b",
       "clinicalReviewed": false
+    },
+    {
+      "key": "cdc-throat-causes",
+      "topic": "Sore Throat",
+      "deck": 1,
+      "text": "Viruses, like those that cause colds or flu, are the most common cause of sore throat. These viruses are not strep throat.",
+      "heading": "Causes",
+      "intent": "cause",
+      "focus": "Sore Throat",
+      "scopeTerms": [],
+      "url": "https://www.cdc.gov/sore-throat/about/index.html",
+      "title": "Sore Throat Basics · CDC",
+      "date": "2024-04-17",
+      "retrievedAt": "2026-11-12",
+      "textSha256": "acc515e1b3da71ab9a442fefd8f705bc84b3ce6ca0cf445639ebf6865d986bf3",
+      "clinicalReviewed": false
+    },
+    {
+      "key": "cdc-throat-diagnosis",
+      "topic": "Sore Throat",
+      "deck": 3,
+      "text": "Your healthcare provider will determine what type of illness you have by asking about symptoms and doing a physical examination. Sometimes they will also swab your throat.",
+      "heading": "Diagnosis",
+      "intent": "diagnosis",
+      "focus": "Sore Throat",
+      "scopeTerms": [],
+      "url": "https://www.cdc.gov/sore-throat/about/index.html",
+      "title": "Sore Throat Basics · CDC",
+      "date": "2024-04-17",
+      "retrievedAt": "2026-11-12",
+      "textSha256": "f1ddaf15e7013de10dd0bf2ce922e78781eb0716af7cd18a5a306da160103dd0",
+      "clinicalReviewed": false
+    },
+    {
+      "key": "cdc-strep-symptoms",
+      "topic": "Sore Throat",
+      "deck": 3,
+      "text": "It usually takes 2 to 5 days after exposure to become ill with strep throat. Common symptoms may include: • Fever • Pain when swallowing • Red and swollen tonsils • Sore throat that started very quickly and may look red • Swollen lymph nodes in the front of the neck • Tiny, red spots on the roof of the mouth, called petechiae • White patches or streaks of pus on the tonsils",
+      "heading": "Symptoms",
+      "intent": "symptoms",
+      "focus": "Strep throat",
+      "scopeTerms": [
+        "strep",
+        "streptococcal"
+      ],
+      "url": "https://www.cdc.gov/group-a-strep/about/strep-throat.html",
+      "title": "About Strep Throat · CDC",
+      "date": "2026-01-15",
+      "retrievedAt": "2026-11-12",
+      "textSha256": "a5ee4824c79336b739dabf43010e92bed6da753854329815005c9e1d9ca62887",
+      "clinicalReviewed": false
     }
   ]
 }

@@ -86,3 +86,15 @@ test('both modes and Buddy generate once and review support once through the API
  providerStatus=429;const busy=await call(input);assert.equal((await busy.json()).code,'provider_busy');assert.equal(calls.length,7,'No repeated billable retries');
  delete env.GROQ_API_KEY;assert.equal((await call(input)).status,503);assert.equal(calls.length,7);
 });
+
+test('withheld overview wording can use an independently supported deck claim from the same evidence',()=>{
+ const p=prepareCited({...input,topic:'Sore Throat'},citedEvidence(assets,{...input,topic:'Sore Throat'}));
+ const source=p.evidence.sources.find(s=>s.key==='cdc-throat-causes');
+ const supported={text:source.text,sources:[source.id]};
+ const raw={answer:[{text:source.text+' It proves a personal diagnosis.',sources:[source.id]}],decks:{1:[supported]}};
+ const check=prepareCitedReview(raw,p,input);
+ const review={checks:check.claims.map(c=>({id:c.id,verdict:c.deck?'supported':'unsupported',sources:c.deck?c.sources:[]}))};
+ const result=applyCitedReview(review,check,p,input);
+ assert.deepEqual(result.answer,[supported]);assert.ok(result.answerRecoveredFromDecks);assert.doesNotMatch(result.answer[0].text,/personal diagnosis/);
+ assert.equal(result.withheldClaims,1,'The rejected original remains counted as withheld');
+});

@@ -28,7 +28,7 @@ function clinicalTablesURL(table, term, codeLookup) {
 }
 
 async function fetchTerminologyJSON(url) {
-  const response=await fetch(url,{signal:AbortSignal.timeout(8000),redirect:'error',
+  const response=await fetch(url,{signal:AbortSignal.timeout(8000),redirect:'manual',
     headers:{Accept:'application/json'},credentials:'omit',referrerPolicy:'no-referrer'});
   if(!response.ok)throw Error('Terminology source unavailable');
   return response.json();

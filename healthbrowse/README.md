@@ -1,6 +1,6 @@
 # HealthBrowse public research platform
 
-HealthBrowse uses Groq-hosted `openai/gpt-oss-120b` for cited answers and six clinical decks, with `openai/gpt-oss-20b` checking claim support and citation assignments. General and Clinicians share this hosted service but use different audience instructions. The click-to-open Buddy uses the active question, answer and selected deck. [Configuration and verification](docs/model-integration.md).
+HealthBrowse uses Groq-hosted `openai/gpt-oss-120b` for cited answers and six clinical decks, with a separate `openai/gpt-oss-120b` request checking claim support and citation assignments. General and Clinicians share this hosted service but use different audience instructions. The click-to-open Buddy uses the active question, answer and selected deck. [Configuration and verification](docs/model-integration.md).
 
 The local QLoRA training and evaluation files remain research experiments; they are not required to run this hosted integration. No model weights or credentials belong in this repository. Automated citation/support checks reduce some errors but do not establish clinical certification.
 

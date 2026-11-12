@@ -511,7 +511,7 @@
           },
           {
             "role": "user",
-            "content": "{\"question\":\"I have a sore throat and fever. What can cause this, and when should someone seek care?\",\"topic\":\"Sore Throat\",\"mode\":\"search\",\"browserQuestion\":\"What is Sore Throat?\",\"activeDeck\":0,\"priorQuestions\":[],\"facets\":[{\"id\":\"F1\",\"label\":\"Causes and risk factors\"},{\"id\":\"F2\",\"label\":\"When to seek medical care\"}],\"domains\":[{\"id\":1,\"title\":\"Etiology & Pathogenesis\",\"scope\":\"Causes, risk factors, genetics, and biological mechanisms.\"},{\"id\":2,\"title\":\"Natural History & Progression\",\"scope\":\"Early changes, symptom onset, and the course of disease.\"},{\"id\":3,\"title\":\"Clinical Presentation & Diagnosis\",\"scope\":\"Symptoms, signs, examinations, and diagnostic tests.\"},{\"id\":4,\"title\":\"Therapeutics & Management\",\"scope\":\"Treatment approaches, ongoing care, and support.\"},{\"id\":5,\"title\":\"Prognosis & Complications\",\"scope\":\"Possible outcomes and health problems associated with the disease.\"},{\"id\":6,\"title\":\"Epidemiology & Public Health\",\"scope\":\"Population patterns, prevention, and access to care.\"}],\"evidence\":[{\"id\":\"S2\",\"deck\":1,\"text\":\"You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: • Allergies • Mononucleosis • Smoking • Strep throat • Tonsillitis\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]},{\"id\":\"S6\",\"deck\":3,\"text\":\"This list is not all-inclusive. Please see your healthcare provider for any symptom that is severe or concerning. Tell your healthcare provider if you or your child have recurrent sore throats.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S4\",\"deck\":2,\"text\":\"Most sore throats will get better on their own within one week.\",\"focus\":\"Sore Throat\",\"heading\":\"Overview\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S3\",\"deck\":4,\"text\":\"Treatment depends on the cause. Sucking on lozenges, drinking lots of liquids, and gargling may ease the pain. Over-the-counter pain relievers can also help, but children should not take aspirin.\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]},{\"id\":\"S10\",\"deck\":5,\"text\":\"Complications can occur after a strep throat infection if the bacteria spread to other parts of the body. Complications can include: • Abscesses (pockets of pus) around the tonsils or in the neck • Ear infections • Post-streptococcal glomerulonephritis (a kidney disease) • Rheumatic fever (a disease affecting the heart, joints, brain, skin) • Sinus infections\",\"focus\":\"Strep throat\",\"heading\":\"Complications\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S8\",\"deck\":6,\"text\":\"You can help prevent sore throat by doing your best to stay healthy and keep others healthy, including: • Clean your hands. • Avoid close contact with people who have sore throats, colds or other upper respiratory infections. • Don't smoke and avoid exposure to secondhand smoke.\",\"focus\":\"Sore Throat\",\"heading\":\"Prevention\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S5\",\"deck\":3,\"text\":\"Also, see a healthcare provider if you or your child have any of the following: • Difficulty breathing. • Difficulty swallowing. • Blood in saliva or phlegm. • Excessive drooling (in young children). • Dehydration. • Joint swelling and pain. • Rash. • Symptoms that do not improve within a few days or get worse.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S9\",\"deck\":4,\"text\":\"Antibiotics can help people with strep throat feel better faster.\",\"focus\":\"Strep throat\",\"heading\":\"Key points\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S7\",\"deck\":4,\"text\":\"If a virus causes a sore throat, antibiotics will not help. Most sore throats will get better on their own within one week. Your healthcare provider may prescribe other medicine or give you tips to help you feel better.\",\"focus\":\"Sore Throat\",\"heading\":\"Treatment\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S1\",\"deck\":1,\"text\":\"Your throat is a tube that carries food to your esophagus and air to your windpipe and larynx (also called the voice box). The technical name for the throat is pharynx.\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]}]}"
+            "content": "{\"question\":\"I have a sore throat and fever. What can cause this, and when should someone seek care?\",\"topic\":\"Sore Throat\",\"mode\":\"search\",\"browserQuestion\":\"What is Sore Throat?\",\"activeDeck\":0,\"priorQuestions\":[],\"facets\":[{\"id\":\"F1\",\"label\":\"Causes and risk factors\"},{\"id\":\"F2\",\"label\":\"When to seek medical care\"}],\"domains\":[{\"id\":1,\"title\":\"Etiology & Pathogenesis\",\"scope\":\"Causes, risk factors, genetics, and biological mechanisms.\"},{\"id\":2,\"title\":\"Natural History & Progression\",\"scope\":\"Early changes, symptom onset, and the course of disease.\"},{\"id\":3,\"title\":\"Clinical Presentation & Diagnosis\",\"scope\":\"Symptoms, signs, examinations, and diagnostic tests.\"},{\"id\":4,\"title\":\"Therapeutics & Management\",\"scope\":\"Treatment approaches, ongoing care, and support.\"},{\"id\":5,\"title\":\"Prognosis & Complications\",\"scope\":\"Possible outcomes and health problems associated with the disease.\"},{\"id\":6,\"title\":\"Epidemiology & Public Health\",\"scope\":\"Population patterns, prevention, and access to care.\"}],\"evidence\":[{\"id\":\"S2\",\"deck\":1,\"text\":\"You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: • Allergies • Mononucleosis • Smoking • Strep throat • Tonsillitis\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]},{\"id\":\"S6\",\"deck\":3,\"text\":\"This list is not all-inclusive. Please see your healthcare provider for any symptom that is severe or concerning. Tell your healthcare provider if you or your child have recurrent sore throats.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S4\",\"deck\":2,\"text\":\"Most sore throats will get better on their own within one week.\",\"focus\":\"Sore Throat\",\"heading\":\"Overview\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S3\",\"deck\":4,\"text\":\"Treatment depends on the cause. Sucking on lozenges, drinking lots of liquids, and gargling may ease the pain. Over-the-counter pain relievers can also help, but children should not take aspirin.\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]},{\"id\":\"S10\",\"deck\":5,\"text\":\"Complications can occur after a strep throat infection if the bacteria spread to other parts of the body. Complications can include: • Abscesses (pockets of pus) around the tonsils or in the neck • Ear infections • Post-streptococcal glomerulonephritis (a kidney disease) • Rheumatic fever (a disease affecting the heart, joints, brain, skin) • Sinus infections\",\"focus\":\"Strep throat\",\"heading\":\"Complications\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S8\",\"deck\":6,\"text\":\"You can help prevent sore throat by doing your best to stay healthy and keep others healthy, including: • Clean your hands. • Avoid close contact with people who have sore throats, colds or other upper respiratory infections. • Don't smoke and avoid exposure to secondhand smoke.\",\"focus\":\"Sore Throat\",\"heading\":\"Prevention\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S5\",\"deck\":3,\"text\":\"Also, see a healthcare provider if you or your child have any of the following: • Difficulty breathing. • Difficulty swallowing. • Blood in saliva or phlegm. • Excessive drooling (in young children). • Dehydration. • Joint swelling and pain. • Rash. • Symptoms that do not improve within a few days or get worse.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S13\",\"deck\":3,\"text\":\"It usually takes 2 to 5 days after exposure to become ill with strep throat. Common symptoms may include: • Fever • Pain when swallowing • Red and swollen tonsils • Sore throat that started very quickly and may look red • Swollen lymph nodes in the front of the neck • Tiny, red spots on the roof of the mouth, called petechiae • White patches or streaks of pus on the tonsils\",\"focus\":\"Strep throat\",\"heading\":\"Symptoms\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S12\",\"deck\":3,\"text\":\"Your healthcare provider will determine what type of illness you have by asking about symptoms and doing a physical examination. Sometimes they will also swab your throat.\",\"focus\":\"Sore Throat\",\"heading\":\"Diagnosis\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S11\",\"deck\":1,\"text\":\"Viruses, like those that cause colds or flu, are the most common cause of sore throat. These viruses are not strep throat.\",\"focus\":\"Sore Throat\",\"heading\":\"Causes\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S9\",\"deck\":4,\"text\":\"Antibiotics can help people with strep throat feel better faster.\",\"focus\":\"Strep throat\",\"heading\":\"Key points\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]}]}"
           }
         ],
         "schema": {
@@ -539,9 +539,10 @@
                         "S10",
                         "S8",
                         "S5",
-                        "S9",
-                        "S7",
-                        "S1"
+                        "S13",
+                        "S12",
+                        "S11",
+                        "S9"
                       ]
                     },
                     "maxItems": 2,
@@ -574,7 +575,8 @@
                         "items": {
                           "type": "string",
                           "enum": [
-                            "S2"
+                            "S2",
+                            "S11"
                           ]
                         },
                         "maxItems": 2,
@@ -635,7 +637,9 @@
                           "type": "string",
                           "enum": [
                             "S6",
-                            "S5"
+                            "S5",
+                            "S13",
+                            "S12"
                           ]
                         },
                         "maxItems": 2,
@@ -666,8 +670,7 @@
                           "type": "string",
                           "enum": [
                             "S3",
-                            "S9",
-                            "S7"
+                            "S9"
                           ]
                         },
                         "maxItems": 2,
@@ -903,6 +906,66 @@
               "id": "S5"
             },
             {
+              "key": "cdc-strep-symptoms",
+              "topic": "Sore Throat",
+              "deck": 3,
+              "text": "It usually takes 2 to 5 days after exposure to become ill with strep throat. Common symptoms may include: • Fever • Pain when swallowing • Red and swollen tonsils • Sore throat that started very quickly and may look red • Swollen lymph nodes in the front of the neck • Tiny, red spots on the roof of the mouth, called petechiae • White patches or streaks of pus on the tonsils",
+              "heading": "Symptoms",
+              "intent": "symptoms",
+              "focus": "Strep throat",
+              "scopeTerms": [
+                "strep",
+                "streptococcal"
+              ],
+              "url": "https://www.cdc.gov/group-a-strep/about/strep-throat.html",
+              "title": "About Strep Throat · CDC",
+              "date": "2026-01-15; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "a5ee4824c79336b739dabf43010e92bed6da753854329815005c9e1d9ca62887",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S13"
+            },
+            {
+              "key": "cdc-throat-diagnosis",
+              "topic": "Sore Throat",
+              "deck": 3,
+              "text": "Your healthcare provider will determine what type of illness you have by asking about symptoms and doing a physical examination. Sometimes they will also swab your throat.",
+              "heading": "Diagnosis",
+              "intent": "diagnosis",
+              "focus": "Sore Throat",
+              "scopeTerms": [],
+              "url": "https://www.cdc.gov/sore-throat/about/index.html",
+              "title": "Sore Throat Basics · CDC",
+              "date": "2024-04-17; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "f1ddaf15e7013de10dd0bf2ce922e78781eb0716af7cd18a5a306da160103dd0",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S12"
+            },
+            {
+              "key": "cdc-throat-causes",
+              "topic": "Sore Throat",
+              "deck": 1,
+              "text": "Viruses, like those that cause colds or flu, are the most common cause of sore throat. These viruses are not strep throat.",
+              "heading": "Causes",
+              "intent": "cause",
+              "focus": "Sore Throat",
+              "scopeTerms": [],
+              "url": "https://www.cdc.gov/sore-throat/about/index.html",
+              "title": "Sore Throat Basics · CDC",
+              "date": "2024-04-17; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "acc515e1b3da71ab9a442fefd8f705bc84b3ce6ca0cf445639ebf6865d986bf3",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S11"
+            },
+            {
               "key": "cdc-strep-treatment",
               "topic": "Sore Throat",
               "deck": 4,
@@ -923,40 +986,6 @@
               "historical": false,
               "overview": false,
               "id": "S9"
-            },
-            {
-              "key": "cdc-throat-antibiotics",
-              "topic": "Sore Throat",
-              "deck": 4,
-              "text": "If a virus causes a sore throat, antibiotics will not help. Most sore throats will get better on their own within one week. Your healthcare provider may prescribe other medicine or give you tips to help you feel better.",
-              "url": "https://www.cdc.gov/sore-throat/about/index.html",
-              "title": "Sore Throat Basics · CDC",
-              "heading": "Treatment",
-              "intent": "therapy",
-              "focus": "Sore Throat",
-              "scopeTerms": [],
-              "date": "2024-04-17; retrieved 2026-11-12",
-              "retrievedAt": "2026-11-12",
-              "textSha256": "b6d8051b08ad64110ece29e22404879fcf1926efbbcb42c80cadf40d8a222086",
-              "clinicalReviewed": false,
-              "historical": false,
-              "overview": false,
-              "id": "S7"
-            },
-            {
-              "id": "S1",
-              "deck": 1,
-              "overview": true,
-              "text": "Your throat is a tube that carries food to your esophagus and air to your windpipe and larynx (also called the voice box). The technical name for the throat is pharynx.",
-              "title": "Sore Throat · MedlinePlus",
-              "url": "https://medlineplus.gov/sorethroat.html",
-              "date": "MedlinePlus feed snapshot · 2026-11-05",
-              "historical": false,
-              "focus": "Sore Throat",
-              "sourceType": "patient-education",
-              "heading": "",
-              "intent": "definition",
-              "scopeTerms": []
             }
           ],
           "topic": "Sore Throat",
@@ -1357,7 +1386,7 @@
           },
           {
             "role": "user",
-            "content": "{\"question\":\"When are antibiotics relevant, and when are they not helpful?\",\"topic\":\"Sore Throat\",\"mode\":\"chat\",\"browserQuestion\":\"What is Sore Throat?\",\"activeDeck\":4,\"priorQuestions\":[],\"facets\":[{\"id\":\"F1\",\"label\":\"Treatment and its limitations\"}],\"domains\":[{\"id\":1,\"title\":\"Etiology & Pathogenesis\",\"scope\":\"Causes, risk factors, genetics, and biological mechanisms.\"},{\"id\":2,\"title\":\"Natural History & Progression\",\"scope\":\"Early changes, symptom onset, and the course of disease.\"},{\"id\":3,\"title\":\"Clinical Presentation & Diagnosis\",\"scope\":\"Symptoms, signs, examinations, and diagnostic tests.\"},{\"id\":4,\"title\":\"Therapeutics & Management\",\"scope\":\"Treatment approaches, ongoing care, and support.\"},{\"id\":5,\"title\":\"Prognosis & Complications\",\"scope\":\"Possible outcomes and health problems associated with the disease.\"},{\"id\":6,\"title\":\"Epidemiology & Public Health\",\"scope\":\"Population patterns, prevention, and access to care.\"}],\"evidence\":[{\"id\":\"S3\",\"deck\":4,\"text\":\"Treatment depends on the cause. Sucking on lozenges, drinking lots of liquids, and gargling may ease the pain. Over-the-counter pain relievers can also help, but children should not take aspirin.\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]},{\"id\":\"S2\",\"deck\":1,\"text\":\"You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: • Allergies • Mononucleosis • Smoking • Strep throat • Tonsillitis\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]},{\"id\":\"S4\",\"deck\":2,\"text\":\"Most sore throats will get better on their own within one week.\",\"focus\":\"Sore Throat\",\"heading\":\"Overview\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S5\",\"deck\":3,\"text\":\"Also, see a healthcare provider if you or your child have any of the following: • Difficulty breathing. • Difficulty swallowing. • Blood in saliva or phlegm. • Excessive drooling (in young children). • Dehydration. • Joint swelling and pain. • Rash. • Symptoms that do not improve within a few days or get worse.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S10\",\"deck\":5,\"text\":\"Complications can occur after a strep throat infection if the bacteria spread to other parts of the body. Complications can include: • Abscesses (pockets of pus) around the tonsils or in the neck • Ear infections • Post-streptococcal glomerulonephritis (a kidney disease) • Rheumatic fever (a disease affecting the heart, joints, brain, skin) • Sinus infections\",\"focus\":\"Strep throat\",\"heading\":\"Complications\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S8\",\"deck\":6,\"text\":\"You can help prevent sore throat by doing your best to stay healthy and keep others healthy, including: • Clean your hands. • Avoid close contact with people who have sore throats, colds or other upper respiratory infections. • Don't smoke and avoid exposure to secondhand smoke.\",\"focus\":\"Sore Throat\",\"heading\":\"Prevention\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S7\",\"deck\":4,\"text\":\"If a virus causes a sore throat, antibiotics will not help. Most sore throats will get better on their own within one week. Your healthcare provider may prescribe other medicine or give you tips to help you feel better.\",\"focus\":\"Sore Throat\",\"heading\":\"Treatment\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S9\",\"deck\":4,\"text\":\"Antibiotics can help people with strep throat feel better faster.\",\"focus\":\"Strep throat\",\"heading\":\"Key points\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S6\",\"deck\":3,\"text\":\"This list is not all-inclusive. Please see your healthcare provider for any symptom that is severe or concerning. Tell your healthcare provider if you or your child have recurrent sore throats.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S1\",\"deck\":1,\"text\":\"Your throat is a tube that carries food to your esophagus and air to your windpipe and larynx (also called the voice box). The technical name for the throat is pharynx.\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]}]}"
+            "content": "{\"question\":\"When are antibiotics relevant, and when are they not helpful?\",\"topic\":\"Sore Throat\",\"mode\":\"chat\",\"browserQuestion\":\"What is Sore Throat?\",\"activeDeck\":4,\"priorQuestions\":[],\"facets\":[{\"id\":\"F1\",\"label\":\"Treatment and its limitations\"}],\"domains\":[{\"id\":1,\"title\":\"Etiology & Pathogenesis\",\"scope\":\"Causes, risk factors, genetics, and biological mechanisms.\"},{\"id\":2,\"title\":\"Natural History & Progression\",\"scope\":\"Early changes, symptom onset, and the course of disease.\"},{\"id\":3,\"title\":\"Clinical Presentation & Diagnosis\",\"scope\":\"Symptoms, signs, examinations, and diagnostic tests.\"},{\"id\":4,\"title\":\"Therapeutics & Management\",\"scope\":\"Treatment approaches, ongoing care, and support.\"},{\"id\":5,\"title\":\"Prognosis & Complications\",\"scope\":\"Possible outcomes and health problems associated with the disease.\"},{\"id\":6,\"title\":\"Epidemiology & Public Health\",\"scope\":\"Population patterns, prevention, and access to care.\"}],\"evidence\":[{\"id\":\"S3\",\"deck\":4,\"text\":\"Treatment depends on the cause. Sucking on lozenges, drinking lots of liquids, and gargling may ease the pain. Over-the-counter pain relievers can also help, but children should not take aspirin.\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]},{\"id\":\"S11\",\"deck\":1,\"text\":\"Viruses, like those that cause colds or flu, are the most common cause of sore throat. These viruses are not strep throat.\",\"focus\":\"Sore Throat\",\"heading\":\"Causes\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S4\",\"deck\":2,\"text\":\"Most sore throats will get better on their own within one week.\",\"focus\":\"Sore Throat\",\"heading\":\"Overview\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S5\",\"deck\":3,\"text\":\"Also, see a healthcare provider if you or your child have any of the following: • Difficulty breathing. • Difficulty swallowing. • Blood in saliva or phlegm. • Excessive drooling (in young children). • Dehydration. • Joint swelling and pain. • Rash. • Symptoms that do not improve within a few days or get worse.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S10\",\"deck\":5,\"text\":\"Complications can occur after a strep throat infection if the bacteria spread to other parts of the body. Complications can include: • Abscesses (pockets of pus) around the tonsils or in the neck • Ear infections • Post-streptococcal glomerulonephritis (a kidney disease) • Rheumatic fever (a disease affecting the heart, joints, brain, skin) • Sinus infections\",\"focus\":\"Strep throat\",\"heading\":\"Complications\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S8\",\"deck\":6,\"text\":\"You can help prevent sore throat by doing your best to stay healthy and keep others healthy, including: • Clean your hands. • Avoid close contact with people who have sore throats, colds or other upper respiratory infections. • Don't smoke and avoid exposure to secondhand smoke.\",\"focus\":\"Sore Throat\",\"heading\":\"Prevention\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S7\",\"deck\":4,\"text\":\"If a virus causes a sore throat, antibiotics will not help. Most sore throats will get better on their own within one week. Your healthcare provider may prescribe other medicine or give you tips to help you feel better.\",\"focus\":\"Sore Throat\",\"heading\":\"Treatment\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S9\",\"deck\":4,\"text\":\"Antibiotics can help people with strep throat feel better faster.\",\"focus\":\"Strep throat\",\"heading\":\"Key points\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S12\",\"deck\":3,\"text\":\"Your healthcare provider will determine what type of illness you have by asking about symptoms and doing a physical examination. Sometimes they will also swab your throat.\",\"focus\":\"Sore Throat\",\"heading\":\"Diagnosis\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S6\",\"deck\":3,\"text\":\"This list is not all-inclusive. Please see your healthcare provider for any symptom that is severe or concerning. Tell your healthcare provider if you or your child have recurrent sore throats.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S13\",\"deck\":3,\"text\":\"It usually takes 2 to 5 days after exposure to become ill with strep throat. Common symptoms may include: • Fever • Pain when swallowing • Red and swollen tonsils • Sore throat that started very quickly and may look red • Swollen lymph nodes in the front of the neck • Tiny, red spots on the roof of the mouth, called petechiae • White patches or streaks of pus on the tonsils\",\"focus\":\"Strep throat\",\"heading\":\"Symptoms\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S2\",\"deck\":1,\"text\":\"You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: • Allergies • Mononucleosis • Smoking • Strep throat • Tonsillitis\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]}]}"
           }
         ],
         "schema": {
@@ -1379,15 +1408,17 @@
                       "type": "string",
                       "enum": [
                         "S3",
-                        "S2",
+                        "S11",
                         "S4",
                         "S5",
                         "S10",
                         "S8",
                         "S7",
                         "S9",
+                        "S12",
                         "S6",
-                        "S1"
+                        "S13",
+                        "S2"
                       ]
                     },
                     "maxItems": 2,
@@ -1444,19 +1475,23 @@
               "scopeTerms": []
             },
             {
-              "id": "S2",
+              "key": "cdc-throat-causes",
+              "topic": "Sore Throat",
               "deck": 1,
-              "overview": false,
-              "text": "You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: • Allergies • Mononucleosis • Smoking • Strep throat • Tonsillitis",
-              "title": "Sore Throat · MedlinePlus",
-              "url": "https://medlineplus.gov/sorethroat.html",
-              "date": "MedlinePlus feed snapshot · 2026-11-05",
-              "historical": false,
+              "text": "Viruses, like those that cause colds or flu, are the most common cause of sore throat. These viruses are not strep throat.",
+              "heading": "Causes",
+              "intent": "cause",
               "focus": "Sore Throat",
-              "sourceType": "patient-education",
-              "heading": "",
-              "intent": "risk",
-              "scopeTerms": []
+              "scopeTerms": [],
+              "url": "https://www.cdc.gov/sore-throat/about/index.html",
+              "title": "Sore Throat Basics · CDC",
+              "date": "2024-04-17; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "acc515e1b3da71ab9a442fefd8f705bc84b3ce6ca0cf445639ebf6865d986bf3",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S11"
             },
             {
               "key": "cdc-throat-course",
@@ -1579,6 +1614,25 @@
               "id": "S9"
             },
             {
+              "key": "cdc-throat-diagnosis",
+              "topic": "Sore Throat",
+              "deck": 3,
+              "text": "Your healthcare provider will determine what type of illness you have by asking about symptoms and doing a physical examination. Sometimes they will also swab your throat.",
+              "heading": "Diagnosis",
+              "intent": "diagnosis",
+              "focus": "Sore Throat",
+              "scopeTerms": [],
+              "url": "https://www.cdc.gov/sore-throat/about/index.html",
+              "title": "Sore Throat Basics · CDC",
+              "date": "2024-04-17; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "f1ddaf15e7013de10dd0bf2ce922e78781eb0716af7cd18a5a306da160103dd0",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S12"
+            },
+            {
               "key": "cdc-throat-care-limits",
               "topic": "Sore Throat",
               "deck": 3,
@@ -1598,10 +1652,32 @@
               "id": "S6"
             },
             {
-              "id": "S1",
+              "key": "cdc-strep-symptoms",
+              "topic": "Sore Throat",
+              "deck": 3,
+              "text": "It usually takes 2 to 5 days after exposure to become ill with strep throat. Common symptoms may include: • Fever • Pain when swallowing • Red and swollen tonsils • Sore throat that started very quickly and may look red • Swollen lymph nodes in the front of the neck • Tiny, red spots on the roof of the mouth, called petechiae • White patches or streaks of pus on the tonsils",
+              "heading": "Symptoms",
+              "intent": "symptoms",
+              "focus": "Strep throat",
+              "scopeTerms": [
+                "strep",
+                "streptococcal"
+              ],
+              "url": "https://www.cdc.gov/group-a-strep/about/strep-throat.html",
+              "title": "About Strep Throat · CDC",
+              "date": "2026-01-15; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "a5ee4824c79336b739dabf43010e92bed6da753854329815005c9e1d9ca62887",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S13"
+            },
+            {
+              "id": "S2",
               "deck": 1,
-              "overview": true,
-              "text": "Your throat is a tube that carries food to your esophagus and air to your windpipe and larynx (also called the voice box). The technical name for the throat is pharynx.",
+              "overview": false,
+              "text": "You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: • Allergies • Mononucleosis • Smoking • Strep throat • Tonsillitis",
               "title": "Sore Throat · MedlinePlus",
               "url": "https://medlineplus.gov/sorethroat.html",
               "date": "MedlinePlus feed snapshot · 2026-11-05",
@@ -1609,7 +1685,7 @@
               "focus": "Sore Throat",
               "sourceType": "patient-education",
               "heading": "",
-              "intent": "definition",
+              "intent": "risk",
               "scopeTerms": []
             }
           ],
@@ -3686,7 +3762,7 @@
           },
           {
             "role": "user",
-            "content": "{\"question\":\"When are antibiotics relevant, and when are they not helpful?\",\"topic\":\"Sore Throat\",\"mode\":\"chat\",\"browserQuestion\":\"What is Sore Throat?\",\"activeDeck\":4,\"priorQuestions\":[],\"facets\":[{\"id\":\"F1\",\"label\":\"Treatment and its limitations\"}],\"domains\":[{\"id\":1,\"title\":\"Etiology & Pathogenesis\",\"scope\":\"Causes, risk factors, genetics, and biological mechanisms.\"},{\"id\":2,\"title\":\"Natural History & Progression\",\"scope\":\"Early changes, symptom onset, and the course of disease.\"},{\"id\":3,\"title\":\"Clinical Presentation & Diagnosis\",\"scope\":\"Symptoms, signs, examinations, and diagnostic tests.\"},{\"id\":4,\"title\":\"Therapeutics & Management\",\"scope\":\"Treatment approaches, ongoing care, and support.\"},{\"id\":5,\"title\":\"Prognosis & Complications\",\"scope\":\"Possible outcomes and health problems associated with the disease.\"},{\"id\":6,\"title\":\"Epidemiology & Public Health\",\"scope\":\"Population patterns, prevention, and access to care.\"}],\"evidence\":[{\"id\":\"S3\",\"deck\":4,\"text\":\"Treatment depends on the cause. Sucking on lozenges, drinking lots of liquids, and gargling may ease the pain. Over-the-counter pain relievers can also help, but children should not take aspirin.\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]},{\"id\":\"S2\",\"deck\":1,\"text\":\"You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: • Allergies • Mononucleosis • Smoking • Strep throat • Tonsillitis\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]},{\"id\":\"S4\",\"deck\":2,\"text\":\"Most sore throats will get better on their own within one week.\",\"focus\":\"Sore Throat\",\"heading\":\"Overview\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S5\",\"deck\":3,\"text\":\"Also, see a healthcare provider if you or your child have any of the following: • Difficulty breathing. • Difficulty swallowing. • Blood in saliva or phlegm. • Excessive drooling (in young children). • Dehydration. • Joint swelling and pain. • Rash. • Symptoms that do not improve within a few days or get worse.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S10\",\"deck\":5,\"text\":\"Complications can occur after a strep throat infection if the bacteria spread to other parts of the body. Complications can include: • Abscesses (pockets of pus) around the tonsils or in the neck • Ear infections • Post-streptococcal glomerulonephritis (a kidney disease) • Rheumatic fever (a disease affecting the heart, joints, brain, skin) • Sinus infections\",\"focus\":\"Strep throat\",\"heading\":\"Complications\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S8\",\"deck\":6,\"text\":\"You can help prevent sore throat by doing your best to stay healthy and keep others healthy, including: • Clean your hands. • Avoid close contact with people who have sore throats, colds or other upper respiratory infections. • Don't smoke and avoid exposure to secondhand smoke.\",\"focus\":\"Sore Throat\",\"heading\":\"Prevention\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S7\",\"deck\":4,\"text\":\"If a virus causes a sore throat, antibiotics will not help. Most sore throats will get better on their own within one week. Your healthcare provider may prescribe other medicine or give you tips to help you feel better.\",\"focus\":\"Sore Throat\",\"heading\":\"Treatment\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S9\",\"deck\":4,\"text\":\"Antibiotics can help people with strep throat feel better faster.\",\"focus\":\"Strep throat\",\"heading\":\"Key points\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S6\",\"deck\":3,\"text\":\"This list is not all-inclusive. Please see your healthcare provider for any symptom that is severe or concerning. Tell your healthcare provider if you or your child have recurrent sore throats.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S1\",\"deck\":1,\"text\":\"Your throat is a tube that carries food to your esophagus and air to your windpipe and larynx (also called the voice box). The technical name for the throat is pharynx.\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]}]}"
+            "content": "{\"question\":\"When are antibiotics relevant, and when are they not helpful?\",\"topic\":\"Sore Throat\",\"mode\":\"chat\",\"browserQuestion\":\"What is Sore Throat?\",\"activeDeck\":4,\"priorQuestions\":[],\"facets\":[{\"id\":\"F1\",\"label\":\"Treatment and its limitations\"}],\"domains\":[{\"id\":1,\"title\":\"Etiology & Pathogenesis\",\"scope\":\"Causes, risk factors, genetics, and biological mechanisms.\"},{\"id\":2,\"title\":\"Natural History & Progression\",\"scope\":\"Early changes, symptom onset, and the course of disease.\"},{\"id\":3,\"title\":\"Clinical Presentation & Diagnosis\",\"scope\":\"Symptoms, signs, examinations, and diagnostic tests.\"},{\"id\":4,\"title\":\"Therapeutics & Management\",\"scope\":\"Treatment approaches, ongoing care, and support.\"},{\"id\":5,\"title\":\"Prognosis & Complications\",\"scope\":\"Possible outcomes and health problems associated with the disease.\"},{\"id\":6,\"title\":\"Epidemiology & Public Health\",\"scope\":\"Population patterns, prevention, and access to care.\"}],\"evidence\":[{\"id\":\"S3\",\"deck\":4,\"text\":\"Treatment depends on the cause. Sucking on lozenges, drinking lots of liquids, and gargling may ease the pain. Over-the-counter pain relievers can also help, but children should not take aspirin.\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]},{\"id\":\"S11\",\"deck\":1,\"text\":\"Viruses, like those that cause colds or flu, are the most common cause of sore throat. These viruses are not strep throat.\",\"focus\":\"Sore Throat\",\"heading\":\"Causes\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S4\",\"deck\":2,\"text\":\"Most sore throats will get better on their own within one week.\",\"focus\":\"Sore Throat\",\"heading\":\"Overview\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S5\",\"deck\":3,\"text\":\"Also, see a healthcare provider if you or your child have any of the following: • Difficulty breathing. • Difficulty swallowing. • Blood in saliva or phlegm. • Excessive drooling (in young children). • Dehydration. • Joint swelling and pain. • Rash. • Symptoms that do not improve within a few days or get worse.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S10\",\"deck\":5,\"text\":\"Complications can occur after a strep throat infection if the bacteria spread to other parts of the body. Complications can include: • Abscesses (pockets of pus) around the tonsils or in the neck • Ear infections • Post-streptococcal glomerulonephritis (a kidney disease) • Rheumatic fever (a disease affecting the heart, joints, brain, skin) • Sinus infections\",\"focus\":\"Strep throat\",\"heading\":\"Complications\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S8\",\"deck\":6,\"text\":\"You can help prevent sore throat by doing your best to stay healthy and keep others healthy, including: • Clean your hands. • Avoid close contact with people who have sore throats, colds or other upper respiratory infections. • Don't smoke and avoid exposure to secondhand smoke.\",\"focus\":\"Sore Throat\",\"heading\":\"Prevention\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S7\",\"deck\":4,\"text\":\"If a virus causes a sore throat, antibiotics will not help. Most sore throats will get better on their own within one week. Your healthcare provider may prescribe other medicine or give you tips to help you feel better.\",\"focus\":\"Sore Throat\",\"heading\":\"Treatment\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S9\",\"deck\":4,\"text\":\"Antibiotics can help people with strep throat feel better faster.\",\"focus\":\"Strep throat\",\"heading\":\"Key points\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S12\",\"deck\":3,\"text\":\"Your healthcare provider will determine what type of illness you have by asking about symptoms and doing a physical examination. Sometimes they will also swab your throat.\",\"focus\":\"Sore Throat\",\"heading\":\"Diagnosis\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S6\",\"deck\":3,\"text\":\"This list is not all-inclusive. Please see your healthcare provider for any symptom that is severe or concerning. Tell your healthcare provider if you or your child have recurrent sore throats.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S13\",\"deck\":3,\"text\":\"It usually takes 2 to 5 days after exposure to become ill with strep throat. Common symptoms may include: • Fever • Pain when swallowing • Red and swollen tonsils • Sore throat that started very quickly and may look red • Swollen lymph nodes in the front of the neck • Tiny, red spots on the roof of the mouth, called petechiae • White patches or streaks of pus on the tonsils\",\"focus\":\"Strep throat\",\"heading\":\"Symptoms\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S2\",\"deck\":1,\"text\":\"You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: • Allergies • Mononucleosis • Smoking • Strep throat • Tonsillitis\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]}]}"
           }
         ],
         "schema": {
@@ -3708,15 +3784,17 @@
                       "type": "string",
                       "enum": [
                         "S3",
-                        "S2",
+                        "S11",
                         "S4",
                         "S5",
                         "S10",
                         "S8",
                         "S7",
                         "S9",
+                        "S12",
                         "S6",
-                        "S1"
+                        "S13",
+                        "S2"
                       ]
                     },
                     "maxItems": 2,
@@ -4379,7 +4457,7 @@
           },
           {
             "role": "user",
-            "content": "{\"question\":\"I have a sore throat and fever. What can cause this, and when should someone seek care?\",\"topic\":\"Sore Throat\",\"mode\":\"search\",\"browserQuestion\":\"What is Sore Throat?\",\"activeDeck\":0,\"priorQuestions\":[],\"facets\":[{\"id\":\"F1\",\"label\":\"Causes and risk factors\"},{\"id\":\"F2\",\"label\":\"When to seek medical care\"}],\"domains\":[{\"id\":1,\"title\":\"Etiology & Pathogenesis\",\"scope\":\"Causes, risk factors, genetics, and biological mechanisms.\"},{\"id\":2,\"title\":\"Natural History & Progression\",\"scope\":\"Early changes, symptom onset, and the course of disease.\"},{\"id\":3,\"title\":\"Clinical Presentation & Diagnosis\",\"scope\":\"Symptoms, signs, examinations, and diagnostic tests.\"},{\"id\":4,\"title\":\"Therapeutics & Management\",\"scope\":\"Treatment approaches, ongoing care, and support.\"},{\"id\":5,\"title\":\"Prognosis & Complications\",\"scope\":\"Possible outcomes and health problems associated with the disease.\"},{\"id\":6,\"title\":\"Epidemiology & Public Health\",\"scope\":\"Population patterns, prevention, and access to care.\"}],\"evidence\":[{\"id\":\"S2\",\"deck\":1,\"text\":\"You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: • Allergies • Mononucleosis • Smoking • Strep throat • Tonsillitis\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]},{\"id\":\"S6\",\"deck\":3,\"text\":\"This list is not all-inclusive. Please see your healthcare provider for any symptom that is severe or concerning. Tell your healthcare provider if you or your child have recurrent sore throats.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S4\",\"deck\":2,\"text\":\"Most sore throats will get better on their own within one week.\",\"focus\":\"Sore Throat\",\"heading\":\"Overview\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S3\",\"deck\":4,\"text\":\"Treatment depends on the cause. Sucking on lozenges, drinking lots of liquids, and gargling may ease the pain. Over-the-counter pain relievers can also help, but children should not take aspirin.\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]},{\"id\":\"S10\",\"deck\":5,\"text\":\"Complications can occur after a strep throat infection if the bacteria spread to other parts of the body. Complications can include: • Abscesses (pockets of pus) around the tonsils or in the neck • Ear infections • Post-streptococcal glomerulonephritis (a kidney disease) • Rheumatic fever (a disease affecting the heart, joints, brain, skin) • Sinus infections\",\"focus\":\"Strep throat\",\"heading\":\"Complications\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S8\",\"deck\":6,\"text\":\"You can help prevent sore throat by doing your best to stay healthy and keep others healthy, including: • Clean your hands. • Avoid close contact with people who have sore throats, colds or other upper respiratory infections. • Don't smoke and avoid exposure to secondhand smoke.\",\"focus\":\"Sore Throat\",\"heading\":\"Prevention\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S5\",\"deck\":3,\"text\":\"Also, see a healthcare provider if you or your child have any of the following: • Difficulty breathing. • Difficulty swallowing. • Blood in saliva or phlegm. • Excessive drooling (in young children). • Dehydration. • Joint swelling and pain. • Rash. • Symptoms that do not improve within a few days or get worse.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S9\",\"deck\":4,\"text\":\"Antibiotics can help people with strep throat feel better faster.\",\"focus\":\"Strep throat\",\"heading\":\"Key points\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S7\",\"deck\":4,\"text\":\"If a virus causes a sore throat, antibiotics will not help. Most sore throats will get better on their own within one week. Your healthcare provider may prescribe other medicine or give you tips to help you feel better.\",\"focus\":\"Sore Throat\",\"heading\":\"Treatment\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S1\",\"deck\":1,\"text\":\"Your throat is a tube that carries food to your esophagus and air to your windpipe and larynx (also called the voice box). The technical name for the throat is pharynx.\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]}]}"
+            "content": "{\"question\":\"I have a sore throat and fever. What can cause this, and when should someone seek care?\",\"topic\":\"Sore Throat\",\"mode\":\"search\",\"browserQuestion\":\"What is Sore Throat?\",\"activeDeck\":0,\"priorQuestions\":[],\"facets\":[{\"id\":\"F1\",\"label\":\"Causes and risk factors\"},{\"id\":\"F2\",\"label\":\"When to seek medical care\"}],\"domains\":[{\"id\":1,\"title\":\"Etiology & Pathogenesis\",\"scope\":\"Causes, risk factors, genetics, and biological mechanisms.\"},{\"id\":2,\"title\":\"Natural History & Progression\",\"scope\":\"Early changes, symptom onset, and the course of disease.\"},{\"id\":3,\"title\":\"Clinical Presentation & Diagnosis\",\"scope\":\"Symptoms, signs, examinations, and diagnostic tests.\"},{\"id\":4,\"title\":\"Therapeutics & Management\",\"scope\":\"Treatment approaches, ongoing care, and support.\"},{\"id\":5,\"title\":\"Prognosis & Complications\",\"scope\":\"Possible outcomes and health problems associated with the disease.\"},{\"id\":6,\"title\":\"Epidemiology & Public Health\",\"scope\":\"Population patterns, prevention, and access to care.\"}],\"evidence\":[{\"id\":\"S2\",\"deck\":1,\"text\":\"You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: • Allergies • Mononucleosis • Smoking • Strep throat • Tonsillitis\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]},{\"id\":\"S6\",\"deck\":3,\"text\":\"This list is not all-inclusive. Please see your healthcare provider for any symptom that is severe or concerning. Tell your healthcare provider if you or your child have recurrent sore throats.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S4\",\"deck\":2,\"text\":\"Most sore throats will get better on their own within one week.\",\"focus\":\"Sore Throat\",\"heading\":\"Overview\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S3\",\"deck\":4,\"text\":\"Treatment depends on the cause. Sucking on lozenges, drinking lots of liquids, and gargling may ease the pain. Over-the-counter pain relievers can also help, but children should not take aspirin.\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]},{\"id\":\"S10\",\"deck\":5,\"text\":\"Complications can occur after a strep throat infection if the bacteria spread to other parts of the body. Complications can include: • Abscesses (pockets of pus) around the tonsils or in the neck • Ear infections • Post-streptococcal glomerulonephritis (a kidney disease) • Rheumatic fever (a disease affecting the heart, joints, brain, skin) • Sinus infections\",\"focus\":\"Strep throat\",\"heading\":\"Complications\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S8\",\"deck\":6,\"text\":\"You can help prevent sore throat by doing your best to stay healthy and keep others healthy, including: • Clean your hands. • Avoid close contact with people who have sore throats, colds or other upper respiratory infections. • Don't smoke and avoid exposure to secondhand smoke.\",\"focus\":\"Sore Throat\",\"heading\":\"Prevention\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S5\",\"deck\":3,\"text\":\"Also, see a healthcare provider if you or your child have any of the following: • Difficulty breathing. • Difficulty swallowing. • Blood in saliva or phlegm. • Excessive drooling (in young children). • Dehydration. • Joint swelling and pain. • Rash. • Symptoms that do not improve within a few days or get worse.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S13\",\"deck\":3,\"text\":\"It usually takes 2 to 5 days after exposure to become ill with strep throat. Common symptoms may include: • Fever • Pain when swallowing • Red and swollen tonsils • Sore throat that started very quickly and may look red • Swollen lymph nodes in the front of the neck • Tiny, red spots on the roof of the mouth, called petechiae • White patches or streaks of pus on the tonsils\",\"focus\":\"Strep throat\",\"heading\":\"Symptoms\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S12\",\"deck\":3,\"text\":\"Your healthcare provider will determine what type of illness you have by asking about symptoms and doing a physical examination. Sometimes they will also swab your throat.\",\"focus\":\"Sore Throat\",\"heading\":\"Diagnosis\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S11\",\"deck\":1,\"text\":\"Viruses, like those that cause colds or flu, are the most common cause of sore throat. These viruses are not strep throat.\",\"focus\":\"Sore Throat\",\"heading\":\"Causes\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S9\",\"deck\":4,\"text\":\"Antibiotics can help people with strep throat feel better faster.\",\"focus\":\"Strep throat\",\"heading\":\"Key points\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]}]}"
           }
         ],
         "schema": {
@@ -4407,9 +4485,10 @@
                         "S10",
                         "S8",
                         "S5",
-                        "S9",
-                        "S7",
-                        "S1"
+                        "S13",
+                        "S12",
+                        "S11",
+                        "S9"
                       ]
                     },
                     "maxItems": 2,
@@ -4442,7 +4521,8 @@
                         "items": {
                           "type": "string",
                           "enum": [
-                            "S2"
+                            "S2",
+                            "S11"
                           ]
                         },
                         "maxItems": 2,
@@ -4503,7 +4583,9 @@
                           "type": "string",
                           "enum": [
                             "S6",
-                            "S5"
+                            "S5",
+                            "S13",
+                            "S12"
                           ]
                         },
                         "maxItems": 2,
@@ -4534,8 +4616,7 @@
                           "type": "string",
                           "enum": [
                             "S3",
-                            "S9",
-                            "S7"
+                            "S9"
                           ]
                         },
                         "maxItems": 2,
@@ -5118,7 +5199,7 @@
           },
           {
             "role": "user",
-            "content": "{\"question\":\"When are antibiotics relevant, and when are they not helpful?\",\"topic\":\"Sore Throat\",\"mode\":\"chat\",\"browserQuestion\":\"What is Sore Throat?\",\"activeDeck\":4,\"priorQuestions\":[],\"facets\":[{\"id\":\"F1\",\"label\":\"Treatment and its limitations\"}],\"domains\":[{\"id\":1,\"title\":\"Etiology & Pathogenesis\",\"scope\":\"Causes, risk factors, genetics, and biological mechanisms.\"},{\"id\":2,\"title\":\"Natural History & Progression\",\"scope\":\"Early changes, symptom onset, and the course of disease.\"},{\"id\":3,\"title\":\"Clinical Presentation & Diagnosis\",\"scope\":\"Symptoms, signs, examinations, and diagnostic tests.\"},{\"id\":4,\"title\":\"Therapeutics & Management\",\"scope\":\"Treatment approaches, ongoing care, and support.\"},{\"id\":5,\"title\":\"Prognosis & Complications\",\"scope\":\"Possible outcomes and health problems associated with the disease.\"},{\"id\":6,\"title\":\"Epidemiology & Public Health\",\"scope\":\"Population patterns, prevention, and access to care.\"}],\"evidence\":[{\"id\":\"S3\",\"deck\":4,\"text\":\"Treatment depends on the cause. Sucking on lozenges, drinking lots of liquids, and gargling may ease the pain. Over-the-counter pain relievers can also help, but children should not take aspirin.\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]},{\"id\":\"S2\",\"deck\":1,\"text\":\"You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: • Allergies • Mononucleosis • Smoking • Strep throat • Tonsillitis\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]},{\"id\":\"S4\",\"deck\":2,\"text\":\"Most sore throats will get better on their own within one week.\",\"focus\":\"Sore Throat\",\"heading\":\"Overview\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S5\",\"deck\":3,\"text\":\"Also, see a healthcare provider if you or your child have any of the following: • Difficulty breathing. • Difficulty swallowing. • Blood in saliva or phlegm. • Excessive drooling (in young children). • Dehydration. • Joint swelling and pain. • Rash. • Symptoms that do not improve within a few days or get worse.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S10\",\"deck\":5,\"text\":\"Complications can occur after a strep throat infection if the bacteria spread to other parts of the body. Complications can include: • Abscesses (pockets of pus) around the tonsils or in the neck • Ear infections • Post-streptococcal glomerulonephritis (a kidney disease) • Rheumatic fever (a disease affecting the heart, joints, brain, skin) • Sinus infections\",\"focus\":\"Strep throat\",\"heading\":\"Complications\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S8\",\"deck\":6,\"text\":\"You can help prevent sore throat by doing your best to stay healthy and keep others healthy, including: • Clean your hands. • Avoid close contact with people who have sore throats, colds or other upper respiratory infections. • Don't smoke and avoid exposure to secondhand smoke.\",\"focus\":\"Sore Throat\",\"heading\":\"Prevention\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S7\",\"deck\":4,\"text\":\"If a virus causes a sore throat, antibiotics will not help. Most sore throats will get better on their own within one week. Your healthcare provider may prescribe other medicine or give you tips to help you feel better.\",\"focus\":\"Sore Throat\",\"heading\":\"Treatment\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S9\",\"deck\":4,\"text\":\"Antibiotics can help people with strep throat feel better faster.\",\"focus\":\"Strep throat\",\"heading\":\"Key points\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S6\",\"deck\":3,\"text\":\"This list is not all-inclusive. Please see your healthcare provider for any symptom that is severe or concerning. Tell your healthcare provider if you or your child have recurrent sore throats.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S1\",\"deck\":1,\"text\":\"Your throat is a tube that carries food to your esophagus and air to your windpipe and larynx (also called the voice box). The technical name for the throat is pharynx.\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]}]}"
+            "content": "{\"question\":\"When are antibiotics relevant, and when are they not helpful?\",\"topic\":\"Sore Throat\",\"mode\":\"chat\",\"browserQuestion\":\"What is Sore Throat?\",\"activeDeck\":4,\"priorQuestions\":[],\"facets\":[{\"id\":\"F1\",\"label\":\"Treatment and its limitations\"}],\"domains\":[{\"id\":1,\"title\":\"Etiology & Pathogenesis\",\"scope\":\"Causes, risk factors, genetics, and biological mechanisms.\"},{\"id\":2,\"title\":\"Natural History & Progression\",\"scope\":\"Early changes, symptom onset, and the course of disease.\"},{\"id\":3,\"title\":\"Clinical Presentation & Diagnosis\",\"scope\":\"Symptoms, signs, examinations, and diagnostic tests.\"},{\"id\":4,\"title\":\"Therapeutics & Management\",\"scope\":\"Treatment approaches, ongoing care, and support.\"},{\"id\":5,\"title\":\"Prognosis & Complications\",\"scope\":\"Possible outcomes and health problems associated with the disease.\"},{\"id\":6,\"title\":\"Epidemiology & Public Health\",\"scope\":\"Population patterns, prevention, and access to care.\"}],\"evidence\":[{\"id\":\"S3\",\"deck\":4,\"text\":\"Treatment depends on the cause. Sucking on lozenges, drinking lots of liquids, and gargling may ease the pain. Over-the-counter pain relievers can also help, but children should not take aspirin.\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]},{\"id\":\"S11\",\"deck\":1,\"text\":\"Viruses, like those that cause colds or flu, are the most common cause of sore throat. These viruses are not strep throat.\",\"focus\":\"Sore Throat\",\"heading\":\"Causes\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S4\",\"deck\":2,\"text\":\"Most sore throats will get better on their own within one week.\",\"focus\":\"Sore Throat\",\"heading\":\"Overview\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S5\",\"deck\":3,\"text\":\"Also, see a healthcare provider if you or your child have any of the following: • Difficulty breathing. • Difficulty swallowing. • Blood in saliva or phlegm. • Excessive drooling (in young children). • Dehydration. • Joint swelling and pain. • Rash. • Symptoms that do not improve within a few days or get worse.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S10\",\"deck\":5,\"text\":\"Complications can occur after a strep throat infection if the bacteria spread to other parts of the body. Complications can include: • Abscesses (pockets of pus) around the tonsils or in the neck • Ear infections • Post-streptococcal glomerulonephritis (a kidney disease) • Rheumatic fever (a disease affecting the heart, joints, brain, skin) • Sinus infections\",\"focus\":\"Strep throat\",\"heading\":\"Complications\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S8\",\"deck\":6,\"text\":\"You can help prevent sore throat by doing your best to stay healthy and keep others healthy, including: • Clean your hands. • Avoid close contact with people who have sore throats, colds or other upper respiratory infections. • Don't smoke and avoid exposure to secondhand smoke.\",\"focus\":\"Sore Throat\",\"heading\":\"Prevention\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S7\",\"deck\":4,\"text\":\"If a virus causes a sore throat, antibiotics will not help. Most sore throats will get better on their own within one week. Your healthcare provider may prescribe other medicine or give you tips to help you feel better.\",\"focus\":\"Sore Throat\",\"heading\":\"Treatment\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S9\",\"deck\":4,\"text\":\"Antibiotics can help people with strep throat feel better faster.\",\"focus\":\"Strep throat\",\"heading\":\"Key points\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S12\",\"deck\":3,\"text\":\"Your healthcare provider will determine what type of illness you have by asking about symptoms and doing a physical examination. Sometimes they will also swab your throat.\",\"focus\":\"Sore Throat\",\"heading\":\"Diagnosis\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S6\",\"deck\":3,\"text\":\"This list is not all-inclusive. Please see your healthcare provider for any symptom that is severe or concerning. Tell your healthcare provider if you or your child have recurrent sore throats.\",\"focus\":\"Sore Throat\",\"heading\":\"When to seek medical care\",\"date\":\"2024-04-17; retrieved 2026-11-12\",\"scopeTerms\":[]},{\"id\":\"S13\",\"deck\":3,\"text\":\"It usually takes 2 to 5 days after exposure to become ill with strep throat. Common symptoms may include: • Fever • Pain when swallowing • Red and swollen tonsils • Sore throat that started very quickly and may look red • Swollen lymph nodes in the front of the neck • Tiny, red spots on the roof of the mouth, called petechiae • White patches or streaks of pus on the tonsils\",\"focus\":\"Strep throat\",\"heading\":\"Symptoms\",\"date\":\"2026-01-15; retrieved 2026-11-12\",\"scopeTerms\":[\"strep\",\"streptococcal\"]},{\"id\":\"S2\",\"deck\":1,\"text\":\"You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: • Allergies • Mononucleosis • Smoking • Strep throat • Tonsillitis\",\"focus\":\"Sore Throat\",\"heading\":\"\",\"date\":\"MedlinePlus feed snapshot · 2026-11-05\",\"scopeTerms\":[]}]}"
           }
         ],
         "schema": {
@@ -5140,15 +5221,17 @@
                       "type": "string",
                       "enum": [
                         "S3",
-                        "S2",
+                        "S11",
                         "S4",
                         "S5",
                         "S10",
                         "S8",
                         "S7",
                         "S9",
+                        "S12",
                         "S6",
-                        "S1"
+                        "S13",
+                        "S2"
                       ]
                     },
                     "maxItems": 2,

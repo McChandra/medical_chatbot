@@ -10,7 +10,7 @@ It does not create a real account, impersonate a licensed clinician, train model
 npm run qa:bot -- --limit=4
 ```
 
-The bot prompts for the Groq key without echo, or reads `GROQ_API_KEY` from the server environment. No key is written to reports. The first four tests exercise leukemia search and Buddy in both modes. Omit `--limit` for all 16 cases. Default spacing is 45 seconds to respect provider allowances. This run uses real Groq inference, a real in-memory SQL quota database and a local authentication fixture. It does not prove deployed login works.
+The bot prompts for the Groq key without echo, or reads `GROQ_API_KEY` from the server environment. No key is written to reports. The first four tests exercise leukemia search and Buddy in both modes. Omit `--limit` for all 18 cases. Default spacing is 45 seconds to respect provider allowances. This run uses real Groq inference, a real in-memory SQL quota database and a local authentication fixture. It does not prove deployed login works.
 
 Reports are written to ignored `qa-results/report.md` and `report.json`. Change the output directory with `--out=/absolute/path`. Cases are maintained in [qa/cases.json](../qa/cases.json); adding public questions there extends coverage without changing the runner. Use synthetic/public educational questions only.
 
@@ -39,3 +39,9 @@ The repository's **HealthBrowse response QA** workflow is manually triggered. St
 ## Completed run
 
 [12 November 2026 findings](../qa/reports/2026-11-12-groq-qa.md): 8/8 real-provider response cases passed software checks; 4/4 privacy/emergency checks passed; four quality-review suggestions remain. The report preserves limitations and the Buddy defect found and fixed.
+
+## Hosting-runtime regression
+
+`npm test` now runs the API inside Cloudflare workerd through Miniflare, including General and Clinicians search, Buddy, account settings, invalid sessions, and refused upstream redirects. Authentication and model replies are fixtures in this regression; D1 is real local storage. The separate provider smoke test uses actual Groq. Neither replaces a signed-in production check.
+
+The runtime regression was added after production returned HTTP 503 before any upstream request: Workers rejected `redirect: error`. Server requests now use `manual` and reject non-success statuses without forwarding credentials. Older compatibility dates also need the HTTP no-store header instead of the unsupported fetch cache option, and may omit incoming Request.signal.
