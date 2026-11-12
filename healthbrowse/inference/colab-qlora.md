@@ -65,6 +65,22 @@ Raw MedQuAD question-answer pairs, MedQA and MedMCQA exam rows are **not** alrea
 
 Train for direct answers, plain-language explanations, requested follow-ups, safe uncertainty and citation use. Include genuine evidence gaps. Do not train on HealthBrowse visitors' conversations or patient identifiers. Assess factual support and dangerous omissions as well as readability and loss; fine-tuning does not replace retrieval or source verification.
 
+## Fixing `operator torchvision::nms does not exist`
+
+This error occurs during a TorchVision import and can cascade into misleading `Could not import module Trainer` errors. The submitted Colab traceback failed at that import, before model loading or optimization. The original setup pinned torch 2.8.0 but left Colab's preinstalled optional TorchVision package in place. Those binary builds must be compatible; PyTorch's [official version matrix](https://pytorch.org/get-started/previous-versions/) pairs torch 2.8.0 with torchvision 0.23.0 and torchaudio 2.8.0 using compatible build indexes.
+
+This Llama notebook is text-only, so the fix removes unused `torchvision` and `torchaudio` in the **Colab training runtime**, keeps the existing torch/Transformers/PEFT pins, and runs an import preflight in a fresh process. It disables TensorFlow/Flax auto-detection for this PyTorch-only workflow. It does not monkey-patch the missing operator or change the model, dataset, adapter format, source SHA or checkpoint manifest.
+
+To repair an existing notebook, run this cell once:
+
+```python
+import subprocess, sys
+subprocess.run([sys.executable, '-m', 'pip', 'uninstall', '-y',
+                'torchvision', 'torchaudio'], check=True)
+```
+
+Then choose **Runtime → Restart session**, and rerun from the top. This is a session restart, not deletion of the runtime/Drive run. The updated setup includes this removal and checks imports automatically; open the latest notebook or copy its setup cell into your existing notebook. Use the same run name/settings to preserve your data. Wait for `Text training imports: OK` before advancing. If a different import fails, the preflight reports that specific traceback immediately. The check does not establish that an 8B model fits the assigned GPU or that GPU training succeeds.
+
 ## When the training cell fails
 
 `CalledProcessError ... exit status 1` by itself is not the underlying training error. In an older notebook, expand the output and inspect the traceback immediately above that wrapper. Do not infer a GPU-memory, access or dependency cause from the exit code alone.
