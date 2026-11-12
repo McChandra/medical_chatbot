@@ -1,6 +1,6 @@
 # HealthBrowse public research platform
 
-General-user model development: the first Llama 3 QLoRA research adapter has completed training. The uploaded export passed integrity checks; its five saved prompts demonstrate extraction/JSON formatting, not clinical accuracy. [Evaluate and privately serve the adapter](inference/private-endpoint.md). Production-prompt GPU evaluation, clinical target review and an authorized inference host remain required before public integration. The live Site is not connected to these weights.
+General-user model development: the first Llama 3 QLoRA research adapter has completed training and its 78-result evaluation. It passed format/source checks on 9/12 production-prompt questions and 25/25 separate extraction holdouts, but unsupported citations, incomplete answers and slow browser generation prevent public activation. [Read the evaluation findings](inference/releases/llama3-general-research-002-evaluation.md). These are format results, not clinical accuracy. The completed run is preserved; do not repeat it unchanged. [Private evaluation and hosting guide](inference/private-endpoint.md).
 
 The existing [model gateway and deployment guide](docs/model-integration.md) describes citations, six-deck outputs, automated support review, optional hosted provider routes, and self-hosted adapter serving. Earlier provider configuration is not evidence of successful inference or clinical validation. Clinicians remains a separately configured DR7 route.
 

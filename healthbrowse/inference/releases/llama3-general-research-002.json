@@ -22,7 +22,9 @@
   },
   "clinical_reviewed": false,
   "clinical_release_approved": false,
-  "production_prompt_gpu_evaluation": "pending",
+  "production_prompt_gpu_evaluation": "completed; public activation not recommended",
   "private_gpu_endpoint": "not deployed",
-  "note": "Observed from uploaded export. Five comparison prompts test extraction and formatting, not clinical accuracy. Weights are not committed to Git."
+  "note": "Observed from uploaded export. Five comparison prompts test extraction and formatting, not clinical accuracy. Weights are not committed to Git.",
+  "evaluation_report": "llama3-general-research-002-evaluation.md",
+  "evaluation_archive_sha256": "693228c1701f758675af5d4d23818f350daeab7abd1318ea0a6a56fa4aaeed66"
 }
