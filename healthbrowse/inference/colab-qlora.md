@@ -12,11 +12,42 @@ Use **File → Save a copy in Drive**, then choose a GPU runtime and follow the 
 - Checkpoints in your Drive every 10 optimizer steps, with two retained; a resume guard checks the base revision, data hashes and training settings.
 - A comparison of the quantized base and adapter on the same held-out prompts, plus adapter/report download.
 
-No GPU training was performed while preparing these files. No fine-tuned weights, accuracy score, successful live inference, or clinical validation is claimed. The checkout does not contain the required training/validation JSONL. The first 50 steps are a pipeline experiment; choose a new run name for a full training experiment. Resume with identical settings, not a new step budget.
+No GPU training was performed while preparing these files. No fine-tuned weights, accuracy score, successful live inference, or clinical validation is claimed. The default `research_demo` mode prepares the JSONL files automatically from the existing MedlinePlus snapshot; generated targets are not clinically reviewed. The first 50 steps are a pipeline experiment; choose a new run name for a full training experiment. Resume with identical settings, not a new step budget.
 
-## Data required before training
+## Start now without uploading files
 
-The existing `train_adapter.py` accepts one JSON object per line in `train.jsonl` and `validation.jsonl`. Each row needs:
+If your old copy is waiting for `train.jsonl`, cancel that upload. Reopen the GitHub notebook above and save a **new copy** in Drive. An old Drive copy does not update when GitHub changes. In Colab, use **Runtime → Disconnect and delete runtime**, reconnect with a GPU, then run the new copy from the top. This removes the temporary old checkout, not saved Drive experiments.
+
+Keep `DATA_MODE = 'research_demo'` and the new default run name `llama3-general-research-002`. Section 4 prepares the data automatically. After the data and token-length checks pass, run **6. Train the adapter**, then the base-versus-adapter comparison and ZIP export. This fixes the missing-upload step; no trained model or successful GPU run is implied.
+
+Files are created in `MyDrive/HealthBrowse/<RUN_NAME>/data/`:
+
+- `train.jsonl`: optimization examples.
+- `validation.jsonl`: validation loss and the five-example comparison.
+- `test.jsonl`: separate holdout, not opened by training or comparison.
+- `dataset-manifest.json`: source snapshot hash, policy, split counts, data hashes, tokenizer revision, and limitations.
+
+The export ZIP includes these data files as well as adapter files and reports. `prepare_research_data.py` can also be run locally without a GPU:
+
+```bash
+python inference/prepare_research_data.py --output /tmp/healthbrowse-research-data
+```
+
+Run that command from `healthbrowse/`. CPU preparation does not check tokenizer lengths; the notebook does so with the pinned Llama tokenizer before writing its own data. It never truncates evidence. Re-running preparation is deterministic and refuses to replace different existing data.
+
+### What this dataset teaches—and does not
+
+This is a small **source-extraction and JSON-format baseline**, not a clinically validated six-domain corpus. It uses only short, intact passages from the existing MedlinePlus health-topic XML summaries, under the [MedlinePlus reuse policy](https://medlineplus.gov/about/using/usingcontent/). Source: MedlinePlus, National Library of Medicine. No NLM endorsement is implied. It excludes encyclopedia and drug monographs, linked resources, visitor chats and MedQuAD archives with separate rights conditions.
+
+Each target copies source text exactly and records citations. It keeps `clinical_reviewed: false`, `research_only: true`, and `target_method: "extractive"`. The scope-specific license check is recorded separately; that is not clinical approval. `--research-only` explicitly permits this experiment; the trainer's default still rejects unreviewed data. Training manifests remain `clinical_release_approved: false`.
+
+Short summaries and sparse deck coverage bias the dataset. Existing deck labels are heuristic, the compact exercise prompt differs from the full production prompt, and targets do not teach broad medical synthesis, patient-specific reasoning or every kind of evidence gap. Copying quoted text is not a test of factual reasoning. A loss reduction or valid JSON does not demonstrate safe answers. Use fresh retrieval, independently reviewed targets, production prompts and clinical evaluation before any deployment.
+
+Groups sharing canonical topic titles, aliases, publisher pages or identical selected passages stay in one split. The script selects 120 groups by stable hashes and partitions groups 80/10/10; actual row counts depend on available passages and token limits. Related-disease and near-duplicate leakage is not ruled out. Keep the test set untouched while tuning; conduct a separate final evaluation and manual source-support review later.
+
+## Optional clinically reviewed training data
+
+Change `DATA_MODE` to `reviewed_upload` with a new run name to upload your own files. `train_adapter.py` in its default reviewed mode accepts one JSON object per line in `train.jsonl` and `validation.jsonl`. Each row needs:
 
 | Field | Meaning |
 |---|---|
