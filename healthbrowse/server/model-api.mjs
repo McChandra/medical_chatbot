@@ -3,6 +3,7 @@ import {inspectQuery} from '../dist/clinical-engine.js';
 import {evidenceFor,generationMessages,validateDraft,reviewMessages,reviewPasses,presentDraft} from './model-evidence.mjs';
 import {modelEndpoint as endpoint,modelReviewEndpoint} from './model-provider.mjs';
 import {compactGeneration,compactReviews,ContextLimit} from './model-context.mjs';
+import {groundedEvidence,prepareGrounded,decodeGrounded,groundedReview,groundedReviewPasses,presentGrounded} from './model-grounded.mjs';
 const headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'};
 const reply=(body,status=200)=>Response.json(body,{status,headers});
 class Failure extends Error{constructor(status,code,message){super(message);this.status=status;this.code=code}}
@@ -30,9 +31,9 @@ async function reserve(env,user){
  WHERE hb_model_limits.bucket<>excluded.bucket OR hb_model_limits.requests<6`).bind(user,bucket).run();
  if(!result.meta?.changes)fail(429,'rate_limited','Please wait a minute before another AI request.');
 }
-async function complete(config,messages,signal,maxTokens=6000){
+async function complete(config,messages,signal,maxTokens=6000,schema){
  const res=await fetch(config.url,{method:'POST',headers:{Authorization:'Bearer '+config.key,'Content-Type':'application/json'},redirect:'error',signal,
-  body:JSON.stringify({model:config.model,messages,temperature:0,max_tokens:maxTokens,stream:false,response_format:{type:'json_object'}})});
+  body:JSON.stringify({model:config.model,messages,temperature:0,max_tokens:maxTokens,stream:false,response_format:schema?{type:'json_schema',json_schema:{name:'healthbrowse',strict:true,schema}}:{type:'json_object'}})});
  // Configuration/credit failures are not hallucinations; do not repeat billable requests.
  if(!res.ok){
   if(res.status===401||res.status===403)fail(503,'provider_access','The AI provider rejected access. The site owner must check the token and model access.');
@@ -64,7 +65,8 @@ export async function modelAPI(request,env,assets){
   if(!config)fail(503,'model_not_configured','AI synthesis is not connected yet. Showing source excerpts instead.');
   const reviewer=modelReviewEndpoint(env,route);
   if(!reviewer)fail(503,'reviewer_not_configured','The support reviewer is not configured. Showing source excerpts instead.');
-  const user=await identity(request,env),evidence=evidenceFor(assets,b.topic,b.role,b.question);
+  const user=await identity(request,env),grounded=config.protocol==='grounded-v2';
+  const evidence=grounded?groundedEvidence(assets,b):evidenceFor(assets,b.topic,b.role,b.question);
   if(!evidence?.sources.length)fail(422,'no_evidence','No indexed sources support this topic.');
   await reserve(env,user);
   // The deadline includes both generation, review and one possible repair.
@@ -72,6 +74,14 @@ export async function modelAPI(request,env,assets){
   let reason='';
   for(let attempt=0;attempt<2;attempt++){
    try{
+    if(grounded){
+     const prepared=prepareGrounded(b,evidence,reason);
+     const raw=await complete(config,prepared.messages,signal,prepared.maxTokens,prepared.schema);
+     const draft=decodeGrounded(raw,b,prepared),check=groundedReview(draft,prepared,b);
+     const review=await complete(reviewer,check.messages,signal,check.maxTokens,check.schema);
+     if(!groundedReviewPasses(review,draft,prepared)){reason='Claim support or direct-answer facet coverage failed: '+JSON.stringify(review).slice(0,350);continue;}
+     return reply(presentGrounded(draft,prepared,b,config.model,attempt>0));
+    }
     const prepared=config.compact?compactGeneration(b,evidence,reason):{messages:generationMessages(b,evidence,reason),evidence,maxTokens:6000};
     const raw=await complete(config,prepared.messages,signal,prepared.maxTokens);
     const draft=validateDraft(raw,b,prepared.evidence);

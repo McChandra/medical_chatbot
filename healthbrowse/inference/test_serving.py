@@ -40,6 +40,15 @@ class ServingTests(unittest.TestCase):
                 self.assertTrue(r.json()['research_only']);self.assertEqual(gen.call_args.args[0].model,alias)
             self.assertEqual(self.client.post('/v1/chat/completions',headers=self.headers,json={**self.body,'model':'other'}).status_code,400)
 
+    def test_json_schema_requests_and_busy_health_are_supported(self):
+        schema={'type':'object','properties':{'ok':{'type':'boolean'}},'required':['ok'],'additionalProperties':False}
+        body={**self.body,'response_format':{'type':'json_schema','json_schema':{'name':'test','strict':True,'schema':schema}}}
+        with patch.object(serve,'generate',return_value=('{"ok":true}',False)):
+            self.assertEqual(self.client.post('/v1/chat/completions',headers=self.headers,json=body).status_code,200)
+        body['response_format']['json_schema']['schema']={'$ref':'https://invalid.example/schema'}
+        self.assertEqual(self.client.post('/v1/chat/completions',headers=self.headers,json=body).status_code,400)
+        self.assertFalse(self.client.get('/healthz').json()['busy'])
+
     def test_failure_and_context_overflow_do_not_disclose_internal_details(self):
         for error,code in [(ValueError('secret context detail'),413),(RuntimeError('secret failure detail'),503)]:
             with patch.object(serve,'generate',side_effect=error):

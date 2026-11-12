@@ -12,6 +12,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Header, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
 from model_settings import validate_base, validate_adapter
+from structured_output import schema_from_format, prefix_function, validate_output, prepare_tokenizer_data
 
 state = {}
 lock = asyncio.Lock()
@@ -47,6 +48,8 @@ async def lifespan(app):
     if adapter:
         model = PeftModel.from_pretrained(model, adapter)
     model.eval()
+    # Cache vocabulary indexing during startup; each request gets a fresh parser.
+    prepare_tokenizer_data(processor.tokenizer if medical else processor)
     text_config = getattr(model.config, "text_config", model.config)
     served_id = os.environ.get("SERVED_MODEL_ID",model_id)
     base_alias = os.environ.get("BASE_MODEL_ALIAS") if adapter else None
@@ -101,7 +104,7 @@ async def auth_and_size(request: Request, call_next):
 async def health():
     if not state:
         raise HTTPException(503, "Loading")
-    return {"ready": True}
+    return {"ready": True, "busy": lock.locked()}
 
 
 def generate(body):
@@ -124,11 +127,20 @@ def generate(body):
     inputs = {k: v.to(state["model"].device) for k, v in inputs.items()}
     use_base = body.model == state.get("base_alias")
     adapter_context = state["model"].disable_adapter() if use_base else nullcontext()
+    schema = schema_from_format(body.response_format)
+    generation_options = {"prefix_allowed_tokens_fn": prefix_function(processor.tokenizer if state["medical"] else processor, schema)} if schema else {}
     with adapter_context, torch.inference_mode():
         result = state["model"].generate(**inputs, max_new_tokens=body.max_tokens, do_sample=False,
-                                       pad_token_id=processor.tokenizer.eos_token_id if state["medical"] else processor.eos_token_id)
+                                       pad_token_id=processor.tokenizer.eos_token_id if state["medical"] else processor.eos_token_id, **generation_options)
     tokens = result[0, inputs["input_ids"].shape[-1]:]
-    return processor.decode(tokens, skip_special_tokens=True), len(tokens) >= body.max_tokens
+    text = processor.decode(tokens, skip_special_tokens=True)
+    truncated = len(tokens) >= body.max_tokens
+    if not truncated:
+        try:
+            validate_output(text, schema)
+        except Exception as exc:
+            raise RuntimeError("Generated output failed schema validation") from exc
+    return text, truncated
 
 
 @app.post("/v1/chat/completions")
@@ -138,7 +150,11 @@ async def completion(body: Completion):
     allowed = {state["model_id"]}
     if state.get("base_alias"):
         allowed.add(state["base_alias"])
-    if (body.model not in allowed or body.stream or body.response_format != {"type":"json_object"}
+    try:
+        schema_from_format(body.response_format)
+    except Exception:
+        raise HTTPException(400,"Unsupported or invalid response schema") from None
+    if (body.model not in allowed or body.stream
             or any(m.role not in {"system","user","assistant"} for m in body.messages)
             or (state["medical"] and len(body.messages)==1 and body.messages[0].role=="system")):
         raise HTTPException(400,"Unsupported model or request")

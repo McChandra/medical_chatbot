@@ -11,7 +11,9 @@ export function modelEndpoint(env,route){
  const llama3=model.split(':')[0]==='meta-llama/Meta-Llama-3-8B-Instruct';
  // Dedicated adapters can opt into the same context profile using this setting.
  const compact=llama3||(general&&env.MODEL_GENERAL_CONTEXT_TOKENS==='8192');
- return {url,key,model,compact};
+ const protocol=env[prefix+'PROTOCOL']||'legacy';
+ if(!['legacy','grounded-v2'].includes(protocol))return null;
+ return {url,key,model,compact,protocol};
 }
 
 // A format-trained generator must not silently replace the support reviewer.
@@ -19,10 +21,10 @@ export function modelEndpoint(env,route){
 export function modelReviewEndpoint(env,route){
  const generator=modelEndpoint(env,route);if(!generator)return null;
  const prefix=route==='general'?'MODEL_GENERAL_':'MODEL_PROFESSIONAL_';
- if(!env[prefix+'REVIEW_ID']&&!env[prefix+'REVIEW_URL']&&!env[prefix+'REVIEW_KEY'])return generator;
+ if(!env[prefix+'REVIEW_ID']&&!env[prefix+'REVIEW_URL']&&!env[prefix+'REVIEW_KEY'])return generator.protocol==='grounded-v2'?null:generator;
  const url=env[prefix+'REVIEW_URL']||generator.url;
  const key=env[prefix+'REVIEW_KEY']||(url===generator.url?generator.key:'');
  const model=env[prefix+'REVIEW_ID'];if(!model)return null;
  return modelEndpoint({[prefix+'URL']:url,[prefix+'KEY']:key,[prefix+'ID']:model,
-                       [prefix+'CONTEXT_TOKENS']:env[prefix+'CONTEXT_TOKENS']},route);
+                       [prefix+'CONTEXT_TOKENS']:env[prefix+'CONTEXT_TOKENS'],[prefix+'PROTOCOL']:env[prefix+'PROTOCOL']},route);
 }

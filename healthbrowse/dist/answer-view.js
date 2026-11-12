@@ -12,7 +12,7 @@ export function renderAnswer(parent,answer,renderCheck){
    if(block.references?.length){
     for(const ref of block.references){const a=sourceLink(ref,'['+ref.id+'] '+ref.title);if(a)box.append(a);const detail=element('details','', 'source-evidence');detail.append(element('summary','Supporting passage · '+ref.date),element('blockquote',ref.quote));box.append(detail)}
     box.append(element('small',block.verification,'meta'));
-   }else{const a=sourceLink(block.citation,'['+(i+1)+'] '+block.citation.title);if(a)box.append(a)}
+   }else if(block.citation){const a=sourceLink(block.citation,'['+(i+1)+'] '+block.citation.title);if(a)box.append(a)}
    renderCheck?.(box,block.check);parent.append(box);
   });
   for(const gap of answer.gaps||[])parent.append(element('p',gap,'coverage-gap'));

@@ -4,6 +4,8 @@ The uploaded `llama3-general-research-002` export is a completed **research extr
 
 ## Evaluate before connecting
 
+For the current development update, use the [focused grounded-v2 workflow](grounded-v2.md). It reuses the adapter and evaluates the full gateway, including actual support review and repair.
+
 **Completed-run decision:** the uploaded evaluation contains all 78 expected results. [The audit](releases/llama3-general-research-002-evaluation.md) found unsupported citations, incomplete answers and a browser generation exceeding the gateway deadline. Keep this adapter in research; do not activate it publicly or repeat the same run unchanged. The notebook below remains the reproducible historical workflow.
 
 [Open the evaluation notebook](https://colab.research.google.com/github/McChandra/medical_chatbot/blob/feature/responsive-healthbrowse-auth/healthbrowse/inference/HealthBrowse_Adapter_Evaluation_Colab.ipynb). It reuses `MyDrive/HealthBrowse/llama3-general-research-002`; no retraining or paid inference API is required. Use an authorized GPU and the existing `HF_TOKEN` Colab secret. If using an exported ZIP instead, the notebook verifies and extracts the exact uploaded adapter checksum.
