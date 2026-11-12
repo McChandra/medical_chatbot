@@ -1,0 +1,35 @@
+services:
+  inference:
+    build:
+      context: .
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      MODEL_ID: meta-llama/Meta-Llama-3-8B-Instruct
+      MODEL_REVISION: 8afb486c1db24fe5011ec46dfbe5b5dccdb575c2
+      SERVED_MODEL_ID: healthbrowse-general-qlora
+      BASE_MODEL_ALIAS: healthbrowse-general-base-review
+      ADAPTER_PATH: /models/adapter
+      LOAD_IN_4BIT: "1"
+      ALLOW_RESEARCH_ADAPTER: "1"
+      MAX_INPUT_TOKENS: "6144"
+      INFERENCE_API_KEY: ${INFERENCE_API_KEY:?Set a random server-only key}
+      HF_TOKEN: ${HF_TOKEN:?Set a token with access to the pinned base weights}
+    volumes:
+      - ${ARTIFACT_DIR:?Set the extracted artifact directory}/adapter:/models/adapter:ro
+      - model-cache:/cache
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+volumes:
+  model-cache:

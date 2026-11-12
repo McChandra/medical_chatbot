@@ -13,3 +13,16 @@ export function modelEndpoint(env,route){
  const compact=llama3||(general&&env.MODEL_GENERAL_CONTEXT_TOKENS==='8192');
  return {url,key,model,compact};
 }
+
+// A format-trained generator must not silently replace the support reviewer.
+// Reuse its credential only on the exact same endpoint URL.
+export function modelReviewEndpoint(env,route){
+ const generator=modelEndpoint(env,route);if(!generator)return null;
+ const prefix=route==='general'?'MODEL_GENERAL_':'MODEL_PROFESSIONAL_';
+ if(!env[prefix+'REVIEW_ID']&&!env[prefix+'REVIEW_URL']&&!env[prefix+'REVIEW_KEY'])return generator;
+ const url=env[prefix+'REVIEW_URL']||generator.url;
+ const key=env[prefix+'REVIEW_KEY']||(url===generator.url?generator.key:'');
+ const model=env[prefix+'REVIEW_ID'];if(!model)return null;
+ return modelEndpoint({[prefix+'URL']:url,[prefix+'KEY']:key,[prefix+'ID']:model,
+                       [prefix+'CONTEXT_TOKENS']:env[prefix+'CONTEXT_TOKENS']},route);
+}

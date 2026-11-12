@@ -1,7 +1,7 @@
 import {isReadingRole,normalizeReadingRole} from '../dist/reading-profiles.js';
 import {inspectQuery} from '../dist/clinical-engine.js';
 import {evidenceFor,generationMessages,validateDraft,reviewMessages,reviewPasses,presentDraft} from './model-evidence.mjs';
-import {modelEndpoint as endpoint} from './model-provider.mjs';
+import {modelEndpoint as endpoint,modelReviewEndpoint} from './model-provider.mjs';
 import {compactGeneration,compactReviews,ContextLimit} from './model-context.mjs';
 const headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'};
 const reply=(body,status=200)=>Response.json(body,{status,headers});
@@ -62,6 +62,8 @@ export async function modelAPI(request,env,assets){
   b.role=normalizeReadingRole(b.role);
   const route=b.role==='Medical professional'?'professional':'general',config=endpoint(env,route);
   if(!config)fail(503,'model_not_configured','AI synthesis is not connected yet. Showing source excerpts instead.');
+  const reviewer=modelReviewEndpoint(env,route);
+  if(!reviewer)fail(503,'reviewer_not_configured','The support reviewer is not configured. Showing source excerpts instead.');
   const user=await identity(request,env),evidence=evidenceFor(assets,b.topic,b.role,b.question);
   if(!evidence?.sources.length)fail(422,'no_evidence','No indexed sources support this topic.');
   await reserve(env,user);
@@ -73,10 +75,10 @@ export async function modelAPI(request,env,assets){
     const prepared=config.compact?compactGeneration(b,evidence,reason):{messages:generationMessages(b,evidence,reason),evidence,maxTokens:6000};
     const raw=await complete(config,prepared.messages,signal,prepared.maxTokens);
     const draft=validateDraft(raw,b,prepared.evidence);
-    const batches=config.compact?compactReviews(draft,prepared.evidence,b):[{draft,messages:reviewMessages(draft,prepared.evidence,b),maxTokens:2500}];
+    const batches=(config.compact||reviewer.compact)?compactReviews(draft,prepared.evidence,b):[{draft,messages:reviewMessages(draft,prepared.evidence,b),maxTokens:2500}];
     let passed=true;
     for(const batch of batches){
-     const review=await complete(config,batch.messages,signal,batch.maxTokens);
+     const review=await complete(reviewer,batch.messages,signal,batch.maxTokens);
      if(!reviewPasses(review,batch.draft)){passed=false;reason='The direct answer was incomplete or a claim was unsupported. '+JSON.stringify(review).slice(0,300);break}
     }
     if(!passed)continue;

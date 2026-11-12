@@ -119,6 +119,7 @@ def knowledge_blocks(blocks):
         text = "\n".join(parts)
         h, t = heading.lower(), text.lower()
         rules = [
+            (r"(?:what should|target|goal).*(?:ldl|cholesterol|blood pressure|level)|(?:ldl|cholesterol).*(?:target|goal)", 4, "therapy"),
             (r"complication|prognos|outlook|survival", 5, "prognosis"),
             (r"prevent|incidence|prevalence|how common", 6, "public-health"),
             (r"treat|therap|manag|living with", 4, "therapy"),

@@ -193,3 +193,12 @@ test('large claim reviews are batched without losing any claims or question cont
  }
  assert.equal(seen.size,7);
 });
+
+test('dedicated base reviewer receives review prompts while adapter receives generation prompts',async t=>{
+ const {call,env,calls}=fixture(t);env.MODEL_GENERAL_REVIEW_ID='base-review';
+ const r=await call();assert.equal(r.status,200);
+ assert.equal(calls[0].body.model,'llama-adapter');assert.equal(calls[1].body.model,'base-review');
+ assert.ok(JSON.parse(calls[1].body.messages[1].content).draft);
+ env.MODEL_GENERAL_REVIEW_URL='https://other-reviewer.example/v1/chat/completions';
+ const count=calls.length;const failed=await call();assert.equal(failed.status,503);assert.equal((await failed.json()).code,'reviewer_not_configured');assert.equal(calls.length,count);
+});

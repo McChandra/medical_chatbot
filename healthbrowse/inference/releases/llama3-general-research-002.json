@@ -1,0 +1,28 @@
+{
+  "artifact": "Llama-3-HealthBrowse-General-QLoRA.zip",
+  "adapter_sha256": "9fd872b09372d3d079aa7f359e4072cdb66954d0e5e77b130f5a0441a397e5c5",
+  "base_model": "meta-llama/Meta-Llama-3-8B-Instruct",
+  "base_revision": "8afb486c1db24fe5011ec46dfbe5b5dccdb575c2",
+  "training_source_commit": "520b78eb7b93179f3f66a1e4acc77e2ff01db7d7",
+  "observed": {
+    "zip_crc_passed": true,
+    "dataset_hashes_match": true,
+    "adapter_tensors": 448,
+    "adapter_parameters": 20971520,
+    "nonfinite_tensors": 0,
+    "training_seconds": 1139.9402,
+    "train_examples": 182,
+    "validation_examples": 21,
+    "test_examples": 25,
+    "comparison_prompts": 5,
+    "adapter_schema_passed": 5,
+    "base_schema_passed": 0,
+    "search_outputs_with_no_populated_decks": 3,
+    "search_comparisons": 4
+  },
+  "clinical_reviewed": false,
+  "clinical_release_approved": false,
+  "production_prompt_gpu_evaluation": "pending",
+  "private_gpu_endpoint": "not deployed",
+  "note": "Observed from uploaded export. Five comparison prompts test extraction and formatting, not clinical accuracy. Weights are not committed to Git."
+}

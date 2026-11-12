@@ -1,3 +1,4 @@
+import {normalizeSourceLabel} from './source-labels.js';
 import {roleIndex,readingLabel} from './reading-profiles.js';
 // Stable identifiers keep saved conversations distinct from the previous taxonomy.
 export const frameworkVersion='disease-spectrum-v2';
@@ -45,7 +46,7 @@ export function routePassage(p,origin='medquad'){
 }
 export function medlinePassages(record,topic,feed={}){
  if(!record)return [];
- if(record.knowledge?.length)return record.knowledge.map(p=>({...p,focus:topic,frameworkVersion,
+ if(record.knowledge?.length)return record.knowledge.map(normalizeSourceLabel).map(p=>({...p,focus:topic,frameworkVersion,
   title:record.title+' · MedlinePlus'+(p.heading?' · '+p.heading:''),url:record.url,record:record.url+'#summary-'+p.id,
   vintage:'MedlinePlus feed snapshot · '+(feed.feedDate||feed.retrievedAt||'date unavailable'),sourceType:'patient-education',
   ...(p.deck===2?{courseContext:/untreated|without (?:treatment|intervention)|not treated/i.test(p.text)?'untreated':'unspecified'}:{})}));
