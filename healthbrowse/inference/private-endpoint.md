@@ -4,7 +4,7 @@ The uploaded `llama3-general-research-002` export is a completed **research extr
 
 ## Evaluate before connecting
 
-For the current development update, use the [focused grounded-v2 workflow](grounded-v2.md). It reuses the adapter and evaluates the full gateway, including actual support review and repair.
+The [focused grounded-v2 evaluation](releases/llama3-general-research-002-grounded-v2-evaluation.md) is also complete: all 22 records were audited, no browser answer passed, and the base reviewer falsely accepted two negative controls. Do not repeat either completed run or activate this model pair. The workflows below are retained for reproducibility. Post-audit safeguards have CPU regression coverage, not a new GPU quality result.
 
 **Completed-run decision:** the uploaded evaluation contains all 78 expected results. [The audit](releases/llama3-general-research-002-evaluation.md) found unsupported citations, incomplete answers and a browser generation exceeding the gateway deadline. Keep this adapter in research; do not activate it publicly or repeat the same run unchanged. The notebook below remains the reproducible historical workflow.
 
@@ -50,7 +50,7 @@ docker compose -f inference/compose.research.yml up --build -d
 curl --fail http://127.0.0.1:8080/healthz
 ```
 
-The container listens through a loopback-only published port. It loads the base in NF4 and applies the adapter; it chooses FP16 on T4-class hardware and BF16 where natively supported. Quantization reduces memory use but does not guarantee that a particular GPU can handle every request. One generation runs at a time. A disconnected client cannot cause overlapping base/adapter generation. The API requires a bearer token, limits request bodies, rejects unsupported model aliases and labels the adapter as research-only. JSON generation is not grammar-constrained; the gateway must keep validating and withholding failed drafts.
+The container listens through a loopback-only published port. It loads the base in NF4 and applies the adapter; it chooses FP16 on T4-class hardware and BF16 where natively supported. Quantization reduces memory use but does not guarantee that a particular GPU can handle every request. One generation runs at a time. A disconnected client cannot cause overlapping base/adapter generation. The API requires a bearer token, limits request bodies, rejects unsupported model aliases and labels the adapter as research-only. The grounded-v2 JSON-schema route uses constrained decoding; the legacy JSON-object route does not. Both require gateway validation, and valid JSON does not establish complete or supported medical answers.
 
 Configure authenticated HTTPS ingress on that host before any remote integration. Keep raw prompts out of access logs and allow access only from your test clients/gateway. The compose file does not provision a GPU, DNS, TLS or an external cloud account, and has not been GPU-deployed by this change.
 

@@ -1,20 +1,22 @@
 # Grounded v2: evaluate claim support and the full gateway
 
-This is an opt-in development update for the failure modes in the [completed v1 evaluation](releases/llama3-general-research-002-evaluation.md). It preserves the trained adapter and historical results. It is not an adapter-quality improvement demonstrated by a GPU experiment yet, and it is not activated on the public website.
+This is an opt-in development update for the failure modes in the [completed v1 evaluation](releases/llama3-general-research-002-evaluation.md). It preserves the trained adapter and historical results. The focused GPU run is complete and failed the release criteria. [Read the audited results](releases/llama3-general-research-002-grounded-v2-evaluation.md). Neither generator produced an accepted browser answer; the four accepted buddy responses contained unfinished sentences. The model pair is not activated on the public website.
 
 ## What changed
 
-- The generator emits short claims and source IDs. The server resolves the selected passages and URLs from its retrieved evidence. Model-authored quotations are no longer required in this protocol. This reduces repeated generated text; actual end-to-end latency remains to be measured.
+- The generator emits short claims and source IDs. The server resolves the selected passages and URLs from its retrieved evidence. Model-authored quotations are no longer required in this protocol. This reduces repeated generated text; the completed T4 run still encountered five gateway deadline failures across both routes.
 - Generation uses a JSON schema with at most 180 characters per claim, three direct-answer claims, one claim per deck, and known source IDs. The private GPU server constrains decoding with pinned LM Format Enforcer, then validates completed JSON again. Syntax constraints do not establish factual support.
-- Question facets make compound requests explicit. The reviewer checks every direct-answer facet and every claim, seeing only the passages cited for that claim. A missed facet or unsupported claim triggers one repair; a second failure is withheld. Evidence gaps are declared, reviewed and rendered without fabricated citations.
+- Question facets make compound requests explicit. The reviewer checks every direct-answer facet and every claim, seeing only the passages cited for that claim. A missed facet or unsupported claim permits at most one repair when sufficient time remains; a second failure is withheld. Evidence gaps are declared, reviewed and rendered without fabricated citations.
 - Retrieval prioritizes question facets before filling domains. Complete, independently scoped diabetes treatment list items can fit the context; arbitrary long paragraphs and unscoped list items are not truncated. Historical staging material is excluded from this profile. Age/population text and hypertension complications are assigned to their relevant domains.
 - Targeted CDC passages cover sore-throat course, when to seek care, antibiotics, prevention and strep complications. An NCI passage supports AML-specific complications. Claims using subtype-specific added passages must name the subtype. No source is labeled clinically certified or endorsed by its publisher.
 
 The 120-second total gateway deadline remains. Search generation is capped at 1,100 output tokens and buddy generation at 450, versus the prior compact 2,048-token budget. Review is capped at 700. Shorter limits can cause truncation or omissions; the new evaluation counts failures instead of assuming they are fixed.
 
-## Run the focused evaluation
+## Completed evaluation (historical reproduction)
 
-[Open the grounded-v2 notebook](https://colab.research.google.com/github/McChandra/medical_chatbot/blob/feature/responsive-healthbrowse-auth/healthbrowse/inference/HealthBrowse_Grounded_V2_Colab.ipynb).
+**No repeat run is requested.** The notebook remains pinned to the completed experiment. New CPU guards reject unfinished sentences and require relevant evidence types for non-gap facets; they do not prove corrected generation quality.
+
+[Open the historical grounded-v2 notebook](https://colab.research.google.com/github/McChandra/medical_chatbot/blob/feature/responsive-healthbrowse-auth/healthbrowse/inference/HealthBrowse_Grounded_V2_Colab.ipynb).
 
 Use a fresh GPU runtime, the existing `HF_TOKEN` secret and the saved `llama3-general-research-002` Drive folder. Do not retrain or rerun the historical 78-generation notebook. Results are saved separately under `evaluation-grounded-v2-001`.
 
@@ -35,7 +37,7 @@ These are development regressions selected after inspecting v1 errors. They must
 
 ## Optional gateway configuration after evaluation
 
-The existing route remains `legacy` by default. A schema-capable private endpoint can opt in with these server-side settings:
+**The completed run does not qualify either tested route for public activation.** The settings below document the research protocol. The existing route remains `legacy` by default. A schema-capable private endpoint can opt in with these server-side settings:
 
 ```text
 MODEL_GENERAL_PROTOCOL=grounded-v2

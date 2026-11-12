@@ -70,9 +70,14 @@ export async function modelAPI(request,env,assets){
   if(!evidence?.sources.length)fail(422,'no_evidence','No indexed sources support this topic.');
   await reserve(env,user);
   // The deadline includes both generation, review and one possible repair.
-  const signal=AbortSignal.any([request.signal,AbortSignal.timeout(120000)]);
+  const started=Date.now(),signal=AbortSignal.any([request.signal,AbortSignal.timeout(120000)]);
   let reason='';
   for(let attempt=0;attempt<2;attempt++){
+   // Do not start another whole generation/review cycle when the first cycle
+   // already consumed more than the remaining budget (plus a small margin).
+   // This is a conservative estimate, not a latency guarantee.
+   if(grounded&&attempt&&Date.now()-started+5000>=120000-(Date.now()-started))
+    fail(503,'repair_budget_exhausted','The draft failed checks and there is insufficient time to recheck a replacement. Showing source excerpts instead.');
    try{
     if(grounded){
      const prepared=prepareGrounded(b,evidence,reason);
@@ -95,7 +100,11 @@ export async function modelAPI(request,env,assets){
     return reply(presentDraft(draft,prepared.evidence,b,config.model,attempt>0));
    }catch(error){
     if(error instanceof ContextLimit)fail(422,'context_limit','This question and its evidence exceed the model context. Try a shorter question or explore one deck with the buddy.');
-    if(signal.aborted||error instanceof Failure)throw error;
+    if(signal.aborted){
+     if(request.signal.aborted)fail(499,'request_cancelled','The request was cancelled.');
+     fail(503,'model_timeout','AI generation and verification exceeded the response deadline. Showing source excerpts instead.');
+    }
+    if(error instanceof Failure)throw error;
     reason='The draft failed validation: '+error.message;
    }
   }

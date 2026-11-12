@@ -10,7 +10,12 @@ const prepare=i=>prepareGrounded(i,groundedEvidence(assets,i));
 function output(p,i=input){
  const s=p.evidence.sources.find(s=>s.intent==='risk')||p.evidence.sources[0];
  const text=s.text.split('. ')[0]+'.';
- return {answer:[{text:text.slice(0,180),sources:[s.id]}],decks:i.mode==='chat'?{}:Object.fromEntries(Array.from({length:6},(_,j)=>[j+1,[]])),gaps:[]};
+ const answer=[{text:text.slice(0,180),sources:[s.id]}];
+ if(p.facets.some(f=>f.key==='care')){
+  const care=p.evidence.sources.find(s=>s.intent==='escalation'&&s.text.includes('Please see'));
+  answer.push({text:'Please see your healthcare provider for any symptom that is severe or concerning.',sources:[care.id]});
+ }
+ return {answer,decks:i.mode==='chat'?{}:Object.fromEntries(Array.from({length:6},(_,j)=>[j+1,[]])),gaps:[]};
 }
 function review(d,p,override){return {checks:[...d.answer.claims,...d.decks.flatMap(s=>s.claims)].map(c=>({id:c.id,verdict:override||'supported'})),coverage:p.facets.map(f=>({id:f.id,verdict:d.gaps.includes(f.id)?'gap':'answered'}))};}
 test('new source text has a hash, attribution, date and unapproved clinical status',()=>{
