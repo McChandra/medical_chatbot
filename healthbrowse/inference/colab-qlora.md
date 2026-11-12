@@ -65,6 +65,14 @@ Raw MedQuAD question-answer pairs, MedQA and MedMCQA exam rows are **not** alrea
 
 Train for direct answers, plain-language explanations, requested follow-ups, safe uncertainty and citation use. Include genuine evidence gaps. Do not train on HealthBrowse visitors' conversations or patient identifiers. Assess factual support and dangerous omissions as well as readability and loss; fine-tuning does not replace retrieval or source verification.
 
+## When the training cell fails
+
+`CalledProcessError ... exit status 1` by itself is not the underlying training error. In an older notebook, expand the output and inspect the traceback immediately above that wrapper. Do not infer a GPU-memory, access or dependency cause from the exit code alone.
+
+The updated training cell streams combined stdout/stderr and saves each attempt in a new `logs/training-<timestamp>-<id>.log` under the Drive run folder. It records Python and installed package versions without dumping environment variables. A failure embeds the tail of the training output in the final exception. Share the actual traceback lines to diagnose the problem. If training is interrupted, the launcher stops its child process and keeps the log.
+
+A retry discovers the latest checkpoint, while the trainer retains its original manifest/data checks. If there is partial output without a checkpoint, preserve it and the first failure log; do not delete evidence just to make a retry pass. The updated notebook can be copied from GitHub, or its training cell copied into an existing notebook with the same variables. The training source remains pinned to the existing commit, so logging does not itself change training settings or invalidate the source manifest.
+
 ## Interrupted sessions
 
 Mount the same Drive, select the same run name and use the original source commit. The notebook records its pinned source SHA and base-model SHA in `experiment.json`. It refuses changed settings instead of mixing experiments. To resume an older compatible experiment, set `SOURCE_COMMIT` in the setup cell to its recorded full SHA; setup will use that version in a separate directory. A pre-data-preparation commit cannot support the new research demo. For the updated workflow use the new default run name instead. Do not discard local code changes without reviewing them.
