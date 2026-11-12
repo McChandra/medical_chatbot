@@ -16,7 +16,7 @@ No GPU training was performed while preparing these files. No fine-tuned weights
 
 ## Start now without uploading files
 
-If your old copy is waiting for `train.jsonl`, cancel that upload. Reopen the GitHub notebook above and save a **new copy** in Drive. An old Drive copy does not update when GitHub changes. In Colab, use **Runtime → Disconnect and delete runtime**, reconnect with a GPU, then run the new copy from the top. This removes the temporary old checkout, not saved Drive experiments.
+If your old copy is waiting for `train.jsonl` or reports a missing `prepare_research_data.py`, reopen the GitHub notebook above and save a **new copy** in Drive. An old Drive copy does not update when GitHub changes. Run the new setup cell and then continue from the top with a GPU runtime. The setup downloads the known source commit into `/content/healthbrowse-qlora-520b78eb7b93`, leaving an older `/content/medical_chatbot` and Drive experiments untouched. You do not need to delete the runtime for this stale-checkout fix. Successful setup prints `Data preparation script: ready`.
 
 Keep `DATA_MODE = 'research_demo'` and the new default run name `llama3-general-research-002`. Section 4 prepares the data automatically. After the data and token-length checks pass, run **6. Train the adapter**, then the base-versus-adapter comparison and ZIP export. This fixes the missing-upload step; no trained model or successful GPU run is implied.
 
@@ -67,7 +67,7 @@ Train for direct answers, plain-language explanations, requested follow-ups, saf
 
 ## Interrupted sessions
 
-Mount the same Drive, select the same run name and use the original source commit. The notebook records the source SHA (or a training-source fingerprint for an uploaded ZIP) and base-model SHA in `experiment.json`. It refuses changed settings instead of mixing experiments. To fetch the original code in a fresh clone, fetch that recorded SHA and check it out, then rerun the notebook. Do not discard local code changes without reviewing them.
+Mount the same Drive, select the same run name and use the original source commit. The notebook records its pinned source SHA and base-model SHA in `experiment.json`. It refuses changed settings instead of mixing experiments. To resume an older compatible experiment, set `SOURCE_COMMIT` in the setup cell to its recorded full SHA; setup will use that version in a separate directory. A pre-data-preparation commit cannot support the new research demo. For the updated workflow use the new default run name instead. Do not discard local code changes without reviewing them.
 
 Trainer checkpoints include optimizer/scheduler state. Only your own complete checkpoints should be resumed. Work after the last completed save may be lost. If the session ended before any checkpoint completed, preserve the partial run and start a new run name. The final ZIP is an inference adapter export, not a substitute for a full optimizer checkpoint.
 
