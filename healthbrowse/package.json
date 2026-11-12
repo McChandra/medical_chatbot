@@ -5,6 +5,6 @@
   "type":"module",
   "engines":{"node":">=24 <25"},
   "scripts":{"build":"node scripts/build-account.mjs && node scripts/build-worker.mjs","start":"node server/main.mjs","test":"node --test tests/*.test.mjs"},
-  "dependencies":{"@supabase/supabase-js":"2.118.0"},
+  "dependencies":{"@supabase/supabase-js":"2.119.0"},
   "devDependencies":{"esbuild":"0.28.2"}
 }
