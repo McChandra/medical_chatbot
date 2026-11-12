@@ -59,7 +59,7 @@ export function setupCopilot(getContext,actions={}){
   if(researchAnswer)answer=researchAnswer;
   else if(status==='ok'){
    modelRequest?.abort();modelRequest=new AbortController();
-   const result=await requestSynthesis(c,q,{mode:'chat',deck:guidedDeck||active,history,signal:modelRequest.signal});
+   const result=await requestSynthesis(c,q,{mode:'chat',deck:guidedDeck||active,history:history.slice(0,-1),signal:modelRequest.signal});
    if(run!==sequence||identity!==scope)return;
    if(result.status==='generated')answer=result.answer;else answer={...answer,modelNotice:result.message};
   }

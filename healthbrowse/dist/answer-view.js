@@ -4,7 +4,7 @@ function sourceLink(cite,label){
 }
 export function renderAnswer(parent,answer,renderCheck){
  if(answer.modelNotice){const notice=element('p',answer.modelNotice,'model-notice');notice.setAttribute('role','status');parent.append(notice)}
- if(answer.generation)parent.append(element('p','AI synthesis · '+answer.generation.model+(answer.generation.corrected?' · revised after source review':''),'meta'));
+ if(answer.generation)parent.append(element('p',(answer.generation.label||'AI synthesis')+' · '+answer.generation.model+(answer.generation.corrected?' · revised after source review':''),'meta'));
  if(answer.style)parent.append(element('p',answer.style,'answer-mode'));
  if(answer.blocks?.length){
   answer.blocks.forEach((block,i)=>{

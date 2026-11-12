@@ -1,11 +1,10 @@
 # HealthBrowse public research platform
 
-General-user model development: the first Llama 3 QLoRA research adapter has completed training and its 78-result evaluation. It passed format/source checks on 9/12 production-prompt questions and 25/25 separate extraction holdouts, but unsupported citations, incomplete answers and slow browser generation prevent public activation. [Read the evaluation findings](inference/releases/llama3-general-research-002-evaluation.md). These are format results, not clinical accuracy. The completed run is preserved; do not repeat it unchanged. [Private evaluation and hosting guide](inference/private-endpoint.md).
-The opt-in [grounded-v2 update](inference/grounded-v2.md) adds shorter structured outputs, server-resolved citations, targeted evidence additions and full generation/review/repair evaluation. Its focused GPU evaluation is now complete: neither route produced an accepted browser answer, and all four accepted buddy answers contained unfinished sentences. [Read the grounded-v2 results and safeguards](inference/releases/llama3-general-research-002-grounded-v2-evaluation.md). Do not repeat that run or activate this model pair publicly.
+HealthBrowse uses Groq-hosted `openai/gpt-oss-120b` for cited answers and six clinical decks, with `openai/gpt-oss-20b` checking claim support and citation assignments. General and Clinicians share this hosted service but use different audience instructions. The click-to-open Buddy uses the active question, answer and selected deck. [Configuration and verification](docs/model-integration.md).
 
+The local QLoRA training and evaluation files remain research experiments; they are not required to run this hosted integration. No model weights or credentials belong in this repository. Automated citation/support checks reduce some errors but do not establish clinical certification.
 
-The existing [model gateway and deployment guide](docs/model-integration.md) describes citations, six-deck outputs, automated support review, optional hosted provider routes, and self-hosted adapter serving. Earlier provider configuration is not evidence of successful inference or clinical validation. Clinicians remains a separately configured DR7 route.
-
+Historical adapter findings: [original evaluation](inference/releases/llama3-general-research-002-evaluation.md) and [grounded-v2 audit](inference/releases/llama3-general-research-002-grounded-v2-evaluation.md). These failed research evaluations remain preserved; hosted-model checks do not validate those adapters.
 
 HealthBrowse is an educational medical research browser. Every reading mode shows a question-specific answer followed by six clinical decks and a click-to-open HealthBrowse buddy. Research and discovery resources remain separately expandable. The hosted desk opens after Supabase sign-in. Personal workspaces store profiles, preferences, saved research chats, bookmarks and activity in the hosted database. This release uses source excerpts, publication corroboration, ClinicalTrials.gov registrations and NIH funding records. Clinical validation and institutional endorsement remain separate from software tests.
 
@@ -16,19 +15,20 @@ The browser and buddy use the same question-answering and audience profiles:
 
 | Reading mode | Answer behavior |
 | --- | --- |
-| General user | One concise source explanation with plain-language headings |
-| Patient | Care-oriented explanation, relevant source context and questions to discuss safely with a clinician |
-| Medical student | Definition plus mechanism, presentation and study prompts |
-| Medical professional | Clinical passages, diagnostic/management context and brief educational interpretation |
-| Advanced professional | More source detail, classification/subtype distinctions and evidence appraisal |
+| General | Plain-language answers, explanations of unfamiliar terms and source-supported safety information |
+| Clinicians | Clinical terminology, diagnostic and management context, subtype distinctions and evidence limitations |
 
-All five modes use the floating buddy, which stays closed until clicked. Its six guided questions adapt to the reading mode, and each deck has an “Ask buddy about this” action. Research papers, datasets and care resources remain separately available. A mode selection changes source selection, depth and learning guidance, not identity verification or data permissions. Only medical and advanced professional modes show the specialty selector.
+Only these two modes are selectable. Both use the floating Buddy, which stays closed until clicked. A reading-mode selection changes presentation, not identity verification or access to patient records. Research papers, datasets and care resources remain separately available. The specialty selector is removed.
 
-Conversational phrasing, known synonyms and spelling corrections are normalized before intent matching. Explicit multipart questions are answered clause by clause, with unsupported parts identified. Answers do not exclude material merely because it is visible in a deck. Each clinical passage retains its citation and exact stored-source check; role-specific study prompts and safety reminders are separately labeled. Source coverage limits still apply: the application has no unrestricted generative LLM service or clinically validated diagnostic capability.
+Conversational phrasing, known synonyms and spelling corrections are normalized before intent matching. Explicit multipart questions are answered clause by clause, with unsupported parts identified. Answers do not exclude material merely because it is visible in a deck. Each clinical passage retains its citation and exact stored-source check; role-specific study prompts and safety reminders are separately labeled. Source coverage limits still apply: the application has no unrestricted evidence coverage or clinically validated diagnostic capability.
 
 The MedlinePlus importer now retains complete headed summary blocks, including diagnosis and treatment sections that the previous first-paragraph preview omitted. The 5 November 2026 feed contains 1,017 topics and 5,752 indexed blocks. Original publisher terms, attribution and provenance hashes are retained. Local topic loading and external requests have time limits; an account-history outage cannot block a research answer.
 
 Clinical excerpts require a recognized publisher or a pinned historical MedQuAD record, topic agreement, record identity and an exact text match. Corrections require an explicit, unambiguous source record; otherwise the claim is withheld. These checks detect some unsupported or altered claims, but do not establish clinical accuracy, certification, completeness or currency. Historical excerpts retain their dates and subtype labels. Untreated natural history is not inferred from general progression or treated outcomes. See [framework design and validation](docs/DISEASE_FRAMEWORK.md).
+
+## Automated response QA
+
+The [dual-persona QA bot](docs/QA_BOT.md) exercises General and Clinicians, including six decks, Buddy, citations, safety handling and response timing. Run `npm run qa:bot -- --limit=4` for the initial four public-example cases. It produces concrete improvement suggestions without claiming clinical certification.
 
 ## Run locally
 Use Node 24. From this directory:

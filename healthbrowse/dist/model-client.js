@@ -16,7 +16,7 @@ export async function requestSynthesis(context,question,{mode='search',deck=0,hi
   const token=await abortable(Promise.resolve().then(tokenProvider),controller.signal);if(!token)return {status:'unavailable',message:'Sign in to use AI synthesis. Source excerpts are available below.'};
   if(controller.signal.aborted)throw new DOMException('Aborted','AbortError');
   const response=await fetcher('/api/ai/answer',{method:'POST',redirect:'error',signal:controller.signal,cache:'no-store',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},
-   body:JSON.stringify({topic:context.topic,question,searchQuery:context.query||context.topic,role:normalizeReadingRole(context.role),mode,deck,history:history.slice(-4).map(t=>typeof t==='string'?t:t.question)})});
+   body:JSON.stringify({topic:context.topic,question,searchQuery:context.query||context.topic,role:normalizeReadingRole(context.role),mode,deck,history:history.slice(-4).map(t=>typeof t==='string'?t:t.question),...(mode==='chat'?{browserContext:[context.answerSummary||'',context.deckSummaries?.[deck-1]||'',history.at(-1)?.text||''].filter(Boolean).join('\n').slice(0,1200)}:{})})});
   const data=await response.json();
   if(!response.ok)return {status:'unavailable',message:data.error||'AI synthesis could not finish. Source excerpts are shown below.'};
   if(data.status!=='generated'||!data.answer||!Array.isArray(data.decks))throw Error('Invalid AI response');

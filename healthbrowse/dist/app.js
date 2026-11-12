@@ -50,7 +50,9 @@ function refreshSynthesis(context){
 function currentContext(){
   if(!topic||!catalog||unresolved)return null;
   const resources=catalog[topic]||[];
+  const currentAnswer=synthesis?.status==='generated'&&synthesis.key===synthesisKey({topic,role:roles[role],query:activeQuery});
   return {topic,frameworkVersion,role:roles[role],query:activeQuery,aliases:[...(medicalRecord(topic)?.aliases||[]),...(taxonomy?.entities.find(e=>e.name===topic)?.aliases||[])],
+    answerSummary:currentAnswer?synthesis.answer.text:'',deckSummaries:currentAnswer?synthesis.decks.map(d=>d.text):[],
     passages:textRecords(),records:[...resources,...(live?.records||[]),...(codes?.rows||[]).map(r=>({...r,kind:'terminology',title:r.label}))],
     sections:sectionNames.map((_,i)=>sectionSources(i+1,resources,activeQuery,role).map(x=>x.r)),
     visibleTexts:[...$('card').querySelectorAll('.excerpt')].filter(e=>e.getClientRects().length).map(e=>e.textContent)};
