@@ -1,4 +1,5 @@
 import {assessSafety,safetyAnswer,safetyPolicyVersion} from '../dist/safety-policy.js';
+import {securityVariants,assessBuddySafety,buddySafetyAnswer,buddyHelpAnswer,buddyPolicyVersion} from '../dist/buddy-policy.js';
 import {citedEvidence,prepareCited,presentCited,prepareCitedReview,applyCitedReview} from './model-cited.mjs';
 import {isReadingRole,normalizeReadingRole} from '../dist/reading-profiles.js';
 import {inspectQuery} from '../dist/clinical-engine.js';
@@ -72,17 +73,21 @@ export async function modelAPI(request,env,assets){
   const context=[b.topic,b.searchQuery||'',...(b.history||[])].join(' ');
   const screened=assessSafety(b.question,context);
   const inputs=[b.question,b.topic,b.searchQuery||'',b.browserContext||'',...(b.history||[])];
+  const expanded=inputs.flatMap(securityVariants);
+  const clinicalDecision=screened.action!=='allow'?screened:expanded.map(text=>assessSafety(text,context)).find(result=>result.action!=='allow');
+  const buddyDecision=inputs.map(assessBuddySafety).find(result=>result.action!=='allow');
   const statuses=inputs.map(inspectQuery);
   // Log only policy outcomes, never query text, identity, tokens or medical details.
-  const category=statuses.includes('emergency')?'emergency':statuses.includes('private')?'private':screened.action!=='allow'?screened.category:statuses.includes('unsafe')?'unsafe_context':'educational';
-  console.info(JSON.stringify({event:'safety_screened',policyVersion:safetyPolicyVersion,action:category==='educational'?'allow':'redirect',category}));
+  const category=statuses.includes('emergency')?'emergency':statuses.includes('private')?'private':clinicalDecision?.category||buddyDecision?.category||(statuses.includes('unsafe')?'unsafe_context':'educational');
+  console.info(JSON.stringify({event:'safety_screened',policyVersion:buddyDecision&&!clinicalDecision?buddyPolicyVersion:safetyPolicyVersion,action:category==='educational'?'allow':'redirect',category}));
   if(statuses.includes('emergency'))fail(422,'emergency','If this danger is happening now, contact local emergency services. Do not wait for an AI response.');
-  if(statuses.includes('private'))fail(422,'private','Remove names, contact details, birth dates or record numbers. You can describe symptoms in your own words.');
+  if(statuses.includes('private'))fail(422,'private','Remove names, contact details, birth dates, record numbers, passwords or tokens. You can describe symptoms in your own words.');
   if(category!=='educational'){
-   const decision=screened.action!=='allow'?screened:inputs.map(text=>assessSafety(text)).find(r=>r.action!=='allow');
-   return reply({status:'blocked',code:'unsafe_request',answer:safetyAnswer(decision?.category),decks:[]},422);
+   return reply({status:'blocked',code:'unsafe_request',answer:clinicalDecision?safetyAnswer(clinicalDecision.category):buddySafetyAnswer(buddyDecision?.category),decks:[]},422);
   }
   b.role=normalizeReadingRole(b.role);
+  const help=b.mode==='chat'?buddyHelpAnswer(b.question):null;
+  if(help){phase='authentication';await identity(request,env);return reply({status:'platform',answer:help,decks:[]})}
   const route=b.role==='Medical professional'?'professional':'general',config=endpoint(env,route);
   if(!config)fail(503,'model_not_configured','AI synthesis is not connected yet. Showing source excerpts instead.');
   const reviewer=modelReviewEndpoint(env,route);

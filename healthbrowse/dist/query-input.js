@@ -1,5 +1,6 @@
 import {assessSafety,safetyAnswer} from './safety-policy.js';
 import {inspectInput,inspectQuery} from './clinical-engine.js';
+import {securityVariants,assessBuddySafety,buddySafetyAnswer} from './buddy-policy.js';
 
 // Convert only complete, simple symptom statements into public topic questions.
 // This is local intent recognition, not diagnosis or a general PHI scrubber.
@@ -15,7 +16,10 @@ const symptoms=new Map([
 ]);
 export function prepareQuery(input,context=""){
  const original=String(input??'').trim(),status=inspectQuery(original);
- if(status==='unsafe')return {status,query:'',safety:safetyAnswer(assessSafety(original,context).category)};
+ if(status==='unsafe'){
+  const clinical=securityVariants(original).map(text=>assessSafety(text,context)).find(result=>result.action!=='allow');
+  return {status,query:'',safety:clinical?safetyAnswer(clinical.category):buddySafetyAnswer(assessBuddySafety(original).category)};
+ }
  if(status!=='ok')return {status,query:''};
  const safety=assessSafety(original,context);if(safety.action!=='allow')return {status:'unsafe',query:'',safety:safetyAnswer(safety.category)};
  const simple=original.toLowerCase().replace(/[’]/g,"'").replace(/[.!?]+$/,'').trim();

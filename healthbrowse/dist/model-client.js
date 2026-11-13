@@ -18,7 +18,7 @@ export async function requestSynthesis(context,question,{mode='search',deck=0,hi
   const response=await fetcher('/api/ai/answer',{method:'POST',redirect:'error',signal:controller.signal,cache:'no-store',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},
    body:JSON.stringify({topic:context.topic,question,searchQuery:context.query||context.topic,role:normalizeReadingRole(context.role),mode,deck,history:history.slice(-4).map(t=>typeof t==='string'?t:t.question),...(mode==='chat'?{browserContext:[context.answerSummary||'',context.deckSummaries?.[deck-1]||'',history.at(-1)?.text||''].filter(Boolean).join('\n').slice(0,1200)}:{})})});
   const data=await response.json();
-  if(data.status==='blocked'&&data.answer)return {...data,decks:[]};
+  if(['blocked','platform'].includes(data.status)&&data.answer)return {...data,decks:[]};
   if(!response.ok){
    const retryable=['provider_busy','rate_limited'].includes(data.code);
    const delay=Number.isFinite(data.retryAfterSeconds)&&data.retryAfterSeconds>=0&&data.retryAfterSeconds<=604800?data.retryAfterSeconds:null;

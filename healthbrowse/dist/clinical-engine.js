@@ -1,4 +1,5 @@
 import {assessSafety,safetyAnswer} from './safety-policy.js';
+import {securityVariants,assessBuddySafety,buddySafetyAnswer,hasBuddySecrets,hasUnsafeBuddyOutput} from './buddy-policy.js';
 import {verifyClaim} from './claim-check.js';
 import {orderedPassages,professionalRole,domains} from './disease-framework.js';
 // All answer generation is local. Pass arrays already scoped to the selected topic,
@@ -16,11 +17,13 @@ const identifiers = /(?:[\w.+-]+@[\w.-]+\.[a-z]{2,}|\b(?:mrn|dob|ssn|patient id|
 // stricter rule for persistence, but do not make it a prerequisite for asking.
 const namedCase = /\b(?:(?:[Mm]y|[Oo]ur|[Tt]his|[Tt]he) patient\s+(?!(?:has|is|with|reports|presents|was|had|needs|takes|feels)\b)[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?|(?:[Pp]atient|[Pp]erson) (?:named|called)\s+\w+|(?:[Ii] am|[Ii]'m)\s+(?!(?:Having|Feeling|Experiencing|Suffering|Sick|Tired|Dizzy|Pregnant|Worried|Concerned)\b)[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?(?=\s*[,.;]|\s+and\b|$))|\b\d+\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?\s+(?:Street|Road|Avenue|Lane|Drive)\b/;
 export function inspectQuery(text) {
-  const value = plain(text);
-  if (selfHarmStatement.test(value)||/\b(?:how (?:to|can i|do i)|best way to|instructions? to) (?:kill|harm|hurt|cut) myself\b/.test(value)) return 'emergency';
-  if (emergencySigns.test(value) && (personal.test(value) || /\b(help me|right now|what do i do|happening now|please help|collapsed|not breathing|cant breathe|cannot breathe|kill myself)\b/.test(value))) return 'emergency';
-  if (dateIdentifier.test(String(text ?? '')) || identifiers.test(String(text ?? '')) || namedCase.test(String(text ?? ''))) return 'private';
-  if(assessSafety(text).action!=='allow')return 'unsafe';
+  const variants=securityVariants(text);
+  for(const variant of variants){const value=plain(variant);
+   if (selfHarmStatement.test(value)||/\b(?:how (?:to|can i|do i)|best way to|instructions? to) (?:kill|harm|hurt|cut) myself\b/.test(value)) return 'emergency';
+   if (emergencySigns.test(value) && (personal.test(value) || /\b(help me|right now|what do i do|happening now|please help|collapsed|not breathing|cant breathe|cannot breathe|kill myself)\b/.test(value))) return 'emergency';
+  }
+  if(variants.some(value=>dateIdentifier.test(value)||identifiers.test(value)||namedCase.test(value)||hasBuddySecrets(value)))return 'private';
+  if(variants.some(value=>assessSafety(value).action!=='allow')||assessBuddySafety(text).action!=='allow')return 'unsafe';
   return 'ok';
 }
 export function inspectInput(text) {
@@ -131,7 +134,10 @@ export function answerQuestion({question='',topic='',deck,passages=[],visibleTex
   let selected=selectedDeck(deck);
   const result=text=>({text,citations:[],deck:selected||1});
   const status=inspectInput(question);
-  if(status==='unsafe')return {...safetyAnswer(assessSafety(question).category),deck:selected||1};
+  if(status==='unsafe'){
+   const clinical=securityVariants(question).map(text=>assessSafety(text)).find(r=>r.action!=='allow');
+   return {...(clinical?safetyAnswer(clinical.category):buddySafetyAnswer(assessBuddySafety(question).category)),deck:selected||1};
+  }
   if(status==='emergency')return result('If this may be an emergency, contact local emergency services now. This research browser cannot assess someone’s condition.');
   if(status==='private')return result('Please remove personal health details and identifiers. Ask about a public medical topic or a research source.');
   let q=normalizeQuestion(question,topic,extraAliases);
@@ -152,6 +158,7 @@ export function answerQuestion({question='',topic='',deck,passages=[],visibleTex
   const matches=[];
   const ranked=orderedPassages(scoped(passages,topic),role,topic).map((p,i)=>({p,i,match:(p.intent===intent.id?5:0)+(intent.id==='definition'&&plain(p.focus)===plain(topic)?15:0)+(intent.id==='definition'&&plain(p.heading).includes(plain(topic))?5:0)})).sort((a,b)=>b.match-a.match||a.i-b.i).map(x=>x.p);
   for(const p of ranked) {
+    if(hasUnsafeBuddyOutput(p.text)||assessBuddySafety(p.text).action!=='allow')continue;
     const subtype=plain(p.focus).endsWith(' '+plain(topic)) && !topicLabels(topic).includes(plain(p.focus));
     if(!(topicLabels(topic).includes(plain(p.focus)) || subtype) || (intent.id==='definition'?!p.overview:selectedDeck(p.deck)!==selected) || typeof p.text!=='string' || !p.text.trim() || !p.title || !p.record || !safeURL(p.url)) continue;
     const evidence=plain(p.text);

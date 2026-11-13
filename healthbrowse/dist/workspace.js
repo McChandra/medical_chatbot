@@ -1,4 +1,5 @@
 import {safetyAnswer} from './safety-policy.js';
+import {buddyHelpAnswer} from './buddy-policy.js';
 import {deckCount,domainAnswer,searchAnswer,isOverviewQuestion} from './search-experience.js';
 import {prepareQuery,canSaveResearchQuestion} from './query-input.js';
 import {readingProfile,roleQuestions} from './reading-profiles.js';
@@ -9,7 +10,7 @@ import {renderCheck} from './research-session.js';
 export const deckNames=domains.map(d=>d.title);
 const $=id=>document.getElementById(id);
 const node=(tag,text)=>Object.assign(document.createElement(tag),{textContent:text});
-export function guardMessage(status){return status==='unsafe'?safetyAnswer().text:status==='emergency'?'If these symptoms or immediate danger are happening now, contact local emergency services now or ask someone nearby to call. Do not wait for a search response.':'Please remove identifying details such as names, contact information, birth dates or record numbers. You can still describe symptoms in your own words. This input was not sent for retrieval.'}
+export function guardMessage(status){return status==='unsafe'?safetyAnswer().text:status==='emergency'?'If these symptoms or immediate danger are happening now, contact local emergency services now or ask someone nearby to call. Do not wait for a search response.':'Please remove identifying details, passwords, tokens, contact information, birth dates or record numbers. You can still describe symptoms in your own words. This input was not sent for retrieval.'}
 function save(key,value){try{sessionStorage.setItem(key,JSON.stringify(value))}catch{}}
 export function readSession(key,fallback){try{return JSON.parse(sessionStorage.getItem(key))??fallback}catch{return fallback}}
 export function setupCopilot(getContext,actions={}){
@@ -27,7 +28,7 @@ export function setupCopilot(getContext,actions={}){
   $('deckSelect').value=String(active);$('copilotScope').textContent=c.topic+' · '+roleLabel(c.role);
   $('copilotHint').textContent=busy?'Finding a source-backed answer…':'Choose an area or ask a follow-up. '+profile.guide;
   $('buddyWelcome').hidden=false;$('buddyQuestions').hidden=false;
-  $('buddyWelcome').replaceChildren(node('p','Let’s explore '+c.topic+'.'),node('small',profile.style+'. Which of these six areas would you like to explore?'));
+  $('buddyWelcome').replaceChildren(node('p','I’m Buddy, your AI research companion. Let’s explore '+c.topic+'.'),node('small',profile.style+'. Choose an area below or ask me a question.'));
   $('buddyQuestions').replaceChildren();
   for(const choice of roleQuestions(c.role)){const b=node('button',choice.label);b.type='button';b.disabled=busy;b.setAttribute('aria-pressed',String(active===choice.deck&&history.length>0));const n=node('span',String(choice.deck).padStart(2,'0'));b.prepend(n);b.onclick=()=>ask(choice.prompt,true,choice.deck);$('buddyQuestions').append(b)}
   $('ask').querySelector('label').textContent='Ask a follow-up question';$('ask').querySelector('button').textContent='Send question ↗';$('copilot').querySelector('.eyebrow').textContent='YOUR HEALTH RESEARCH BUDDY';
@@ -47,22 +48,23 @@ export function setupCopilot(getContext,actions={}){
   const run=++sequence,scope=identity;
   const choices=status==='ok'&&!guidedDeck?actions.scopeChoice?.(q)||[]:[];
   if(choices.length){actions.confirm(q,choices.join(' / '));return}
-  let answer=status!=='ok'?{...(prepared.safety||{text:guardMessage(status),citations:[],checks:[]}),deck:active}:guidedDeck?domainAnswer(c,guidedDeck):searchAnswer(c,q,{detail:true,activeDeck:active});
+  const help=status==='ok'?buddyHelpAnswer(q):null;
+  let answer=status!=='ok'?{...(prepared.safety||{text:guardMessage(status),citations:[],checks:[]}),deck:active}:help?{...help,deck:active}:guidedDeck?domainAnswer(c,guidedDeck):searchAnswer(c,q,{detail:true,activeDeck:active});
   if(!answer)return;
   // Give the visitor the source-backed response now; optional remote services
   // can enrich this same turn without holding the conversation blank.
   const turn={...answer,frameworkVersion,topic:c.topic,question:status==='ok'?q:'Input withheld',overview:isOverviewQuestion(c,q)};
-  if(status==='ok'){active=answer.deck||active;turn.modelNotice='Checking for additional evidence. You can read the cited response below.'}
+  if(status==='ok'){active=answer.deck||active;if(!help)turn.modelNotice='Checking for additional evidence. You can read the cited response below.'}
   history=[...history.slice(-9),turn];if(fromSuggestion&&saveable)publicTurns=[...publicTurns.slice(-9),turn];
   sync();$('thread').lastElementChild?.scrollIntoView({block:'nearest'});
   let researchAnswer=null;
-  if(status==='ok'&&!guidedDeck&&!prepared.ephemeral){try{researchAnswer=await actions.research?.(q)}catch{}if(run!==sequence||identity!==scope)return}
+  if(status==='ok'&&!help&&!guidedDeck&&!prepared.ephemeral){try{researchAnswer=await actions.research?.(q)}catch{}if(run!==sequence||identity!==scope)return}
   if(researchAnswer)answer=researchAnswer;
-  else if(status==='ok'){
+  else if(status==='ok'&&!help){
    modelRequest?.abort();modelRequest=new AbortController();
    const result=await requestSynthesis(c,q,{mode:'chat',deck:guidedDeck||active,history:history.slice(0,-1),signal:modelRequest.signal});
    if(run!==sequence||identity!==scope)return;
-   if(['generated','blocked'].includes(result.status))answer=result.answer;else answer={...answer,modelNotice:result.message,code:result.code,retryAt:result.retryAt};
+   if(['generated','blocked','platform'].includes(result.status))answer=result.answer;else answer={...answer,modelNotice:result.message,code:result.code,retryAt:result.retryAt};
   }
   if(run!==sequence||identity!==scope)return;
   if(status==='ok')active=answer.deck||active;
