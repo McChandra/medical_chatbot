@@ -33,7 +33,7 @@ export function setupCopilot(getContext,actions={}){
   $('ask').querySelector('label').textContent='Ask a follow-up question';$('ask').querySelector('button').textContent='Send question ↗';$('copilot').querySelector('.eyebrow').textContent='YOUR HEALTH RESEARCH BUDDY';
   $('thread').replaceChildren();
   for(const t of history){const turn=node('div','');turn.className='turn';turn.append(node('strong',t.question));
-   renderAnswer(turn,{...t,blocks:t.blocks||[],style:t.style||''},renderCheck);
+   renderAnswer(turn,{...t,blocks:t.blocks||[],style:t.style||''},renderCheck,t===history.at(-1)&&!busy?()=>{history=history.filter(item=>item!==t);publicTurns=publicTurns.filter(item=>item!==t);void ask(t.question,true,t.deck)}:undefined);
    if(t.frameworkVersion!==frameworkVersion)turn.append(node('small','Saved using the previous framework. Section numbers refer to that version.'));
    $('thread').append(turn);
   }
@@ -62,7 +62,7 @@ export function setupCopilot(getContext,actions={}){
    modelRequest?.abort();modelRequest=new AbortController();
    const result=await requestSynthesis(c,q,{mode:'chat',deck:guidedDeck||active,history:history.slice(0,-1),signal:modelRequest.signal});
    if(run!==sequence||identity!==scope)return;
-   if(['generated','blocked'].includes(result.status))answer=result.answer;else answer={...answer,modelNotice:result.message};
+   if(['generated','blocked'].includes(result.status))answer=result.answer;else answer={...answer,modelNotice:result.message,code:result.code,retryAt:result.retryAt};
   }
   if(run!==sequence||identity!==scope)return;
   if(status==='ok')active=answer.deck||active;

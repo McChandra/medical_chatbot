@@ -121,8 +121,9 @@ function render(){
     refreshSynthesis(context);
     const direct=synthesis?.key===synthesisKey(context)&&synthesis.status==='generated'?synthesis.answer:searchAnswer(context,activeQuery||topic);
     direct.modelNotice=synthesis?.key===synthesisKey(context)?(synthesis.status==='loading'?'Preparing an answer and six decks from cited sources… Source excerpts are available while you wait.':synthesis.message||''):'';
-    renderAnswer(overview,direct,renderCheck);
-    if(queryNotice)overview.append(el('small',queryNotice,'query-interpretation'));
+    const state=synthesis?.key===synthesisKey(context)?synthesis:null;
+    renderAnswer(overview,{...direct,code:state?.code,retryAt:state?.retryAt},renderCheck,()=>{if(synthesis?.key!==synthesisKey(context))return;synthesis=null;render()});
+    if(queryNotice)overview.append(el('small',role===1?'Clinical reference; interpret evidence against the patient context and local protocols.'+(queryNotice.includes('not saved')?' This personal question is not saved to chat history.':''):queryNotice,'query-interpretation'));
     if(!direct.supported){const intro=checkedPassage(topic,sources,sources.find(p=>p.overview));if(intro){const basic=el('details');basic.append(el('summary','About '+topic),el('p',intro.text));renderCheck(basic,intro);overview.append(basic)}}
     header.append(overview,saveControls(topic));
     const framework=el('details',undefined,'source-directory');framework.append(el('summary','About these six areas'),el('p','Six clinical domains plus research resources. These references inform the organization; they do not validate this application or certify its answers.'));for(const ref of frameworkReferences){const row=el('p');reference(row,ref.title,ref.url);framework.append(row)}header.append(framework);
@@ -181,6 +182,7 @@ async function terminology(term,signal){
 let searchSequence=0;
 async function search(input,chosenTopic,confirmed=false){
   const query=String(input||'').trim();if(!query)return;
+  if(synthesis?.key===synthesisKey(currentContext())&&prepareQuery(query).query===activeQuery&&(synthesis.status==='loading'||synthesis.retryAt>Date.now()))return;
   const sequence=++searchSequence;
   $('searchSubmit').textContent='Searching…';$('find').setAttribute('aria-busy','true');$('notice').textContent='Looking for a sourced answer…';
   try{await performSearch(query,chosenTopic,confirmed)}catch{if(sequence===searchSequence){$('notice').textContent='This search could not finish. Your question is still in the search box. Please try again.';}}

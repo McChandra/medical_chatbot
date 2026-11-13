@@ -60,7 +60,7 @@ export function searchAnswer(context,query,{detail=false,activeDeck=1}={}){
   const publicClause=clause?.replace(/\b(?:it|this condition|this disease)\b/gi,context.topic);
   const referenceQuestion=publicClause&&inspectInput(publicClause)==='ok'&&questionDeck(publicClause)?publicClause:'What causes '+context.topic+'? How is '+context.topic+' treated?';
   const response=searchAnswer(context,referenceQuestion,{detail,activeDeck});
-  const scope='These sources explain '+context.topic+' in general. They do not determine the cause of your symptoms or assess your duration, medicines, age or other individual circumstances.';
+  const scope=generalMode(context.role)?'These sources explain '+context.topic+' in general. They do not determine the cause of your symptoms or assess your duration, medicines, age or other individual circumstances.':'Clinical reference for '+context.topic+'. Interpret the evidence alongside the history, examination, investigations and local protocols. These excerpts do not establish a patient-specific diagnosis.';
   return {...response,text:scope+'\n\n'+response.text,gaps:[...(response.gaps||[]),scope],educationalOnly:true};
  }
  if(/^(?:more|tell me more|more details|go on|continue|explain more)[?!. ]*$/i.test(question))return domainAnswer(context,Math.min(6,activeDeck),{detail:true});

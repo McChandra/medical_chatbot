@@ -2,9 +2,9 @@
   "version": 2,
   "sha256": "9ab7b8f6b2be88c027ad38e1ece77ae404ed26ffd04c2eae8780da97e4c4863b",
   "sourceHashes": {
-    "server/model-cited.mjs": "44606219a7a7f100aba452599d750766133a96e6d07fa8d7e9f08545cd40251c",
+    "server/model-cited.mjs": "359bfa8b060a97ce0570bb6b416270397a10733cb63c62a5a17ab6dd07877282",
     "server/model-grounded.mjs": "0b75950f8b1fbf69a3f02866f40fa9d5208c918eac7d6ef3c220c21d249cad6a",
-    "server/model-api.mjs": "0183e91b30acf4884ee72f6f6e325f93c82119fdf8b440622b93e4b5c9a5fca5",
+    "server/model-api.mjs": "69022fc1a4a7b09e8f93658c859cd2e5171d027749f62a45f3ad81f20404523a",
     "server/model-provider.mjs": "24e88a3c39005e33de17b673a90f36f75e7dffd3bf6c557b85e841134a13f5b2",
     "server/model-evidence.mjs": "1471ca5d264f3fa39dc2e1d585cec7e3f316f871db6ecf95ffc14af0228c4c71",
     "server/model-context.mjs": "57bfd837aad443ed94c746940751b57306ff19febd69035a76ec8ccddcd9e3de",
@@ -18,7 +18,7 @@
     "dist/claim-check.js": "eaa471ced400b475bd4de911b375aad5d00bba51e5c3e249524d9b3764b12a39",
     "dist/clinical-engine.js": "9eedb3b0658e8b2732bb4a22b02021cc97f16195ce20ff76cb7ecafbcc5b34a3",
     "dist/safety-policy.js": "4af70d3ed6b52c8a67dd1b545e26024b454b1296e318ae56cc9c4aca35bd94c2",
-    "dist/search-experience.js": "7791f36834993f7593596dd500626bee7f0b6dabcf3904e5cd6fb327ca4fa284",
+    "dist/search-experience.js": "96475d5d09b13a768b88849d2778b65b4468faf88d9fa29dddd2f5e7f44e0672",
     "dist/authorities.js": "3ea48fa8a78094d46e7a2d3a495f2ef856e3f7959eb20492ec46bf0ff23782f6",
     "dist/disease-framework.js": "301212ec173a473b64b20f85cd6dffb868b893cce512302f9f3544d4a74e49ee"
   },

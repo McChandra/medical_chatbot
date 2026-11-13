@@ -19,7 +19,11 @@ export async function requestSynthesis(context,question,{mode='search',deck=0,hi
    body:JSON.stringify({topic:context.topic,question,searchQuery:context.query||context.topic,role:normalizeReadingRole(context.role),mode,deck,history:history.slice(-4).map(t=>typeof t==='string'?t:t.question),...(mode==='chat'?{browserContext:[context.answerSummary||'',context.deckSummaries?.[deck-1]||'',history.at(-1)?.text||''].filter(Boolean).join('\n').slice(0,1200)}:{})})});
   const data=await response.json();
   if(data.status==='blocked'&&data.answer)return {...data,decks:[]};
-  if(!response.ok)return {status:'unavailable',message:data.error||'AI synthesis could not finish. Source excerpts are shown below.'};
+  if(!response.ok){
+   const retryable=['provider_busy','rate_limited'].includes(data.code);
+   const delay=Number.isFinite(data.retryAfterSeconds)&&data.retryAfterSeconds>=0&&data.retryAfterSeconds<=604800?data.retryAfterSeconds:null;
+   return {status:'unavailable',message:data.error||'AI synthesis could not finish. Source excerpts are shown below.',code:data.code,...(retryable?{retryAt:delay===null?null:Date.now()+delay*1000}:{})};
+  }
   if(data.status!=='generated'||!data.answer||!Array.isArray(data.decks))throw Error('Invalid AI response');
   return data;
  }catch(error){if(signal?.aborted)throw error;return {status:'unavailable',message:'AI synthesis could not finish. Source excerpts are shown below.'}}

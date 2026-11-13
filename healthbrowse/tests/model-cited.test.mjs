@@ -23,10 +23,11 @@ test('Groq uses only its own key and a fixed endpoint for both reading modes',()
  assert.doesNotMatch(JSON.stringify(modelStatus(env)),/test-only|must-not-leak/);
 });
 test('six decks have source coverage for leukemia and sore throat, including scoped complications',()=>{
- for(const topic of ['Leukemia','Sore Throat']){
+ for(const topic of ['Leukemia','Sore Throat','Cold Sores']){
   const p=prepareCited({...input,topic},citedEvidence(assets,{...input,topic}));
   for(let deck=1;deck<=6;deck++)assert.ok(p.evidence.sources.some(s=>s.deck===deck&&!s.overview),topic+' deck '+deck);
   assert.ok(JSON.stringify(p.messages).length<18000);assert.ok(p.evidence.sources.every(s=>!s.historical));
+  assert.equal(p.maxTokens,2400);assert.equal(prepareCitedReview(rawFor(p),p,input).maxTokens,1400);
   assert.doesNotMatch(JSON.stringify(p.schema),/maxLength/,'Schema must not truncate sentences');
  }
 });

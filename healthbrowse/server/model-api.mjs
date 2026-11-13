@@ -7,9 +7,14 @@ import {modelEndpoint as endpoint,modelReviewEndpoint} from './model-provider.mj
 import {compactGeneration,compactReviews,ContextLimit} from './model-context.mjs';
 import {groundedEvidence,prepareGrounded,decodeGrounded,groundedReview,groundedReviewPasses,presentGrounded} from './model-grounded.mjs';
 const headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'};
-const reply=(body,status=200)=>Response.json(body,{status,headers});
-class Failure extends Error{constructor(status,code,message){super(message);this.status=status;this.code=code}}
-const fail=(status,code,message)=>{throw new Failure(status,code,message)};
+const reply=(body,status=200)=>Response.json(body,{status,headers:{...headers,...(body.retryAfterSeconds!==undefined?{'Retry-After':String(body.retryAfterSeconds)}:{})}});
+class Failure extends Error{constructor(status,code,message,retryAfterSeconds){super(message);this.status=status;this.code=code;this.retryAfterSeconds=retryAfterSeconds}}
+const fail=(status,code,message,retryAfterSeconds)=>{throw new Failure(status,code,message,retryAfterSeconds)};
+export function retryDelay(value,now=Date.now()){
+ if(typeof value!=='string'||!value.trim())return undefined;
+ const raw=value.trim();const seconds=/^\d+(?:\.\d+)?$/.test(raw)?Number(raw):(Date.parse(raw)-now)/1000;
+ return Number.isFinite(seconds)&&seconds>=0&&seconds<=604800?Math.ceil(seconds):undefined;
+}
 export function modelStatus(env){return {general:{configured:!!endpoint(env,'general')},professional:{configured:!!endpoint(env,'professional')},validation:env.MODEL_PROVIDER==='groq'?'Server-resolved citations; AI interpretation is not independently clinically validated':'Automated support review; independent clinical validation pending'};}
 async function boundedJSON(stream,max){
  const reader=stream?.getReader();if(!reader)throw Error('Missing body');const decoder=new TextDecoder();let n=0,text='';
@@ -31,7 +36,7 @@ async function reserve(env,user){
  const result=await env.DB.prepare(`INSERT INTO hb_model_limits (user_id, bucket, requests) VALUES (?, ?, 1)
  ON CONFLICT(user_id) DO UPDATE SET bucket=excluded.bucket, requests=CASE WHEN hb_model_limits.bucket=excluded.bucket THEN hb_model_limits.requests+1 ELSE 1 END
  WHERE hb_model_limits.bucket<>excluded.bucket OR hb_model_limits.requests<6`).bind(user,bucket).run();
- if(!result.meta?.changes)fail(429,'rate_limited','Please wait a minute before another AI request.');
+ if(!result.meta?.changes)fail(429,'rate_limited','Your request limit has been reached. The cited sources remain available.',Math.ceil((60000-Date.now()%60000)/1000));
 }
 async function complete(config,messages,signal,maxTokens=6000,schema){
  const payload=config.protocol==='groq-cited-v1'&&schema?{model:config.model,messages,temperature:0,max_completion_tokens:maxTokens,stream:false,reasoning_effort:'low',include_reasoning:false,response_format:{type:'json_schema',json_schema:{name:'healthbrowse_answer',strict:true,schema}}}:{model:config.model,messages,temperature:0,max_tokens:maxTokens,stream:false,response_format:schema?{type:'json_schema',json_schema:{name:'healthbrowse',strict:true,schema}}:{type:'json_object'}};
@@ -41,7 +46,7 @@ async function complete(config,messages,signal,maxTokens=6000,schema){
  if(!res.ok){
   if(res.status===401||res.status===403)fail(503,'provider_access','The AI provider rejected access. The site owner must check the token and model access.');
   if(res.status===402)fail(503,'provider_credits','AI provider credits are unavailable. Showing source excerpts instead.');
-  if(res.status===429)fail(503,'provider_busy','The AI provider is busy or rate-limited. Please try again shortly.');
+  if(res.status===429)fail(503,'provider_busy','The AI service has reached a usage limit. '+(config.protocol==='groq-cited-v1'?'General and Clinicians modes share this provider quota. ':'')+'Cited source excerpts remain available.',retryDelay(res.headers.get('retry-after')));
   if(res.status===400||res.status===404||res.status===422)fail(503,'provider_configuration','The AI provider could not accept this model request. Showing source excerpts instead.');
   fail(503,'provider_unavailable','The AI provider is temporarily unavailable. Showing source excerpts instead.');
  }
@@ -120,11 +125,13 @@ export async function modelAPI(request,env,assets){
      return reply(presentGrounded(draft,prepared,b,config.model,attempt>0));
     }
     const prepared=config.compact?compactGeneration(b,evidence,reason):{messages:generationMessages(b,evidence,reason),evidence,maxTokens:6000};
+    phase='generation';
     const raw=await complete(config,prepared.messages,signal,prepared.maxTokens);
     const draft=validateDraft(raw,b,prepared.evidence);
     const batches=(config.compact||reviewer.compact)?compactReviews(draft,prepared.evidence,b):[{draft,messages:reviewMessages(draft,prepared.evidence,b),maxTokens:2500}];
     let passed=true;
     for(const batch of batches){
+     phase='support_review';
      const review=await complete(reviewer,batch.messages,signal,batch.maxTokens);
      if(!reviewPasses(review,batch.draft)){passed=false;reason='The direct answer was incomplete or a claim was unsupported. '+JSON.stringify(review).slice(0,300);break}
     }
@@ -143,6 +150,7 @@ export async function modelAPI(request,env,assets){
   fail(502,'verification_failed','The generated answer did not pass source checks. Showing source excerpts instead.');
  }catch(error){
   // Never log questions, tokens, provider bodies, identities or error messages.
+  if(error.code==='provider_busy')console.warn(JSON.stringify({event:'ai_provider_limited',phase,...(error.retryAfterSeconds!==undefined?{retryAfterSeconds:error.retryAfterSeconds}:{})}));
   if(!(error instanceof Failure))console.error(JSON.stringify({event:'ai_request_failed',phase,kind:['TypeError','SyntaxError','TimeoutError','AbortError'].includes(error?.name)?error.name:'Error'}));
-  return reply({status:'unavailable',code:error.code||'model_unavailable',error:error instanceof Failure?error.message:'AI synthesis is temporarily unavailable. Showing source excerpts instead.'},error.status||503)}
+  return reply({status:'unavailable',code:error.code||'model_unavailable',error:error instanceof Failure?error.message:'AI synthesis is temporarily unavailable. Showing source excerpts instead.',...(error.retryAfterSeconds!==undefined?{retryAfterSeconds:error.retryAfterSeconds}:{})},error.status||503)}
 }

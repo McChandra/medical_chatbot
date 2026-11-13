@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {modelAPI,modelStatus} from '../server/model-api.mjs';
+import {modelAPI,modelStatus,retryDelay} from '../server/model-api.mjs';
 import {evidenceFor,validateDraft,reviewPasses,generationMessages} from '../server/model-evidence.mjs';
 import {openWorkspace} from '../server/sqlite-workspace.mjs';
 import {requestSynthesis,synthesisKey} from '../dist/model-client.js';
@@ -79,6 +79,26 @@ test('absence, auth, PHI, body tampering and cross-origin requests never invoke 
 test('real SQL enforces six requests per account per minute',async t=>{
  const {call,DB}=fixture(t);for(let i=0;i<6;i++)assert.equal((await call()).status,200);assert.equal((await call()).status,429);
  const row=await DB.prepare('SELECT * FROM hb_model_limits').bind().first();assert.deepEqual(Object.keys(row).sort(),['bucket','requests','user_id']);assert.equal(row.requests,6);
+});
+test('provider limits preserve Retry-After without retrying or exposing provider bodies',async t=>{
+ const {call,calls}=fixture(t,()=>new Response('private provider diagnostics',{status:429,headers:{'Retry-After':'23'}}));
+ const response=await call(),body=await response.json();
+ assert.equal(response.status,503);assert.equal(response.headers.get('Retry-After'),'23');
+ assert.equal(body.code,'provider_busy');assert.equal(body.retryAfterSeconds,23);assert.equal(calls.length,1);
+ assert.doesNotMatch(JSON.stringify(body),/private provider diagnostics|server-secret/);
+});
+test('Retry-After parser accepts seconds and future dates without inventing a deadline',()=>{
+ const now=Date.parse('2026-11-13T12:00:00Z');
+ assert.equal(retryDelay('2.2',now),3);assert.equal(retryDelay('Fri, 13 Nov 2026 12:00:20 GMT',now),20);
+ for(const value of [null,'','-1','Infinity','garbage','99999999'])assert.equal(retryDelay(value,now),undefined);
+});
+test('client exposes rate-limit metadata for manual retries in both reading modes',async()=>{
+ for(const role of ['General','Clinicians'])for(const seconds of [19,undefined]){
+  let calls=0;const before=Date.now();
+  const result=await requestSynthesis({...input,role},input.question,{tokenProvider:async()=>'test-token',fetcher:async()=>++calls===1?Response.json({general:{configured:true},professional:{configured:true}}):Response.json({code:'provider_busy',error:'Capacity limit',retryAfterSeconds:seconds},{status:503})});
+  assert.equal(calls,2);assert.equal(result.code,'provider_busy');
+  if(seconds===undefined)assert.equal(result.retryAt,null);else assert.ok(result.retryAt>=before+19000&&result.retryAt<=Date.now()+19000);
+ }
 });
 test('buddy sends its own question, search context and active deck; returns no repeated deck array',async t=>{
  const {call,calls}=fixture(t);const r=await (await call({...input,mode:'chat',question:'Explain that further',searchQuery:'What is leukemia?',deck:4,history:['How is it treated?']})).json();

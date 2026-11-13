@@ -1,8 +1,9 @@
+import {renderRetry} from './retry-control.js';
 const element=(tag,text,cls)=>Object.assign(document.createElement(tag),{textContent:text||'',className:cls||''});
 function sourceLink(cite,label){
  try{const url=new URL(cite.url);if(!['https:','http:'].includes(url.protocol)||url.username||url.password)return null;const a=element('a',label+' ↗');a.href=url.href;a.target='_blank';a.rel='noopener noreferrer';return a}catch{return null}
 }
-export function renderAnswer(parent,answer={},renderCheck){
+export function renderAnswer(parent,answer={},renderCheck,onRetry){
  const blocks=(answer.blocks||[]).filter(b=>typeof b?.text==='string'&&b.text.trim());
  if(blocks.length){
   blocks.forEach((block,i)=>{
@@ -30,6 +31,7 @@ export function renderAnswer(parent,answer={},renderCheck){
  }
  // Operational and audience labels never replace or precede the actual answer.
  if(answer.modelNotice){const notice=element('p',answer.modelNotice,'model-notice');notice.setAttribute('role','status');parent.append(notice)}
+ renderRetry(parent,answer,onRetry);
  if(answer.style)parent.append(element('small',answer.style,'answer-mode'));
  if(answer.generation)parent.append(element('small',(answer.generation.label||'AI synthesis')+' · '+answer.generation.model+(answer.generation.corrected?' · revised after source review':''),'meta'));
 }

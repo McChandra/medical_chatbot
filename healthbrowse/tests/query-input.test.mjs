@@ -52,7 +52,8 @@ test('natural symptom questions receive cited educational answers instead of a r
    const answer=searchAnswer({...context,role},p.query);
    assert.equal(answer.supported,true,question);assert.ok(answer.citations.length);
    assert.match(answer.text,/Other causes can include/);assert.match(answer.text,/Treatment depends on the cause/);
-   assert.match(answer.text,/do not determine the cause/);
+   if(role==='General reader')assert.match(answer.text,/do not determine the cause/);
+   else{assert.match(answer.text,/Clinical reference.*history, examination, investigations and local protocols/);assert.doesNotMatch(answer.text,/your symptoms|your duration/);}
    assert.doesNotMatch(answer.text,/rephrase|Remove personal details/);
    for(let n=1;n<=6;n++)assert.ok(domainAnswer({...context,role},n).text);
   }
