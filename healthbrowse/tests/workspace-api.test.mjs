@@ -105,3 +105,15 @@ test('research export includes every page of messages and excludes other owners 
  assert.ok(exported.messages.every(m=>m.chatId===a.id));assert.doesNotMatch(JSON.stringify(exported),/access_token|refresh_token|password|b@example.test/);
  assert.equal((await call('export','GET',undefined,'invalid')).status,401);
 });
+
+test('Buddy welcome is atomically claimed once per authenticated account, across tabs and roles',async t=>{
+ const {call}=fixture(t);
+ assert.equal((await call('buddy-intro','POST',{},'invalid')).status,401);
+ assert.equal((await call('buddy-intro','POST',{user_id:users.b.id})).status,400);
+ const simultaneous=await Promise.all([call('buddy-intro','POST',{}),call('buddy-intro','POST',{})]);
+ const results=await Promise.all(simultaneous.map(r=>r.json()));assert.equal(results.filter(r=>r.showWelcome).length,1);
+ await call('settings','PATCH',{readingMode:'Clinicians'});await call('chats','DELETE',{confirmation:'DELETE_ALL_CHATS'});
+ assert.equal((await (await call('buddy-intro','POST',{})).json()).showWelcome,false);
+ assert.equal((await (await call('buddy-intro','POST',{},'b')).json()).showWelcome,true);
+ assert.equal((await call('buddy-intro')).status,405);
+});

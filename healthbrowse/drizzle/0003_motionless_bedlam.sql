@@ -1,0 +1,1 @@
+ALTER TABLE `hb_accounts` ADD `buddy_intro_seen` integer DEFAULT 0 NOT NULL;

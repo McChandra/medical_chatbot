@@ -31,6 +31,14 @@ export async function workspaceAPI(request,db,user){
   await sql('INSERT OR IGNORE INTO hb_accounts (user_id,display_name) VALUES (?,?)',owner,metadataName).run();
   const account=await sql('SELECT * FROM hb_accounts WHERE user_id=?',owner).first();
   if(path==='/api/me/export'&&method==='GET')return workspaceExport(db,owner,profile(account,user),preferences(account));
+  if(path==='/api/me/buddy-intro'){
+   if(method!=='POST')return response({error:'Use POST.'},405);
+   const b=await body(request);only(b,[]);
+   // Atomic account-level claim: reloads, simultaneous tabs and other devices
+   // cannot each show a welcome. Never reset this when chats are deleted.
+   const result=await sql('UPDATE hb_accounts SET buddy_intro_seen=1 WHERE user_id=? AND buddy_intro_seen=0',owner).run();
+   return response({showWelcome:result.meta?.changes===1});
+  }
   const ownedChat=async id=>{if(!uuid.test(id))fail('Invalid chat.');const row=await sql('SELECT * FROM hb_chats WHERE id=? AND user_id=?',id,owner).first();if(!row)fail('This chat was deleted or is unavailable.',404);return row};
   if(path==='/api/me/profile'){
    if(method==='GET')return response({profile:profile(account,user)});

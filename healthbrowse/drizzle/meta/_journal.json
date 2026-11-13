@@ -22,6 +22,13 @@
       "when": 1794551541477,
       "tag": "0002_mysterious_lizard",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1794552686292,
+      "tag": "0003_motionless_bedlam",
+      "breakpoints": true
     }
   ]
 }
