@@ -37,5 +37,5 @@ test('rendering puts real text before mode/operational labels, with inline sourc
  const root=new Node('div');renderAnswer(root,{blocks:[{text:'A source-backed answer.',references:[{id:'S1',title:'MedlinePlus',url:'https://medlineplus.gov/coldsores.html',quote:'Test evidence',date:'Fixture'}]}],style:'Plain-language answer',modelNotice:'Preparing more detail'});
  const nodes=all(root);assert.equal(root.children[0].tag,'section');assert.equal(root.children[0].children[0].textContent,'A source-backed answer.');
  assert.ok(nodes.some(n=>n.tag==='a'&&n.textContent==='[S1] ↗'));assert.ok(nodes.some(n=>n.tag==='details'));
- for(const bad of [{},{blocks:[{text:null}]},{text:'',style:'Plain-language answer'}]){const box=new Node('div');renderAnswer(box,bad);assert.match(box.children[0].textContent,/sufficient authorized data/)}
+ for(const bad of [{},{blocks:[{text:null}]},{text:'',style:'Plain-language answer'}]){const box=new Node('div');renderAnswer(box,bad);assert.match(box.children[0].textContent,/Insufficient clinical context available to verify this claim/)}
 });

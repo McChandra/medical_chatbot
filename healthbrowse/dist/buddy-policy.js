@@ -1,7 +1,9 @@
+import {securityFlagFor} from './safety-policy.js';
+import {domainRestriction} from './medical-contract.js';
 import {standardRefusalText,promptBoundaryText} from './refusal.js';
 // Bounded, deterministic checks, not a general-purpose abuse classifier.
 // Never interpret chat text as a UI event or a permission grant.
-export const buddyPolicyVersion='2026-11-13.3';
+export const buddyPolicyVersion='2026-11-13.4';
 const normalize=value=>String(value||'').normalize('NFKC').replace(/[\u200b-\u200f\u202a-\u202e\u2060-\u2069\ufeff]/g,'').trim();
 const plain=value=>normalize(value).toLowerCase().replace(/[’']/g,'').replace(/[^\p{L}\p{M}\p{N}]+/gu,' ').trim();
 const controlTag=/(?:<\s*trigger_audio\s*:|\[\s*system\s+event\s*:\s*user\s+login\s*\])/i;
@@ -80,7 +82,7 @@ export function assessBuddySafety(text){
 }
 
 export function buddySafetyAnswer(category){
- return {title:'Buddy can help safely',text:category==='prompt_extraction'?promptBoundaryText:standardRefusalText,blocks:[],citations:[],checks:[],supported:false,safety:{category,policyVersion:buddyPolicyVersion}};
+ return {title:'Buddy can help safely',text:category==='prompt_extraction'?promptBoundaryText:category==='professional_advice'?domainRestriction:standardRefusalText,blocks:[],citations:[],checks:[],supported:false,safety:{category,policyVersion:buddyPolicyVersion,...(securityFlagFor(category)?{securityFlagged:true}:{})}};
 }
 
 export function buddyHelpAnswer(question){

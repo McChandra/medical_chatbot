@@ -1,3 +1,4 @@
+import {withAudienceDisclaimer} from './medical-contract.js';
 import {notifySafety} from './safety-notification.js';
 import {safetyAnswer} from './safety-policy.js';
 import {buddyHelpAnswer} from './buddy-policy.js';
@@ -53,6 +54,7 @@ export function setupCopilot(getContext,actions={}){
   const help=status==='ok'?buddyHelpAnswer(q):null;
   let answer=status!=='ok'?{...(prepared.safety||{text:guardMessage(status),citations:[],checks:[]}),deck:active}:help?{...help,deck:active}:guidedDeck?domainAnswer(c,guidedDeck):searchAnswer(c,q,{detail:true,activeDeck:active});
   if(!answer)return;
+  if(status==='ok'&&!help)answer=withAudienceDisclaimer(answer,c.role);
   // Give the visitor the source-backed response now; optional remote services
   // can enrich this same turn without holding the conversation blank.
   const turn={...answer,frameworkVersion,topic:c.topic,question:status==='ok'?q:'Input withheld',overview:isOverviewQuestion(c,q)};
@@ -70,7 +72,7 @@ export function setupCopilot(getContext,actions={}){
    if(['generated','blocked','platform'].includes(result.status))answer=result.answer;else answer={...answer,modelNotice:result.message,code:result.code,retryAt:result.retryAt};
   }
   if(run!==sequence||identity!==scope)return;
-  if(status==='ok')active=answer.deck||active;
+  if(status==='ok'){active=answer.deck||active;if(!help)answer=withAudienceDisclaimer(answer,c.role);}
   // Preserve the shared turn object, but replace all provisional response fields
   // so an enriched answer cannot inherit an obsolete coverage-gap message.
   for(const key of Object.keys(turn))delete turn[key];

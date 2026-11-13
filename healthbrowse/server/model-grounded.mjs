@@ -68,7 +68,7 @@ export function prepareGrounded(input,evidence,repair=''){
    const ids=sources.filter(s=>s.deck===i+1&&!s.overview).map(s=>s.id);return [i+1,arr(claimSchema(ids),ids.length?1:0)];
   }))),gaps:arr({type:'string',enum:facets.map(f=>f.id)},facets.length)});
   const shape={answer:[],decks:input.mode==='chat'?{}:Object.fromEntries(Array.from({length:6},(_,i)=>[i+1,[]])),gaps:[]};
-  const style=audienceInstructions[input.role].replace('Direct answer: 2–4 short sentences. Each deck: 2–4 short sentences. ','');
+  const style=audienceInstructions[input.persona==='student'?'Medical student':input.role].replace('Direct answer: 2–4 short sentences. Each deck: 2–4 short sentences. ','');
   const messages=[{role:'system',content:`${buddyPersona(input.mode)} ${style}
 ${compactBuddySecurityRules}
 Return only JSON shaped like ${JSON.stringify(shape)}. Each claim is {"text":"short statement","sources":["S1"]}. At most 3 answer claims and 1 per deck; each text <=180 characters. Write a complete short sentence ending in a period, not a copied paragraph cut at the character limit. Keep well below that limit. Do not write quotes, URLs or repeat the overview in decks. Address the exact question and EVERY listed facet; list a facet ID in gaps if evidence cannot answer it. Search returns all six deck keys; chat has an empty decks object.

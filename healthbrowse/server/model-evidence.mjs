@@ -1,3 +1,4 @@
+import {insufficientClinicalContext,withAudienceDisclaimer} from '../dist/medical-contract.js';
 import {personalDiagnosisNotice} from '../dist/safety-policy.js';
 import {faqQuestions,generalTreatmentNotice} from '../dist/faq-spec.js';
 import {generationSafetyRules,hasUnsafeInstructions} from '../dist/safety-policy.js';
@@ -32,10 +33,11 @@ export function evidenceFor(assets,topic,role,question){
 }
 export const audienceInstructions={
  'General reader':'Use only the General persona: warm, direct, everyday English at about an eighth-grade reading level. Start by answering the question, not with a disclaimer or a definition unrelated to it. Explain essential medical words in the same sentence; omit unnecessary codes, jargon and population statistics. Give a useful 1–2 sentence Browser Summary and 2–4 clear sentences for every supported deck. Explain who is affected, causes, signs/symptoms, diagnosis/tests, treatment, and prognosis/follow-up in six FAQs, in that order. No speculative personal diagnosis or individual treatment advice. Any analogy must preserve the cited medical meaning.',
+ 'Medical student':'Use the Student persona: explain source-supported anatomy, physiology, pathophysiology and pharmacological principles for supervised learning. Distinguish educational reasoning from a clinical decision. Do not invent textbook references, diagnoses, codes, metrics or treatment details. Answer the question first, then the six supplied domains.',
  'Medical professional':'Use only the Clinicians persona: objective, precise clinical language and terminology with concise explanatory reasoning. Answer the clinical question directly, then address the six domains using the available etiologic/pathophysiologic mechanisms, clinical findings, diagnostic and differential considerations, management evidence, prognosis and epidemiology. Explain why a distinction matters only when the source supports it. Include named criteria, drug mechanisms, contraindications or codes ONLY when explicitly present in evidence. Do not merely lengthen the General answer or append generic study advice. Preserve subtype, population and date limitations; identify when sources are patient education rather than clinical guidelines. No patient-specific prescription or dose.',
 };
 export function generationMessages(input,evidence,repair){
- const rules=`${buddyPersona(input.mode)} ${audienceInstructions[input.role]}
+ const rules=`${buddyPersona(input.mode)} ${audienceInstructions[input.persona==='student'?'Medical student':input.role]}
 ${generationSafetyRules}
 ${buddySecurityRules}
 Answer the exact question first, including each part of a compound question. Then answer all six supplied FAQ questions in order for search mode; chat mode answers only the follow-up, using the active deck and prior questions to resolve references. Do not repeat the whole overview in a follow-up.
@@ -86,9 +88,9 @@ export function presentDraft(draft,evidence,input,model,corrected){
   });
   const citations=[...new Map(blocks.flatMap(b=>b.references).map(c=>[c.id,{...c,title:'['+c.id+'] '+c.title}])).values()];
   return {...(s.id===5&&input.role==='General reader'?{treatmentNotice:generalTreatmentNotice}:{}),blocks,citations,checks:[],style:evidence.style,deck:s.id||input.deck||1,supported:blocks.length>0,
-   text:blocks.length?blocks.map(b=>b.text+' '+b.references.map(r=>'['+r.id+']').join(' ')).join('\n\n')+'\n\nAI synthesis · '+model+'. Automated support review; not independently clinically validated.':'The retrieved sources do not support an answer for this area. Open the source links or ask a more specific question.',
+   text:blocks.length?blocks.map(b=>b.text+' '+b.references.map(r=>'['+r.id+']').join(' ')).join('\n\n')+'\n\nAI synthesis · '+model+'. Automated support review; not independently clinically validated.':insufficientClinicalContext,
    generation:{model,mode:'generated',corrected,checkedAt:new Date().toISOString()}};
  }
  const answer=section(draft.answer),notice=personalDiagnosisNotice(input.question);if(notice){answer.diagnosisNotice=notice;answer.text+='\n\n'+notice;}
- return {status:'generated',answer,decks:draft.decks.map(s=>({id:s.id,...section(s)})),model,corrected,snapshot:evidence.snapshot};
+ return {status:'generated',answer:withAudienceDisclaimer(answer,input.persona==='student'?'Medical student':input.role),decks:draft.decks.map(s=>({id:s.id,...section(s)})),model,corrected,snapshot:evidence.snapshot};
 }

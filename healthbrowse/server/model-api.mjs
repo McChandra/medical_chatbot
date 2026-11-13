@@ -1,4 +1,5 @@
-import {assessSafety,safetyAnswer,safetyPolicyVersion} from '../dist/safety-policy.js';
+import {outsideMedicalScope,scopeAnswer,insufficientClinicalContext,medicalPersona} from '../dist/medical-contract.js';
+import {assessSafety,safetyAnswer,safetyPolicyVersion,securityFlagFor} from '../dist/safety-policy.js';
 import {securityVariants,assessBuddySafety,buddySafetyAnswer,buddyHelpAnswer,buddyPolicyVersion} from '../dist/buddy-policy.js';
 import {citedEvidence,prepareCited,presentCited,prepareCitedReview,applyCitedReview} from './model-cited.mjs';
 import {isReadingRole,normalizeReadingRole} from '../dist/reading-profiles.js';
@@ -78,14 +79,17 @@ export async function modelAPI(request,env,assets){
   const buddyDecision=inputs.map(assessBuddySafety).find(result=>result.action!=='allow');
   const statuses=inputs.map(inspectQuery);
   // Log only policy outcomes, never query text, identity, tokens or medical details.
-  const category=statuses.includes('emergency')?'emergency':statuses.includes('private')?'private':clinicalDecision?.category||buddyDecision?.category||(statuses.includes('unsafe')?'unsafe_context':'educational');
+  const category=statuses.includes('emergency')?'emergency':statuses.includes('private')?'private':clinicalDecision?.category||buddyDecision?.category||(statuses.includes('unsafe')?'unsafe_context':outsideMedicalScope(b.question)?'out_of_scope':'educational');
   console.info(JSON.stringify({event:'safety_screened',policyVersion:buddyDecision&&!clinicalDecision?buddyPolicyVersion:safetyPolicyVersion,action:category==='educational'?'allow':'redirect',category}));
+  const flag=securityFlagFor(clinicalDecision?.category||buddyDecision?.category);
+  if(flag)console.warn(JSON.stringify({event:'security_flag',...flag,action:'blocked'}));
   if(statuses.includes('emergency'))fail(422,'emergency','If this danger is happening now, contact local emergency services. Do not wait for an AI response.');
   if(statuses.includes('private'))return reply({status:'blocked',code:'private',answer:buddySafetyAnswer('private_input'),decks:[]},422);
+  if(category==='out_of_scope')return reply({status:'blocked',code:'out_of_scope',answer:scopeAnswer(),decks:[]},422);
   if(category!=='educational'){
    return reply({status:'blocked',code:'unsafe_request',answer:clinicalDecision?safetyAnswer(clinicalDecision.category):buddySafetyAnswer(buddyDecision?.category),decks:[]},422);
   }
-  b.role=normalizeReadingRole(b.role);
+  b.persona=medicalPersona(b.role);b.role=normalizeReadingRole(b.role);
   const help=b.mode==='chat'?buddyHelpAnswer(b.question):null;
   if(help){phase='authentication';await identity(request,env);return reply({status:'platform',answer:help,decks:[]})}
   const route=b.role==='Medical professional'?'professional':'general',config=endpoint(env,route);
@@ -96,7 +100,7 @@ export async function modelAPI(request,env,assets){
   const user=await identity(request,env),grounded=config.protocol==='grounded-v2';
   phase='evidence';
   const evidence=config.protocol==='groq-cited-v1'?citedEvidence(assets,b):grounded?groundedEvidence(assets,b):evidenceFor(assets,b.topic,b.role,b.question);
-  if(!evidence?.sources.length)fail(422,'no_evidence','No indexed sources support this topic.');
+  if(!evidence?.sources.length)fail(422,'no_evidence',insufficientClinicalContext);
   phase='quota';
   await reserve(env,user);
   // The deadline includes both generation, review and one possible repair.

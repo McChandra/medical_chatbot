@@ -1,7 +1,7 @@
 import {standardRefusalText} from './refusal.js';
 // Versioned, deterministic pre-retrieval policy. It screens intent, not identity.
 // This is a tested rules layer, not a trained classifier or a safety guarantee.
-export const safetyPolicyVersion='2026-11-13.3';
+export const safetyPolicyVersion='2026-11-13.4';
 const plain=value=>String(value||'').normalize('NFKC').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9]+/g,' ').trim().replace(/\bwanna\b/g,'want to').replace(/\bgonna\b/g,'going to').replace(/\bstich(ing|es)?\b/g,'stitch$1');
 const procedure=/\b(stitch\w*|sutur\w*|appendectom\w*|tracheotom\w*|amputat\w*|surgical incisions?|sew(?:ing)? (?:up )?(?:a |the |my )?(?:wound|cut|skin)|perform\w* (?:an? )?surgery|operat(?:e|ing) on|incis\w*|drain\w* (?:an? |my |the )?(?:abscess|boil)|remov\w* (?:an? |my |the )?(?:tooth|mole)|extract\w* (?:an? |my |the )?tooth|cut(?:ting)? (?:off|out) (?:an? |my |the )?(?:mole|growth))\b/;
 const instruction=/\b(how (?:can|do|should|would|to)|show me|teach me|steps?|instructions?|guide me|walk me through|can i|should i|tell me how|how deep|how tight|(?:what|which) (?:needle|thread|equipment|tools))\b/;
@@ -16,6 +16,8 @@ const medicines={title:'FDA · Using medicines safely',url:'https://www.fda.gov/
 const wounds={title:'NHS · Cuts and grazes',url:'https://www.nhs.uk/conditions/cuts-and-grazes/'};
 export function assessSafety(question,context=''){
  const q=plain(question),prior=plain(context);
+ if(/\b(?:lethal|fatal|deadly) (?:dose|dosage|amount)|\b(?:how (?:much|many)|what (?:dose|amount)).{0,70}\b(?:kill|cause death|be fatal|be lethal)\b/.test(q)&&!/^(?:what does|what is the meaning of|define)\b/.test(q))return {action:'redirect',category:'lethal_dose'};
+ if(/\boff label\b/.test(q)&&/\b(?:protocol|regimen|dosage|dose|steps|instructions|how (?:do i|can i|to) (?:use|take|give|administer))\b/.test(q))return {action:'redirect',category:'off_label_protocol'};
  const aftercare=/\b(care for|clean|keep .* dry|signs? of infection|healing)\b/.test(q)&&!/\b(remove|perform|sew|cut|apply|insert|how to stitch|how to suture)\b/.test(q);
  const procedural=procedure.test(q)||(procedure.test(prior)&&/\b(it|that|this|do it)\b/.test(q));
  const selfProcedure=diy.test(q)&&!simulation.test(q)&&(plannedAction.test(q)||procedureQuestion.test(q)||procedureFragment.test(q));
@@ -27,9 +29,12 @@ export function assessSafety(question,context=''){
  if(/\b(?:how|help me|generate|create|write|make)\b/.test(q)&&/\b(?:fake|forge|falsify|fabricate)\b/.test(q)&&/\b(?:medical records?|prescriptions?|trial results?|patient consent|clinical data)\b/.test(q))return {action:'redirect',category:'medical_misconduct'};
  return {action:'allow',category:'educational'};
 }
+export function securityFlagFor(category){
+ return ['lethal_dose','off_label_protocol','drug_misuse','harm_others','persona_override','unsafe_cyber','harmful_content','prompt_extraction','forged_event'].includes(category)?{category,policyVersion:safetyPolicyVersion}:null;
+}
 export function safetyAnswer(category='unsafe_procedure'){
  const citations=category==='unsafe_procedure'?[wounds]:category==='individual_dose'?[medicines]:[];
- return {text:standardRefusalText,citations,blocks:[],checks:[],supported:false,safety:{category,policyVersion:safetyPolicyVersion},title:'Buddy can help safely'};
+ return {text:standardRefusalText,citations,blocks:[],checks:[],supported:false,safety:{category,policyVersion:safetyPolicyVersion,...(securityFlagFor(category)?{securityFlagged:true}:{})},title:'Buddy can help safely'};
 }
 export function personalDiagnosisNotice(question){
  return /\b(?:what (?:do i|disease do i|condition do i|does my (?:child|patient)) have|diagnose me|confirm my diagnosis|tell me exactly what (?:disease|condition)|do i definitely have)\b/.test(plain(question))?"I'm an AI browsing assistant and cannot diagnose individuals. I can explain the available evidence and questions to discuss with a qualified healthcare professional.":undefined;

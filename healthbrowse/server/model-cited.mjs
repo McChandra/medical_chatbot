@@ -1,3 +1,4 @@
+import {insufficientClinicalContext,withAudienceDisclaimer} from '../dist/medical-contract.js';
 import {personalDiagnosisNotice} from '../dist/safety-policy.js';
 import {faqPassages,generalTreatmentNotice} from '../dist/faq-spec.js';
 import {generationSafetyRules,assessSafety,hasUnsafeInstructions} from '../dist/safety-policy.js';
@@ -54,7 +55,7 @@ export function prepareCited(input,evidence){
  // Groq rejects an empty object schema; Buddy has only an answer field on the
  // provider wire. The public API still returns decks: [] for compatibility.
  const schema=object({answer:array(claim()),...(input.mode==='chat'?{}:{decks:object(Object.fromEntries(Array.from({length:6},(_,i)=>[String(i+1),array(claim())])))})});
- const rules=`${buddyPersona(input.mode)} ${audienceInstructions[input.role]}
+ const rules=`${buddyPersona(input.mode)} ${audienceInstructions[input.persona==='student'?'Medical student':input.role]}
 ${generationSafetyRules}
 ${buddySecurityRules}
 Answer the user's ACTUAL question directly first. An ordinary first-person symptom question is allowed: explain possible general causes and source-supported care/red flags without diagnosing that person. Do not ask them to rephrase it. Address all parts of a compound question. For a symptom question, state source-supported general causes and symptom associations as separate short claims: do not change how common a cause is for one symptom into how common it is for the user's combination of symptoms. Each additional symptom needs its own supporting evidence. When a passage says viruses are the most common cause of a sore throat, repeat that scope exactly: do not add "with fever" to that prevalence statement. Discuss fever as a separate supported association. Do not merge a cause, a diagnosis limitation and care advice into one claim.
@@ -131,13 +132,13 @@ export function presentCited(raw,prepared,input,model){
    const source=candidates.find(s=>deck||s.overview)||candidates[0];
    if(source){const ref={...source,quote:source.text};blocks.push({title:'From the source',text:source.text,citation:ref,references:[ref],verification:'Exact retrieved excerpt. No AI interpretation is shown for this section.'});}
   }
-  const gap='I do not have sufficient authorized data to answer this specific query.'+(deck?' '+domains[deck-1].empty:'');
+  const gap=insufficientClinicalContext+(deck?' '+domains[deck-1].empty:'');
   const citations=[...new Map(blocks.flatMap(b=>b.references).map(r=>[r.id,r])).values()];
   return {id:deck,...(deck===5&&input.role==='General reader'?{treatmentNotice:generalTreatmentNotice}:{}),blocks,citations,checks:[],style:evidence.style,deck:deck||input.deck||1,supported:generated,
    text:blocks.length?blocks.map(b=>b.text+' '+b.references.map(r=>'['+r.id+']').join(' ')).join('\n\n'):gap,
-   ...(generated?{generation:{model,mode:'generated',label:'AI explanation',checkedAt:new Date().toISOString()}}:{modelNotice:blocks.length?'Source excerpt · an AI explanation is not available for this section.':'Evidence gap · '+gap})};
+   ...(generated?{generation:{model,mode:'generated',label:'AI explanation',checkedAt:new Date().toISOString()}}:{modelNotice:blocks.length?insufficientClinicalContext+' Source excerpt · shown for reference.':'Evidence gap · '+gap})};
  }
  const answer=section(raw.answer,0);const notice=personalDiagnosisNotice(input.question);if(notice){answer.diagnosisNotice=notice;answer.text+='\n\n'+notice;}const decks=input.mode==='chat'?[]:Array.from({length:6},(_,i)=>section(raw.decks[String(i+1)],i+1));
- return {status:'generated',protocol:'groq-cited-v1',answer,decks,model,snapshot:evidence.snapshot,
+ return {status:'generated',protocol:'groq-cited-v1',answer:withAudienceDisclaimer(answer,input.persona==='student'?'Medical student':input.role),decks,model,snapshot:evidence.snapshot,
   validation:{citationCheck:'server-resolved passages',semanticReview:raw.supportReview==='completed'?'automated support review; not independent clinical validation':'not independently validated',withheldClaims:dropped}};
 }

@@ -1,3 +1,4 @@
+import {outsideMedicalScope,scopeAnswer} from './medical-contract.js';
 import {assessSafety,safetyAnswer} from './safety-policy.js';
 import {inspectInput,inspectQuery} from './clinical-engine.js';
 import {securityVariants,assessBuddySafety,buddySafetyAnswer} from './buddy-policy.js';
@@ -22,6 +23,7 @@ export function prepareQuery(input,context=""){
  }
  if(status!=='ok')return {status,query:'',...(status==='private'?{safety:buddySafetyAnswer('private_input')}:{})};
  const safety=assessSafety(original,context);if(safety.action!=='allow')return {status:'unsafe',query:'',safety:safetyAnswer(safety.category)};
+ if(outsideMedicalScope(original))return {status:'unsafe',query:'',safety:scopeAnswer()};
  const simple=original.toLowerCase().replace(/[’]/g,"'").replace(/[.!?]+$/,'').trim();
  const match=simple.match(/^(?:i have|i am having|i'm having|i am experiencing|i'm experiencing|i have got|i've got|i feel|i am|i'm)\s+(?:a\s+|an\s+)?([a-z ]+)$/);
  const symptom=match&&symptoms.get(match[1].trim());

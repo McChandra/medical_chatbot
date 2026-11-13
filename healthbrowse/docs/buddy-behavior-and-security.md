@@ -97,6 +97,8 @@ This change does not add a trained classifier, live-provider red-team benchmark,
 
 ## Conversational self-procedure regression
 
-Policy `2026-11-13.3` recognizes informal planned actions such as “i wanna do stitching by myself”, common spelling variants, and contextual “I wanna do it myself” follow-ups. The shared browser/server check returns the standard refusal with relevant source links before terminology, retrieval or generation. It also covers feasibility questions and terse self-stitching phrases. Regression cases preserve normal aftercare, risk education, simulation practice and negated intent. This remains a bounded rules layer, not general intent understanding.
+Policy `2026-11-13.4` recognizes informal planned actions such as “i wanna do stitching by myself”, common spelling variants, and contextual “I wanna do it myself” follow-ups. The shared browser/server check returns the standard refusal with relevant source links before terminology, retrieval or generation. It also covers feasibility questions and terse self-stitching phrases. Regression cases preserve normal aftercare, risk education, simulation practice and negated intent. This remains a bounded rules layer, not general intent understanding.
 
 The security-module regression set additionally covers bare encoded prompts, leetspeak, fictional appendectomy instructions, administrator overrides, prompt translation/extraction, labeled financial data, ordinary biomedical identifiers, personal-diagnosis boundaries, and refusal-tone throttling. These tests measure the listed cases only, not general resistance to adversarial input.
+
+See [Core reasoning contract](core-reasoning-contract.md) for the current role mapping, exact evidence-gap wording, scope checks, high-risk event flags, and the explicit limits of text-only retrieval.

@@ -1,3 +1,4 @@
+import {insufficientClinicalContext,withAudienceDisclaimer,outsideMedicalScope,scopeAnswer} from './medical-contract.js';
 import {personalDiagnosisNotice} from './safety-policy.js';
 import {faqQuestions,generalTreatmentNotice} from './faq-spec.js';
 import {assessBuddySafety,hasUnsafeBuddyOutput} from './buddy-policy.js';
@@ -30,7 +31,7 @@ function compose(context,matches,deck,{detail=false,gaps=[]}={}){
  while(blocks.length&&blocks.reduce((n,b)=>n+b.text.length,0)>12000)blocks.pop();
  const guidance=blocks.length?readingGuidance(context.role,deck):null;
  const text=blocks.map((b,i)=>b.title+'\n'+b.text+' ['+(i+1)+']').join('\n\n')+(gaps.length?'\n\n'+gaps.join('\n'):'')+(guidance?'\n\n'+guidance.title+'\n'+guidance.text:'');
- return {text:text||'No source passage supports this question yet. Try a more specific medical topic or inspect the linked sources.',deck,blocks,style:profile.style,guidance,gaps,supported:blocks.length>0,citations:blocks.map((b,i)=>({...b.citation,title:'['+(i+1)+'] '+b.citation.title})),checks:blocks.map(b=>b.check)};
+ return {text:text||insufficientClinicalContext,deck,blocks,style:profile.style,guidance,gaps,supported:blocks.length>0,citations:blocks.map((b,i)=>({...b.citation,title:'['+(i+1)+'] '+b.citation.title})),checks:blocks.map(b=>b.check)};
 }
 function requestedParts(query){
  // Split explicit question clauses, not disease names or a linked phrase such
@@ -45,13 +46,14 @@ function supplemental(context,deck,limit,exclude=new Set(),intent){
 }
 export function searchAnswer(context,query,options={}){
  const result=sourcedSearchAnswer(context,query,options),notice=personalDiagnosisNotice(query);
- return notice?{...result,diagnosisNotice:notice,text:result.text+'\n\n'+notice}:result;
+ return withAudienceDisclaimer(notice?{...result,diagnosisNotice:notice,text:result.text+'\n\n'+notice}:result,context.role);
 }
 function sourcedSearchAnswer(context,query,{detail=false,activeDeck=1}={}){
  const question=correctSpelling(query).trim(),profile=readingProfile(context.role);
  const status=inspectQuery(question);
  if(status==='unsafe')return {...prepareQuery(question,context.topic).safety,deck:activeDeck};
  if(status!=='ok')return {text:status==='emergency'?'If these symptoms or immediate danger are happening now, contact local emergency services now. Do not wait for a search response.':'Remove identifying details such as names, contact information, birth dates or record numbers. You can still describe symptoms in your own words.',citations:[],checks:[],blocks:[],supported:false,deck:activeDeck};
+ if(outsideMedicalScope(question))return {...scopeAnswer(),deck:activeDeck};
  if(inspectInput(question)==='private'){
   if(/\b(?:dos(?:e|es|age|ing)|prescrib\w*|(?:should|can|may) i (?:take|start|stop|change|increase|reduce)|how much should|which (?:medicine|medication|drug))\b/i.test(question))return {text:'I cannot choose a medicine, dose or treatment change for you. A clinician or pharmacist needs to check your circumstances. You can explore the cited general treatment information in Deck 5.',citations:[],checks:[],blocks:[],supported:false,deck:5};
   // Keep the original question intact for the model; the local fallback can
@@ -84,13 +86,13 @@ function sourcedSearchAnswer(context,query,{detail=false,activeDeck=1}={}){
   for(const [n,count,intent] of extra)matches.push(...supplemental(context,n,count,seen,intent).map(m=>({...m,title:domains[n-1].title})));
  }
  const response=compose(context,matches,primaryDeck,{detail,gaps});
- if(!response.supported)response.text='I found '+context.topic+', but cannot support a direct answer to this question from the indexed sources. '+gaps.join(' ')+' The six decks show the information that is available.';
+ if(!response.supported)response.text=insufficientClinicalContext+' '+gaps.join(' ')+' The six decks show the information that is available.';
  return response;
 }
 export function domainAnswer(context,number,{detail=true}={}){
  const domain=domains[number-1];if(!domain||number>6)return null;
  const profile=readingProfile(context.role),matches=supplemental(context,number,detail?profile.detail:profile.card);
- const gaps=matches.length?[]:['No source passage is available for this area. '+domain.empty];
+ const gaps=matches.length?[]:[insufficientClinicalContext+' '+domain.empty];
  if(number===6)gaps.push('These excerpts do not establish a complete untreated timeline. Check treatment exposure and follow-up in the source.');
  const result=compose(context,matches,number,{detail,gaps});
  if(number===5&&generalMode(context.role)){result.treatmentNotice=generalTreatmentNotice;result.text+='\n\n'+generalTreatmentNotice;}

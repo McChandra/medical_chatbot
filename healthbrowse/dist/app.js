@@ -214,7 +214,7 @@ async function performSearch(input,chosenTopic,confirmed=false){
   const prepared=prepareQuery(input),status=prepared.status;
   if(status!=='ok'){
     notifySafety({status,safety:prepared.safety?.safety});
-    $('notice').textContent=status==='unsafe'?'See the safe-care guidance below.':guardMessage(status);$('results').hidden=true;$('resultsBody').replaceChildren();
+    $('notice').textContent=status==='unsafe'?'Buddy’s response is below.':guardMessage(status);$('results').hidden=true;$('resultsBody').replaceChildren();
     topic='';unresolved=true;activeQuery='';live=null;codes=null;buddy.sync(true,false);
     const message=el('div',undefined,'overview-note search-answer');
     message.setAttribute('role','alert');message.append(el('h2',prepared.safety?.title||(status==='emergency'?'Get urgent help now':'Remove identifying details to continue')));
