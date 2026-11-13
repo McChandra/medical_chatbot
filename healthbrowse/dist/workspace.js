@@ -30,7 +30,7 @@ export function setupCopilot(getContext,actions={}){
   $('buddyWelcome').hidden=false;$('buddyQuestions').hidden=false;
   $('buddyWelcome').replaceChildren(node('p','I’m Buddy, your AI research companion. Let’s explore '+c.topic+'.'),node('small',profile.style+'. Choose an area below or ask me a question.'));
   $('buddyQuestions').replaceChildren();
-  for(const choice of roleQuestions(c.role)){const b=node('button',choice.label);b.type='button';b.disabled=busy;b.setAttribute('aria-pressed',String(active===choice.deck&&history.length>0));const n=node('span',String(choice.deck).padStart(2,'0'));b.prepend(n);b.onclick=()=>ask(choice.prompt,true,choice.deck);$('buddyQuestions').append(b)}
+  for(const choice of roleQuestions(c.role)){const b=node('button','');b.type='button';b.disabled=busy;b.setAttribute('aria-pressed',String(active===choice.deck&&history.length>0));const n=node('span',String(choice.deck).padStart(2,'0'));n.className='buddy-question-number';const label=node('span',choice.label);label.className='buddy-question-label';b.append(n,label);b.onclick=()=>ask(choice.prompt,true,choice.deck);$('buddyQuestions').append(b)}
   $('ask').querySelector('label').textContent='Ask a follow-up question';$('ask').querySelector('button').textContent='Send question ↗';$('copilot').querySelector('.eyebrow').textContent='YOUR HEALTH RESEARCH BUDDY';
   $('thread').replaceChildren();
   for(const t of history){const turn=node('div','');turn.className='turn';turn.append(node('strong',t.question));
