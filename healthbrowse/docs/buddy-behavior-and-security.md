@@ -2,16 +2,16 @@
 
 Buddy is HealthBrowse's friendly AI research companion. It answers the current question, expands the selected clinical area, and preserves the General / Clinicians reading styles and source-backed response contracts. It also explains basic platform navigation. It does not diagnose a person, prescribe, change an account, or execute commands from conversation text.
 
-## First-visit welcome and sound
+## Authenticated-session welcome and sound
 
 The welcome stays outside the language model:
 
 1. After sign-in, consent, and research-desk readiness, the browser calls the authenticated `POST /api/me/buddy-intro` endpoint with an empty body.
-2. The server verifies the session and atomically claims the account's `buddy_intro_seen` flag. Only the first successful claim returns `showWelcome: true`; concurrent tabs and returning sessions do not receive another grant.
+2. After Supabase verifies the bearer token, the server checks its subject against the verified account and reads the `session_id` claim. An atomic insert into `hb_buddy_sessions` grants `showWelcome: true` once per account/session pair. A new sign-in session gets a new welcome; refresh tokens and concurrent tabs within the same session do not replay it. Missing or invalid session identifiers fail closed.
 3. The visible tab shows “Welcome! I’m Buddy” and offers **Meet Buddy** and **Maybe later**. The conversation opens only when the user chooses it. The prompt does not steal keyboard focus.
 4. The existing short, quiet Web Audio tone is attempted once when playback is permitted. When autoplay is blocked, the visual welcome still works. There is no repeated sound or background-tab notification.
 
-This is a once-per-account introduction when the feature is first encountered, including accounts created before the feature existed. It is not proof that this was the account's first-ever login. Dismissing the prompt or opening Buddy consumes the introduction; deleting chat history does not reset it.
+This replaces the previous once-per-account introduction. Dismissing the welcome or opening Buddy consumes it for this authenticated session. Chat deletion and reading-mode changes do not reset it. The additive database migration preserves the old account flag and all research data; session-marker rows cascade on account deletion.
 
 The application deliberately does **not** send `[System Event: User Login]` to an LLM or parse `<Trigger_Audio: Buddy_Pop_Tone>` from model output. Those strings are untrusted when supplied in a question, history item, or source. A copied tag cannot authorize sound, sign-in, or an account action. No user's name or email is needed for the welcome.
 
@@ -22,7 +22,7 @@ The application deliberately does **not** send `[System Event: User Login]` to a
 | Ordinary symptom or disease question | Answer with available cited evidence; explain limitations without requiring a generic rephrasing. Do not infer a personal diagnosis. |
 | General reading mode | Warm, plain-language explanation and short definitions of necessary medical terms. |
 | Clinicians reading mode | Precise clinical terminology, evidence scope, and relevant limitations. Selecting this mode does not verify a license or grant restricted access. |
-| Follow-up about a clinical area | Use the current question, selected area, and screened prior questions. Expand the answer without repeating all six decks. |
+| Follow-up about a clinical area | Use the current question, selected area, and screened prior questions. Expand the answer without repeating all six FAQs. |
 | “Hello Buddy” / “What can you do?” | Immediate platform-owned introduction, without a model call or fabricated medical citation. |
 | Name/email, password, theme, sign-out, or history-deletion navigation | Explain where the existing controls are. Direct personal details to the account form; never claim that Buddy performed the change. |
 | Unsafe medical procedure or individualized dose | Preserve the existing targeted safety response and relevant source links. |
@@ -68,12 +68,12 @@ The generic refusal is short and neutral. Safety-specific refusals remain more u
 | [dist/workspace.js](../dist/workspace.js) | Friendly Buddy introduction, immediate help, normal follow-up flow |
 | [server/model-api.mjs](../server/model-api.mjs) | Independent context screening before external calls; authenticated platform-help response |
 | [server/model-evidence.mjs](../server/model-evidence.mjs), [server/model-cited.mjs](../server/model-cited.mjs) | Prompt composition, source filtering, output validation and claim support |
-| [dist/buddy-welcome.js](../dist/buddy-welcome.js), [dist/buddy.js](../dist/buddy.js) | Existing one-time welcome and sound controller |
+| [dist/buddy-welcome.js](../dist/buddy-welcome.js), [dist/buddy.js](../dist/buddy.js) | Session welcome and sound controller |
 | [tests/buddy-policy.test.mjs](../tests/buddy-policy.test.mjs) | Adversarial and benign regression cases with mocked providers |
 
 ## Verification and limitations
 
-Automated cases cover both reading modes and search/chat entry points, spoofed login/audio tags, prompt extraction, common role overrides, harmful hypothetical framing, encoded procedure requests, encoded emergencies/identifiers, poisoned context fields, source injection, output rejection, platform help, and ordinary medical questions. Existing SQL and audio-controller tests cover once-per-account claiming and blocked autoplay.
+Automated cases cover both reading modes and search/chat entry points, spoofed login/audio tags, prompt extraction, common role overrides, harmful hypothetical framing, encoded procedure requests, encoded emergencies/identifiers, poisoned context fields, source injection, output rejection, platform help, and ordinary medical questions. Existing SQL and audio-controller tests cover per-session claiming, new logins, token refresh, concurrent tabs, missing IDs, and subject mismatch and blocked autoplay.
 
 These are deterministic regression tests, not a measured claim of universal jailbreak resistance. The rule layer recognizes selected patterns, including a few English, Spanish, and Hindi examples; it is not comprehensive multilingual intent classification or complete PII de-identification. Other obfuscation, languages, and novel attacks may evade it. Model safety and support review are additional imperfect layers, not independent clinical validation.
 
@@ -83,3 +83,5 @@ This change does not add a trained classifier, live-provider red-team benchmark,
 
 - [OWASP LLM01 — Prompt Injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/): defense in depth, separating untrusted content, output validation, and least privilege. Prompts, retrieval, and fine-tuning do not eliminate prompt injection.
 - [MDN — Autoplay guide for media and Web Audio APIs](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Autoplay): audio playback can be blocked by browser policy; the UI needs a functional silent fallback.
+
+- [Supabase sessions](https://supabase.com/docs/guides/auth/sessions): each access token includes the session ID; refresh does not constitute a new sign-in.

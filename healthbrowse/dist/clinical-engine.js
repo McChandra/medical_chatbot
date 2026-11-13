@@ -32,8 +32,8 @@ export function inspectInput(text) {
 }
 
 const groups = [
-  {id:'codes',deck:3,ask:/\b(icd(?: 9| 10| 11)?|snomed(?: ct)?|classification codes?|taxonomy codes?)\b/},
-  {id:'course',deck:2,ask:/\b(natural history|disease course|progress\w*|subclinical|asymptomatic|untreated|without (?:treatment|intervention)|timeline|onset)\b/,evidence:/\b(natural history|progress\w*|asymptomatic|no symptoms|over time|grows? (?:quickly|slowly)|untreated|early stages?|onset)\b/},
+  {id:'codes',deck:4,ask:/\b(icd(?: 9| 10| 11)?|snomed(?: ct)?|classification codes?|taxonomy codes?)\b/},
+  {id:'course',deck:6,ask:/\b(natural history|disease course|progress\w*|subclinical|asymptomatic|untreated|without (?:treatment|intervention)|timeline|onset)\b/,evidence:/\b(natural history|progress\w*|asymptomatic|no symptoms|over time|grows? (?:quickly|slowly)|untreated|early stages?|onset)\b/},
   {id:'education',deck:7,ask:/\b(courses?|education(?:al)? programs?|universit(?:y|ies)|institutions?|fellowships?|residenc(?:ies|y)|curricula|training programs?)\b/},
   {id:'data',deck:7,ask:/\b(datasets?|data sets?|repositories|github|open source (?:software|models?)|software|frameworks?|machine learning|ai tools?|pretrained models?|llms?|data modalities|modality|access requirements?|licen[cs]e|sample size)\b/},
   {id:'facility',deck:7,ask:/\b(hospitals?|clinic(?:s)?|pharmac(?:y|ies)|specialty centers?|care facilities|facility director(?:y|ies)|provider director(?:y|ies))\b/},
@@ -43,17 +43,18 @@ const groups = [
   {id:'date',deck:7,ask:/\b(publication date|published|publication year)\b/,field:'date'},
   {id:'identifiers',deck:7,ask:/\b(doi|pmid)\b/,field:'identifier'},
   {id:'research',deck:7,ask:/\b(publications?|studies|clinical trials?|journals?|articles?|research papers?|evidence reports?|guidelines?)\b/},
-  {id:'public-health',deck:6,ask:/\b(epidemiolog\w*|prevalence|incidence|prevention|prevent\w*|vaccin\w*|social determinants|population distribution|healthcare access|who (?:gets|is affected)|how common)\b/,evidence:/\b(epidemiolog\w*|prevalence|incidence|prevent\w*|vaccin\w*|social determinants|population|healthcare access|most common)\b/},
-  {id:'complications',deck:5,ask:/\b(complications?|outcomes?|disability|mortality)\b/,evidence:/\b(complications?|outcomes?|disability|mortality|damage|failure)\b/},
-  {id:'identify',deck:3,ask:/\b(cytogenetic analysis|immunophenotyping|diagnos\w*|testing|tests?|screen\w*|detect\w*|investigations?|biomarkers?|characteristics?|traits?|identif\w*|prediction methods?)\b/,evidence:/\b(diagnos\w*|immunophenotyping|cytogenetic|test\w*|exam\w*|detect\w*|screen\w*|imaging|measur\w*|biomarkers?|characteristics?|traits?|identif\w*)\b/},
-  {id:'genes',deck:1,ask:/\b(genes?|genetic\w*|genealog\w*|mutations?)\b/,evidence:/\b(gene\w*|mutation\w*|inherit\w*|hereditar\w*)\b/},
-  {id:'prognosis',deck:5,ask:/\b(prognos\w*|staging|stages?|stratif\w*|risk (?:estimate|score|calculator|model)|survival|outlook|predict\w*|early (?:warning signs?|indicators?))\b/,evidence:/\b(prognos\w*|stag\w*|stratif\w*|risk|survival|outlook|early|predict\w*)\b/},
-  {id:'risk',deck:1,ask:/\b(risk factors?|risk|susceptibility|inherit\w*|hereditar\w*|cause\w*|etiolog\w*)\b/,evidence:/\b(risk|susceptib\w*|more likely|inherit\w*|hereditar\w*|caus\w*|prevalence|incidence)\b/},
+  {id:'public-health',deck:1,ask:/\b(epidemiolog\w*|prevalence|incidence|prevention|prevent\w*|vaccin\w*|social determinants|population distribution|healthcare access|who (?:gets|is (?:most )?affected)|how common)\b/,evidence:/\b(epidemiolog\w*|prevalence|incidence|prevent\w*|vaccin\w*|social determinants|population|healthcare access|most common)\b/},
+  {id:'complications',deck:6,ask:/\b(complications?|outcomes?|disability|mortality)\b/,evidence:/\b(complications?|outcomes?|disability|mortality|damage|failure)\b/},
+  {id:'identify',deck:4,ask:/\b(cytogenetic analysis|immunophenotyping|diagnos\w*|testing|tests?|screen\w*|detect\w*|investigations?|biomarkers?|characteristics?|traits?|identif\w*|prediction methods?)\b/,evidence:/\b(diagnos\w*|immunophenotyping|cytogenetic|test\w*|exam\w*|detect\w*|screen\w*|imaging|measur\w*|biomarkers?|characteristics?|traits?|identif\w*)\b/},
+  {id:'genes',deck:2,ask:/\b(genes?|genetic\w*|genealog\w*|mutations?)\b/,evidence:/\b(gene\w*|mutation\w*|inherit\w*|hereditar\w*)\b/},
+  {id:'prognosis',deck:6,ask:/\b(prognos\w*|staging|stages?|stratif\w*|risk (?:estimate|score|calculator|model)|survival|outlook|predict\w*|early (?:warning signs?|indicators?))\b/,evidence:/\b(prognos\w*|stag\w*|stratif\w*|risk|survival|outlook|early|predict\w*)\b/},
+  {id:'risk-factors',deck:1,ask:/\b(risk factors?|susceptibility|at risk)\b/,evidence:/\b(risk|susceptib|more likely|exposure|family history)\b/},
+  {id:'risk',deck:2,ask:/\b(risk factors?|risk|susceptibility|inherit\w*|hereditar\w*|cause\w*|etiolog\w*)\b/,evidence:/\b(risk|susceptib\w*|more likely|inherit\w*|hereditar\w*|caus\w*|prevalence|incidence)\b/},
   {id:'symptoms',deck:3,ask:/\b(symptoms?|signs?|manifestations?|clinical presentation)\b/,evidence:/\b(symptoms?|signs?|asymptomatic|manifestations?|wheezing|coughing|fatigue|shortness of breath|rash|pain)\b/},
-  {id:'therapy',deck:4,ask:/\b(treatment classes|treat\w*|therap\w*|drug classes|medicines?|medications?|management|manag\w*)\b/,evidence:/\b(treat\w*|therap\w*|manag\w*|drug classes|medicines?|medications?)\b/},
-  {id:'classification',deck:1,ask:/\b(types?|subtypes?|classif\w*|taxonomy|nosology)\b/,evidence:/\b(types?|classif\w*|subtypes?|lymphoid|myeloid)\b/},
-  {id:'mechanism',deck:1,ask:/\b(pathogenesis|mechanism|molecular biology|pathophysiology|physiology|affect(?:s|ing)?|how does|why does)\b/,evidence:/\b(caus\w*|due to|results? from|mechanism|pathway|cells?|inflamm\w*|protein|molecular|affect\w*)\b/},
-  {id:'definition',deck:1,ask:/\b(what (?:is|are)|defin\w*|overview|explain|classif\w*|subtypes?|taxonomy|meaning|mean|tell me about|help me understand)\b/,evidence:/\b(is|are|means|refers to|classified|characterized|occurs when|types)\b/}
+  {id:'therapy',deck:5,ask:/\b(treatment classes|treat\w*|therap\w*|drug classes|medicines?|medications?|management|manag\w*)\b/,evidence:/\b(treat\w*|therap\w*|manag\w*|drug classes|medicines?|medications?)\b/},
+  {id:'classification',deck:2,ask:/\b(types?|subtypes?|classif\w*|taxonomy|nosology)\b/,evidence:/\b(types?|classif\w*|subtypes?|lymphoid|myeloid)\b/},
+  {id:'mechanism',deck:2,ask:/\b(pathogenesis|mechanism|molecular biology|pathophysiology|physiology|affect(?:s|ing)?|how does|why does)\b/,evidence:/\b(caus\w*|due to|results? from|mechanism|pathway|cells?|inflamm\w*|protein|molecular|affect\w*)\b/},
+  {id:'definition',deck:2,ask:/\b(what (?:is|are)|defin\w*|overview|explain|classif\w*|subtypes?|taxonomy|meaning|mean|tell me about|help me understand)\b/,evidence:/\b(is|are|means|refers to|classified|characterized|occurs when|types)\b/}
 ];
 export function questionDeck(question) {
   return groups.find(group=>group.ask.test(plain(question)))?.deck || null;

@@ -1,4 +1,5 @@
 import {generationMessages,reviewMessages} from './model-evidence.mjs';
+import {buddySecurityRules,compactBuddySecurityRules} from './buddy-prompt.mjs';
 
 export class ContextLimit extends Error {}
 // Llama 3 uses byte-level BPE. UTF-8 byte length is a conservative upper bound,
@@ -10,7 +11,8 @@ const compactSource=({id,deck,text,focus,date,historical})=>({id,deck,text,focus
 export function compactGeneration(input,evidence,repair=''){
  const maxTokens=2048;
  const messagesFor=sources=>{
-  const messages=generationMessages(input,{...evidence,sources:sources.map(compactSource)},repair.slice(0,350));
+  const messages=generationMessages(input,{...evidence,domains:evidence.domains.map(({id,title})=>({id,title})),sources:sources.map(compactSource)},repair.slice(0,350));
+  messages[0].content=messages[0].content.replace(buddySecurityRules,compactBuddySecurityRules);
   messages[0].content+=' For this short-context request: at most 2 direct-answer claims and 1 claim per deck, at most 200 characters per claim and 200 per quote. Use a complete concise sentence; the buddy can expand a deck later.';
   return messages;
  };

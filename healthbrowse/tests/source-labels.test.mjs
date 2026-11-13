@@ -8,6 +8,6 @@ test('LDL treatment targets are not causes merely because text mentions high ris
  const record=feed.topics.find(t=>t.title==='LDL: The "Bad" Cholesterol');
  const original=record.knowledge.find(p=>p.text.includes('different goals'));
  const corrected=medlinePassages(record,record.title,feed).find(p=>p.id===original.id);
- assert.equal(corrected.deck,4);assert.equal(corrected.text,original.text);assert.equal(corrected.url,record.url);
+ assert.equal(corrected.deck,5);assert.equal(corrected.text,original.text);assert.equal(corrected.url,record.url);
  assert.equal(normalizeSourceLabel({heading:'What causes leukemia?',deck:1,text:'A source passage.'}).deck,1);
 });

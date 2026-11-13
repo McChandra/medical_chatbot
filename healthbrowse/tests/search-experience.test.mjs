@@ -18,7 +18,7 @@ test('ordinary question wording, spelling corrections and aliases produce suppor
  for(const [topic,query,pattern] of [['Leukemia','What is lukemia?',/blood/i],['Leukemia','How is leukemia treated?',/treat/i],['Leukemia','What are the symptoms of leukemia?',/symptom/i],['Diabetes','Tell me about diabetes',/diabet/i],['High Blood Pressure','hypertension',/pressure/i]]){
   const answer=searchAnswer(context(topic),query);assert.equal(answer.supported,true,query+' '+answer.text);assert.ok(answer.citations.length,query);assert.match(answer.text,pattern);assert.ok(answer.checks.every(c=>c.status==='supported'));
  }
- assert.equal(questionDeck('How does treatment work?'),4);
+ assert.equal(questionDeck('How does treatment work?'),5);
 });
 test('the direct answer addresses the question rather than substituting a definition',()=>{
  const c=context('Leukemia'),symptoms=searchAnswer(c,'What are the symptoms of leukemia?');

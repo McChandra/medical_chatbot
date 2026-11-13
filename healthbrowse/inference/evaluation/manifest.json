@@ -1,16 +1,17 @@
 {
   "version": 1,
-  "fixture_sha256": "e62ab44a8865c1e500aa8b963fe2c6d8ba858549ca6efa0a28d37d093ff59a8b",
+  "fixture_sha256": "98dd0db14dc08a434e0d950e5320603251b063f63454d93200a8225e2f18be2e",
   "case_count": 17,
   "generation_cases": 12,
   "source_hashes": {
-    "server/buddy-prompt.mjs": "b89f3d8175f3d9ff69c2c848ffff2146162513d417598aa7c1fa0defff0e691a",
+    "dist/faq-spec.js": "63b1c8806e09745a0bae8c817fe82e881869f50cd692ccdc2050d40c20db73bf",
+    "server/buddy-prompt.mjs": "ec5cb23e32e4166a24b0893da99760cb758d56c3530e023eb56a1e37f78684eb",
     "dist/buddy-policy.js": "b3ee5405872c0470a0a5546abedc048a84023e57c65e26862b3d21abab7a5739",
-    "server/model-evidence.mjs": "14da72f33f091373395800b8c06f89e7edc7b3f3674909f189392f8d41194618",
-    "server/model-context.mjs": "57bfd837aad443ed94c746940751b57306ff19febd69035a76ec8ccddcd9e3de",
-    "dist/disease-framework.js": "301212ec173a473b64b20f85cd6dffb868b893cce512302f9f3544d4a74e49ee",
+    "server/model-evidence.mjs": "5e5904499db6bfe45dcb29af1b17cc3e5883db2afb6f17bb4309adaf9b9801ce",
+    "server/model-context.mjs": "67971f46335ceb42b38b488d4b644ed84975f1d14d990b982c55a0fa3599fa2f",
+    "dist/disease-framework.js": "bd72eb19f72530419fd49676f9fe46c9f6430cd936d14d0ab6a23288b17928c5",
     "dist/source-labels.js": "515614d411b9f01fdd901e070b2f2a5d3e4587ddd761ddff62b39f5a0a8a0df0",
-    "dist/clinical-engine.js": "2354657c5262c318fb4c6ec3ef56736a0fd2be01948c484a5216f673048b23c5",
+    "dist/clinical-engine.js": "9bd82bdbbbded02d43c81ad1e5dd69868f7d5105d1c2c0ca7454216c800b5ad1",
     "dist/safety-policy.js": "4af70d3ed6b52c8a67dd1b545e26024b454b1296e318ae56cc9c4aca35bd94c2",
     "dist/medline-topics.json": "722fdee5d14cbd2e1c8a6f701506f8f199a01041b1a2b3f7f814d74c6e135510",
     "dist/clinical-passages.json": "5c8c33590e6ca0c775b24a1b4f10e69db836e3cfd3ae582aa055f612538a49c4"

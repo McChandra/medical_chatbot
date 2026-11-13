@@ -27,7 +27,7 @@ export function setupBuddy(getContext){
  dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)close()}});
  return {show,close,sync(_mode,ready){
   available=ready;launcher.disabled=!ready;launcher.hidden=false;$('buddyClose').hidden=false;panel.hidden=!ready;
-  const context=getContext();$('buddyTopic').textContent=ready?'6 ways to explore '+context.topic:'Search a topic to begin';
+  const context=getContext();$('buddyTopic').textContent=ready?'6 FAQs to explore '+context.topic:'Search a topic to begin';
   launcher.setAttribute('aria-label',ready?'Open HealthBrowse buddy for '+context.topic:'HealthBrowse buddy. Search a topic to begin.');
   if(!ready)close();
   void intro.sync();

@@ -4,14 +4,17 @@ import {readFileSync} from 'node:fs';
 import {accountAPI} from '../server/account-api.mjs';
 import {openWorkspace} from '../server/sqlite-workspace.mjs';
 const users={a:{id:'11111111-1111-4111-8111-111111111111',email:'a@example.test',user_metadata:{full_name:'Researcher A'}},b:{id:'22222222-2222-4222-8222-222222222222',email:'b@example.test'}};
+const sessions={a:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',a2:'cccccccc-cccc-4ccc-8ccc-cccccccccccc',b:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb'};
+const tokenFor=key=>{const owner=key==='b'?'b':'a';return 'e30.'+Buffer.from(JSON.stringify({sub:key==='mismatch'?users.b.id:users[owner].id,session_id:key==='missing'?undefined:sessions[key==='refresh'?'a':key],iat:key==='refresh'?2:1})).toString('base64url')+'.fixture'};
+const verifiedTokens=new Map(['a','a2','b','refresh','missing','mismatch'].map(k=>[tokenFor(k),users[k==='b'?'b':'a']]));
 const journal=JSON.parse(readFileSync(new URL('../drizzle/meta/_journal.json',import.meta.url)));
 function fixture(t){
  const DB=openWorkspace(':memory:');for(const entry of journal.entries)DB.exec(readFileSync(new URL('../drizzle/'+entry.tag+'.sql',import.meta.url),'utf8'));
  t.after(()=>DB.close());t.mock.method(globalThis,'fetch',async(url,options)=>{
-  assert.equal(url,'https://auth.example/auth/v1/user');const user=users[options.headers.Authorization.slice(7)];return user?Response.json(user):Response.json({error:'invalid'},{status:401});
+  assert.equal(url,'https://auth.example/auth/v1/user');const user=verifiedTokens.get(options.headers.Authorization.slice(7));return user?Response.json(user):Response.json({error:'invalid'},{status:401});
  });
  const env={DB,SUPABASE_URL:'https://auth.example',SUPABASE_ANON_KEY:'public'};
- const call=(path,method='GET',body,token='a')=>accountAPI(new Request('https://site.test/api/me/'+path,{method,headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:body===undefined?undefined:JSON.stringify(body)}),env);
+ const call=(path,method='GET',body,token='a')=>accountAPI(new Request('https://site.test/api/me/'+path,{method,headers:{'Content-Type':'application/json',Authorization:'Bearer '+(token==='invalid'?'invalid':tokenFor(token))},body:body===undefined?undefined:JSON.stringify(body)}),env);
  return {DB,call};
 }
 const chat=()=>({id:crypto.randomUUID(),topic:'Leukemia',readingMode:'General reader',historyEpoch:0});
@@ -63,9 +66,9 @@ test('saving preference and privacy validation prevent new saved messages',async
 test('saved chat versions preserve old deck meaning and validate the current framework',async t=>{
  const {call}=fixture(t),c=chat();await call('chats','POST',c);
  await call('chats/'+c.id+'/turns','POST',turn());
- const current={...turn(),frameworkVersion:'disease-spectrum-v2'};
+ const current={...turn(),frameworkVersion:'medical-faq-v3'};
  assert.equal((await call('chats/'+c.id+'/turns','POST',current)).status,201);
- const saved=await (await call('chats/'+c.id)).json();assert.deepEqual(saved.turns.map(t=>t.frameworkVersion),['seven-section-v1','disease-spectrum-v2']);
+ const saved=await (await call('chats/'+c.id)).json();assert.deepEqual(saved.turns.map(t=>t.frameworkVersion),['seven-section-v1','medical-faq-v3']);
  assert.equal((await call('chats/'+c.id+'/turns','POST',{...turn(),frameworkVersion:'made-up'})).status,400);
 });
 
@@ -106,7 +109,7 @@ test('research export includes every page of messages and excludes other owners 
  assert.equal((await call('export','GET',undefined,'invalid')).status,401);
 });
 
-test('Buddy welcome is atomically claimed once per authenticated account, across tabs and roles',async t=>{
+test('Buddy welcome is atomically claimed once per verified login session, across tabs and roles',async t=>{
  const {call}=fixture(t);
  assert.equal((await call('buddy-intro','POST',{},'invalid')).status,401);
  assert.equal((await call('buddy-intro','POST',{user_id:users.b.id})).status,400);
@@ -115,5 +118,9 @@ test('Buddy welcome is atomically claimed once per authenticated account, across
  await call('settings','PATCH',{readingMode:'Clinicians'});await call('chats','DELETE',{confirmation:'DELETE_ALL_CHATS'});
  assert.equal((await (await call('buddy-intro','POST',{})).json()).showWelcome,false);
  assert.equal((await (await call('buddy-intro','POST',{},'b')).json()).showWelcome,true);
+ assert.equal((await (await call('buddy-intro','POST',{},'refresh')).json()).showWelcome,false);
+ assert.equal((await (await call('buddy-intro','POST',{},'a2')).json()).showWelcome,true);
+ for(const token of ['missing','mismatch'])assert.equal((await call('buddy-intro','POST',{},token)).status,503);
+ assert.equal((await call('buddy-intro','POST',{session_id:sessions.a2})).status,400);
  assert.equal((await call('buddy-intro')).status,405);
 });

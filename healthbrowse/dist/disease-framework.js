@@ -1,15 +1,16 @@
+import {faqPassages} from './faq-spec.js';
 import {normalizeSourceLabel} from './source-labels.js';
 import {roleIndex,readingLabel} from './reading-profiles.js';
 // Stable identifiers keep saved conversations distinct from the previous taxonomy.
-export const frameworkVersion='disease-spectrum-v2';
+export const frameworkVersion='medical-faq-v3';
 export const domains=[
- {title:'Etiology & Pathogenesis',plain:'Causes & how it develops',subtitle:'The origin',scope:'Causes, risk factors, genetics, and biological mechanisms.',professional:'Etiologic factors, cellular injury, immune pathways, and molecular mechanisms.',empty:'A source passage about causes or mechanisms is not available for this topic.'},
- {title:'Natural History & Progression',plain:'How it changes over time',subtitle:'The timeline',scope:'Early changes, symptom onset, and the course of disease.',professional:'Susceptibility, subclinical and clinical phases; intervention status and longitudinal evidence.',empty:'No source passage establishes the untreated course here. A standard timeline cannot be inferred.'},
- {title:'Clinical Presentation & Diagnosis',plain:'Symptoms & how doctors identify it',subtitle:'The identification',scope:'Symptoms, signs, examinations, and diagnostic tests.',professional:'Phenotype, diagnostic criteria, differential diagnosis, laboratory and imaging limitations.',empty:'No source passage supports diagnostic criteria or a differential for this topic.'},
- {title:'Therapeutics & Management',plain:'Treatment & ongoing care',subtitle:'The intervention',scope:'Treatment approaches, ongoing care, and support.',professional:'Acute interventions, chronic management, therapeutic classes, and guideline applicability.',empty:'No source passage supports treatment details here. Current guidelines must be checked.'},
- {title:'Prognosis & Complications',plain:'Outlook & possible complications',subtitle:'The outlook',scope:'Possible outcomes and health problems associated with the disease.',professional:'Prognostic factors, outcome measures, complications, population and follow-up limitations.',empty:'No source passage supports an outcome estimate here. Individual prognosis cannot be inferred.'},
- {title:'Epidemiology & Public Health',plain:'Who is affected & prevention',subtitle:'The population',scope:'Population patterns, prevention, and access to care.',professional:'Incidence, prevalence, prevention levels, social determinants, geography and observation period.',empty:'No source passage supports population estimates or prevention guidance here.'},
- {title:'Research, Evidence & Resources',plain:'Research & useful resources',subtitle:'Explore the evidence',scope:'Papers, trials, research institutions, learning resources, datasets, and care directories.',professional:'Study design, evidence limitations, trial registries, funded research, data access and reproducibility.',empty:'Inspect the linked research records. A publication or registry entry does not establish clinical benefit.'}
+ {title:'Epidemiology & Risk Factors',plain:'Who is affected & risk factors',subtitle:'Who and why',scope:'Who is affected, population patterns, risk factors, and prevention.',professional:'Incidence, prevalence, population applicability, risk exposures, and prevention evidence.',empty:'No source passage supports population estimates or risk factors for this topic.'},
+ {title:'Etiology & Pathogenesis',plain:'Causes & how it develops',subtitle:'How it begins',scope:'Causes, genetics, and what happens in the body.',professional:'Etiologic agents, cellular mechanisms, genetic associations, and source-supported classification.',empty:'No source passage supports causes or mechanisms for this topic.'},
+ {title:'Clinical Manifestations',plain:'Signs & symptoms',subtitle:'What it looks like',scope:'Common signs and symptoms, early or later presentation, and warning signs.',professional:'Symptomatic phenotype, objective signs, acute/chronic presentation, and red flags.',empty:'No source passage supports specific signs or symptoms for this topic.'},
+ {title:'Diagnostic Modalities',plain:'Diagnosis & tests',subtitle:'How it is identified',scope:'Clinical evaluation, tests, imaging, and their limitations.',professional:'Diagnostic criteria, assays, imaging, differential considerations, and test limitations.',empty:'No source passage supports diagnostic tests or criteria for this topic.'},
+ {title:'Treatment & Management',plain:'Treatment & ongoing care',subtitle:'Care options',scope:'General treatment types, supportive care, and non-drug approaches.',professional:'Pharmacologic and non-pharmacologic management, source-supported indications and contraindications.',empty:'No source passage supports treatment details. Check current clinical guidance.'},
+ {title:'Prognosis & Follow-up',plain:'Outlook & follow-up',subtitle:'What comes next',scope:'Disease course, possible outcomes, complications, and follow-up.',professional:'Natural history versus treated outcomes, prognostic factors, complications, and monitoring evidence.',empty:'No source passage supports an outcome estimate or follow-up schedule. Do not infer an individual prognosis.'},
+ {title:'Research, Evidence & Resources',plain:'Research & useful resources',subtitle:'Explore the evidence',scope:'Papers, trials, learning resources, datasets, and care directories.',professional:'Study design, evidence limitations, trial registries, data access, and reproducibility.',empty:'Inspect the original records; listing a study does not establish clinical benefit.'}
 ];
 export const frameworkReferences=[
  {title:'Funkhouser · Pathology: the clinical description of human disease (2020)',url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC7380242/'},
@@ -41,7 +42,7 @@ export function routePassage(p,origin='medquad'){
  for(const i of expansions)if(signals[i].test(text))decks.add(i+1);
  // Keep definition records for the overview without mislabelling them as mechanisms.
  if(overview&&!decks.size)decks.add(1);
- return [...decks].map(deck=>({...p,deck,overview,frameworkVersion,
+ return [...decks].flatMap(deck=>faqPassages({...p,deck,overview,
   ...(deck===2?{courseContext:/\b(untreated|without (?:treatment|intervention))\b/i.test(text)?'untreated':'unspecified'}:{})}));
 }
 // Reuse intact, explicitly relevant source paragraphs in more than one domain.
@@ -58,7 +59,7 @@ export function expandKnowledge(p){
 }
 export function medlinePassages(record,topic,feed={}){
  if(!record)return [];
- if(record.knowledge?.length)return record.knowledge.map(normalizeSourceLabel).flatMap(expandKnowledge).map(p=>({...p,focus:topic,frameworkVersion,
+ if(record.knowledge?.length)return record.knowledge.map(normalizeSourceLabel).flatMap(expandKnowledge).flatMap(p=>faqPassages({...p,focus:topic,
   title:record.title+' · MedlinePlus'+(p.heading?' · '+p.heading:''),url:record.url,record:record.url+'#summary-'+p.id,
   vintage:'MedlinePlus feed snapshot · '+(feed.feedDate||feed.retrievedAt||'date unavailable'),sourceType:'patient-education',
   ...(p.deck===2?{courseContext:/untreated|without (?:treatment|intervention)|not treated/i.test(p.text)?'untreated':'unspecified'}:{})}));
@@ -76,6 +77,6 @@ export function orderedPassages(rows,role,topic){
   .sort((a,b)=>b.score-a.score||a.i-b.i).map(x=>x.p);
 }
 export function sectionLinks(record,deck){
- const old={1:[5,1],2:[1],3:[2],4:[6],5:[],6:[3],7:[3,4,7,1]}[deck]||[];
+ const old={1:[3,5],2:[5,1],3:[2],4:[2],5:[6],6:[1],7:[3,4,7,1]}[deck]||[];
  return old.map(n=>record?.links?.[n]).filter(Boolean);
 }

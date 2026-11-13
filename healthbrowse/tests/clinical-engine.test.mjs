@@ -4,13 +4,13 @@ import {inspectInput,inspectQuery,answerQuestion} from '../dist/clinical-engine.
 // Isolated fixtures verify contract behavior independently of catalog revisions.
 const makePassage=(deck,text,focus='Asthma')=>({deck,text,focus,title:'Test passage '+deck,url:'https://medlineplus.gov/asthma.html',record:'fixture.xml#'+deck,overview:text.startsWith('Asthma is')});
 const passages={Asthma:[
-  makePassage(1,'Asthma is a chronic disease that affects the airways.'),
+  makePassage(2,'Asthma is a chronic disease that affects the airways.'),
   makePassage(1,'A family history is one risk factor for asthma.'),
-  makePassage(1,'The mechanism involves airway inflammation.'),
+  makePassage(2,'The mechanism involves airway inflammation.'),
   makePassage(3,'Symptoms of asthma include coughing and wheezing.'),
-  makePassage(3,'Diagnostic tests include measurements of lung function.'),
-  makePassage(5,'This risk model estimates the likelihood of future asthma attacks.'),
-  makePassage(4,'Treatment classes include inhaled corticosteroids.')
+  makePassage(4,'Diagnostic tests include measurements of lung function.'),
+  makePassage(6,'This risk model estimates the likelihood of future asthma attacks.'),
+  makePassage(5,'Treatment classes include inhaled corticosteroids.')
 ],Diabetes:[makePassage(3,'Symptoms can include thirst.','Diabetes')]};
 const base={topic:'Asthma',passages};
 const ask=(question,extras={})=>answerQuestion({...base,question,...extras});
@@ -29,9 +29,9 @@ test('search admission accepts non-identifying symptoms without weakening persis
 });
 test('educational roles cite an actual archived record and do not change permissions',()=>{
   for(const role of [0,1,2,3,4]){
-    const answer=ask('What is asthma?',{role,deck:1});
-    assert.equal(answer.text,passages.Asthma.find(p=>p.deck===1).text);
-    assert.equal(answer.citations[0].url,passages.Asthma.find(p=>p.deck===1).url);
+    const answer=ask('What is asthma?',{role,deck:2});
+    assert.equal(answer.text,passages.Asthma.find(p=>p.overview).text);
+    assert.equal(answer.citations[0].url,passages.Asthma.find(p=>p.overview).url);
     const dose=ask('What dose should I take?',{role});assert.equal(dose.supported,false);assert.ok(dose.citations.every(c=>new URL(c.url).hostname==='www.fda.gov'));
   }
 });
@@ -66,10 +66,10 @@ test('inspect a cataloged dataset access field without granting access',()=>{
   assert.equal(ask('What is the license for the asthma dataset?',{records}).citations.length,0);
 });
 
-test('seven-section clinical taxonomy follows the selected section',()=>{
+test('six-FAQ clinical taxonomy follows the selected section',()=>{
   const cases=[
-    ['What is asthma?',1],['Which risk factors are described?',1],['What mechanism explains asthma?',1],['Which symptoms are common?',3],
-    ['Which diagnostic tests are used?',3],['Which risk model is described?',5],['What treatment classes are discussed?',4]
+    ['What is asthma?',2],['Which risk factors are described?',1],['What mechanism explains asthma?',2],['Which symptoms are common?',3],
+    ['Which diagnostic tests are used?',4],['Which risk model is described?',6],['What treatment classes are discussed?',5]
   ];
   for(const [question,deck] of cases){
     const result=ask(question,{deck});
@@ -85,8 +85,8 @@ test('no leakage from unscoped array of another topic',()=>{
 test('questions select symptom and diagnostic decks independently of the open card',async()=>{
   const {questionDeck}=await import('../dist/clinical-engine.js');
   assert.equal(questionDeck('What are its symptoms?'),3);
-  assert.equal(questionDeck('What is cytogenetic analysis?'),3);
-  assert.equal(questionDeck('How does asthma affect breathing?'),1);
+  assert.equal(questionDeck('What is cytogenetic analysis?'),4);
+  assert.equal(questionDeck('How does asthma affect breathing?'),2);
   assert.equal(questionDeck('Tell me more'),null);
 });
 

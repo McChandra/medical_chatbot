@@ -1,3 +1,4 @@
+import {sessionIdFromVerifiedAccessToken} from './auth-session.mjs';
 import {workspaceAPI} from './workspace-api.mjs';
 // No service key, authorization header, contact body or feedback body is logged.
 import {isReadingRole,normalizeReadingRole} from '../dist/reading-profiles.js';
@@ -105,7 +106,7 @@ export async function accountAPI(request,env){
     const auth=await freshFetch(base+'/auth/v1/user',{headers});
     if(!auth.ok)reject(auth.status===401||auth.status===403?401:503,'The account session could not be verified.');
     const identity=await auth.json(),user=identity.id;if(!uuid.test(user||''))reject(401,'Invalid account session.');
-    if(env.DB&&path.startsWith('/api/me/'))return workspaceAPI(request,env.DB,identity);
+    if(env.DB&&path.startsWith('/api/me/'))return workspaceAPI(request,env.DB,identity,{sessionId:sessionIdFromVerifiedAccessToken(token,user)});
     const db=(...args)=>database(base,headers,...args);
     const owner='user_id=eq.'+user;
     if(path==='/api/me/settings'){

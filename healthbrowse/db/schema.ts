@@ -31,3 +31,10 @@ export const bookmarks=sqliteTable('hb_bookmarks',{
  id:text('id').primaryKey(),userId:text('user_id').notNull().references(()=>accounts.userId,{onDelete:'cascade'}),
  topic:text('topic').notNull(),kind:text('kind').notNull(),title:text('title').notNull(),url:text('url').notNull().default(''),createdAt:text('created_at').notNull()
 },t=>[index('hb_bookmarks_owner_time').on(t.userId,t.createdAt)]);
+
+// Authenticated session identifiers only; no tokens or conversation content.
+export const buddySessions=sqliteTable('hb_buddy_sessions',{
+ userId:text('user_id').notNull().references(()=>accounts.userId,{onDelete:'cascade'}),
+ sessionId:text('session_id').notNull(),
+ createdAt:text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+},t=>[primaryKey({columns:[t.userId,t.sessionId]})]);

@@ -5,17 +5,17 @@ import {domains,routePassage,medlinePassages,professionalRole,orderedPassages,fr
 import {questionDeck,answerQuestion} from '../dist/clinical-engine.js';
 import {verifyClaim} from '../dist/claim-check.js';
 const topic='Asthma';
-const passage=(text,props={})=>({text,topic,focus:topic,deck:3,title:'Fixture education passage',url:'https://medlineplus.gov/asthma.html',record:'fixture:1',...props});
+const passage=(text,props={})=>({text,topic,focus:topic,deck:4,title:'Fixture education passage',url:'https://medlineplus.gov/asthma.html',record:'fixture:1',...props});
 test('all six clinical domains and research resources use stable, distinct routing',()=>{
  assert.equal(domains.length,7);
- for(const [q,n] of [['What causes asthma?',1],['How does asthma progress?',2],['What is the untreated disease course?',2],['What is the disease progression?',2],['Which diagnostic tests are described?',3],['What treatment classes are described?',4],['Which complications are described?',5],['What is the prevalence of asthma?',6],['Which research papers are available?',7]])assert.equal(questionDeck(q),n,q);
+ for(const [q,n] of [['What causes asthma?',2],['How does asthma progress?',6],['What is the untreated disease course?',6],['What is the disease progression?',6],['Which diagnostic tests are described?',4],['What treatment classes are described?',5],['Which complications are described?',6],['What is the prevalence of asthma?',1],['Which research papers are available?',7]])assert.equal(questionDeck(q),n,q);
 });
 test('natural history does not infer treatment exposure or manufacture a timeline',()=>{
- const [p]=routePassage(passage('The disease progresses over time.',{deck:1})).filter(p=>p.deck===2);
+ const [p]=routePassage(passage('The disease progresses over time.',{deck:1})).filter(p=>p.deck===6);
  assert.equal(p.courseContext,'unspecified');
  assert.equal(answerQuestion({topic,question:'Describe the untreated course',passages:[p]}).citations.length,0);
- assert.equal(routePassage(passage('The treatment improves survival.',{deck:7})).some(p=>p.deck===2),false);
- const untreated=routePassage(passage('Without treatment the disease progresses.',{deck:4})).find(p=>p.deck===2);
+ assert.equal(routePassage(passage('The treatment improves survival.',{deck:7})).some(p=>p.deck===6),false);
+ const untreated=routePassage(passage('Without treatment the disease progresses.',{deck:4})).find(p=>p.deck===6);
  assert.equal(untreated.courseContext,'untreated');
 });
 test('general and professional modes prioritize appropriate source passages without changing clinical claims',()=>{
@@ -52,7 +52,7 @@ test('claim correction cannot silently cross topics or source records',()=>{
 });
 test('risk exposures and diagnostic biomarkers cannot drift into treatment or causation cards',()=>{
  const risk=routePassage(passage('Previous chemotherapy treatment may affect the risk of AML.',{deck:2}));
- assert.deepEqual(risk.map(p=>p.deck),[1]);
+ assert.deepEqual(risk.map(p=>p.deck),[2,1]);
  const diagnosis=routePassage(passage('Immunophenotyping compares cells to normal cells of the immune system.',{deck:5}));
- assert.deepEqual(diagnosis.map(p=>p.deck),[3]);
+ assert.deepEqual(diagnosis.map(p=>p.deck),[4]);
 });

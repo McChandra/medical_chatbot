@@ -1,3 +1,4 @@
+import {faqQuestions} from './faq-spec.js';
 // Stable stored IDs preserve existing accounts. Only these two modes are selectable.
 export const readingRoles=['General reader','Medical professional'];
 const legacyRoles=['Patient','Medical student','Advanced professional'];
@@ -11,20 +12,22 @@ const profiles=[
 ];
 export const readingProfile=role=>({...profiles[roleIndex(role)],index:roleIndex(role)});
 const clinicalTasks=[
- 'Distinguish etiology from pathogenesis and link mechanisms to clinical findings.',
- 'Separate untreated natural history from outcomes after intervention. Identify missing timeline evidence.',
- 'Compare symptoms, signs and confirmatory tests. Do not equate screening with diagnosis.',
- 'Relate therapeutic approaches to the underlying mechanism. Check indications and contraindications in current guidelines.',
- 'Separate prognostic factors from complications and identify the population behind outcome estimates.',
- 'Distinguish incidence from prevalence and assess prevention evidence and population applicability.'
+ 'Distinguish incidence from prevalence and assess population and risk-factor applicability.',
+ 'Distinguish etiology from pathogenesis and preserve genetic and subtype qualifiers.',
+ 'Distinguish reported symptoms from observed signs and recognize source-supported red flags.',
+ 'Review diagnostic criteria and test limitations; do not equate screening with diagnosis.',
+ 'Assess treatment evidence, contraindications, and applicability without issuing a prescription.',
+ 'Separate untreated natural history from treated outcomes and check follow-up evidence.'
 ];
 export function readingGuidance(role,deck){
  if(roleIndex(role)===0)return null;
  return {title:'Clinical interpretation',text:clinicalTasks[Math.max(0,Math.min(deck-1,5))]+' Confirm source currency, patient context and local protocols before application.'};
 }
 export function roleQuestions(role){
- const labels=roleIndex(role)===0?
-  ['What causes it?','How does it change over time?','What are the symptoms and tests?','How is it treated?','What is the outlook?','Who is affected, and can it be prevented?']:
-  ['Review causes and disease mechanisms','Review progression and intervention context','Review clinical presentation and diagnostic workup','Review management principles','Review prognosis and complications','Review population evidence and prevention'];
- return labels.map((label,i)=>({deck:i+1,label,prompt:label}));
+ const labels=roleIndex(role)===0?faqQuestions:[
+  'Review epidemiology and risk factors','Review etiology and pathogenesis',
+  'Review clinical manifestations','Review diagnostic modalities',
+  'Review treatment and management','Review prognosis and follow-up'
+ ];
+ return labels.map((label,i)=>({deck:i+1,label,prompt:faqQuestions[i]}));
 }

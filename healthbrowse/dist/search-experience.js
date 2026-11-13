@@ -1,3 +1,4 @@
+import {faqQuestions,generalTreatmentNotice} from './faq-spec.js';
 import {assessBuddySafety,hasUnsafeBuddyOutput} from './buddy-policy.js';
 import {prepareQuery} from './query-input.js';
 import {answerQuestion,questionDeck,inspectInput,inspectQuery,normalizeQuestion} from './clinical-engine.js';
@@ -15,14 +16,7 @@ export function isOverviewQuestion(context,query){
  if(subject===question)return false;
  return [context.topic,...(context.aliases||[]),'it','this disease','this condition'].some(name=>normalize(name)===subject);
 }
-export const buddyQuestions=[
- {label:'What causes it?',prompt:'Explore the causes and risk factors',deck:1},
- {label:'How does it change over time?',prompt:'Explore the disease course',deck:2},
- {label:'What are the symptoms and tests?',prompt:'Explore the symptoms and diagnostic tests',deck:3},
- {label:'How is it treated?',prompt:'Explore treatment approaches',deck:4},
- {label:'What is the outlook?',prompt:'Explore the outlook and complications',deck:5},
- {label:'Who is affected, and can it be prevented?',prompt:'Explore population patterns and prevention',deck:6}
-];
+export const buddyQuestions=faqQuestions.map((label,i)=>({label,prompt:label,deck:i+1}));
 export function passageCheck(context,p){
  if(!p||hasUnsafeBuddyOutput(p.text)||assessBuddySafety(p.text).action!=='allow')return null;
  const check=verifyClaim({kind:'passage',topic:context.topic,sourceUrl:p.sourceRecord||p.url,field:'text',value:p.text,record:p.record},{topic:context.topic,passages:context.passages});
@@ -54,7 +48,7 @@ export function searchAnswer(context,query,{detail=false,activeDeck=1}={}){
  if(status==='unsafe')return {...prepareQuery(question,context.topic).safety,deck:activeDeck};
  if(status!=='ok')return {text:status==='emergency'?'If these symptoms or immediate danger are happening now, contact local emergency services now. Do not wait for a search response.':'Remove identifying details such as names, contact information, birth dates or record numbers. You can still describe symptoms in your own words.',citations:[],checks:[],blocks:[],supported:false,deck:activeDeck};
  if(inspectInput(question)==='private'){
-  if(/\b(?:dos(?:e|es|age|ing)|prescrib\w*|(?:should|can|may) i (?:take|start|stop|change|increase|reduce)|how much should|which (?:medicine|medication|drug))\b/i.test(question))return {text:'I cannot choose a medicine, dose or treatment change for you. A clinician or pharmacist needs to check your circumstances. You can explore the cited general treatment information in Deck 4.',citations:[],checks:[],blocks:[],supported:false,deck:4};
+  if(/\b(?:dos(?:e|es|age|ing)|prescrib\w*|(?:should|can|may) i (?:take|start|stop|change|increase|reduce)|how much should|which (?:medicine|medication|drug))\b/i.test(question))return {text:'I cannot choose a medicine, dose or treatment change for you. A clinician or pharmacist needs to check your circumstances. You can explore the cited general treatment information in FAQ 5.',citations:[],checks:[],blocks:[],supported:false,deck:5};
   // Keep the original question intact for the model; the local fallback can
   // only explain public evidence, never evaluate the person's clinical details.
   const clause=question.match(/(?:^|[.!?,]\s*|\band\s+)((?:what|how|why|when|which|can|does|is|are)\b[^]*?)$/i)?.[1]?.trim();
@@ -81,7 +75,7 @@ export function searchAnswer(context,query,{detail=false,activeDeck=1}={}){
  // It is separately labeled and never used to fill an unsupported direct answer.
  if(matches.length&&primaryIntent==='definition'&&profile.index>0){
   const seen=new Set(matches.map(m=>m.check.text));
-  const extra=[[3,1],[4,1]];
+  const extra=[[4,1],[5,1]];
   for(const [n,count,intent] of extra)matches.push(...supplemental(context,n,count,seen,intent).map(m=>({...m,title:domains[n-1].title})));
  }
  const response=compose(context,matches,primaryDeck,{detail,gaps});
@@ -92,8 +86,10 @@ export function domainAnswer(context,number,{detail=true}={}){
  const domain=domains[number-1];if(!domain||number>6)return null;
  const profile=readingProfile(context.role),matches=supplemental(context,number,detail?profile.detail:profile.card);
  const gaps=matches.length?[]:['No source passage is available for this area. '+domain.empty];
- if(number===2)gaps.push('These excerpts do not establish a complete untreated timeline. Check treatment exposure and follow-up in the source.');
- return compose(context,matches,number,{detail,gaps});
+ if(number===6)gaps.push('These excerpts do not establish a complete untreated timeline. Check treatment exposure and follow-up in the source.');
+ const result=compose(context,matches,number,{detail,gaps});
+ if(number===5&&generalMode(context.role)){result.treatmentNotice=generalTreatmentNotice;result.text+='\n\n'+generalTreatmentNotice;}
+ return result;
 }
 // Bound requests even when a source never returns headers. Caller cancellation
 // still wins, so an old search cannot replace the next search's result.

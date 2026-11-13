@@ -1,6 +1,6 @@
 import {domains,routePassage} from './disease-framework.js';
 export const sectionNames=domains.map(d=>d.title);
-export const sectionKinds=[['risk','core'],['core','article'],['guideline','core'],['guideline','core'],['guideline','statistics','core'],['statistics','risk','guideline','core'],['article','trial','education','dataset','tool','facility','guideline']];
+export const sectionKinds=[['statistics','risk','guideline','core'],['risk','core'],['core','guideline'],['guideline','core'],['guideline','core'],['guideline','statistics','core'],['article','trial','education','dataset','tool','facility','guideline']];
 export function remapPassages(index){return Object.fromEntries(Object.entries(index).map(([name,rows])=>[name,rows.flatMap(r=>routePassage(r))]));}
 export function correctSpelling(input){
   const corrections={lukemia:'leukemia',leukameia:'leukemia',leukaemia:'leukemia',alzhimers:"Alzheimer's Disease",diabetis:'diabetes',psorasis:'psoriasis'};

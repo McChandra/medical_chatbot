@@ -23,7 +23,7 @@ function preferences(row){return {readingMode:normalizeReadingRole(row.reading_m
 function profile(row,user){return {name:row.display_name,firstName:row.first_name||'',lastName:row.last_name||'',phone:row.phone||'',avatar:row.avatar||'',email:user.email||'',pendingEmail:user.new_email||''}}
 function optionalText(input,max,label){if(typeof input!=='string'||input.trim().length>max||/[\u0000-\u001f\u007f]/.test(input))fail('Check '+label+'.');return input.trim()}
 const chatView=row=>({id:row.id,title:row.title,topic:row.topic,readingMode:normalizeReadingRole(row.reading_mode),createdAt:row.created_at,updatedAt:row.updated_at});
-export async function workspaceAPI(request,db,user){
+export async function workspaceAPI(request,db,user,{sessionId=null}={}){
  try{
   const path=new URL(request.url).pathname,method=request.method,owner=user.id;
   const sql=(query,...args)=>db.prepare(query).bind(...args);
@@ -34,9 +34,9 @@ export async function workspaceAPI(request,db,user){
   if(path==='/api/me/buddy-intro'){
    if(method!=='POST')return response({error:'Use POST.'},405);
    const b=await body(request);only(b,[]);
-   // Atomic account-level claim: reloads, simultaneous tabs and other devices
-   // cannot each show a welcome. Never reset this when chats are deleted.
-   const result=await sql('UPDATE hb_accounts SET buddy_intro_seen=1 WHERE user_id=? AND buddy_intro_seen=0',owner).run();
+   if(!sessionId||!uuid.test(sessionId))return response({showWelcome:false,error:'Verified session unavailable.'},503);
+   // New sign-ins get a welcome; token refresh and concurrent tabs do not replay it.
+   const result=await sql('INSERT OR IGNORE INTO hb_buddy_sessions (user_id,session_id) VALUES (?,?)',owner,sessionId).run();
    return response({showWelcome:result.meta?.changes===1});
   }
   const ownedChat=async id=>{if(!uuid.test(id))fail('Invalid chat.');const row=await sql('SELECT * FROM hb_chats WHERE id=? AND user_id=?',id,owner).first();if(!row)fail('This chat was deleted or is unavailable.',404);return row};

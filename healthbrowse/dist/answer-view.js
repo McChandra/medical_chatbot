@@ -6,6 +6,7 @@ function sourceLink(cite,label){
 export function renderAnswer(parent,answer={},renderCheck,onRetry){
  const blocks=(answer.blocks||[]).filter(b=>typeof b?.text==='string'&&b.text.trim());
  if(blocks.length){
+  const list=answer.list?element('ul','','symptom-list'):null;if(list)parent.append(list);
   blocks.forEach((block,i)=>{
    const box=element('section','', 'answer-block');
    if(block.title&&block.title!=='Direct answer')box.append(element('h4',block.title));
@@ -20,7 +21,7 @@ export function renderAnswer(parent,answer={},renderCheck,onRetry){
     if(block.verification)detail.append(element('small',block.verification,'meta'));
     renderCheck?.(detail,block.check);box.append(detail);
    }
-   parent.append(box);
+   if(list){const item=element('li');item.append(box);list.append(item)}else parent.append(box);
   });
   for(const gap of answer.gaps||[])if(gap.trim())parent.append(element('p',gap,'coverage-gap'));
  }else{
@@ -29,6 +30,7 @@ export function renderAnswer(parent,answer={},renderCheck,onRetry){
   for(const cite of answer.citations||[]){const a=sourceLink(cite,cite.title);if(a)parent.append(a)}
   for(const check of answer.checks||[])renderCheck?.(parent,check);
  }
+ if(answer.treatmentNotice&&(blocks.length||!answer.text?.includes(answer.treatmentNotice)))parent.append(element('p',answer.treatmentNotice,'treatment-notice'));
  // Operational and audience labels never replace or precede the actual answer.
  if(answer.modelNotice){const notice=element('p',answer.modelNotice,'model-notice');notice.setAttribute('role','status');parent.append(notice)}
  renderRetry(parent,answer,onRetry);
