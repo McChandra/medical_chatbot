@@ -5,6 +5,7 @@
     try { return localStorage.getItem(key); } catch { return null; }
   }
   let preference = saved();
+  if(preference===null&&matchMedia('(max-width: 640px)').matches)preference='dark';
   function apply() {
     const dark = preference === 'dark' || (preference !== 'light' && media.matches);
     document.documentElement.dataset.theme = dark ? 'dark' : 'light';

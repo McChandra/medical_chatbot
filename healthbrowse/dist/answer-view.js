@@ -14,7 +14,7 @@ export function renderAnswer(parent,answer={},renderCheck,onRetry){
    const text=element('p',block.text.replace(/ • /g,'\n• '),'answer-text');
    const refs=block.references?.length?block.references:block.citation?[block.citation]:[];
    const valid=refs.map((ref,j)=>({ref,link:sourceLink(ref,'['+(ref.id||String(i+1)+(refs.length>1?'.'+(j+1):''))+']')})).filter(r=>r.link);
-   if(valid.length){const links=element('span','','inline-citations');for(const {ref,link} of valid){link.title=ref.title||'Supporting source';link.setAttribute('aria-label','Source: '+(ref.title||'Supporting passage'));links.append(link)}text.append(links)}
+   if(valid.length){const links=element('span','','inline-citations');for(const {ref,link} of valid){link.title=ref.title||'Supporting source';link.setAttribute('aria-label','Source: '+(ref.title||'Supporting passage'));link.addEventListener('click',event=>{if(event.button||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;const request=new CustomEvent('healthbrowse-source',{cancelable:true,detail:ref});if(!document.dispatchEvent(request))event.preventDefault()});links.append(link)}text.append(links)}
    box.append(text);
    if(valid.length){
     const detail=element('details','', 'source-evidence');detail.append(element('summary','Sources & verification'));

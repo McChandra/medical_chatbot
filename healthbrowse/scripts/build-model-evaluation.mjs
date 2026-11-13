@@ -54,7 +54,7 @@ for(const supported of [true,false]){
 }
 mkdirSync(out,{recursive:true});
 const jsonl=rows.map(r=>JSON.stringify(r)).join('\n')+'\n';
-const inputs=['dist/faq-spec.js','server/buddy-prompt.mjs','dist/buddy-policy.js','dist/refusal.js','dist/medical-contract.js','server/model-evidence.mjs','server/model-context.mjs','dist/disease-framework.js','dist/source-labels.js','dist/clinical-engine.js','dist/safety-policy.js','dist/medline-topics.json','dist/clinical-passages.json'];
+const inputs=['dist/faq-spec.js','server/buddy-prompt.mjs','dist/buddy-policy.js','dist/refusal.js','dist/medical-contract.js','dist/reading-profiles.js','server/model-evidence.mjs','server/model-context.mjs','dist/disease-framework.js','dist/source-labels.js','dist/clinical-engine.js','dist/safety-policy.js','dist/medline-topics.json','dist/clinical-passages.json'];
 const hash=data=>createHash('sha256').update(data).digest('hex');
 writeFileSync(resolve(out,'production-cases.jsonl'),jsonl);
 writeFileSync(resolve(out,'review-packet.jsonl'),reviewPacket.map(r=>JSON.stringify(r)).join('\n')+'\n');

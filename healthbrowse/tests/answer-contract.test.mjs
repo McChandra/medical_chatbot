@@ -30,6 +30,7 @@ class Node {
  constructor(tag){this.tag=tag;this.children=[];this.attributes={};this.textContent='';}
  append(...children){this.children.push(...children)}
  setAttribute(k,v){this.attributes[k]=v}
+ addEventListener(type,handler){(this.listeners??={})[type]=handler}
 }
 const all=root=>[root,...root.children.flatMap(all)];
 test('rendering puts real text before mode/operational labels, with inline sources and no empty answer',t=>{
@@ -38,4 +39,12 @@ test('rendering puts real text before mode/operational labels, with inline sourc
  const nodes=all(root);assert.equal(root.children[0].tag,'section');assert.equal(root.children[0].children[0].textContent,'A source-backed answer.');
  assert.ok(nodes.some(n=>n.tag==='a'&&n.textContent==='[S1] ↗'));assert.ok(nodes.some(n=>n.tag==='details'));
  for(const bad of [{},{blocks:[{text:null}]},{text:'',style:'Plain-language answer'}]){const box=new Node('div');renderAnswer(box,bad);assert.match(box.children[0].textContent,/Insufficient clinical context available to verify this claim/)}
+});
+
+test('ordinary inline-source taps can open a passage sheet while modified clicks retain original links',t=>{
+ const old=globalThis.document;let received;globalThis.document={createElement:tag=>new Node(tag),dispatchEvent:event=>{received=event;return false}};t.after(()=>{if(old===undefined)delete globalThis.document;else globalThis.document=old});
+ const ref={id:'S1',title:'Publisher',quote:'The exact supporting passage.',url:'https://medlineplus.gov/leukemia.html'};
+ const root=new Node('div');renderAnswer(root,{blocks:[{text:'A source-backed statement.',references:[ref]}]});const a=all(root).find(n=>n.listeners?.click);let prevented=0;
+ a.listeners.click({button:0,preventDefault:()=>prevented++});assert.equal(prevented,1);assert.equal(received.type,'healthbrowse-source');assert.deepEqual(received.detail,ref);
+ received=null;a.listeners.click({button:0,ctrlKey:true,preventDefault:()=>prevented++});assert.equal(received,null);assert.equal(prevented,1);assert.equal(a.href,ref.url);
 });

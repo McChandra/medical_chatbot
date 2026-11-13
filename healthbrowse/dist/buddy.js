@@ -17,7 +17,7 @@ export function setupBuddy(getContext){
  dialog.append(panel);document.body.classList.add('buddy-enabled');
  function close(){if(dialog.open)dialog.close()}
  function show(from=launcher){
-  if(!available)return;intro.used();returnFocus=from;dialog.showModal();launcher.setAttribute('aria-expanded','true');document.body.classList.add('buddy-open');$('copilot-heading').focus();
+  if(!available)return false;if(dialog.open)return true;intro.used();returnFocus=from;dialog.showModal();launcher.setAttribute('aria-expanded','true');document.body.classList.add('buddy-open');$('copilot-heading').focus();return true;
  }
  $('buddyMeet').onclick=()=>show(launcher);
  $('buddyDismiss').onclick=$('buddyLater').onclick=()=>{intro.dismiss();launcher.focus({preventScroll:true})};

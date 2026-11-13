@@ -1,3 +1,4 @@
+import {setupMobileWorkspace} from './mobile-workspace.js';
 import {notifySafety} from './safety-notification.js';
 import {personalDiagnosisNotice} from './safety-policy.js';
 import {faqQuestions} from './faq-spec.js';
@@ -72,6 +73,7 @@ function switchPrompt(container,input,target,continueSearch){
   prompt.append(button('Switch topic',()=>{container.replaceChildren();continueSearch()}),button('Stay on '+topic,()=>{container.replaceChildren();$('notice').textContent='Continuing with '+topic+'.'}));container.append(prompt);prompt.scrollIntoView({block:'nearest'});
 }
 const buddy=setupBuddy(currentContext);
+const mobile=setupMobileWorkspace({buddy});
 const chats=createChatHistory(currentContext);
 const copilot=setupCopilot(currentContext,{
   onChat:(c,section)=>recordTopic(c.topic,'chat',section),onTurn:turn=>chats.saveTurn(turn),scopeChoice,confirm:(q,name)=>switchPrompt($('scopeQuestion'),q,name,()=>search(q,name,true)),
@@ -107,13 +109,13 @@ function renderCodes(body){
 }
 function render(){
   for(const input of $('readingMode').querySelectorAll('input'))input.checked=input.value===roles[role];
-  if(synthesis?.status==='blocked'){const message=el('div',undefined,'overview-note search-answer');message.setAttribute('role','alert');message.append(el('h2',synthesis.answer.title||'A safer way to proceed'));renderAnswer(message,synthesis.answer,renderCheck);$('card').replaceChildren(message);buddy.sync(true,false);return;}
+  if(synthesis?.status==='blocked'){const message=el('div',undefined,'overview-note search-answer');message.setAttribute('role','alert');message.append(el('h2',synthesis.answer.title||'A safer way to proceed'));renderAnswer(message,synthesis.answer,renderCheck);$('card').replaceChildren(message);mobile.update({topic:'',role:roles[role],responses:[]});buddy.sync(true,false);return;}
   const general=generalMode(role),count=deckCount(role);
-  const profile=readingProfile(role);document.body.classList.add('buddy-enabled');$('deskTitle').textContent=role===0?'Understand your health':'Clinical research desk';$('deskIntro').textContent='Ask a question, explore six medical decks, and go deeper with your buddy.';$('copilot-heading').textContent='HealthBrowse buddy';$('card').setAttribute('aria-label','Six Medical Decks');
-  const deck=$('card'),sameTopic=deck.dataset.faqTopic===topic,openedFAQs=new Set([...deck.querySelectorAll('details[open][data-faq]')].map(d=>d.dataset.faq)),responses=[];
+  const profile=readingProfile(role);document.body.classList.add('buddy-enabled');$('deskTitle').textContent=role===0?'Understand your health':role===2?'Your medical study desk':'Clinical research desk';$('deskIntro').textContent='Ask a question, explore six medical decks, and go deeper with your buddy.';$('copilot-heading').textContent='HealthBrowse buddy';$('card').setAttribute('aria-label','Six Medical Decks');
+  const deck=$('card'),sameTopic=deck.dataset.faqTopic===topic&&deck.dataset.readingRole===String(role),openedFAQs=new Set([...deck.querySelectorAll('details[open][data-faq]')].map(d=>d.dataset.faq)),responses=[];
   const opened=new Set([...deck.querySelectorAll('details[open][data-section]')].map(d=>d.dataset.section));
-  deck.replaceChildren();deck.dataset.faqTopic=topic;
-  const header=el('div',undefined,'cardhead');header.append(el('span','HEALTHBROWSE / MEDCARD','eyebrow'),el('h2',unresolved?'Topic not resolved':topic),el('p','View: '+(professionalRole(role)?'Clinical Professional':'General Public'),'deck-subtitle'));
+  deck.replaceChildren();deck.dataset.faqTopic=topic;deck.dataset.readingRole=String(role);
+  const header=el('div',undefined,'cardhead');header.append(el('span','HEALTHBROWSE / MEDCARD','eyebrow'),el('h2',unresolved?'Topic not resolved':topic),el('p','View: '+(role===2?'Medical Student':professionalRole(role)?'Clinical Professional':'General Public'),'deck-subtitle'));
   if(!unresolved && assignments[topic])header.append(el('span',assignments[topic].map(i=>depts[i]).join(' · '),'badge'));
   if(unresolved){
     const feedback=el('div',undefined,'overview-note search-answer');
@@ -167,7 +169,7 @@ function render(){
       if(ranked.length>3){const more=el('details',undefined,'resource-list');more.dataset.section=String(number);more.open=opened.has(String(number));more.append(el('summary','More source records ('+(ranked.length-3)+')'));ranked.slice(3).forEach(item=>more.append(linkRecord(item.r)));drawer.append(more)}
       if(!ranked.length && number===7){for(const [title,url] of [['NCBI GEO datasets','https://www.ncbi.nlm.nih.gov/gds/?term='],['Hugging Face datasets','https://huggingface.co/datasets?search='],['GitHub research repositories','https://github.com/search?type=repositories&q=']]){const row=el('p');reference(row,'Search '+title,url+encodeURIComponent(topic));drawer.append(row)}}
     }
-    cardBox.append(drawer);if(extra){const shelf=el('details',undefined,'resource-shelf');shelf.append(el('summary','Research papers, datasets & care resources'),cardBox);deck.append(shelf)}else{cardBox.append(button('Explore this with Buddy',()=>openDomain(number)));const faq=el('details',undefined,'faq-item');faq.dataset.faq=String(number);faq.open=sameTopic?openedFAQs.has(String(number)):number===1;const summary=el('summary');summary.append(el('span',faqQuestions[i],'faq-question'));faq.append(summary,cardBox);grid.append(faq)}
+    cardBox.append(drawer);if(extra){const shelf=el('details',undefined,'resource-shelf');shelf.append(el('summary','Research papers, datasets & care resources'),cardBox);deck.append(shelf)}else{cardBox.append(button('Explore this with Buddy',()=>openDomain(number)));const faq=el('details',undefined,'faq-item');faq.dataset.faq=String(number);faq.open=sameTopic?openedFAQs.has(String(number)):(role===1||number===1);const summary=el('summary');summary.append(el('span',faqQuestions[i],'faq-question'));faq.append(summary,cardBox);grid.append(faq)}
   });
   if(!unresolved){
     const citations=el('section',undefined,'faq-citations');citations.setAttribute('aria-label','Authorized citations');citations.append(el('h3','Authorized Citations'));
@@ -175,9 +177,10 @@ function render(){
     citations.append(list);if(!list.children.length)citations.append(el('p','No supporting citations are available for this response.'));
     citations.append(el('p','Sources used in these answers. Open inline citations for supporting passages and verification details. Publisher citations do not mean clinical certification.','meta'));
     const copyStatus=el('span',undefined,'meta');copyStatus.setAttribute('role','status');
-    citations.append(button('Copy deck summary',async()=>{const text=faqMarkdown({topic,clinical:professionalRole(role),answer:responses.find(r=>r.id===0)||{},decks:responses.filter(r=>r.id>0)});try{await navigator.clipboard.writeText(text);copyStatus.textContent='Deck summary copied.'}catch{copyStatus.textContent='Clipboard unavailable. Use your browser’s copy command to select the answers.'}}),copyStatus);
+    citations.append(button('Copy deck summary',async()=>{const text=faqMarkdown({topic,role:roles[role],clinical:professionalRole(role),answer:responses.find(r=>r.id===0)||{},decks:responses.filter(r=>r.id>0)});try{await navigator.clipboard.writeText(text);copyStatus.textContent='Deck summary copied.'}catch{copyStatus.textContent='Clipboard unavailable. Use your browser’s copy command to select the answers.'}}),copyStatus);
     deck.append(citations);
   }
+  mobile.update({topic,role:roles[role],responses:unresolved?[]:responses});
   buddy.sync(true,!unresolved);if(!unresolved){copilot.sync();if($('buddyResearch').open)research.sync()}else research.reset();
 }
 let searchRequest;
@@ -215,7 +218,7 @@ async function performSearch(input,chosenTopic,confirmed=false){
   if(status!=='ok'){
     notifySafety({status,safety:prepared.safety?.safety});
     $('notice').textContent=status==='unsafe'?'Buddy’s response is below.':guardMessage(status);$('results').hidden=true;$('resultsBody').replaceChildren();
-    topic='';unresolved=true;activeQuery='';live=null;codes=null;buddy.sync(true,false);
+    topic='';unresolved=true;activeQuery='';live=null;codes=null;mobile.update({topic:'',role:roles[role],responses:[]});buddy.sync(true,false);
     const message=el('div',undefined,'overview-note search-answer');
     message.setAttribute('role','alert');message.append(el('h2',prepared.safety?.title||(status==='emergency'?'Get urgent help now':'Remove identifying details to continue')));
     renderAnswer(message,prepared.safety||{text:guardMessage(status)},renderCheck);

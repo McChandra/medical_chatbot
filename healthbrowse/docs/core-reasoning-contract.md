@@ -6,9 +6,9 @@ This contract implements the supported parts of the requested Patient / Student 
 
 | Area | Implemented behavior | Boundary |
 | --- | --- | --- |
-| Visible roles | General and Clinicians remain the two selectable reading modes. | A role selection is not professional credential verification. |
+| Visible roles | General, Student and Clinicians are selectable reading modes. | A role selection is not professional credential verification. |
 | Patient style | General and the legacy Patient API role use plain-language, empathetic explanations and the exact disclaimer below. | Educational information, not personal diagnosis or prescribing. |
-| Student style | The existing `Medical student` API role uses source-supported educational mechanisms and supervised-learning framing; it routes to the general model. | It is a compatibility API path, not a third visible selector or a new access permission. The normal web client continues using the two selected modes. |
+| Student style | The existing `Medical student` API role uses source-supported educational mechanisms and supervised-learning framing; it routes to the general model. | Student is also visible in the browser, with source-derived study cards and session-only notes. It does not grant a new clinical access permission. |
 | Clinical style | Clinical terminology, concise explanatory reasoning, differential considerations and source scope. Codes and metrics require explicit source support. | Patient education sources cannot be promoted to clinical guidelines. |
 | Decks | Browser Summary plus the existing six clinical decks. | Eight new internal decks were not defined or connected by this change. |
 | Active evidence | The Groq path uses attributed MedlinePlus passages and targeted CDC/NCI text snapshots. | Historical MedQuAD passages are excluded from this active route. No claim that the deployed system is MedQuAD-only or that all records are verified. |
