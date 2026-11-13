@@ -80,3 +80,28 @@ test('legacy settings and saved chats normalize into the two available reading m
   assert.equal((await call('chats','POST',c)).status,200);
  }
 });
+
+test('profile details and timezone persist per account; identity and unsafe avatar input are rejected',async t=>{
+ const {call}=fixture(t);
+ const avatar='data:image/jpeg;base64,/9j/AA==';
+ const changed=await call('profile','PATCH',{firstName:'Abhay',lastName:'Srivastav',phone:'+919876543210',avatar});assert.equal(changed.status,200);
+ const p=(await (await call('profile')).json()).profile;assert.equal(p.name,'Abhay Srivastav');assert.equal(p.firstName,'Abhay');assert.equal(p.avatar,avatar);assert.equal(p.email,users.a.email);
+ const other=(await (await call('profile','GET',undefined,'b')).json()).profile;assert.equal(other.phone,'');assert.equal(other.avatar,'');
+ for(const patch of [{avatar:'data:image/svg+xml,<svg/>'},{avatar:'https://tracker.example/photo.jpg'},{phone:'123'},{firstName:'bad\nname'},{email:'attacker@example.test'}])assert.equal((await call('profile','PATCH',patch)).status,400);
+ assert.equal((await call('settings','PATCH',{timezone:'Asia/Kolkata'})).status,200);
+ assert.equal((await (await call('settings')).json()).settings.timezone,'Asia/Kolkata');
+ assert.equal((await call('settings','PATCH',{timezone:'not/a-zone'})).status,400);
+ assert.equal((await call('profile','PATCH',{avatar:'',phone:''})).status,200);
+ assert.equal((await (await call('profile')).json()).profile.avatar,'');
+});
+test('research export includes every page of messages and excludes other owners and credentials',async t=>{
+ const {call,DB}=fixture(t),a=chat(),b=chat();
+ await call('chats','POST',a);await call('chats','POST',b,'b');
+ for(let i=0;i<121;i++)await DB.prepare('INSERT INTO hb_chat_turns (id,chat_id,turn_json,created_at) VALUES (?,?,?,?)').bind(crypto.randomUUID(),a.id,JSON.stringify({question:'Question '+i,text:'Saved research answer',citations:[]}),new Date().toISOString()).run();
+ await call('chats/'+b.id+'/turns','POST',turn(),'b');
+ await call('saved','POST',{topic:'Leukemia',kind:'bookmark'});
+ const response=await call('export');assert.equal(response.status,200);assert.match(response.headers.get('Content-Disposition'),/attachment/);assert.match(response.headers.get('Cache-Control'),/no-store/);
+ const exported=await response.json();assert.equal(exported.complete,true);assert.equal(exported.messages.length,121);assert.equal(exported.chats.length,1);assert.equal(exported.bookmarks.length,1);assert.equal(exported.profile.email,users.a.email);
+ assert.ok(exported.messages.every(m=>m.chatId===a.id));assert.doesNotMatch(JSON.stringify(exported),/access_token|refresh_token|password|b@example.test/);
+ assert.equal((await call('export','GET',undefined,'invalid')).status,401);
+});

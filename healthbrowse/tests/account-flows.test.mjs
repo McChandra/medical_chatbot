@@ -94,3 +94,12 @@ test('email change only requests a verified-account update and preserves provide
  assert.deepEqual(sent,[{email:'new@example.test'},{emailRedirectTo:'https://site.test/account.html'}]);
  await assert.rejects(requestEmailChange({updateUser:async()=>({error:new Error('Confirmation unavailable')})},'new@example.test','https://site.test/account.html'),/Confirmation unavailable/);
 });
+
+test('account password change requires current password and matching valid replacements',async()=>{
+ const {changeAccountPassword}=await import('../dist/account-flows.js');let calls=0,received;
+ const auth={updateUser:async body=>{calls++;received=body;return {data:{}}}};
+ for(const [current,next,confirm] of [['','long unique passphrase','long unique passphrase'],['old','short','short'],['old','long unique passphrase','different'],['long unique passphrase','long unique passphrase','long unique passphrase']])await assert.rejects(changeAccountPassword(auth,current,next,confirm));
+ assert.equal(calls,0);await changeAccountPassword(auth,'current password','long unique passphrase','long unique passphrase');
+ assert.deepEqual(received,{current_password:'current password',password:'long unique passphrase'});
+ await assert.rejects(changeAccountPassword({updateUser:async()=>({error:new Error('Current password mismatch')})},'wrong','long unique passphrase','long unique passphrase'),/mismatch/);
+});

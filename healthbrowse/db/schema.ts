@@ -6,6 +6,9 @@ export const modelLimits=sqliteTable('hb_model_limits',{
 });
 export const accounts=sqliteTable('hb_accounts',{
  userId:text('user_id').primaryKey(),displayName:text('display_name').notNull().default(''),
+ firstName:text('first_name').notNull().default(''),lastName:text('last_name').notNull().default(''),
+ phone:text('phone').notNull().default(''),avatar:text('avatar').notNull().default(''),
+ timezone:text('timezone').notNull().default('UTC'),
  saveChats:integer('save_chats').notNull().default(1),saveHistory:integer('save_history').notNull().default(0),
  readingMode:text('reading_mode').notNull().default('General reader'),theme:text('theme').notNull().default('system'),
  historyEpoch:integer('history_epoch').notNull().default(0),createdAt:text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`)

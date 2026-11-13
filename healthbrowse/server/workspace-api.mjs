@@ -1,6 +1,7 @@
 import {frameworkVersion} from '../dist/disease-framework.js';
 import {inspectInput} from '../dist/clinical-engine.js';
 import {isReadingRole,normalizeReadingRole} from '../dist/reading-profiles.js';
+import {workspaceExport} from './workspace-export.mjs';
 const themes=['system','light','dark'];
 const uuid=/^[\da-f]{8}-[\da-f]{4}-[1-8][\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i;
 const response=(data,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'private, no-store','Referrer-Policy':'no-referrer','X-Content-Type-Options':'nosniff'}});
@@ -18,7 +19,9 @@ async function body(request){
  let data;try{data=JSON.parse(raw+decoder.decode())}catch{fail('Invalid JSON.')}
  if(!data||typeof data!=='object'||Array.isArray(data))fail('Invalid request.');return data;
 }
-function preferences(row){return {readingMode:normalizeReadingRole(row.reading_mode),theme:row.theme,saveHistory:!!row.save_history,saveChats:!!row.save_chats,historyEpoch:row.history_epoch}}
+function preferences(row){return {readingMode:normalizeReadingRole(row.reading_mode),theme:row.theme,timezone:row.timezone||'UTC',saveHistory:!!row.save_history,saveChats:!!row.save_chats,historyEpoch:row.history_epoch}}
+function profile(row,user){return {name:row.display_name,firstName:row.first_name||'',lastName:row.last_name||'',phone:row.phone||'',avatar:row.avatar||'',email:user.email||'',pendingEmail:user.new_email||''}}
+function optionalText(input,max,label){if(typeof input!=='string'||input.trim().length>max||/[\u0000-\u001f\u007f]/.test(input))fail('Check '+label+'.');return input.trim()}
 const chatView=row=>({id:row.id,title:row.title,topic:row.topic,readingMode:normalizeReadingRole(row.reading_mode),createdAt:row.created_at,updatedAt:row.updated_at});
 export async function workspaceAPI(request,db,user){
  try{
@@ -27,18 +30,31 @@ export async function workspaceAPI(request,db,user){
   const metadataName=String(user.user_metadata?.full_name||user.user_metadata?.name||'').slice(0,100);
   await sql('INSERT OR IGNORE INTO hb_accounts (user_id,display_name) VALUES (?,?)',owner,metadataName).run();
   const account=await sql('SELECT * FROM hb_accounts WHERE user_id=?',owner).first();
+  if(path==='/api/me/export'&&method==='GET')return workspaceExport(db,owner,profile(account,user),preferences(account));
   const ownedChat=async id=>{if(!uuid.test(id))fail('Invalid chat.');const row=await sql('SELECT * FROM hb_chats WHERE id=? AND user_id=?',id,owner).first();if(!row)fail('This chat was deleted or is unavailable.',404);return row};
   if(path==='/api/me/profile'){
-   if(method==='GET')return response({profile:{name:account.display_name,email:user.email||'',pendingEmail:user.new_email||''}});
-   if(method==='PATCH'){const b=await body(request);only(b,['name']);const name=value(b.name,100,'name');if(/[\r\n\u0000-\u001f]/.test(name))fail('Check name.');
-    await sql('UPDATE hb_accounts SET display_name=? WHERE user_id=?',name,owner).run();return response({profile:{name,email:user.email||'',pendingEmail:user.new_email||''}})}
+   if(method==='GET')return response({profile:profile(account,user)});
+   if(method==='PATCH'){
+    const b=await body(request);only(b,['name','firstName','lastName','phone','avatar']);
+    if(!Object.keys(b).length)fail('No profile changes supplied.');
+    const first=b.firstName===undefined?account.first_name:optionalText(b.firstName,50,'first name'),last=b.lastName===undefined?account.last_name:optionalText(b.lastName,50,'last name');
+    const name=b.name===undefined?(b.firstName!==undefined||b.lastName!==undefined?[first,last].filter(Boolean).join(' '):account.display_name):optionalText(b.name,100,'name');
+    if(!name)fail('Enter your name.');
+    const phone=b.phone===undefined?account.phone:optionalText(b.phone,16,'phone number');
+    if(phone&&!/^\+[1-9]\d{6,14}$/.test(phone))fail('Use an international phone number, such as +919876543210.');
+    const avatar=b.avatar===undefined?account.avatar:b.avatar;
+    if(typeof avatar!=='string'||avatar.length>18000||(avatar&&!/^data:image\/jpeg;base64,\/9j\/[A-Za-z0-9+/]*={0,2}$/.test(avatar)))fail('Use a small JPEG profile image.');
+    await sql('UPDATE hb_accounts SET display_name=?,first_name=?,last_name=?,phone=?,avatar=? WHERE user_id=?',name,first,last,phone,avatar,owner).run();
+    return response({profile:profile({...account,display_name:name,first_name:first,last_name:last,phone,avatar},user)});
+   }
   }else if(path==='/api/me/settings'){
    if(method==='GET')return response({settings:preferences(account)});
    if(method==='PATCH'){
-    const b=await body(request);only(b,['saveChats','saveHistory','readingMode','theme']);
+    const b=await body(request);only(b,['saveChats','saveHistory','readingMode','theme','timezone']);
     for(const key of ['saveChats','saveHistory'])if(b[key]!==undefined&&typeof b[key]!=='boolean')fail('Invalid history preference.');
     if(b.readingMode!==undefined){if(!isReadingRole(b.readingMode))fail('Invalid reading mode.');b.readingMode=normalizeReadingRole(b.readingMode)}if(b.theme!==undefined&&!themes.includes(b.theme))fail('Invalid theme.');
-    const stmts=[sql('UPDATE hb_accounts SET save_chats=COALESCE(?,save_chats),save_history=COALESCE(?,save_history),reading_mode=COALESCE(?,reading_mode),theme=COALESCE(?,theme) WHERE user_id=?',b.saveChats===undefined?null:Number(b.saveChats),b.saveHistory===undefined?null:Number(b.saveHistory),b.readingMode??null,b.theme??null,owner)];
+    if(b.timezone!==undefined){if(typeof b.timezone!=='string'||b.timezone.length>80)fail('Invalid timezone.');try{new Intl.DateTimeFormat('en',{timeZone:b.timezone}).format()}catch{fail('Invalid timezone.')}}
+    const stmts=[sql('UPDATE hb_accounts SET save_chats=COALESCE(?,save_chats),save_history=COALESCE(?,save_history),reading_mode=COALESCE(?,reading_mode),theme=COALESCE(?,theme),timezone=COALESCE(?,timezone) WHERE user_id=?',b.saveChats===undefined?null:Number(b.saveChats),b.saveHistory===undefined?null:Number(b.saveHistory),b.readingMode??null,b.theme??null,b.timezone??null,owner)];
     if(b.saveHistory===false)stmts.push(sql('DELETE FROM hb_research_history WHERE user_id=?',owner));
     await db.batch(stmts);return response({settings:preferences(await sql('SELECT * FROM hb_accounts WHERE user_id=?',owner).first())});
    }

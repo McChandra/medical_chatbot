@@ -22,6 +22,7 @@
       apply();
     }));
   });
+  addEventListener('healthbrowse-theme-change',()=>{preference=saved();apply()});
   media.addEventListener('change', apply);
   addEventListener('storage', event => {
     if (event.key === key || event.key === null) { preference = saved(); apply(); }

@@ -101,3 +101,12 @@ export async function requestEmailChange(auth,email,redirectTo){
   const {error}=await auth.updateUser({email:address},{emailRedirectTo:redirectTo});
   if(error)throw error;
 }
+
+export async function changeAccountPassword(auth,currentPassword,password,confirmation){
+ if(!currentPassword)throw new Error('Enter your current password.');
+ if(!validPassword(password))throw new Error('Use at least 12 characters and no more than 72 UTF-8 bytes.');
+ if(password!==confirmation)throw new Error('The new passwords do not match.');
+ if(currentPassword===password)throw new Error('Choose a password different from your current password.');
+ const {error}=await auth.updateUser({password,current_password:currentPassword});
+ if(error)throw error;
+}

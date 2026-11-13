@@ -60,7 +60,7 @@ export async function respond(request,env,assets) {
   if(file.type?.startsWith('text/html')){
     const origin=browserConfig(env).supabaseUrl;
     headers['Content-Security-Policy']=[
-      "default-src 'self'","script-src 'self'","style-src 'self'","img-src 'self'",
+      "default-src 'self'","script-src 'self'","style-src 'self'","img-src 'self' data:",
       "connect-src 'self' https://www.ebi.ac.uk"+(origin?' '+origin:''),
       "object-src 'none'","base-uri 'none'","form-action 'self'","frame-ancestors 'self'"
     ].join('; ');
