@@ -77,7 +77,7 @@ const copilot=setupCopilot(currentContext,{
 const research=createResearchDesk(currentContext,(n,focus)=>copilot.activate(n,focus));
 chats.setHandlers({newChat:()=>copilot.clear(),restore:async data=>{
   queryNotice='';
-  role=Math.max(0,roles.indexOf(normalizeReadingRole(data.chat.readingMode)));$('role').selectedIndex=role;
+  role=Math.max(0,roles.indexOf(normalizeReadingRole(data.chat.readingMode)));
   if(Object.hasOwn(catalog,data.chat.topic)||allowedTopics.has(data.chat.topic.toLowerCase())){
     topic=data.chat.topic;activeQuery=topic;unresolved=false;live=null;codes=null;$('query').value=topic;render();
   }else await search(data.chat.topic,null,true);
@@ -102,6 +102,7 @@ function renderCodes(body){
   box.append(el('p',codes?.snomedStatus||'SNOMED CT lookup requires licensed terminology access.','meta'));body.append(box);
 }
 function render(){
+  for(const input of $('readingMode').querySelectorAll('input'))input.checked=input.value===roles[role];
   const general=generalMode(role),count=deckCount(role);
   const profile=readingProfile(role);document.body.classList.add('buddy-enabled');$('deskTitle').textContent=role===0?'Understand your health':'Clinical research desk';$('deskIntro').textContent='Ask a question, explore six clinical areas, and go deeper with your buddy.';$('copilot-heading').textContent='HealthBrowse buddy';$('card').setAttribute('aria-label','Six-deck medical response');
   const deck=$('card'),opened=new Set([...deck.querySelectorAll('details[open][data-section]')].map(d=>d.dataset.section));
@@ -302,7 +303,14 @@ try{
 
   const last=readSession('hb-context',{});if(Object.hasOwn(passages,last.topic)||Object.hasOwn(catalog,last.topic)||allowedTopics.has(String(last.topic).toLowerCase()))topic=last.topic;
   activeQuery=topic;
-depts=taxonomy.departments.map(d=>d.name);assignments=Object.fromEntries(taxonomy.entities.map(e=>[e.name,e.departmentIds.map(id=>taxonomy.departments.findIndex(d=>d.id===id))]));roles.forEach(r=>$('role').append(new Option(roleLabel(r),r)));role=Math.max(0,roles.indexOf(normalizeReadingRole(readSession('hb-reader',''))));$('role').selectedIndex=role;$('role').onchange=()=>{role=$('role').selectedIndex;try{sessionStorage.setItem('hb-reader',JSON.stringify(roles[role]))}catch{}render()};render();
+depts=taxonomy.departments.map(d=>d.name);assignments=Object.fromEntries(taxonomy.entities.map(e=>[e.name,e.departmentIds.map(id=>taxonomy.departments.findIndex(d=>d.id===id))]));role=Math.max(0,roles.indexOf(normalizeReadingRole(readSession('hb-reader',''))));
+$('readingMode').disabled=false;
+$('readingMode').addEventListener('change',event=>{
+  const next=roles.indexOf(event.target.value);if(next<0||next===role)return;
+  role=next;try{sessionStorage.setItem('hb-reader',JSON.stringify(roles[role]))}catch{}
+  render();
+});
+render();
 $('notice').textContent='Ready. Ask a question about a medical topic.';
 const queued=searchUI.ready(search);
 void chats.init();
