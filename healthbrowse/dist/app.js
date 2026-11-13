@@ -1,3 +1,4 @@
+import {createQuerySuggestions,attachQueryCompletion} from './query-completion.js';
 import {readingProfile,readingRoles,normalizeReadingRole} from './reading-profiles.js';
 import {searchUI} from './search-startup.js';
 import {requestSynthesis,synthesisKey} from './model-client.js';
@@ -297,10 +298,11 @@ try{
   for(const item of feed.topics)if(!allowedTopics.has(item.title.toLowerCase()))allowedTopics.set(item.title.toLowerCase(),item.title);
   lookupIndex=topicIndex([...feed.topics.map(t=>({name:t.title,aliases:(t.aliases||[]).filter(a=>medlineLookup.find(a)===t)})),...taxonomy.entities],allowedTopics.values());
   Object.keys(catalog).forEach(name=>$('focusTopics').append(button(name,()=>search(name))));
+  attachQueryCompletion({input:$('query'),popup:$('querySuggestionPopup'),list:$('querySuggestions'),status:$('querySuggestionStatus'),form:$('find'),suggest:createQuerySuggestions([...Object.keys(catalog).map(name=>({name,aliases:medicalRecord(name)?.aliases||[]})),...feed.topics])});
 
   const last=readSession('hb-context',{});if(Object.hasOwn(passages,last.topic)||Object.hasOwn(catalog,last.topic)||allowedTopics.has(String(last.topic).toLowerCase()))topic=last.topic;
   activeQuery=topic;
-depts=taxonomy.departments.map(d=>d.name);assignments=Object.fromEntries(taxonomy.entities.map(e=>[e.name,e.departmentIds.map(id=>taxonomy.departments.findIndex(d=>d.id===id))]));Object.keys(catalog).forEach(t=>$('topics').append(new Option(t)));roles.forEach(r=>$('role').append(new Option(roleLabel(r),r)));role=Math.max(0,roles.indexOf(normalizeReadingRole(readSession('hb-reader',''))));$('role').selectedIndex=role;$('role').onchange=()=>{role=$('role').selectedIndex;try{sessionStorage.setItem('hb-reader',JSON.stringify(roles[role]))}catch{}render()};render();
+depts=taxonomy.departments.map(d=>d.name);assignments=Object.fromEntries(taxonomy.entities.map(e=>[e.name,e.departmentIds.map(id=>taxonomy.departments.findIndex(d=>d.id===id))]));roles.forEach(r=>$('role').append(new Option(roleLabel(r),r)));role=Math.max(0,roles.indexOf(normalizeReadingRole(readSession('hb-reader',''))));$('role').selectedIndex=role;$('role').onchange=()=>{role=$('role').selectedIndex;try{sessionStorage.setItem('hb-reader',JSON.stringify(roles[role]))}catch{}render()};render();
 $('notice').textContent='Ready. Ask a question about a medical topic.';
 const queued=searchUI.ready(search);
 void chats.init();
