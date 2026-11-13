@@ -21,7 +21,7 @@
     "dist/claim-check.js": "eaa471ced400b475bd4de911b375aad5d00bba51e5c3e249524d9b3764b12a39",
     "dist/clinical-engine.js": "9bd82bdbbbded02d43c81ad1e5dd69868f7d5105d1c2c0ca7454216c800b5ad1",
     "dist/safety-policy.js": "4af70d3ed6b52c8a67dd1b545e26024b454b1296e318ae56cc9c4aca35bd94c2",
-    "dist/search-experience.js": "c80cecf669a88d2cfcebcce34ed0b07b1e9b8a17cd6cd51d4579b73fced9392a",
+    "dist/search-experience.js": "a8551d03e49f5c862861b8de4f913fdfc8feaa0ec1bbf56e1460aed84b8bd8c1",
     "dist/authorities.js": "3ea48fa8a78094d46e7a2d3a495f2ef856e3f7959eb20492ec46bf0ff23782f6",
     "dist/disease-framework.js": "bd72eb19f72530419fd49676f9fe46c9f6430cd936d14d0ab6a23288b17928c5"
   },

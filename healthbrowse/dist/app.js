@@ -107,7 +107,7 @@ function render(){
   for(const input of $('readingMode').querySelectorAll('input'))input.checked=input.value===roles[role];
   if(synthesis?.status==='blocked'){const message=el('div',undefined,'overview-note search-answer');message.setAttribute('role','alert');message.append(el('h2',synthesis.answer.title||'A safer way to proceed'));renderAnswer(message,synthesis.answer,renderCheck);$('card').replaceChildren(message);buddy.sync(true,false);return;}
   const general=generalMode(role),count=deckCount(role);
-  const profile=readingProfile(role);document.body.classList.add('buddy-enabled');$('deskTitle').textContent=role===0?'Understand your health':'Clinical research desk';$('deskIntro').textContent='Ask a question, explore six FAQs, and go deeper with your buddy.';$('copilot-heading').textContent='HealthBrowse buddy';$('card').setAttribute('aria-label','Six medical FAQs');
+  const profile=readingProfile(role);document.body.classList.add('buddy-enabled');$('deskTitle').textContent=role===0?'Understand your health':'Clinical research desk';$('deskIntro').textContent='Ask a question, explore six medical decks, and go deeper with your buddy.';$('copilot-heading').textContent='HealthBrowse buddy';$('card').setAttribute('aria-label','Six Medical Decks');
   const deck=$('card'),sameTopic=deck.dataset.faqTopic===topic,openedFAQs=new Set([...deck.querySelectorAll('details[open][data-faq]')].map(d=>d.dataset.faq)),responses=[];
   const opened=new Set([...deck.querySelectorAll('details[open][data-section]')].map(d=>d.dataset.section));
   deck.replaceChildren();deck.dataset.faqTopic=topic;
@@ -123,19 +123,19 @@ function render(){
     const overview=el('div',undefined,'overview-note search-answer');overview.append(el('h3','Browser Summary'),el('p',activeQuery||topic,'answer-question'));
     refreshSynthesis(context);
     const direct=synthesis?.key===synthesisKey(context)&&synthesis.status==='generated'?synthesis.answer:searchAnswer(context,activeQuery||topic);
-    direct.modelNotice=synthesis?.key===synthesisKey(context)?(synthesis.status==='loading'?'Preparing an answer and six FAQs from cited sources… Source excerpts are available while you wait.':synthesis.message||''):'';
+    direct.modelNotice=synthesis?.key===synthesisKey(context)?(synthesis.status==='loading'?'Preparing an answer and six medical decks from cited sources… Source excerpts are available while you wait.':synthesis.message||''):'';
     const state=synthesis?.key===synthesisKey(context)?synthesis:null;
     responses.push({id:0,...direct});
     renderAnswer(overview,{...direct,code:state?.code,retryAt:state?.retryAt},renderCheck,()=>{if(synthesis?.key!==synthesisKey(context))return;synthesis=null;render()});
     if(queryNotice)overview.append(el('small',role===1?'Clinical reference; interpret evidence against the patient context and local protocols.'+(queryNotice.includes('not saved')?' This personal question is not saved to chat history.':''):queryNotice,'query-interpretation'));
     if(!direct.supported){const intro=checkedPassage(topic,sources,sources.find(p=>p.overview));if(intro){const basic=el('details');basic.append(el('summary','About '+topic),el('p',intro.text));renderCheck(basic,intro);overview.append(basic)}}
     header.append(overview,saveControls(topic));
-    const framework=el('details',undefined,'source-directory');framework.append(el('summary','About these six FAQs'),el('p','Six medical FAQs plus research resources. These references inform the organization; they do not validate this application or certify its answers.'));for(const ref of frameworkReferences){const row=el('p');reference(row,ref.title,ref.url);framework.append(row)}header.append(framework);
+    const framework=el('details',undefined,'source-directory');framework.append(el('summary','About these six medical decks'),el('p','Six Medical Decks plus research resources. These references inform the organization; they do not validate this application or certify its answers.'));for(const ref of frameworkReferences){const row=el('p');reference(row,ref.title,ref.url);framework.append(row)}header.append(framework);
     const guide=el('details',undefined,'source-directory');guide.append(el('summary','Source guide · 10 medical and public-health organizations'),el('p','These organizations have different responsibilities. A publisher citation does not mean it reviewed or certified this HealthBrowse response.'));
     for(const a of authorities){const item=el('p');reference(item,a.name,a.url);item.append(document.createTextNode(' · '+a.scope));guide.append(item)}header.append(guide)
   }
   header.append(el('p','Publisher sources are linked. Independent clinical review is pending.','meta'));deck.append(header);
-  const grid=el('div',undefined,'deck-grid faq-list');if(!unresolved)deck.append(el('h3','Frequently Asked Questions','faq-heading'));deck.append(grid);$('roleHint').textContent=profile.guide;
+  const grid=el('div',undefined,'deck-grid faq-list');if(!unresolved)deck.append(el('h3','Six Medical Decks','faq-heading'));deck.append(grid);$('roleHint').textContent=profile.guide;
   $('clinicalNotice').textContent=professionalRole(role)?'Professional research reference. Check current guidelines, patient context and local protocols before clinical use. This tool is not clinically validated.':'HealthBrowse provides general education, not a diagnosis or an individual treatment plan. Discuss care with a licensed healthcare professional.';
   const texts=textRecords(),resources=unresolved?[]:catalog[topic]||[];
   sectionNames.forEach((label,i)=>{
@@ -173,7 +173,7 @@ function render(){
     citations.append(list);if(!list.children.length)citations.append(el('p','No supporting citations are available for this response.'));
     citations.append(el('p','Sources used in these answers. Open inline citations for supporting passages and verification details. Publisher citations do not mean clinical certification.','meta'));
     const copyStatus=el('span',undefined,'meta');copyStatus.setAttribute('role','status');
-    citations.append(button('Copy FAQ summary',async()=>{const text=faqMarkdown({topic,clinical:professionalRole(role),answer:responses.find(r=>r.id===0)||{},decks:responses.filter(r=>r.id>0)});try{await navigator.clipboard.writeText(text);copyStatus.textContent='FAQ summary copied.'}catch{copyStatus.textContent='Clipboard unavailable. Use your browser’s copy command to select the answers.'}}),copyStatus);
+    citations.append(button('Copy deck summary',async()=>{const text=faqMarkdown({topic,clinical:professionalRole(role),answer:responses.find(r=>r.id===0)||{},decks:responses.filter(r=>r.id>0)});try{await navigator.clipboard.writeText(text);copyStatus.textContent='Deck summary copied.'}catch{copyStatus.textContent='Clipboard unavailable. Use your browser’s copy command to select the answers.'}}),copyStatus);
     deck.append(citations);
   }
   buddy.sync(true,!unresolved);if(!unresolved){copilot.sync();if($('buddyResearch').open)research.sync()}else research.reset();

@@ -12,7 +12,7 @@ export function faqMarkdown({topic,clinical,answer,decks}){
   if(response.blocks?.length)return response.blocks.map(b=>safeText(b.text)+' '+answerSources({blocks:[b]}).map(r=>'['+number(r)+']').join(' ')).join('\n> ');
   return safeText(response.text||'I do not have sufficient authorized data to answer this specific query.');
  }
- const out=['# 🩺 '+safeText(topic),'*View: '+(clinical?'Clinical Professional':'General Public')+'*','','> **Browser Summary:**','> '+body(answer),'','---','','## ❓ Frequently Asked Questions',''];
+ const out=['# 🩺 '+safeText(topic),'*View: '+(clinical?'Clinical Professional':'General Public')+'*','','> **Browser Summary:**','> '+body(answer),'','---','','## ❓ Six Medical Decks',''];
  for(let i=0;i<6;i++){
   const response=decks.find(d=>d.id===i+1)||{};
   out.push('**Q: '+faqQuestions[i]+'**','> **Buddy says:** '+body(response));

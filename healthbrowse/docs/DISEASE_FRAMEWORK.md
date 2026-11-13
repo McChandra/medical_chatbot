@@ -1,4 +1,6 @@
-# Medical FAQs, evidence routing and Buddy sessions
+# Six Medical Decks, evidence routing and Buddy sessions
+
+The visible section heading is **Six Medical Decks**; each deck retains its expandable question-and-answer layout. Internal FAQ identifiers remain unchanged for compatibility.
 
 The current framework is `medical-faq-v3`. General and Clinicians are the two reading modes. Selecting Clinicians changes presentation; it grants no restricted permissions or clinical credential status.
 
@@ -15,7 +17,7 @@ The current framework is `medical-faq-v3`. General and Clinicians are the two re
 
 The browser renders a direct Browser Summary, six keyboard-accessible native details/summary accordions, and a muted Authorized Citations block. Symptoms are listed as discrete source-backed items. Opening one FAQ does not close another, and the current open state survives synthesis updates. A new topic starts with the first FAQ open. The separate research shelf retains papers, trials, grants, education, datasets and care resources.
 
-The language model returns schema-checked claims, not executable markup or UI commands. The frontend generates the requested FAQ presentation and a **Copy FAQ summary** Markdown export from the same displayed responses. Exported citations are deduplicated by source URL. Each clinical claim retains its supporting inline references and passage details; directory links are not falsely included as used citations. Displayed source fallbacks remain identified as excerpts in exported text. The system does not manufacture a summary when the evidence does not answer the question.
+The language model returns schema-checked claims, not executable markup or UI commands. The frontend generates the requested FAQ presentation and a **Copy deck summary** Markdown export from the same displayed responses. Exported citations are deduplicated by source URL. Each clinical claim retains its supporting inline references and passage details; directory links are not falsely included as used citations. Displayed source fallbacks remain identified as excerpts in exported text. The system does not manufacture a summary when the evidence does not answer the question.
 
 Buddy stays closed until clicked. Selecting a FAQ opens a contextual conversation about that area; follow-ups do not repeat all six FAQs. Role-specific instructions distinguish everyday education from precise clinical interpretation, but cannot create missing specialist evidence from patient-education sources.
 
