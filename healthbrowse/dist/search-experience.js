@@ -1,3 +1,4 @@
+import {personalDiagnosisNotice} from './safety-policy.js';
 import {faqQuestions,generalTreatmentNotice} from './faq-spec.js';
 import {assessBuddySafety,hasUnsafeBuddyOutput} from './buddy-policy.js';
 import {prepareQuery} from './query-input.js';
@@ -42,7 +43,11 @@ function supplemental(context,deck,limit,exclude=new Set(),intent){
  for(const p of candidates){const check=passageCheck(context,p);if(!check||exclude.has(check.text))continue;exclude.add(check.text);matches.push({check,passage:p});if(matches.length>=limit)break}
  return matches;
 }
-export function searchAnswer(context,query,{detail=false,activeDeck=1}={}){
+export function searchAnswer(context,query,options={}){
+ const result=sourcedSearchAnswer(context,query,options),notice=personalDiagnosisNotice(query);
+ return notice?{...result,diagnosisNotice:notice,text:result.text+'\n\n'+notice}:result;
+}
+function sourcedSearchAnswer(context,query,{detail=false,activeDeck=1}={}){
  const question=correctSpelling(query).trim(),profile=readingProfile(context.role);
  const status=inspectQuery(question);
  if(status==='unsafe')return {...prepareQuery(question,context.topic).safety,deck:activeDeck};

@@ -1,3 +1,4 @@
+import {notifySafety} from './safety-notification.js';
 import {safetyAnswer} from './safety-policy.js';
 import {buddyHelpAnswer} from './buddy-policy.js';
 import {deckCount,domainAnswer,searchAnswer,isOverviewQuestion} from './search-experience.js';
@@ -43,6 +44,7 @@ export function setupCopilot(getContext,actions={}){
  async function respond(q,fromSuggestion=false,guidedDeck=0){
   const c=getContext();if(!c||!q.trim())return;
   const prepared=prepareQuery(q,[c.topic,c.query,history.at(-1)?.question].filter(Boolean).join(' ')),status=prepared.status;q=prepared.query;$('question').value='';$('scopeQuestion').replaceChildren();
+  if(status!=='ok')notifySafety({status,safety:prepared.safety?.safety});
   if(status==='ok'&&(prepared.ephemeral||!canSaveResearchQuestion(q,c.query)))privateConversation=true;
   const saveable=status==='ok'&&!privateConversation;
   const run=++sequence,scope=identity;
@@ -64,6 +66,7 @@ export function setupCopilot(getContext,actions={}){
    modelRequest?.abort();modelRequest=new AbortController();
    const result=await requestSynthesis(c,q,{mode:'chat',deck:guidedDeck||active,history:history.slice(0,-1),signal:modelRequest.signal});
    if(run!==sequence||identity!==scope)return;
+   if(result.status==='blocked')notifySafety({status:'blocked',safety:result.answer?.safety});
    if(['generated','blocked','platform'].includes(result.status))answer=result.answer;else answer={...answer,modelNotice:result.message,code:result.code,retryAt:result.retryAt};
   }
   if(run!==sequence||identity!==scope)return;

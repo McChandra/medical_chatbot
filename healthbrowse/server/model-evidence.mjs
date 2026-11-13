@@ -1,3 +1,4 @@
+import {personalDiagnosisNotice} from '../dist/safety-policy.js';
 import {faqQuestions,generalTreatmentNotice} from '../dist/faq-spec.js';
 import {generationSafetyRules,hasUnsafeInstructions} from '../dist/safety-policy.js';
 import {assessBuddySafety,hasUnsafeBuddyOutput} from '../dist/buddy-policy.js';
@@ -88,5 +89,6 @@ export function presentDraft(draft,evidence,input,model,corrected){
    text:blocks.length?blocks.map(b=>b.text+' '+b.references.map(r=>'['+r.id+']').join(' ')).join('\n\n')+'\n\nAI synthesis · '+model+'. Automated support review; not independently clinically validated.':'The retrieved sources do not support an answer for this area. Open the source links or ask a more specific question.',
    generation:{model,mode:'generated',corrected,checkedAt:new Date().toISOString()}};
  }
- return {status:'generated',answer:section(draft.answer),decks:draft.decks.map(s=>({id:s.id,...section(s)})),model,corrected,snapshot:evidence.snapshot};
+ const answer=section(draft.answer),notice=personalDiagnosisNotice(input.question);if(notice){answer.diagnosisNotice=notice;answer.text+='\n\n'+notice;}
+ return {status:'generated',answer,decks:draft.decks.map(s=>({id:s.id,...section(s)})),model,corrected,snapshot:evidence.snapshot};
 }

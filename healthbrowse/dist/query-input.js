@@ -20,7 +20,7 @@ export function prepareQuery(input,context=""){
   const clinical=securityVariants(original).map(text=>assessSafety(text,context)).find(result=>result.action!=='allow');
   return {status,query:'',safety:clinical?safetyAnswer(clinical.category):buddySafetyAnswer(assessBuddySafety(original).category)};
  }
- if(status!=='ok')return {status,query:''};
+ if(status!=='ok')return {status,query:'',...(status==='private'?{safety:buddySafetyAnswer('private_input')}:{})};
  const safety=assessSafety(original,context);if(safety.action!=='allow')return {status:'unsafe',query:'',safety:safetyAnswer(safety.category)};
  const simple=original.toLowerCase().replace(/[’]/g,"'").replace(/[.!?]+$/,'').trim();
  const match=simple.match(/^(?:i have|i am having|i'm having|i am experiencing|i'm experiencing|i have got|i've got|i feel|i am|i'm)\s+(?:a\s+|an\s+)?([a-z ]+)$/);

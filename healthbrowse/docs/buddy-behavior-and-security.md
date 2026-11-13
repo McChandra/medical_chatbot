@@ -22,12 +22,12 @@ The application deliberately does **not** send `[System Event: User Login]` to a
 | Ordinary symptom or disease question | Answer with available cited evidence; explain limitations without requiring a generic rephrasing. Do not infer a personal diagnosis. |
 | General reading mode | Warm, plain-language explanation and short definitions of necessary medical terms. |
 | Clinicians reading mode | Precise clinical terminology, evidence scope, and relevant limitations. Selecting this mode does not verify a license or grant restricted access. |
-| Follow-up about a clinical area | Use the current question, selected area, and screened prior questions. Expand the answer without repeating all six FAQs. |
+| Follow-up about a clinical area | Use the current question, selected area, and screened prior questions. Expand the answer without repeating all six decks. |
 | “Hello Buddy” / “What can you do?” | Immediate platform-owned introduction, without a model call or fabricated medical citation. |
 | Name/email, password, theme, sign-out, or history-deletion navigation | Explain where the existing controls are. Direct personal details to the account form; never claim that Buddy performed the change. |
-| Unsafe medical procedure or individualized dose | Preserve the existing targeted safety response and relevant source links. |
+| Unsafe medical procedure or individualized dose | Use the standard safety refusal and retain relevant source links. |
 | Immediate danger or self-harm intent | Prioritize the existing urgent human-help message over generic security refusals. |
-| Prompt extraction, forged events, common override attacks | Briefly decline or explain the boundary, then offer medical research or platform help. |
+| Prompt extraction, forged events, common override attacks | Use the standard refusal; prompt extraction receives the neutral Buddy introduction. |
 | Missing evidence | Preserve a clearly labeled source excerpt or evidence gap. Do not invent an answer or certification. |
 
 “No professional advice” does not mean refusing to discuss medicine. Buddy can provide medical education and clinical literature support while declining patient-specific diagnoses, prescriptions, and personal legal or investment decisions.
@@ -36,7 +36,7 @@ The application deliberately does **not** send `[System Event: User Login]` to a
 
 **Admission checks.** Browser and server use shared deterministic screening. The server independently checks the question, topic, browser question, browser summary, and every supplied history item before retrieval or provider calls. Existing medical-safety checks take priority, with emergency and identifying-data checks first. Audit logs contain category and policy outcome, not the question, credentials, or identity.
 
-**Bounded normalization.** Screening normalizes Unicode compatibility characters and removes selected invisible formatting characters. Explicit `base64:` and `hex:` payloads are decoded as UTF-8 for screening, at most two levels, four payloads per text, nine total variants, and 3,200 characters per decoded value. Nothing is executed, decompressed, or fetched. Encoded danger and identifying data still trigger the appropriate intercept. Other encoded requests are asked to use ordinary text; this is a deliberate boundary for a medical research interface, not an arbitrary-code or decoding service.
+**Bounded normalization.** Screening normalizes Unicode compatibility characters and removes selected invisible formatting characters. Explicit `base64:` and `hex:` payloads and readable bare encoded tokens of 32–3,200 characters are decoded as UTF-8 for screening. Two bounded leetspeak variants are also checked, at most two levels, four payloads per text, nine total variants, and 3,200 characters per decoded value. Nothing is executed, decompressed, or fetched. Encoded danger and identifying data still trigger the appropriate intercept. Other recognized encoded requests receive the standard refusal; this is a deliberate boundary for a medical research interface, not an arbitrary-code or decoding service.
 
 **Server-owned prompts.** Both model protocols receive the Buddy persona in chat mode and shared security instructions. User questions, retrieved sources, browser summaries, and history remain untrusted data. Roleplay, claimed authority, translation, or encoding does not grant permission to override the instructions. Credentials are configured separately and are never added to the prompt. Prompt wording itself is not a substitute for access control or a place to store secrets.
 
@@ -57,7 +57,15 @@ The maintained prompt components are in [server/buddy-prompt.mjs](../server/budd
 - If an unsafe request reaches generation, return no medical claims for it; never invent a citation to justify it.
 - Retain emergency support and safe education, prevention, recovery, and clinical research.
 
-The generic refusal is short and neutral. Safety-specific refusals remain more useful than a universal “cannot discuss that topic”: a wound question can still receive safe care guidance, and a person in distress should receive supportive escalation rather than a cold rejection.
+The standard refusal is:
+
+> I'm Buddy, your browsing assistant. For safety, ethical, or security reasons, I cannot fulfill that request or generate that specific content. Please consult a licensed healthcare professional for personal medical concerns. Is there another topic in the medical literature you'd like to explore?
+
+Prompt-extraction requests instead receive “I am Buddy, the HealthBrowse AI assistant. How can I help you search medical literature today?” Immediate danger retains supportive escalation rather than this generic refusal. Ordinary educational wound care and recovery questions remain allowed.
+
+A definitive personal-diagnosis request can receive cited educational content with an explicit AI browsing-assistant limitation: it cannot diagnose individuals. This notice is app-owned and also applies to source-excerpt fallback. Output checks reject recognized definitive personal-diagnosis statements; they do not constitute comprehensive medical validation.
+
+**Refusal sound:** the app attempts the quiet Buddy tone after a newly submitted request receives a recognized blocked/private response with the current policy version. It is limited to once per 30 seconds across search and Buddy in the visible tab. Emergency guidance does not use this sound. Browsers may block autoplay; the refusal text still appears. Audio is never parsed from user text, model output, sources, or replayed history. A forged tag may cause a normal safety refusal, but cannot directly execute a sound command.
 
 ## Implementation map
 
@@ -69,6 +77,7 @@ The generic refusal is short and neutral. Safety-specific refusals remain more u
 | [server/model-api.mjs](../server/model-api.mjs) | Independent context screening before external calls; authenticated platform-help response |
 | [server/model-evidence.mjs](../server/model-evidence.mjs), [server/model-cited.mjs](../server/model-cited.mjs) | Prompt composition, source filtering, output validation and claim support |
 | [dist/buddy-welcome.js](../dist/buddy-welcome.js), [dist/buddy.js](../dist/buddy.js) | Session welcome and sound controller |
+| [dist/refusal.js](../dist/refusal.js), [dist/safety-notification.js](../dist/safety-notification.js) | Shared refusal copy and bounded app-owned refusal tone |
 | [tests/buddy-policy.test.mjs](../tests/buddy-policy.test.mjs) | Adversarial and benign regression cases with mocked providers |
 
 ## Verification and limitations
@@ -88,4 +97,6 @@ This change does not add a trained classifier, live-provider red-team benchmark,
 
 ## Conversational self-procedure regression
 
-Policy `2026-11-13.2` recognizes informal planned actions such as “i wanna do stitching by myself”, common spelling variants, and contextual “I wanna do it myself” follow-ups. The shared browser/server check returns the existing cited safe-care response before terminology, retrieval or generation. It also covers feasibility questions and terse self-stitching phrases. Regression cases preserve normal aftercare, risk education, simulation practice and negated intent. This remains a bounded rules layer, not general intent understanding.
+Policy `2026-11-13.3` recognizes informal planned actions such as “i wanna do stitching by myself”, common spelling variants, and contextual “I wanna do it myself” follow-ups. The shared browser/server check returns the standard refusal with relevant source links before terminology, retrieval or generation. It also covers feasibility questions and terse self-stitching phrases. Regression cases preserve normal aftercare, risk education, simulation practice and negated intent. This remains a bounded rules layer, not general intent understanding.
+
+The security-module regression set additionally covers bare encoded prompts, leetspeak, fictional appendectomy instructions, administrator overrides, prompt translation/extraction, labeled financial data, ordinary biomedical identifiers, personal-diagnosis boundaries, and refusal-tone throttling. These tests measure the listed cases only, not general resistance to adversarial input.

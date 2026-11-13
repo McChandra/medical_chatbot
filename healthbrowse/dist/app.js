@@ -1,3 +1,5 @@
+import {notifySafety} from './safety-notification.js';
+import {personalDiagnosisNotice} from './safety-policy.js';
 import {faqQuestions} from './faq-spec.js';
 import {faqReferences,faqMarkdown} from './faq-export.js';
 import {createQuerySuggestions,attachQueryCompletion} from './query-completion.js';
@@ -47,7 +49,7 @@ function refreshSynthesis(context){
  synthesisController?.abort();const controller=new AbortController();synthesisController=controller;synthesis={key,status:'loading'};
  void requestSynthesis(context,context.query||context.topic,{signal:controller.signal}).then(result=>{
   if(controller!==synthesisController||key!==synthesisKey(currentContext()))return;
-  synthesis={key,...result};render();
+  synthesis={key,...result};if(result.status==='blocked')notifySafety({status:'blocked',safety:result.answer?.safety});render();
  }).catch(()=>{});
 }
 function currentContext(){
@@ -116,7 +118,7 @@ function render(){
   if(unresolved){
     const feedback=el('div',undefined,'overview-note search-answer');
     feedback.append(el('h3','Let’s clarify your question'),el('p',activeQuery||$('query').value,'answer-question'),el('p','I could not confidently match this to one medical topic. Enter a disease name, choose a focus area above, or select a matching topic when options are shown.'));
-    header.append(feedback);
+    const diagnosis=personalDiagnosisNotice(activeQuery);if(diagnosis)feedback.append(el('p',diagnosis,'query-interpretation'));header.append(feedback);
   }
   if(!unresolved){
     const sources=textRecords(),context={...currentContext(),topic,role:roles[role],aliases:[...(medicalRecord(topic)?.aliases||[]),...(taxonomy.entities.find(e=>e.name===topic)?.aliases||[])],passages:sources,records:currentContext()?.records||[]};
@@ -211,6 +213,7 @@ async function performSearch(input,chosenTopic,confirmed=false){
   const explicitCode=/^(?:what is |look up |search for )?(?:icd|snomed)/i.test(input.trim()) && codeQuery(input);
   const prepared=prepareQuery(input),status=prepared.status;
   if(status!=='ok'){
+    notifySafety({status,safety:prepared.safety?.safety});
     $('notice').textContent=status==='unsafe'?'See the safe-care guidance below.':guardMessage(status);$('results').hidden=true;$('resultsBody').replaceChildren();
     topic='';unresolved=true;activeQuery='';live=null;codes=null;buddy.sync(true,false);
     const message=el('div',undefined,'overview-note search-answer');

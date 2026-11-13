@@ -31,6 +31,7 @@ export function renderAnswer(parent,answer={},renderCheck,onRetry){
   for(const check of answer.checks||[])renderCheck?.(parent,check);
  }
  if(answer.treatmentNotice&&(blocks.length||!answer.text?.includes(answer.treatmentNotice)))parent.append(element('p',answer.treatmentNotice,'treatment-notice'));
+ if(answer.diagnosisNotice&&(blocks.length||!answer.text?.includes(answer.diagnosisNotice)))parent.append(element('p',answer.diagnosisNotice,'query-interpretation'));
  // Operational and audience labels never replace or precede the actual answer.
  if(answer.modelNotice){const notice=element('p',answer.modelNotice,'model-notice');notice.setAttribute('role','status');parent.append(notice)}
  renderRetry(parent,answer,onRetry);

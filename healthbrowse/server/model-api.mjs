@@ -81,7 +81,7 @@ export async function modelAPI(request,env,assets){
   const category=statuses.includes('emergency')?'emergency':statuses.includes('private')?'private':clinicalDecision?.category||buddyDecision?.category||(statuses.includes('unsafe')?'unsafe_context':'educational');
   console.info(JSON.stringify({event:'safety_screened',policyVersion:buddyDecision&&!clinicalDecision?buddyPolicyVersion:safetyPolicyVersion,action:category==='educational'?'allow':'redirect',category}));
   if(statuses.includes('emergency'))fail(422,'emergency','If this danger is happening now, contact local emergency services. Do not wait for an AI response.');
-  if(statuses.includes('private'))fail(422,'private','Remove names, contact details, birth dates, record numbers, passwords or tokens. You can describe symptoms in your own words.');
+  if(statuses.includes('private'))return reply({status:'blocked',code:'private',answer:buddySafetyAnswer('private_input'),decks:[]},422);
   if(category!=='educational'){
    return reply({status:'blocked',code:'unsafe_request',answer:clinicalDecision?safetyAnswer(clinicalDecision.category):buddySafetyAnswer(buddyDecision?.category),decks:[]},422);
   }

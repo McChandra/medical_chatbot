@@ -79,3 +79,12 @@ test('the form submission path used by Enter and Search produces the symptom ans
  form.onsubmit({preventDefault(){}});await Promise.resolve();await Promise.resolve();
  assert.equal(answer.supported,true);assert.equal(answer.blocks.length,2);
 });
+
+test('direct diagnosis questions include a limitation while retaining cited educational content',()=>{
+ for(const role of ['General reader','Medical professional']){
+  const answer=searchAnswer({...context,role},'I have a sore throat. What do I have?');
+  assert.match(answer.diagnosisNotice,/cannot diagnose individuals/);
+  assert.equal(answer.text.split('cannot diagnose individuals').length,2);
+  assert.ok(answer.citations.length);
+ }
+});

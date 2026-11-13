@@ -1,3 +1,4 @@
+import {personalDiagnosisNotice} from '../dist/safety-policy.js';
 import {faqPassages,generalTreatmentNotice} from '../dist/faq-spec.js';
 import {generationSafetyRules,assessSafety,hasUnsafeInstructions} from '../dist/safety-policy.js';
 import {assessBuddySafety,hasUnsafeBuddyOutput} from '../dist/buddy-policy.js';
@@ -136,7 +137,7 @@ export function presentCited(raw,prepared,input,model){
    text:blocks.length?blocks.map(b=>b.text+' '+b.references.map(r=>'['+r.id+']').join(' ')).join('\n\n'):gap,
    ...(generated?{generation:{model,mode:'generated',label:'AI explanation',checkedAt:new Date().toISOString()}}:{modelNotice:blocks.length?'Source excerpt · an AI explanation is not available for this section.':'Evidence gap · '+gap})};
  }
- const answer=section(raw.answer,0),decks=input.mode==='chat'?[]:Array.from({length:6},(_,i)=>section(raw.decks[String(i+1)],i+1));
+ const answer=section(raw.answer,0);const notice=personalDiagnosisNotice(input.question);if(notice){answer.diagnosisNotice=notice;answer.text+='\n\n'+notice;}const decks=input.mode==='chat'?[]:Array.from({length:6},(_,i)=>section(raw.decks[String(i+1)],i+1));
  return {status:'generated',protocol:'groq-cited-v1',answer,decks,model,snapshot:evidence.snapshot,
   validation:{citationCheck:'server-resolved passages',semanticReview:raw.supportReview==='completed'?'automated support review; not independent clinical validation':'not independently validated',withheldClaims:dropped}};
 }
