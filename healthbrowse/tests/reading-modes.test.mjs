@@ -16,8 +16,8 @@ test('all audiences get answers to conversational and multipart questions',()=>{
 });
 test('reading modes differ in clinical depth and supporting context, not just headings',()=>{
  const answers=readingRoles.map(role=>searchAnswer(context('Leukemia',role),'What is leukemia?'));
- assert.equal(new Set(answers.map(a=>a.text)).size,3);
- assert.equal(new Set(answers.map(a=>a.blocks.map(b=>b.text).join('\n'))).size,3);
+ assert.equal(new Set(answers.map(a=>a.text)).size,2);
+ assert.equal(new Set(answers.map(a=>a.blocks.map(b=>b.text).join('\n'))).size,2);
  assert.equal(answers[0].blocks.length,1);assert.match(answers[1].guidance.text,/local protocols/);
  assert.ok(answers[1].blocks.length>answers[0].blocks.length);
  for(const role of readingRoles){assert.equal(deckCount(role),6);assert.equal(roleQuestions(role).length,6)}
@@ -48,9 +48,9 @@ test('heading-aware ingestion retains treatment and diagnosis after symptoms',()
  const diabetes=index.find('Diabetes');assert.ok(diabetes.knowledge.some(p=>p.intent==='public-health'&&p.text.includes("can't be prevented")));
 });
 
-test('General, Clinicians and Student are selectable without changing clinical stored IDs',()=>{
- assert.deepEqual(readingRoles.map(readingLabel),['General','Clinicians','Student']);
+test('Only General and Clinicians are selectable without changing clinical stored IDs',()=>{
+ assert.deepEqual(readingRoles.map(readingLabel),['General','Clinicians']);
  for(const saved of ['General reader','Patient','General'])assert.equal(normalizeReadingRole(saved),readingRoles[0]);
- for(const saved of ['Medical student','Student'])assert.equal(normalizeReadingRole(saved),readingRoles[2]);
+ for(const saved of ['Medical student','Student'])assert.equal(normalizeReadingRole(saved),readingRoles[0]);
  for(const saved of ['Medical professional','Advanced professional','Clinicians'])assert.equal(normalizeReadingRole(saved),readingRoles[1]);
 });

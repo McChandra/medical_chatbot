@@ -1,14 +1,13 @@
 # HealthBrowse core reasoning contract
 
-This contract implements the supported parts of the requested Patient / Student / Clinical Professional reasoning prompt. A prompt does not create a vector database, validate a dataset, grant professional credentials, or turn a research prototype into a regulated diagnostic system.
+This contract implements General and Clinical Professional reading modes. Legacy Student preferences and API role aliases normalize to General. A prompt does not create a vector database, validate a dataset, grant professional credentials, or turn a research prototype into a regulated diagnostic system.
 
 ## Current implementation and requested capabilities
 
 | Area | Implemented behavior | Boundary |
 | --- | --- | --- |
-| Visible roles | General, Student and Clinicians are selectable reading modes. | A role selection is not professional credential verification. |
+| Visible roles | General and Clinicians are the two selectable reading modes. | A role selection is not professional credential verification. |
 | Patient style | General and the legacy Patient API role use plain-language, empathetic explanations and the exact disclaimer below. | Educational information, not personal diagnosis or prescribing. |
-| Student style | The existing `Medical student` API role uses source-supported educational mechanisms and supervised-learning framing; it routes to the general model. | Student is also visible in the browser, with source-derived study cards and session-only notes. It does not grant a new clinical access permission. |
 | Clinical style | Clinical terminology, concise explanatory reasoning, differential considerations and source scope. Codes and metrics require explicit source support. | Patient education sources cannot be promoted to clinical guidelines. |
 | Decks | Browser Summary plus the existing six clinical decks. | Eight new internal decks were not defined or connected by this change. |
 | Active evidence | The Groq path uses attributed MedlinePlus passages and targeted CDC/NCI text snapshots. | Historical MedQuAD passages are excluded from this active route. No claim that the deployed system is MedQuAD-only or that all records are verified. |
@@ -44,7 +43,7 @@ High-risk requests received by `/api/ai/answer` emit a structured `security_flag
 
 ## Verification and remaining work
 
-Regression checks cover General/Clinicians and search/chat entry points; exact disclaimer and evidence-gap copy; obvious off-topic examples and safe medical counterparts; high-risk pre-provider blocking; metadata-only security flags; preserved emergency precedence; student API prompt routing; and rejection of forged multimodal evidence. Existing citation and unsupported-claim tests remain applicable.
+Regression checks cover General/Clinicians and search/chat entry points; exact disclaimer and evidence-gap copy; obvious off-topic examples and safe medical counterparts; high-risk pre-provider blocking; metadata-only security flags; preserved emergency precedence; legacy Student-to-General normalization; and rejection of forged multimodal evidence. Existing citation and unsupported-claim tests remain applicable.
 
 Provider responses are mocked in automated tests. These are not live-model safety benchmarks, clinical certification, a guarantee of zero hallucinations, or proof against all adversarial prompts. Human clinical review and live-provider evaluation remain outstanding.
 

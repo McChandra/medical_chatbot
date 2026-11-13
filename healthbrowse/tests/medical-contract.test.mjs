@@ -38,10 +38,10 @@ test('high-risk requests are blocked and server flags contain no query or identi
  assert.equal(assessSafety('What evidence supports off-label prescribing?').action,'allow');
  assert.equal(prepareQuery('I want to die. What is a lethal dose?').status,'emergency');
 });
-test('patient disclaimer is appended once and clinical/student output avoids patient framing',()=>{
+test('patient disclaimer is appended once and clinical output avoids patient framing',()=>{
  const answer={text:'A cited educational answer.',blocks:[]};
- for(const role of ['General','General reader','Patient']){const r=withAudienceDisclaimer(withAudienceDisclaimer(answer,role),role);assert.equal(r.text.split(patientDisclaimer).length,2);assert.equal(r.audienceDisclaimer,patientDisclaimer);}
- for(const role of ['Clinicians','Medical professional','Medical student'])assert.equal(withAudienceDisclaimer(answer,role).audienceDisclaimer,undefined);
+ for(const role of ['General','General reader','Patient','Medical student','Student']){const r=withAudienceDisclaimer(withAudienceDisclaimer(answer,role),role);assert.equal(r.text.split(patientDisclaimer).length,2);assert.equal(r.audienceDisclaimer,patientDisclaimer);}
+ for(const role of ['Clinicians','Medical professional'])assert.equal(withAudienceDisclaimer(answer,role).audienceDisclaimer,undefined);
  assert.equal(withAudienceDisclaimer({text:domainRestriction,safety:{}},'General').text,domainRestriction);
  assert.ok(faqMarkdown({topic:'Leukemia',clinical:false,answer,decks:[]}).includes(patientDisclaimer));
 });

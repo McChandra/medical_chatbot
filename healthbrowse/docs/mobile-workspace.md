@@ -10,13 +10,12 @@ At widths up to 760px, the actual search form moves into a sticky header without
 | --- | --- | --- |
 | General (including legacy Patient preference) | Search, Saved, History, Account | Plain-language answers, guided Buddy prompts and a pinned medical disclaimer |
 | Clinicians | Search, Evidence, Sources, History | Expanded quick-reference decks and horizontal Risk, Symptoms, Tests, Treatment and Outlook shortcuts |
-| Student | Search, Notes, Cards, Sources | Educational answers, cited study cards and a notebook beside the decks in landscape layouts at least 700px wide |
 
-These are presentation styles, not verified professional credentials or access permissions. Clinical stored identifiers are unchanged. Student is a visible third option and uses the existing educational model prompt through the general model route.
+These are presentation styles, not verified professional credentials or access permissions. Clinical stored identifiers are unchanged. Student has been removed. Existing Student preferences and saved chats open in General mode.
 
 Source taps open the available supporting passage and its original publisher link. Modified clicks retain ordinary browser link behavior. This does not embed complete licensed textbooks, fetch missing chapters or certify the generated text. Deck labels describe actual evidence state—cited AI summary, source excerpt or evidence gap—not a numerical probability of clinical correctness.
 
-Study cards reuse complete cited deck text, preserve its source links and qualifiers, and omit blocks without links. They do not generate new medical claims. Previous/Next controls and horizontal swipes move between cards. Session notes are topic-scoped, limited to 8,000 characters and 20 topics, and cleared on sign-out. Identifying/personal input detected by the existing screen is refused for saving; this screen is not a guarantee of de-identification. Notes are for public research only. No patient-record vault or cloud note synchronization is provided.
+The Student workspace, study-card controls and notebook are no longer presented. Existing session notes are not deleted by this role change; normal sign-out cleanup still clears them.
 
 ## Buddy, voice and feedback
 

@@ -111,11 +111,11 @@ function render(){
   for(const input of $('readingMode').querySelectorAll('input'))input.checked=input.value===roles[role];
   if(synthesis?.status==='blocked'){const message=el('div',undefined,'overview-note search-answer');message.setAttribute('role','alert');message.append(el('h2',synthesis.answer.title||'A safer way to proceed'));renderAnswer(message,synthesis.answer,renderCheck);$('card').replaceChildren(message);mobile.update({topic:'',role:roles[role],responses:[]});buddy.sync(true,false);return;}
   const general=generalMode(role),count=deckCount(role);
-  const profile=readingProfile(role);document.body.classList.add('buddy-enabled');$('deskTitle').textContent=role===0?'Understand your health':role===2?'Your medical study desk':'Clinical research desk';$('deskIntro').textContent='Ask a question, explore six medical decks, and go deeper with your buddy.';$('copilot-heading').textContent='HealthBrowse buddy';$('card').setAttribute('aria-label','Six Medical Decks');
+  const profile=readingProfile(role);document.body.classList.add('buddy-enabled');$('deskTitle').textContent=role===0?'Understand your health':'Clinical research desk';$('deskIntro').textContent='Ask a question, explore six medical decks, and go deeper with your buddy.';$('copilot-heading').textContent='HealthBrowse buddy';$('card').setAttribute('aria-label','Six Medical Decks');
   const deck=$('card'),sameTopic=deck.dataset.faqTopic===topic&&deck.dataset.readingRole===String(role),openedFAQs=new Set([...deck.querySelectorAll('details[open][data-faq]')].map(d=>d.dataset.faq)),responses=[];
   const opened=new Set([...deck.querySelectorAll('details[open][data-section]')].map(d=>d.dataset.section));
   deck.replaceChildren();deck.dataset.faqTopic=topic;deck.dataset.readingRole=String(role);
-  const header=el('div',undefined,'cardhead');header.append(el('span','HEALTHBROWSE / MEDCARD','eyebrow'),el('h2',unresolved?'Topic not resolved':topic),el('p','View: '+(role===2?'Medical Student':professionalRole(role)?'Clinical Professional':'General Public'),'deck-subtitle'));
+  const header=el('div',undefined,'cardhead');header.append(el('span','HEALTHBROWSE / MEDCARD','eyebrow'),el('h2',unresolved?'Topic not resolved':topic),el('p','View: '+(professionalRole(role)?'Clinical Professional':'General Public'),'deck-subtitle'));
   if(!unresolved && assignments[topic])header.append(el('span',assignments[topic].map(i=>depts[i]).join(' · '),'badge'));
   if(unresolved){
     const feedback=el('div',undefined,'overview-note search-answer');
