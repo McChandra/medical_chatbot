@@ -1,5 +1,6 @@
 import {mobileDestinations,citationURL} from './mobile-model.js';
 import {normalizeReadingRole} from './reading-profiles.js';
+import {setupBuddyLayout,buddyIcon} from './buddy-layout.js';
 import {patientDisclaimer} from './medical-contract.js';
 import {createDictation,createLocalReader,bindLongPress} from './mobile-voice.js';
 import {glossary,annotateMedicalTerms} from './mobile-glossary.js';
@@ -41,22 +42,21 @@ export function setupMobileWorkspace({buddy}){
   source.dialog.showModal();
  }
  function run(name){if(name==='search')focusSearch();else if(name==='sources')allSources();else if(name==='evidence')jump(1);else location.assign('/account.html#'+({saved:'saved',history:'chats',account:'profile'}[name]));}
- // Fixed composer and a concise safety note keep the conversation usable with a keyboard.
- const panel=$('copilot'),composer=n('div','','buddy-composer'),voiceTools=n('div','','buddy-voice-tools'),consent=n('div','','voice-consent');consent.hidden=true;
- const safety=n('p',patientDisclaimer,'buddy-pinned-notice');panel.querySelector('.copilot-head').after(safety);
- const guided=n('details','','buddy-guided');guided.append(n('summary','Explore this topic'));$('buddyWelcome').before(guided);guided.append($('buddyWelcome'),$('buddyQuestions'));
- const greeting=n('p','','buddy-mobile-greeting');$('thread').before(greeting);
+ // Mobile and desktop share chat data, with a dedicated responsive conversation layout.
+ const {composer,voiceTools,consent,safety,greeting,more,showChat}=setupBuddyLayout();
  let voiceApproved=false;
- const dictation=createDictation({Recognition:window.SpeechRecognition||window.webkitSpeechRecognition,onText:text=>{const input=$('question');input.value=(input.value?input.value+' ':'')+text;input.value=input.value.slice(0,input.maxLength);input.dispatchEvent(new Event('input',{bubbles:true}));},onStatus:text=>voiceStatus.textContent=text});
+ const dictation=createDictation({Recognition:window.SpeechRecognition||window.webkitSpeechRecognition,onText:text=>{const input=$('question');input.value=(input.value?input.value+' ':'')+text;input.value=input.value.slice(0,input.maxLength);input.dispatchEvent(new Event('input',{bubbles:true}));},onStatus:text=>voiceStatus.textContent=text,onState:listening=>{stopVoice.hidden=!listening;voiceButton.setAttribute('aria-pressed',String(listening));voiceButton.setAttribute('aria-label',listening?'Voice input is listening':'Dictate a question')}});
  function startVoice(){consent.hidden=true;voiceApproved=true;dictation.start()}
- function requestVoice(){if(!buddy.show())return;if(!(window.SpeechRecognition||window.webkitSpeechRecognition)){voiceStatus.textContent='Voice typing is unavailable. Use your keyboard microphone or type your question.';$('question').focus();return}if(voiceApproved)startVoice();else consent.hidden=false;}
+ function requestVoice(){if(!buddy.show())return;showChat({focus:false});if(!(window.SpeechRecognition||window.webkitSpeechRecognition)){voiceStatus.textContent='Voice typing is unavailable. Use your keyboard microphone or type your question.';$('question').focus();return}if(voiceApproved)startVoice();else consent.hidden=false;}
  consent.append(n('p','Your browser may send audio to its speech service. Use public medical questions only, without names or patient details. Review the text before sending.'),b('Start voice input',startVoice),b('Cancel',()=>consent.hidden=true));
- voiceTools.append(b('Voice',requestVoice),b('Stop voice',()=>dictation.stop()),b('Read latest',()=>{const text=$('thread').lastElementChild?.innerText;if(text)reader.read(text);else voiceStatus.textContent='Ask a question first to read an answer aloud.'}));
- composer.append(consent,$('ask'),voiceTools,voiceStatus);panel.append(composer);
+ const voiceButton=b('',requestVoice,'buddy-voice-button');voiceButton.append(buddyIcon('voice'),n('span','Voice'));voiceButton.setAttribute('aria-label','Dictate a question');voiceButton.setAttribute('aria-pressed','false');
+ const stopVoice=b('Stop voice',()=>dictation.stop(),'buddy-stop-voice');stopVoice.hidden=true;voiceTools.append(voiceButton,stopVoice);
+ more.prepend(b('Read the latest answer aloud',()=>{showChat({focus:false});const text=$('thread').lastElementChild?.querySelector('.buddy-response')?.innerText;if(text)reader.read(text);else voiceStatus.textContent='Ask a question first to read an answer aloud.'},'buddy-read-latest'));
+ composer.append(voiceStatus);
  bindLongPress($('buddyLauncher'),requestVoice);$('buddyLauncher').title='Open Buddy. Hold for voice input.';
  $('buddyDialog').addEventListener('close',()=>{dictation.stop();reader.stop();consent.hidden=true});
  window.addEventListener('pagehide',()=>{dictation.stop();reader.stop()});document.addEventListener('visibilitychange',()=>{if(document.hidden){dictation.stop();reader.stop()}});
- const observer=new MutationObserver(()=>{annotateMedicalTerms($('thread'));greeting.hidden=$('thread').children.length>0});observer.observe($('thread'),{childList:true,subtree:true});
+ const observer=new MutationObserver(()=>{annotateMedicalTerms($('thread'))});observer.observe($('thread'),{childList:true,subtree:true});
  document.addEventListener('click',event=>{const term=event.target.closest?.('button[data-term]')?.dataset.term;if(!glossary[term])return;const g=glossary[term];source.heading.textContent=term[0].toUpperCase()+term.slice(1);source.body.replaceChildren(n('p',g.definition),n('p',g.pronunciation,'meta'),b('Hear term',()=>reader.read(term)),n('p','Plain-language explanation based on the NCI Dictionary of Cancer Terms.','meta'));source.body.append(safeLink(g,'NCI definition & pronunciation ↗'),sourceAudioStatus);source.dialog.showModal()});
  const feedback=n('p','','mobile-safety-feedback');feedback.hidden=true;feedback.setAttribute('role','status');document.body.append(feedback);let warningTimer;
  document.addEventListener('healthbrowse-safety-alert',()=>{feedback.textContent='Safety guidance is available in your response.';feedback.hidden=false;document.body.classList.add('safety-feedback');clearTimeout(warningTimer);warningTimer=setTimeout(()=>{feedback.hidden=true;document.body.classList.remove('safety-feedback')},3500);if(!matchMedia('(prefers-reduced-motion:reduce)').matches){try{navigator.vibrate?.(40)}catch{}}});
@@ -71,7 +71,7 @@ export function setupMobileWorkspace({buddy}){
   if(state.role==='Medical professional'){for(const [id,label] of [[1,'Risk'],[3,'Symptoms'],[4,'Tests'],[5,'Treatment'],[6,'Outlook']])shortcuts.append(b(label,()=>jump(id)))}
   else {shortcuts.append(b('Ask Buddy',()=>{buddy.show();$('question').focus()}),b('Explain symptoms',()=>{if(!buddy.show())return;$('question').value='Explain the symptoms of '+state.topic+' in simple language.';$('question').focus()}),b('Questions for my doctor',()=>{if(!buddy.show())return;$('question').value='What questions could I discuss with a clinician about '+state.topic+'?';$('question').focus()}))}
   for(const control of shortcuts.children)control.disabled=!state.topic||!state.responses.length;tools.append(shortcuts,live);safety.textContent=state.role==='General reader'?patientDisclaimer:'Clinical research reference. Apply professional judgment, current guidelines and local protocols.';
-  greeting.textContent='What would you like to understand about '+(state.topic||'a medical topic')+'? Ask below, or expand “Explore this topic”.';
+  greeting.textContent='Ask a follow-up about '+(state.topic||'your topic')+', or explore one area at a time. I’ll use the sources from your research.';
   for(const r of state.responses.filter(r=>r.id>0)){const summary=$('card').querySelector('details[data-faq="'+r.id+'"]>summary');if(summary&&!summary.querySelector('.evidence-status'))summary.append(n('small',r.generation?'Cited AI summary':r.blocks?.length?'Source excerpt':'Evidence gap','evidence-status'+(!r.blocks?.length?' evidence-gap':'')));}
   annotateMedicalTerms($('card'));
  }};

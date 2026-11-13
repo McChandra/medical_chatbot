@@ -26,7 +26,7 @@ export function createChatHistory(getContext){
   const run=++generation;message('Opening saved chat…');
   try{const data=await accountRequest('/api/me/chats/'+encodeURIComponent(id));if(run!==generation)return;
    await onRestore(data);if(run!==generation)return;setCurrent(data.chat);epoch=data.historyEpoch;
-   message('Saved conversation loaded. Sources may have changed since these answers were saved.');$('chatHistoryPanel').open=false;
+   message('Saved conversation loaded. Sources may have changed since these answers were saved.');$('chatHistoryPanel').open=false;document.dispatchEvent(new Event('healthbrowse-chat-restored'));
    const url=new URL(location.href);url.searchParams.set('chat',id);history.replaceState(null,'',url.pathname+url.search);
   }catch(error){if(run===generation)message(error.message)}
  }

@@ -1,16 +1,16 @@
 // Voice starts only after an explicit browser-service disclosure and user action.
-export function createDictation({Recognition,onText,onStatus,schedule=setTimeout,unschedule=clearTimeout}){
+export function createDictation({Recognition,onText,onStatus,onState=()=>{},schedule=setTimeout,unschedule=clearTimeout}){
  let active=null,timer;
- function stop(){const current=active;active=null;unschedule(timer);try{current?.abort()}catch{}if(current)onStatus('Voice input stopped. Review your question before sending.');}
+ function stop(){const current=active;active=null;unschedule(timer);try{current?.abort()}catch{}if(current){onState(false);onStatus('Voice input stopped. Review your question before sending.');}}
  return {stop,start(){
   if(!Recognition){onStatus('Voice typing is unavailable. Use the keyboard microphone or type your question.');return false}
   stop();let failed=false,recognition;
   try{recognition=new Recognition();active=recognition;recognition.lang='en-US';recognition.continuous=false;recognition.interimResults=false;
    recognition.onresult=event=>{if(active!==recognition)return;let text='';for(let i=event.resultIndex;i<event.results.length;i++)if(event.results[i].isFinal)text+=event.results[i][0].transcript+' ';if(text.trim())onText(text.trim());};
    recognition.onerror=()=>{if(active!==recognition)return;failed=true;onStatus('Voice input could not finish. Check microphone permission or type your question.');};
-   recognition.onend=()=>{if(active!==recognition)return;active=null;unschedule(timer);if(!failed)onStatus('Review your question, then tap Send.');};
-   recognition.start();onStatus('Listening… Tap Stop voice when finished.');timer=schedule(stop,30000);return true;
-  }catch{active=null;onStatus('Voice typing could not start. You can still type your question.');return false}
+   recognition.onend=()=>{if(active!==recognition)return;active=null;onState(false);unschedule(timer);if(!failed)onStatus('Review your question, then tap Send.');};
+   recognition.start();onState(true);onStatus('Listening… Tap Stop voice when finished.');timer=schedule(stop,30000);return true;
+  }catch{active=null;onState(false);onStatus('Voice typing could not start. You can still type your question.');return false}
  }};
 }
 export function createLocalReader({synthesis,Utterance,onStatus}){

@@ -1,3 +1,4 @@
+import {shouldSendBuddyKey} from './buddy-layout.js';
 import {withAudienceDisclaimer} from './medical-contract.js';
 import {notifySafety} from './safety-notification.js';
 import {safetyAnswer} from './safety-policy.js';
@@ -17,7 +18,7 @@ function save(key,value){try{sessionStorage.setItem(key,JSON.stringify(value))}c
 export function readSession(key,fallback){try{return JSON.parse(sessionStorage.getItem(key))??fallback}catch{return fallback}}
 export function setupCopilot(getContext,actions={}){
  let sequence=0,active=1,history=[],identity='',publicTurns=[],busy=false,modelRequest=null,privateConversation=false;
- const controls=[$('deckSelect'),$('question'),$('ask').querySelector('button')];
+ const controls=[$('deckSelect'),$('question'),$('ask').querySelector('button[type=submit]')];
  controls.forEach(control=>control.disabled=true);
  function sync(){
   const c=getContext();if(!c)return;
@@ -28,19 +29,20 @@ export function setupCopilot(getContext,actions={}){
   save('hb-context',{topic:c.topic,role:c.role,scope,deck:active});save('hb-transcript',publicTurns);
   [...$('deckSelect').options].forEach((option,i)=>{option.textContent=(i+1)+' · '+domainTitle(i+1,c.role);option.hidden=i>=deckCount(c.role)});
   $('deckSelect').value=String(active);$('copilotScope').textContent=c.topic+' · '+roleLabel(c.role);
-  $('copilotHint').textContent=busy?'Finding a source-backed answer…':'Choose an area or ask a follow-up. '+profile.guide;
+  $('copilotHint').textContent=busy?'Checking sources…':'';
   $('buddyWelcome').hidden=false;$('buddyQuestions').hidden=false;
   $('buddyWelcome').replaceChildren(node('p','I’m Buddy, your AI research companion. Let’s explore '+c.topic+'.'),node('small',profile.style+'. Choose an area below or ask me a question.'));
   $('buddyQuestions').replaceChildren();
   for(const choice of roleQuestions(c.role)){const b=node('button','');b.type='button';b.disabled=busy;b.setAttribute('aria-pressed',String(active===choice.deck&&history.length>0));const n=node('span',String(choice.deck).padStart(2,'0'));n.className='buddy-question-number';const label=node('span',choice.label);label.className='buddy-question-label';b.append(n,label);b.onclick=()=>ask(choice.prompt,true,choice.deck);$('buddyQuestions').append(b)}
-  $('ask').querySelector('label').textContent='Ask a follow-up question';$('ask').querySelector('button').textContent='Send question ↗';$('copilot').querySelector('.eyebrow').textContent='YOUR HEALTH RESEARCH BUDDY';
+  $('ask').querySelector('label').textContent='Ask a follow-up question';$('ask').querySelector('button[type=submit]').textContent='↑';$('copilot').querySelector('.eyebrow').textContent='HEALTHBROWSE';
   $('thread').replaceChildren();
-  for(const t of history){const turn=node('div','');turn.className='turn';turn.append(node('strong',t.question));
-   renderAnswer(turn,{...t,blocks:t.blocks||[],style:t.style||''},renderCheck,t===history.at(-1)&&!busy?()=>{history=history.filter(item=>item!==t);publicTurns=publicTurns.filter(item=>item!==t);void ask(t.question,true,t.deck)}:undefined);
-   if(t.frameworkVersion!==frameworkVersion)turn.append(node('small','Saved using the previous framework. Section numbers refer to that version.'));
+  for(const t of history){const turn=node('div','');turn.className='turn';const question=node('p',t.question);question.className='buddy-user-message';question.setAttribute('aria-label','You');const response=node('div','');response.className='buddy-response';const author=node('span','Buddy');author.className='buddy-message-author';response.append(author);turn.append(question,response);
+   renderAnswer(response,{...t,blocks:t.blocks||[],style:t.style||''},renderCheck,t===history.at(-1)&&!busy?()=>{history=history.filter(item=>item!==t);publicTurns=publicTurns.filter(item=>item!==t);void ask(t.question,true,t.deck)}:undefined);
+   if(t.frameworkVersion!==frameworkVersion)response.append(node('small','Saved using the previous framework. Section numbers refer to that version.'));
    $('thread').append(turn);
   }
   $('followups').replaceChildren();
+  document.dispatchEvent(new CustomEvent('healthbrowse-chat-updated',{detail:{count:history.length,busy}}));
  }
  async function respond(q,fromSuggestion=false,guidedDeck=0){
   const c=getContext();if(!c||!q.trim())return;
@@ -88,7 +90,7 @@ export function setupCopilot(getContext,actions={}){
  }
  deckNames.forEach((name,i)=>$('deckSelect').append(new Option((i+1)+' · '+name,String(i+1))));
  $('deckSelect').onchange=()=>{active=Number($('deckSelect').value);sync()};
- $('question').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();$('ask').requestSubmit()}};
+ $('question').onkeydown=e=>{if(shouldSendBuddyKey(e,window.matchMedia('(max-width:760px)').matches)){e.preventDefault();$('ask').requestSubmit()}};
  $('ask').onsubmit=e=>{e.preventDefault();ask($('question').value)};
   $('buddyStop').onclick=()=>{sequence++;modelRequest?.abort();busy=false;if(history.at(-1))history.at(-1).modelNotice='Additional lookup stopped. The available cited response is shown below.';sync()};
   $('clearChat').onclick=()=>{sequence++;modelRequest?.abort();busy=false;$('scopeQuestion').replaceChildren();history=[];publicTurns=[];privateConversation=false;sync()};
