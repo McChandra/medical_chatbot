@@ -1,14 +1,15 @@
 {
   "version": 1,
-  "fixture_sha256": "90956139e1cc5369c60be7c42be254e771df964d1922bf0888824a4d586136e4",
+  "fixture_sha256": "9f31e37dbe40bc6ac89ab779f88907f3ffdd4d600eedfa92a2192c93fe71dbb2",
   "case_count": 17,
   "generation_cases": 12,
   "source_hashes": {
-    "server/model-evidence.mjs": "6ebde06b9163eabe0c2c507f2faccd673b54a58e49c208d992ab14388904636e",
+    "server/model-evidence.mjs": "1471ca5d264f3fa39dc2e1d585cec7e3f316f871db6ecf95ffc14af0228c4c71",
     "server/model-context.mjs": "57bfd837aad443ed94c746940751b57306ff19febd69035a76ec8ccddcd9e3de",
-    "dist/disease-framework.js": "f743c95a28b035ba81984b6850099a53bd193ae0b1d6a258f489530a00b4feaf",
+    "dist/disease-framework.js": "301212ec173a473b64b20f85cd6dffb868b893cce512302f9f3544d4a74e49ee",
     "dist/source-labels.js": "515614d411b9f01fdd901e070b2f2a5d3e4587ddd761ddff62b39f5a0a8a0df0",
-    "dist/clinical-engine.js": "dc42a99d70352ad9d0311a8e06924d90d1cb5f071bd30aec3639fe3fe89867c5",
+    "dist/clinical-engine.js": "9eedb3b0658e8b2732bb4a22b02021cc97f16195ce20ff76cb7ecafbcc5b34a3",
+    "dist/safety-policy.js": "4af70d3ed6b52c8a67dd1b545e26024b454b1296e318ae56cc9c4aca35bd94c2",
     "dist/medline-topics.json": "722fdee5d14cbd2e1c8a6f701506f8f199a01041b1a2b3f7f814d74c6e135510",
     "dist/clinical-passages.json": "5c8c33590e6ca0c775b24a1b4f10e69db836e3cfd3ae582aa055f612538a49c4"
   },

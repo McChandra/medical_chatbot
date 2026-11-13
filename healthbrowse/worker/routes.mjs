@@ -1,3 +1,5 @@
+import {inspectQuery} from '../dist/clinical-engine.js';
+import {assessSafety,safetyAnswer} from '../dist/safety-policy.js';
 import {browserConfig} from '../server/public-config.mjs';
 import {accountAPI} from '../server/account-api.mjs';
 import {lookupTerminology,patientEducationForCode} from './terminology.mjs';
@@ -26,6 +28,13 @@ export async function respond(request,env,assets) {
   // Older shared search links used /search?q=... . Preserve the question and
   // load the canonical desk so relative asset paths remain correct.
   if(url.pathname==='/search'||url.pathname==='/search/')return new Response(null,{status:307,headers:{...headers,Location:'/'+url.search}});
+  if(url.pathname==='/api/terminology'||url.pathname.startsWith('/api/research/')){
+    for(const key of ['term','topic','q','query']){
+      const value=url.searchParams.get(key)||'',status=inspectQuery(value);
+      if(status==='unsafe')return Response.json({status:'blocked',answer:safetyAnswer(assessSafety(value).category)},{status:422,headers});
+      if(status!=='ok')return Response.json({status:'blocked',code:status,error:status==='emergency'?'Seek immediate local emergency help.':'Remove identifying details before searching.'},{status:422,headers});
+    }
+  }
   if(url.pathname==='/api/terminology'){
     const term=url.searchParams.get('term')||'';
     const result=await lookupTerminology(term,env);

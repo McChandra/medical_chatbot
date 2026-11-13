@@ -1,3 +1,4 @@
+import {safetyAnswer} from './safety-policy.js';
 import {deckCount,domainAnswer,searchAnswer,isOverviewQuestion} from './search-experience.js';
 import {prepareQuery,canSaveResearchQuestion} from './query-input.js';
 import {readingProfile,roleQuestions} from './reading-profiles.js';
@@ -8,7 +9,7 @@ import {renderCheck} from './research-session.js';
 export const deckNames=domains.map(d=>d.title);
 const $=id=>document.getElementById(id);
 const node=(tag,text)=>Object.assign(document.createElement(tag),{textContent:text});
-export function guardMessage(status){return status==='emergency'?'If these symptoms or immediate danger are happening now, contact local emergency services now or ask someone nearby to call. Do not wait for a search response.':'Please remove identifying details such as names, contact information, birth dates or record numbers. You can still describe symptoms in your own words. This input was not sent for retrieval.'}
+export function guardMessage(status){return status==='unsafe'?safetyAnswer().text:status==='emergency'?'If these symptoms or immediate danger are happening now, contact local emergency services now or ask someone nearby to call. Do not wait for a search response.':'Please remove identifying details such as names, contact information, birth dates or record numbers. You can still describe symptoms in your own words. This input was not sent for retrieval.'}
 function save(key,value){try{sessionStorage.setItem(key,JSON.stringify(value))}catch{}}
 export function readSession(key,fallback){try{return JSON.parse(sessionStorage.getItem(key))??fallback}catch{return fallback}}
 export function setupCopilot(getContext,actions={}){
@@ -40,13 +41,13 @@ export function setupCopilot(getContext,actions={}){
  }
  async function respond(q,fromSuggestion=false,guidedDeck=0){
   const c=getContext();if(!c||!q.trim())return;
-  const prepared=prepareQuery(q),status=prepared.status;q=prepared.query;$('question').value='';$('scopeQuestion').replaceChildren();
+  const prepared=prepareQuery(q,[c.topic,c.query,history.at(-1)?.question].filter(Boolean).join(' ')),status=prepared.status;q=prepared.query;$('question').value='';$('scopeQuestion').replaceChildren();
   if(status==='ok'&&(prepared.ephemeral||!canSaveResearchQuestion(q,c.query)))privateConversation=true;
   const saveable=status==='ok'&&!privateConversation;
   const run=++sequence,scope=identity;
   const choices=status==='ok'&&!guidedDeck?actions.scopeChoice?.(q)||[]:[];
   if(choices.length){actions.confirm(q,choices.join(' / '));return}
-  let answer=status!=='ok'?{text:guardMessage(status),citations:[],checks:[],deck:active}:guidedDeck?domainAnswer(c,guidedDeck):searchAnswer(c,q,{detail:true,activeDeck:active});
+  let answer=status!=='ok'?{...(prepared.safety||{text:guardMessage(status),citations:[],checks:[]}),deck:active}:guidedDeck?domainAnswer(c,guidedDeck):searchAnswer(c,q,{detail:true,activeDeck:active});
   if(!answer)return;
   // Give the visitor the source-backed response now; optional remote services
   // can enrich this same turn without holding the conversation blank.
@@ -61,7 +62,7 @@ export function setupCopilot(getContext,actions={}){
    modelRequest?.abort();modelRequest=new AbortController();
    const result=await requestSynthesis(c,q,{mode:'chat',deck:guidedDeck||active,history:history.slice(0,-1),signal:modelRequest.signal});
    if(run!==sequence||identity!==scope)return;
-   if(result.status==='generated')answer=result.answer;else answer={...answer,modelNotice:result.message};
+   if(['generated','blocked'].includes(result.status))answer=result.answer;else answer={...answer,modelNotice:result.message};
   }
   if(run!==sequence||identity!==scope)return;
   if(status==='ok')active=answer.deck||active;

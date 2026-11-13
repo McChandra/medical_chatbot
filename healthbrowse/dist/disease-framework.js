@@ -44,9 +44,21 @@ export function routePassage(p,origin='medquad'){
  return [...decks].map(deck=>({...p,deck,overview,frameworkVersion,
   ...(deck===2?{courseContext:/\b(untreated|without (?:treatment|intervention))\b/i.test(text)?'untreated':'unspecified'}:{})}));
 }
+// Reuse intact, explicitly relevant source paragraphs in more than one domain.
+// No new facts or treatment-exposure assumptions are introduced by routing.
+export function expandKnowledge(p){
+ const rows=[p],add=(deck,intent)=>{if(!rows.some(r=>r.deck===deck&&!r.overview))rows.push({...p,deck,intent,overview:false})};
+ const text=p.text||'';
+ if(p.overview&&/\b(caused by|cause of|causes? include|results? from)\b/i.test(text))add(1,'risk');
+ if((p.overview||p.deck===6)&&/\b(?:antiviral medicines?|medicines? can help|treatment (?:includes|depends|can)|treated with)\b/i.test(text))add(4,'therapy');
+ if([2,3,4,5,6].includes(p.deck)&&/\b(?:go away on their own|heal on their own|clear up on their own|usually (?:last|lasts|clear|clears)|come back|recur|recurrence)\b/i.test(text))add(2,'course');
+ if([2,4,6].includes(p.deck)&&/\b(?:go away on their own|heal on their own|clear up on their own|there is no cure|complications? include)\b/i.test(text))add(5,'prognosis');
+ if(p.overview&&/\b(?:population|prevalence|incidence|most common in)\b/i.test(text))add(6,'public-health');
+ return rows;
+}
 export function medlinePassages(record,topic,feed={}){
  if(!record)return [];
- if(record.knowledge?.length)return record.knowledge.map(normalizeSourceLabel).map(p=>({...p,focus:topic,frameworkVersion,
+ if(record.knowledge?.length)return record.knowledge.map(normalizeSourceLabel).flatMap(expandKnowledge).map(p=>({...p,focus:topic,frameworkVersion,
   title:record.title+' · MedlinePlus'+(p.heading?' · '+p.heading:''),url:record.url,record:record.url+'#summary-'+p.id,
   vintage:'MedlinePlus feed snapshot · '+(feed.feedDate||feed.retrievedAt||'date unavailable'),sourceType:'patient-education',
   ...(p.deck===2?{courseContext:/untreated|without (?:treatment|intervention)|not treated/i.test(p.text)?'untreated':'unspecified'}:{})}));

@@ -103,6 +103,7 @@ function renderCodes(body){
 }
 function render(){
   for(const input of $('readingMode').querySelectorAll('input'))input.checked=input.value===roles[role];
+  if(synthesis?.status==='blocked'){const message=el('div',undefined,'overview-note search-answer');message.setAttribute('role','alert');message.append(el('h2',synthesis.answer.title||'A safer way to proceed'));renderAnswer(message,synthesis.answer,renderCheck);$('card').replaceChildren(message);buddy.sync(true,false);return;}
   const general=generalMode(role),count=deckCount(role);
   const profile=readingProfile(role);document.body.classList.add('buddy-enabled');$('deskTitle').textContent=role===0?'Understand your health':'Clinical research desk';$('deskIntro').textContent='Ask a question, explore six clinical areas, and go deeper with your buddy.';$('copilot-heading').textContent='HealthBrowse buddy';$('card').setAttribute('aria-label','Six-deck medical response');
   const deck=$('card'),opened=new Set([...deck.querySelectorAll('details[open][data-section]')].map(d=>d.dataset.section));
@@ -117,11 +118,11 @@ function render(){
   if(!unresolved){
     const sources=textRecords(),context={...currentContext(),topic,role:roles[role],aliases:[...(medicalRecord(topic)?.aliases||[]),...(taxonomy.entities.find(e=>e.name===topic)?.aliases||[])],passages:sources,records:currentContext()?.records||[]};
     const overview=el('div',undefined,'overview-note search-answer');overview.append(el('h3','Your answer'),el('p',activeQuery||topic,'answer-question'));
-    if(queryNotice)overview.append(el('p',queryNotice,'query-interpretation'));
     refreshSynthesis(context);
     const direct=synthesis?.key===synthesisKey(context)&&synthesis.status==='generated'?synthesis.answer:searchAnswer(context,activeQuery||topic);
     direct.modelNotice=synthesis?.key===synthesisKey(context)?(synthesis.status==='loading'?'Preparing an answer and six decks from cited sources… Source excerpts are available while you wait.':synthesis.message||''):'';
     renderAnswer(overview,direct,renderCheck);
+    if(queryNotice)overview.append(el('small',queryNotice,'query-interpretation'));
     if(!direct.supported){const intro=checkedPassage(topic,sources,sources.find(p=>p.overview));if(intro){const basic=el('details');basic.append(el('summary','About '+topic),el('p',intro.text));renderCheck(basic,intro);overview.append(basic)}}
     header.append(overview,saveControls(topic));
     const framework=el('details',undefined,'source-directory');framework.append(el('summary','About these six areas'),el('p','Six clinical domains plus research resources. These references inform the organization; they do not validate this application or certify its answers.'));for(const ref of frameworkReferences){const row=el('p');reference(row,ref.title,ref.url);framework.append(row)}header.append(framework);
@@ -193,12 +194,13 @@ async function performSearch(input,chosenTopic,confirmed=false){
   searchRequest?.abort(); controller?.abort();controller=null;
   const request=new AbortController();searchRequest=request;
   const explicitCode=/^(?:what is |look up |search for )?(?:icd|snomed)/i.test(input.trim()) && codeQuery(input);
-  const prepared=explicitCode?{status:'ok',query:input}:prepareQuery(input),status=prepared.status;
+  const prepared=prepareQuery(input),status=prepared.status;
   if(status!=='ok'){
-    $('notice').textContent=guardMessage(status);$('results').hidden=true;$('resultsBody').replaceChildren();
+    $('notice').textContent=status==='unsafe'?'See the safe-care guidance below.':guardMessage(status);$('results').hidden=true;$('resultsBody').replaceChildren();
     topic='';unresolved=true;activeQuery='';live=null;codes=null;buddy.sync(true,false);
     const message=el('div',undefined,'overview-note search-answer');
-    message.setAttribute('role','alert');message.append(el('h2',status==='emergency'?'Get urgent help now':'Remove identifying details to continue'),el('p',guardMessage(status)));
+    message.setAttribute('role','alert');message.append(el('h2',prepared.safety?.title||(status==='emergency'?'Get urgent help now':'Remove identifying details to continue')));
+    renderAnswer(message,prepared.safety||{text:guardMessage(status)},renderCheck);
     if(status!=='emergency')message.append(button('Edit question',()=>{$('query').focus();$('query').scrollIntoView({block:'center'})}));
     $('card').hidden=false;$('card').replaceChildren(message);$('card').focus({preventScroll:true});$('card').scrollIntoView({block:'start'});
     return;
@@ -247,7 +249,7 @@ async function performSearch(input,chosenTopic,confirmed=false){
   codes=codeResult;activeQuery=input;topic=subject;void recordTopic(subject,'search',questionDeck(input)||1);activeResearchReady=true;live={message:'Searching Europe PMC…'};
   $('card').querySelectorAll('details[open]').forEach(d=>d.open=false);
   render();
-  $('notice').textContent=(corrected!==input?'Understood as “'+corrected+'”. ':'')+'Your answer and '+deckCount(role)+' areas are ready below.';
+  $('notice').textContent=(corrected!==input?'Understood as “'+corrected+'”. ':'')+'Your sources are below. Preparing the answer and six decks…';
   const target=questionDeck(corrected);
   if(target)copilot.activate(target);
   $('query').value=input;

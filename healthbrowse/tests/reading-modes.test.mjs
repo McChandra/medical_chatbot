@@ -26,7 +26,8 @@ test('a direct answer cannot be replaced by unrelated contextual detail',()=>{
  for(const role of readingRoles){
   const c=context('Leukemia',role),answer=searchAnswer(c,'What causes leukemia?');
   assert.match(answer.blocks[0].text,/genetic material/);assert.doesNotMatch(answer.blocks[0].text,/wheezing/);
-  for(const question of ['Does leukemia always come from mutation XYZ123?','What is the price of leukemia treatment?','Which medicine should I take?'])assert.equal(searchAnswer(c,question).citations.length,0,question);
+  for(const question of ['Does leukemia always come from mutation XYZ123?','What is the price of leukemia treatment?'])assert.equal(searchAnswer(c,question).citations.length,0,question);
+  const medication=searchAnswer(c,'Which medicine should I take?');assert.equal(medication.supported,false);assert.ok(medication.citations.every(c=>new URL(c.url).hostname==='www.fda.gov'));
  }
 });
 test('multipart requests preserve both answers and identify unsupported parts',()=>{

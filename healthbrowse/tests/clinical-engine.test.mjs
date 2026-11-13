@@ -32,7 +32,7 @@ test('educational roles cite an actual archived record and do not change permiss
     const answer=ask('What is asthma?',{role,deck:1});
     assert.equal(answer.text,passages.Asthma.find(p=>p.deck===1).text);
     assert.equal(answer.citations[0].url,passages.Asthma.find(p=>p.deck===1).url);
-    assert.equal(ask('What dose should I take?',{role}).citations.length,0);
+    const dose=ask('What dose should I take?',{role});assert.equal(dose.supported,false);assert.ok(dose.citations.every(c=>new URL(c.url).hostname==='www.fda.gov'));
   }
 });
 test('uses the requested card, clinical intent and topic',()=>{

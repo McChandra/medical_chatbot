@@ -10,3 +10,5 @@
 .model-notice{border-inline-start:3px solid var(--accent, #74935c);padding:.7rem 1rem;margin:1rem 0;line-height:1.55}
 .source-evidence{margin:.55rem 0;font-size:.85rem;overflow-wrap:anywhere}
 .source-evidence blockquote{margin:.65rem 0;padding-inline-start:1rem;border-inline-start:2px solid currentColor;white-space:pre-line}
+
+.inline-citations{display:inline-flex;flex-wrap:wrap;gap:6px;margin-inline-start:8px;font-size:.8em;vertical-align:baseline}.inline-citations a{font-weight:650;white-space:nowrap}.answer-text{white-space:pre-line;overflow-wrap:anywhere}.source-evidence>a,.source-evidence>small{display:block;margin-block:6px}.search-answer>.answer-mode,.med-section>.answer-mode{margin:10px 8px 0 0}.query-interpretation{display:block;margin-top:12px;color:var(--dim)}

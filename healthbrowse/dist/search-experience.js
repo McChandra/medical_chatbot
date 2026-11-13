@@ -1,3 +1,4 @@
+import {assessSafety,safetyAnswer} from './safety-policy.js';
 import {answerQuestion,questionDeck,inspectInput,inspectQuery,normalizeQuestion} from './clinical-engine.js';
 import {verifyClaim} from './claim-check.js';
 import {correctSpelling} from './medcard.js';
@@ -49,6 +50,7 @@ function supplemental(context,deck,limit,exclude=new Set(),intent){
 export function searchAnswer(context,query,{detail=false,activeDeck=1}={}){
  const question=correctSpelling(query).trim(),profile=readingProfile(context.role);
  const status=inspectQuery(question);
+ if(status==='unsafe')return {...safetyAnswer(assessSafety(question,context.topic).category),deck:activeDeck};
  if(status!=='ok')return {text:status==='emergency'?'If these symptoms or immediate danger are happening now, contact local emergency services now. Do not wait for a search response.':'Remove identifying details such as names, contact information, birth dates or record numbers. You can still describe symptoms in your own words.',citations:[],checks:[],blocks:[],supported:false,deck:activeDeck};
  if(inspectInput(question)==='private'){
   if(/\b(?:dos(?:e|es|age|ing)|prescrib\w*|(?:should|can|may) i (?:take|start|stop|change|increase|reduce)|how much should|which (?:medicine|medication|drug))\b/i.test(question))return {text:'I cannot choose a medicine, dose or treatment change for you. A clinician or pharmacist needs to check your circumstances. You can explore the cited general treatment information in Deck 4.',citations:[],checks:[],blocks:[],supported:false,deck:4};

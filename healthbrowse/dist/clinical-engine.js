@@ -1,3 +1,4 @@
+import {assessSafety,safetyAnswer} from './safety-policy.js';
 import {verifyClaim} from './claim-check.js';
 import {orderedPassages,professionalRole,domains} from './disease-framework.js';
 // All answer generation is local. Pass arrays already scoped to the selected topic,
@@ -5,7 +6,7 @@ import {orderedPassages,professionalRole,domains} from './disease-framework.js';
 const plain = value => String(value ?? '').normalize('NFKC').toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
 const words = value => plain(value).split(' ').filter(Boolean);
 const list = value => Array.isArray(value) ? value : [];
-const emergencySigns = /\b(stroke|heart attack|chest pain|chest pressure|face droop\w*|sudden(?:ly)? (?:weakness|numbness|confused|unable to speak)|slurred speech|cant breathe|cannot breathe|unable to breathe|struggling to breathe|difficulty breathing|trouble breathing|cant swallow|cannot swallow|unable to swallow|not breathing|overdos\w*|unconscious|kill myself|suicid\w*)\b/;
+const emergencySigns = /\b(stroke|heart attack|chest pain|chest pressure|face droop\w*|sudden(?:ly)? (?:weakness|numbness|confused|unable to speak)|slurred speech|cant stop bleeding|cannot stop bleeding|bleeding wont stop|cant breathe|cannot breathe|unable to breathe|struggling to breathe|difficulty breathing|trouble breathing|cant swallow|cannot swallow|unable to swallow|not breathing|overdos\w*|unconscious|kill myself|suicid\w*)\b/;
 const personal = /\b(i (?:have|had|am|feel|felt|think|suspect|took|take|cant|cannot|was|noticed|developed|might|may)|im (?:having|feeling|taking|experiencing|unable|dizzy)|my (?!research\b|question\b|course\b|assignment\b|presentation\b|project\b|search\b)|our patient|a patient (?:presents|reports|has|with)|he is|she is|this patient|patient (?:name|id)|am i|ive been|should i (?:take|stop|start|change|increase|reduce|go to)|someone (?:is|has|just)|\d{1,3} year old (?:man|woman|male|female|patient) (?:with|has|presents|reports))\b/;
 const dateIdentifier = /\b(?:\d{4}[-/]\d{1,2}[-/]\d{1,2}|\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}|(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\.?\s+\d{1,2}(?:st|nd|rd|th)?[,]?\s+\d{4}|\d{1,2}\s+(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\.?\s+\d{4})\b/i;
 const selfHarmStatement = /\b(?:i (?:want|intend|plan) to (?:die|(?:kill|hurt|harm) myself)|i(?:m| am) (?:feeling )?suicidal|i (?:have|am having|keep having) (?:active )?suicidal thoughts|i (?:might|will) (?:kill|hurt|harm) myself|(?:im having |having |experiencing |^)(?:active suicidal thoughts|thoughts of suicide right now))\b/;
@@ -16,9 +17,10 @@ const identifiers = /(?:[\w.+-]+@[\w.-]+\.[a-z]{2,}|\b(?:mrn|dob|ssn|patient id|
 const namedCase = /\b(?:(?:[Mm]y|[Oo]ur|[Tt]his|[Tt]he) patient\s+(?!(?:has|is|with|reports|presents|was|had|needs|takes|feels)\b)[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?|(?:[Pp]atient|[Pp]erson) (?:named|called)\s+\w+|(?:[Ii] am|[Ii]'m)\s+(?!(?:Having|Feeling|Experiencing|Suffering|Sick|Tired|Dizzy|Pregnant|Worried|Concerned)\b)[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?(?=\s*[,.;]|\s+and\b|$))|\b\d+\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?\s+(?:Street|Road|Avenue|Lane|Drive)\b/;
 export function inspectQuery(text) {
   const value = plain(text);
-  if (selfHarmStatement.test(value)) return 'emergency';
+  if (selfHarmStatement.test(value)||/\b(?:how (?:to|can i|do i)|best way to|instructions? to) (?:kill|harm|hurt|cut) myself\b/.test(value)) return 'emergency';
   if (emergencySigns.test(value) && (personal.test(value) || /\b(help me|right now|what do i do|happening now|please help|collapsed|not breathing|cant breathe|cannot breathe|kill myself)\b/.test(value))) return 'emergency';
   if (dateIdentifier.test(String(text ?? '')) || identifiers.test(String(text ?? '')) || namedCase.test(String(text ?? ''))) return 'private';
+  if(assessSafety(text).action!=='allow')return 'unsafe';
   return 'ok';
 }
 export function inspectInput(text) {
@@ -129,6 +131,7 @@ export function answerQuestion({question='',topic='',deck,passages=[],visibleTex
   let selected=selectedDeck(deck);
   const result=text=>({text,citations:[],deck:selected||1});
   const status=inspectInput(question);
+  if(status==='unsafe')return {...safetyAnswer(assessSafety(question).category),deck:selected||1};
   if(status==='emergency')return result('If this may be an emergency, contact local emergency services now. This research browser cannot assess someone’s condition.');
   if(status==='private')return result('Please remove personal health details and identifiers. Ask about a public medical topic or a research source.');
   let q=normalizeQuestion(question,topic,extraAliases);
