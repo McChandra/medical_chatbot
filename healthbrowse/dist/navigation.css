@@ -17,7 +17,7 @@
   .site-header,.auth-entry .site-header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;padding:10px clamp(12px,3vw,24px)}
   .site-header .brand,.site-header .wordmark{grid-column:1;grid-row:1;font-size:clamp(16px,3vw,24px);gap:6px}
   .site-header .brand small{font-size:9px;padding:3px}
-  .site-header .mark{width:28px;flex:none;font-size:24px;line-height:30px}
+  .site-header .mark{width:28px;height:28px;flex:none}
   .site-header .wordmark img{width:28px;height:28px}
   .site-header .theme-controls button{font-size:12px;padding-inline:8px}
   .site-header.nav-ready .nav-actions{display:flex}
