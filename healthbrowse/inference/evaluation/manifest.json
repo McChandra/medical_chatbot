@@ -12,7 +12,7 @@
     "dist/disease-framework.js": "bd72eb19f72530419fd49676f9fe46c9f6430cd936d14d0ab6a23288b17928c5",
     "dist/source-labels.js": "515614d411b9f01fdd901e070b2f2a5d3e4587ddd761ddff62b39f5a0a8a0df0",
     "dist/clinical-engine.js": "9bd82bdbbbded02d43c81ad1e5dd69868f7d5105d1c2c0ca7454216c800b5ad1",
-    "dist/safety-policy.js": "4af70d3ed6b52c8a67dd1b545e26024b454b1296e318ae56cc9c4aca35bd94c2",
+    "dist/safety-policy.js": "d6c978b9b9cb6df934973a3d8d4359666b6219933197d2e362fe5f2ee981be92",
     "dist/medline-topics.json": "722fdee5d14cbd2e1c8a6f701506f8f199a01041b1a2b3f7f814d74c6e135510",
     "dist/clinical-passages.json": "5c8c33590e6ca0c775b24a1b4f10e69db836e3cfd3ae582aa055f612538a49c4"
   },

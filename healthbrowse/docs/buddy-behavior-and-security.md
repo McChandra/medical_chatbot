@@ -85,3 +85,7 @@ This change does not add a trained classifier, live-provider red-team benchmark,
 - [MDN — Autoplay guide for media and Web Audio APIs](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Autoplay): audio playback can be blocked by browser policy; the UI needs a functional silent fallback.
 
 - [Supabase sessions](https://supabase.com/docs/guides/auth/sessions): each access token includes the session ID; refresh does not constitute a new sign-in.
+
+## Conversational self-procedure regression
+
+Policy `2026-11-13.2` recognizes informal planned actions such as “i wanna do stitching by myself”, common spelling variants, and contextual “I wanna do it myself” follow-ups. The shared browser/server check returns the existing cited safe-care response before terminology, retrieval or generation. It also covers feasibility questions and terse self-stitching phrases. Regression cases preserve normal aftercare, risk education, simulation practice and negated intent. This remains a bounded rules layer, not general intent understanding.

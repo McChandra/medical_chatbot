@@ -1,10 +1,15 @@
 // Versioned, deterministic pre-retrieval policy. It screens intent, not identity.
 // This is a tested rules layer, not a trained classifier or a safety guarantee.
-export const safetyPolicyVersion='2026-11-13.1';
-const plain=value=>String(value||'').normalize('NFKC').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+export const safetyPolicyVersion='2026-11-13.2';
+const plain=value=>String(value||'').normalize('NFKC').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9]+/g,' ').trim().replace(/\bwanna\b/g,'want to').replace(/\bgonna\b/g,'going to').replace(/\bstich(ing|es)?\b/g,'stitch$1');
 const procedure=/\b(stitch\w*|sutur\w*|sew(?:ing)? (?:up )?(?:a |the |my )?(?:wound|cut|skin)|perform\w* (?:an? )?surgery|operat(?:e|ing) on|incis\w*|drain\w* (?:an? |my |the )?(?:abscess|boil)|remov\w* (?:an? |my |the )?(?:tooth|mole)|extract\w* (?:an? |my |the )?tooth|cut(?:ting)? (?:off|out) (?:an? |my |the )?(?:mole|growth))\b/;
 const instruction=/\b(how (?:can|do|should|would|to)|show me|teach me|steps?|instructions?|guide me|walk me through|can i|should i|tell me how|how deep|how tight|(?:what|which) (?:needle|thread|equipment|tools))\b/;
 const diy=/\b(myself|yourself|at home|diy|without (?:a |an )?(?:doctor|clinician|nurse|dentist|surgeon|medical help)|on my own|my (?:cut|wound|skin|tooth|mole)|self sutur\w*)\b/;
+// Statements of intended action are requests too, even without “how” or “?”.
+// Keep education, aftercare, explicit refusal, and simulation separate.
+const plannedAction=/\b(?:i (?:want(?: to)?|need to|plan to|intend to|would like to|am going to|am planning to|am thinking (?:of|about)|will|might)|im (?:going to|planning to|thinking (?:of|about))|ill|help me|let me) (?:(?:do|try|perform|attempt|start) (?:the |some )?(?:stitch\w*|sutur\w*|sew\w*|drain\w*|remov\w*|extract\w*|cut\w*|operat\w*|surgery|it|this|that)|stitch\w*|sutur\w*|sew\w*|drain\w*|remov\w*|extract\w*|cut\w*|operat\w*)\b/;
+const procedureQuestion=/\b(?:is it (?:safe|okay|ok|possible) to|can (?:stitching|suturing|this|it) be done|could i|may i)\b/;
+const procedureFragment=/^(?:(?:diy|self) )?(?:stitch\w*|sutur\w*) (?:by )?(?:myself|at home|on my own)$/;
 const simulation=/\b(simulat\w*|suture pad|practice pad|mannequin|training model)\b/;
 const medicines={title:'FDA · Using medicines safely',url:'https://www.fda.gov/drugs/information-consumers-and-patients-drugs/think-it-through-managing-benefits-and-risks-medicines'};
 const wounds={title:'NHS · Cuts and grazes',url:'https://www.nhs.uk/conditions/cuts-and-grazes/'};
@@ -12,7 +17,8 @@ export function assessSafety(question,context=''){
  const q=plain(question),prior=plain(context);
  const aftercare=/\b(care for|clean|keep .* dry|signs? of infection|healing)\b/.test(q)&&!/\b(remove|perform|sew|cut|apply|insert|how to stitch|how to suture)\b/.test(q);
  const procedural=procedure.test(q)||(procedure.test(prior)&&/\b(it|that|this|do it)\b/.test(q));
- if(procedural&&!aftercare&&instruction.test(q)&&(diy.test(q)||(!simulation.test(q)&&/\b(steps?|instructions?|how to|teach me|walk me through)\b/.test(q))))return {action:'redirect',category:'unsafe_procedure'};
+ const selfProcedure=diy.test(q)&&!simulation.test(q)&&(plannedAction.test(q)||procedureQuestion.test(q)||procedureFragment.test(q));
+ if(procedural&&(!aftercare||selfProcedure)&&(selfProcedure||instruction.test(q)&&(diy.test(q)||(!simulation.test(q)&&/\b(steps?|instructions?|how to|teach me|walk me through)\b/.test(q)))))return {action:'redirect',category:'unsafe_procedure'};
  if(/\b(?:how (?:much|many)|what (?:dose|dosage)|which dose)\b/.test(q)&&/\b(i|me|my|myself|give|take|child|baby)\b/.test(q)||/\b(?:can|should|may) i (?:double|increase|reduce|stop|change|start|take)\b/.test(q)&&/\b(dose|medicine|medication|tablets?|pills?|antibiotics?|insulin|warfarin|prednisone|alprazolam)\b/.test(q)||/\b(?:prescribe (?:me|for me)|recommend (?:a )?dose for)\b/.test(q))return {action:'redirect',category:'individual_dose'};
  if(/\b(?:how|instructions?|steps?|best way|help me|teach me)\b/.test(q)&&(/\b(?:poison|drug|sedate) (?:someone|a person|my partner|my wife|my husband|a patient)\b/.test(q)||/\b(?:without (?:their )?consent|without them knowing)\b/.test(q)))return {action:'redirect',category:'harm_others'};
  if(/\b(?:how|instructions?|steps?|recipe|teach me|help me)\b/.test(q)&&/\b(?:make|manufacture|cook|synthesi[sz]e|extract|inject|snort|mix|combine|get|buy|obtain)\b/.test(q.replace(/\bget help\b/g,'seek support'))&&/\b(?:methamphetamine|meth|cocaine|heroin|fentanyl|illicit drugs?|get high|recreational high|without (?:a )?prescription)\b/.test(q))return {action:'redirect',category:'drug_misuse'};
