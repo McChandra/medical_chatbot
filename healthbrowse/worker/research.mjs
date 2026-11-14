@@ -25,7 +25,7 @@ function activityDate(value){
 }
 async function activityJSON(fetchImpl,url,options={}){
   const response=await fetchImpl(url,{...options,headers:{Accept:'application/json',...options.headers},credentials:'omit',
-    redirect:'error',signal:AbortSignal.timeout(8500)});
+    redirect:'manual',signal:AbortSignal.timeout(8500)});
   if(!response.ok)throw Error('Registry unavailable');
   return response.json();
 }

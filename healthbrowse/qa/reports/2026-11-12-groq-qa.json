@@ -1,0 +1,269 @@
+{
+  "createdAt": "2026-11-12T14:31:45.429Z",
+  "execution": "Real Groq provider through local gateway; authentication fixture",
+  "summary": {
+    "passed": 8,
+    "reviewFindings": 4
+  },
+  "models": {
+    "generator": "openai/gpt-oss-120b",
+    "reviewer": "openai/gpt-oss-20b"
+  },
+  "records": [
+    {
+      "case": "leukemia-overview",
+      "role": "General",
+      "question": "What is leukemia?",
+      "status": 200,
+      "elapsedMs": 10910,
+      "directAnswer": "Leukemia is a cancer of the blood\u2011forming cells that starts in the bone marrow, where blood cells are made. [S1]\n\nIt causes the marrow to produce large numbers of abnormal white blood cells that crowd out normal blood cells. [S2]",
+      "decks": [
+        {
+          "id": 1,
+          "generated": true,
+          "text": "Leukemia arises from genetic changes in bone\u2011marrow cells, but the exact cause of these DNA alterations is often unknown. [S11]\n\nThe disease is classified by the type of blood cell affected (lymphocytes or myeloid cells) and whether it grows quickly (acute) or slowly (chronic). [S3] [S4]"
+        },
+        {
+          "id": 2,
+          "generated": true,
+          "text": "Acute leukemias are fast\u2011growing and can worsen quickly without treatment, while chronic leukemias progress more slowly over many years. [S5]"
+        },
+        {
+          "id": 3,
+          "generated": true,
+          "text": "Common symptoms include fatigue, fever or night sweats, easy bruising or bleeding, weight loss, and tiny red spots (petechiae) under the skin. [S6]\n\nChronic leukemia may not cause noticeable symptoms early on. [S7]"
+        },
+        {
+          "id": 4,
+          "generated": true,
+          "text": "Treatment options depend on the leukemia type, severity, age, and overall health, and can include chemotherapy, radiation, stem\u2011cell transplant, and targeted therapies. [S9]"
+        },
+        {
+          "id": 5,
+          "generated": false,
+          "text": "In AML, there is an increase in the number of immature white blood cells called myeloblasts (or myeloid blasts). The myeloblasts in AML are abnormal and do not become healthy white blood cells. As the number of these cells, also called leukemia cells, increases in the blood and bone marrow, there is less room for healthy platelets, red blood cells, and other white blood cells. This may lead to easy bleeding, anemia, and infection. [S14]"
+        },
+        {
+          "id": 6,
+          "generated": true,
+          "text": "Risk of developing leukemia rises with age, especially after age 60, and varies by specific leukemia subtype. [S12]"
+        }
+      ],
+      "audit": {
+        "passed": true,
+        "findings": [
+          {
+            "severity": "review",
+            "check": "deck-coverage",
+            "detail": "Deck 5 used an excerpt or gap.",
+            "suggestion": "Inspect available sources for this domain before adding more generated detail."
+          }
+        ]
+      }
+    },
+    {
+      "case": "leukemia-overview",
+      "role": "Clinicians",
+      "question": "What is leukemia?",
+      "status": 200,
+      "elapsedMs": 12626,
+      "directAnswer": "Leukemia is a group of cancers that originate in the blood\u2011forming tissues, most commonly the bone marrow, where abnormal proliferation of white\u2011blood\u2011cell precursors crowds out normal blood cells and impairs their functions. [S1] [S3]",
+      "decks": [
+        {
+          "id": 1,
+          "generated": true,
+          "text": "Leukemia results from DNA changes in bone\u2011marrow cells, though the initiating causes of these mutations remain unidentified. [S12]"
+        },
+        {
+          "id": 2,
+          "generated": false,
+          "text": "There are different types of leukemia. Which type of leukemia you have depends on the type of blood cell that becomes cancer and whether it grows quickly or slowly. [S6]"
+        },
+        {
+          "id": 3,
+          "generated": true,
+          "text": "Common presenting features include fatigue, fever or night sweats, easy bruising or bleeding, weight loss, loss of appetite, and petechiae caused by platelet deficiency. [S7]"
+        },
+        {
+          "id": 4,
+          "generated": true,
+          "text": "Treatment selection is guided by leukemia type, disease severity, patient age, and overall health, employing chemotherapy, radiation, stem\u2011cell transplantation, or targeted agents that attack specific cancer pathways. [S10]"
+        },
+        {
+          "id": 5,
+          "generated": true,
+          "text": "In acute myeloid leukemia, accumulation of myeloblasts reduces functional red cells, platelets, and normal white cells, leading to anemia, bleeding tendencies, and infection risk. [S15]"
+        },
+        {
+          "id": 6,
+          "generated": true,
+          "text": "Leukemia incidence rises with age, becoming most common after age 60, reflecting age\u2011related risk factors across the population. [S14]"
+        }
+      ],
+      "audit": {
+        "passed": true,
+        "findings": [
+          {
+            "severity": "review",
+            "check": "deck-coverage",
+            "detail": "Deck 2 used an excerpt or gap.",
+            "suggestion": "Inspect available sources for this domain before adding more generated detail."
+          }
+        ]
+      }
+    },
+    {
+      "case": "leukemia-buddy",
+      "role": "General",
+      "question": "Explain the treatment options and what affects the choice.",
+      "status": 200,
+      "elapsedMs": 10967,
+      "directAnswer": "Leukemia can be treated with chemotherapy, radiation therapy, stem\u2011cell transplant, or targeted therapy, depending on the specific disease. [S8]\n\nThe choice of treatment is influenced by the leukemia type, how severe it is, the patient\u2019s age, overall health, and other individual factors. [S8]",
+      "decks": [],
+      "audit": {
+        "passed": true,
+        "findings": []
+      }
+    },
+    {
+      "case": "leukemia-buddy",
+      "role": "Clinicians",
+      "question": "Explain the treatment options and what affects the choice.",
+      "status": 200,
+      "elapsedMs": 6440,
+      "directAnswer": "Leukemia can be treated with chemotherapy, radiation therapy, chemotherapy combined with stem\u2011cell transplantation, or targeted therapy that attacks specific cancer cells while sparing normal tissue. [S8]\n\nThe selection of a specific treatment is guided by the leukemia type (acute versus chronic, lymphoid versus myeloid), disease severity, the patient\u2019s age, and overall health status. [S8]",
+      "decks": [],
+      "audit": {
+        "passed": true,
+        "findings": []
+      }
+    },
+    {
+      "case": "sore-throat-question",
+      "role": "General",
+      "question": "I have a sore throat. What can cause it and do antibiotics help?",
+      "status": 200,
+      "elapsedMs": 8959,
+      "directAnswer": "A sore throat can be caused by many things, most often a viral cold or flu, but also allergies, mononucleosis, smoking, strep throat, or tonsillitis. [S2]\n\nAntibiotics only help when the sore throat is due to a bacterial infection like strep throat; they do not help viral causes. [S7] [S9]",
+      "decks": [
+        {
+          "id": 1,
+          "generated": true,
+          "text": "Common causes of sore throat include colds, flu, allergies, mononucleosis, smoking, strep throat, and tonsillitis. [S2]"
+        },
+        {
+          "id": 2,
+          "generated": true,
+          "text": "Most sore throats improve on their own within about one week. [S4]"
+        },
+        {
+          "id": 3,
+          "generated": true,
+          "text": "Seek medical care if you have difficulty breathing or swallowing, blood in saliva, excessive drooling, dehydration, joint pain, rash, or worsening symptoms. [S5]\n\nGeneral guidance advises seeing a provider for severe or concerning sore throat symptoms. [S6]"
+        },
+        {
+          "id": 4,
+          "generated": true,
+          "text": "Supportive care such as lozenges, fluids, gargling, and over\u2011the\u2011counter pain relievers can ease throat pain. [S3]\n\nAntibiotics are useful for strep throat and can speed recovery, but they are ineffective for viral sore throats. [S7] [S9]"
+        },
+        {
+          "id": 5,
+          "generated": true,
+          "text": "If strep throat is not treated, it can lead to complications like abscesses, ear infections, kidney inflammation, rheumatic fever, or sinus infections. [S10]"
+        },
+        {
+          "id": 6,
+          "generated": true,
+          "text": "Prevent sore throats by washing hands, avoiding close contact with sick people, and not smoking or exposing yourself to secondhand smoke. [S8]"
+        }
+      ],
+      "audit": {
+        "passed": true,
+        "findings": []
+      }
+    },
+    {
+      "case": "sore-throat-question",
+      "role": "Clinicians",
+      "question": "I have a sore throat. What can cause it and do antibiotics help?",
+      "status": 200,
+      "elapsedMs": 10249,
+      "directAnswer": "If the sore throat is viral, antibiotics do not provide benefit, and most cases improve within one week without antimicrobial therapy. [S7]",
+      "decks": [
+        {
+          "id": 1,
+          "generated": false,
+          "text": "You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: \u2022 Allergies \u2022 Mononucleosis \u2022 Smoking \u2022 Strep throat \u2022 Tonsillitis [S2]"
+        },
+        {
+          "id": 2,
+          "generated": true,
+          "text": "Most sore throats improve on their own within one week. [S4]"
+        },
+        {
+          "id": 3,
+          "generated": true,
+          "text": "Seek care for severe symptoms such as difficulty breathing, swallowing, blood in saliva, excessive drooling, dehydration, joint pain, rash, or lack of improvement. [S5]"
+        },
+        {
+          "id": 4,
+          "generated": true,
+          "text": "Supportive care includes lozenges, fluids, gargling, and over\u2011the\u2011counter analgesics; aspirin is avoided in children. [S3]\n\nAntibiotics are ineffective for viral sore throats but are indicated for confirmed streptococcal infection. [S7] [S9]"
+        },
+        {
+          "id": 5,
+          "generated": true,
+          "text": "Untreated streptococcal infection can lead to abscesses, ear infections, glomerulonephritis, rheumatic fever, or sinus infections. [S10]"
+        },
+        {
+          "id": 6,
+          "generated": true,
+          "text": "Hand hygiene, avoiding close contact with infected individuals, and not smoking reduce the risk of sore throat. [S8]"
+        }
+      ],
+      "audit": {
+        "passed": true,
+        "findings": [
+          {
+            "severity": "review",
+            "check": "deck-coverage",
+            "detail": "Deck 1 used an excerpt or gap.",
+            "suggestion": "Inspect available sources for this domain before adding more generated detail."
+          },
+          {
+            "severity": "review",
+            "check": "clinical-depth",
+            "detail": "The clinician answer is very short.",
+            "suggestion": "Add source-supported diagnostic or mechanistic context appropriate to the question."
+          }
+        ]
+      }
+    },
+    {
+      "case": "sore-throat-buddy",
+      "role": "General",
+      "question": "When should someone seek medical care for a sore throat?",
+      "status": 200,
+      "elapsedMs": 5966,
+      "directAnswer": "Seek medical care if you have difficulty breathing or swallowing, notice blood in your saliva, drool excessively, become dehydrated, develop joint pain, rash, or if symptoms worsen or do not improve after a few days. [S5]\n\nGeneral guidance also recommends seeing a provider for any severe or concerning sore\u2011throat symptoms, including recurrent episodes. [S6]",
+      "decks": [],
+      "audit": {
+        "passed": true,
+        "findings": []
+      }
+    },
+    {
+      "case": "sore-throat-buddy",
+      "role": "Clinicians",
+      "question": "When should someone seek medical care for a sore throat?",
+      "status": 200,
+      "elapsedMs": 8045,
+      "directAnswer": "Seek medical care promptly if you experience difficulty breathing, difficulty swallowing, blood in saliva or phlegm, excessive drooling (especially in young children), signs of dehydration, joint swelling or pain, rash, or if symptoms do not improve within a few days or worsen. [S5]",
+      "decks": [],
+      "audit": {
+        "passed": true,
+        "findings": []
+      }
+    }
+  ]
+}

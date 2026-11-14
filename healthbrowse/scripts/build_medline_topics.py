@@ -5,6 +5,7 @@ Only the English health topic full-summary, publisher vocabulary, and first-part
 link metadata are copied. The feed timestamp is not an article review date.
 """
 import argparse
+import hashlib
 import io
 import json
 import re
@@ -99,6 +100,66 @@ def allowed_link(url):
                 for host in ALLOWED_HOSTS) and not parsed.path.startswith("/ency/"))
 
 
+def knowledge_blocks(blocks):
+    """Keep every summary paragraph and its complete list, with publisher headings.
+
+    The legacy four previews stay available. This richer index prevents a symptom
+    preview from swallowing the treatment section in the same source summary.
+    """
+    groups = []
+    for heading, kind, text in blocks:
+        if text.lower().startswith("nih:"):
+            continue
+        if kind == "li" and groups and groups[-1][0] == heading:
+            groups[-1][1].append("• " + text)
+        else:
+            groups.append([heading, [text]])
+    result = []
+    for position, (heading, parts) in enumerate(groups):
+        text = "\n".join(parts)
+        h, t = heading.lower(), text.lower()
+        rules = [
+            (r"(?:what should|target|goal).*(?:ldl|cholesterol|blood pressure|level)|(?:ldl|cholesterol).*(?:target|goal)", 4, "therapy"),
+            (r"complication|prognos|outlook|survival", 5, "prognosis"),
+            (r"prevent|incidence|prevalence|how common", 6, "public-health"),
+            (r"treat|therap|manag|living with", 4, "therapy"),
+            (r"diagnos|screen|test", 3, "identify"),
+            (r"symptom|signs", 3, "symptoms"),
+            (r"caus|etiolog", 1, "risk"),
+            (r"risk|more likely", 1, "risk"),
+            (r"progress|course|untreated|over time", 2, "course"),
+            (r"types|classif", 1, "classification"),
+            (r"genetic|inherit", 1, "genes"),
+        ]
+        matched = next(((deck, intent) for pattern, deck, intent in rules if re.search(pattern, h)), None)
+        if matched:
+            deck, intent = matched
+        elif position == 0:
+            deck, intent = 1, "definition"
+        elif re.search(r"what (?:is|are)|overview", h):
+            if position == 0 or groups[position - 1][0] != heading:
+                deck, intent = 1, "definition"
+            elif re.search(r"cells|insulin|immune|inflam|causes?|crowd|narrow|tissues|organs", t):
+                deck, intent = 1, "mechanism"
+            else:
+                deck, intent = 1, "context"
+        else:
+            # Unheaded paragraphs use narrow content cues; a missing category is
+            # left out rather than assigning every paragraph to a default deck.
+            matched = next(((deck, intent) for pattern, deck, intent in rules if re.search(pattern, t)), None)
+            if not matched:
+                continue
+            deck, intent = matched
+        result.append({"heading": heading, "text": text, "deck": deck, "intent": intent,
+                       "overview": intent == "definition",
+                       "id": hashlib.sha256((heading + "\n" + text).encode()).hexdigest()[:16]})
+        # A subtype description can explicitly establish progression. Preserve
+        # the complete source scope and do not infer a duration or untreated state.
+        if intent == "classification" and re.search(r"grows? quickly|grows? slowly|fast growing|slow growing|gets worse", t):
+            result.append({**result[-1], "deck": 2, "intent": "course"})
+    return result
+
+
 def topic_record(row):
     url = row.get("url", "")
     if row.get("language") != "English" or not re.fullmatch(r"https://medlineplus\.gov/[\w-]+\.html", url):
@@ -137,7 +198,7 @@ def topic_record(row):
     return {
         "title": row.get("title"), "url": url, "mesh": descriptors,
         "aliases": [clean(x.text) for x in row.findall("also-called") if x.text],
-        "sections": sections, "links": links,
+        "sections": sections, "links": links, "knowledge": knowledge_blocks(summary.blocks),
     }
 
 

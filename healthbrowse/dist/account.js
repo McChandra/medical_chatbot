@@ -1,6 +1,7 @@
-import {startEmailChallenge,confirmEmailChallenge} from './account-flows.js';
-import {accountRequest,getAuthClient} from './account-client.js';
-import {readingModes,researchUrl,suggestedPassword,validPassword} from './account-utils.js';
+import {setupAccountSettings} from './settings-ui.js';
+import {startEmailChallenge,confirmEmailChallenge,passwordLogin,updateRecoveredPassword,completeAuthCallback,authErrorMessage,requestEmailChange} from './account-flows.js';
+import {accountRequest,getAuthClient,clearResearchSession} from './account-client.js';
+import {readingModes,researchUrl,suggestedPassword,normalizeReadingRole,readingLabel} from './account-utils.js';
 
 const $=id=>document.getElementById(id);
 const text=(tag,value)=>Object.assign(document.createElement(tag),{textContent:value});
@@ -10,61 +11,90 @@ const failure=(error,fallback)=>error instanceof Error?error.message:fallback;
 const accountURL=new URL('/account.html',location.origin).href;
 let client,session,mode='login',challenge=null,recovering=false,authBusy=false,userGeneration=0;
 let contactAttempt=null,hasSettings=false;
+const settingsUI=setupAccountSettings({getClient:()=>client,getSession:()=>session});
 
 const modes={
-  login:['Log in with the password for your account. To use a one-time code, choose Email code.','Log in'],
-  signup:['Create an account with a unique password. Confirm your address with the code sent by email.','Create account'],
-  otp:['Log in to an existing account using a one-time code. Choose Sign up if you need an account.','Send sign-in code'],
-  forgot:['Request a password recovery code. Use it in this tab to choose a new password.','Send recovery code'],
+  login:['Sign in','Explore medical evidence and save sources in your research desk.','Log in'],
+  signup:['Create an account','Use Google or create a login with your email and password.','Create account'],
+  otp:['Email code login','Enter the email associated with your HealthBrowse account.','Send sign-in code'],
+  forgot:['Reset your password','Enter your account email and we’ll send password reset instructions.','Send reset email'],
 };
 function updateForm(){
   const verifying=Boolean(challenge);
   const passwordNeeded=!verifying && (recovering||['signup','login'].includes(mode));
-  $('authHelp').textContent=verifying?'Enter the latest code from your email.':recovering?'Choose a new password for the recovered account.':modes[mode][0];
-  $('authSubmit').textContent=verifying?'Verify code':recovering?'Update password':modes[mode][1];
+  const title=verifying?'Check your email':recovering?'Choose a new password':modes[mode][0];
+  if(document.body.classList.contains('auth-entry')){
+    $('pageTitle').textContent=title;
+    document.title=title+' · HealthBrowse AI';
+    $('intro').textContent=verifying?'Follow the confirmation instructions in your newest email.':recovering?'Choose a password with at least 12 characters.':modes[mode][1];
+  }
+  $('authHelp').textContent=verifying?'Email requested for '+challenge.email:'';
+  $('authSubmit').textContent=authBusy?'Please wait…':verifying?'Verify code':recovering?'Update password':modes[mode][2];
+  $('authForm').setAttribute('aria-busy',String(authBusy));
   $('email').disabled=authBusy||verifying||recovering;
-  $('password').required=passwordNeeded;$('password').disabled=!passwordNeeded;
+  $('password').required=passwordNeeded;$('password').disabled=authBusy||!passwordNeeded;
   $('password').autocomplete=mode==='login'&&!recovering?'current-password':'new-password';
-  $('code').disabled=!verifying;$('code').required=verifying;
+  $('code').disabled=authBusy||!verifying;$('code').required=verifying;
+  $('cancelFlow').disabled=authBusy;$('generate').disabled=authBusy;$('showPassword').disabled=authBusy;
   $('authSubmit').disabled=authBusy||!client;
   show('codeGroup',verifying);show('passwordGroup',passwordNeeded);
   show('suggestionGroup',passwordNeeded&&(mode==='signup'||recovering));
-  show('authModes',!verifying&&!recovering);show('cancelFlow',verifying||recovering);
-  show('google',!verifying&&!recovering);$('google').disabled=authBusy||!client;
-  for(const b of $('authModes').querySelectorAll('button')){b.disabled=authBusy||!client;b.setAttribute('aria-pressed',String(b.dataset.mode===mode))}
+  const chooseMethod=!verifying&&!recovering;
+  show('cancelFlow',!chooseMethod);
+  show('socialOptions',chooseMethod&&['login','signup'].includes(mode));
+  $('google').disabled=authBusy||!client;
+  show('forgotLink',chooseMethod&&mode==='login');
+  show('authLinks',chooseMethod&&!authBusy);
+  show('signupLink',mode==='login');show('otpLink',mode==='login');show('loginLink',mode!=='login');
+
 }
 function switchMode(value){
   mode=value;challenge=null;$('code').value='';$('password').value='';$('showPassword').checked=false;
+  history.replaceState(null,'',value==='login'?'/account.html':'/account.html?view='+value);
   $('password').type='password';status('authStatus','');updateForm();
 }
 function checked(result){if(result?.error)throw result.error;return result?.data}
 async function loadAccount(){
   const generation=++userGeneration;
-  const active=Boolean(session)&&!recovering;
+  const active=Boolean(session)&&!recovering&&mode!=='forgot';
+  if(recovering&&session?.user.email)$('email').value=session.user.email;
+  if(active && !['#workspace','#help','#contact','#feedback','#saved','#settings','#history','#profile','#chats','#security','#notifications','#privacy'].includes(location.hash)){
+    location.replace('/');
+    return;
+  }
+  document.body.classList.toggle('auth-entry',!active);
+  if(active){
+    $('pageTitle').textContent='Account settings';document.title='Account settings · HealthBrowse AI';
+    $('intro').textContent='Your profile, preferences and research. All in one place.';
+  }else updateForm();
   hasSettings=false;
-  for(const id of ['signedIn','settings','saved','history'])show(id,active);
+  settingsUI.activate(active);
   show('authPanel',!active);show('authForm',Boolean(client));
   $('feedbackForm').querySelector('button').disabled=!active;$('contactForm').querySelector('button').disabled=!active;
   for(const id of ['feedbackStatus','contactStatus'])status(id,active?'':'Sign in to submit.');
   for(const id of ['settingsStatus','historyStatus','savedStatus'])status(id,'');
   $('settingsForm').querySelector('button').disabled=true;
+  $('privacyForm').querySelector('button').disabled=true;
   $('savedItems').replaceChildren();$('historyItems').replaceChildren();
-  if(!active){$('who').textContent='';return}
-  $('who').textContent=session.user.email||'Authenticated account';
+  if(!active)return;
   $('contactEmail').value=session.user.email||'';
   const loaders=[
     ['settingsStatus','/api/me/settings',data=>{
-      const s=data.settings;$('readingMode').value=s.readingMode;$('savedTheme').value=s.theme;$('saveHistory').checked=s.saveHistory;
-      hasSettings=true;$('settingsForm').querySelector('button').disabled=false;
+      const s=data.settings;$('saveChats').checked=s.saveChats??true;$('readingMode').value=normalizeReadingRole(s.readingMode);$('savedTheme').value=s.theme;$('saveHistory').checked=s.saveHistory;
+      settingsUI.preferences(s);hasSettings=true;$('settingsForm').querySelector('button').disabled=false;$('privacyForm').querySelector('button').disabled=false;
     }],
     ['savedStatus','/api/me/saved',data=>renderSaved(data.items)],
     ['historyStatus','/api/me/history',data=>renderHistory(data.items)],
+    ['nameStatus','/api/me/profile',data=>settingsUI.profile(data.profile)],
+    ['chatsStatus','/api/me/chats',data=>renderChats(data.items)],
   ];
   await Promise.all(loaders.map(async([id,path,draw])=>{
     try{const data=await accountRequest(path);if(generation===userGeneration)draw(data)}
     catch(error){if(generation===userGeneration)status(id,failure(error,'Account data unavailable.'))}
   }));
+  if(generation===userGeneration){settingsUI.security();renderAccountDates();}
 }
+function renderAccountDates(){for(const el of document.querySelectorAll('[data-account-time]'))el.textContent=settingsUI.formatTime(el.dataset.accountTime)}
 function renderSaved(items){
   const root=$('savedItems');root.replaceChildren();
   for(const row of items){
@@ -85,20 +115,20 @@ function renderHistory(items){
   const root=$('historyItems');root.replaceChildren();
   for(const row of items){
     const line=text('div','');line.className='row';
-    const open=text('a',row.questionLabel||row.topic);open.href=researchUrl(row.topic,row.section);
-    line.append(open,text('small',' · '+row.kind+' · '+new Date(row.created_at).toLocaleString()));root.append(line);
+    const open=text('a',row.questionLabel||row.topic);open.href=researchUrl(row.topic);
+    const time=text('time',settingsUI.formatTime(row.created_at));time.dataset.accountTime=row.created_at;time.dateTime=row.created_at;line.append(open,text('small',' · '+row.kind+' · '),time);root.append(line);
   }
   if(!items.length)root.append(text('p','No saved public research activity.'));
   $('clearHistory').disabled=!items.length;
 }
 function clearTabData(){
-  for(const key of ['hb-context','hb-transcript','hb-reader','hb-terms','hb-welcome','hb-account-recovery'])sessionStorage.removeItem(key);
+  clearResearchSession();
   for(const id of ['feedbackForm','contactForm','authForm'])$(id).reset();
   contactAttempt=null;recovering=false;challenge=null;
 }
 async function finishRecovery(){
-  sessionStorage.removeItem('hb-account-recovery');recovering=false;
-  checked(await client.auth.signOut({scope:'local'}));session=null;clearTabData();
+  checked(await client.auth.signOut({scope:'local'}));session=null;
+  sessionStorage.removeItem('hb-account-recovery');recovering=false;clearTabData();
   switchMode('login');status('authStatus','Password updated. Sign in with your new password.');
 }
 $('authForm').onsubmit=async e=>{
@@ -111,23 +141,22 @@ $('authForm').onsubmit=async e=>{
       session=await confirmEmailChallenge(client.auth,challenge,$('code').value);challenge=null;$('code').value='';
       if(kind==='recovery'){recovering=true;sessionStorage.setItem('hb-account-recovery','1');status('authStatus','Code verified. Choose a new password.')}
     }else if(recovering){
-      if(!validPassword(password))throw new Error('Use at least 12 characters and no more than 72 UTF-8 bytes.');
-      checked(await client.auth.updateUser({password}));await finishRecovery();
+      await updateRecoveredPassword(client.auth,password);await finishRecovery();
     }else if(mode==='login'){
-      const result=checked(await client.auth.signInWithPassword({email,password}));session=result.session;
+      session=await passwordLogin(client.auth,email,password);
       $('password').value='';
     }else{
       challenge=await startEmailChallenge(client.auth,mode,email,password,accountURL);
       $('password').value='';
-      const messages={signup:'If signup can proceed, you will receive a confirmation code.',login:'If this account can sign in, check your email for a code.',recovery:'If this email belongs to an account, check it for a recovery code or link.'};
+      const messages={signup:'If signup can proceed, you will receive a confirmation email.',login:'If this account can sign in, check your email for a code or link.',recovery:'If this email belongs to an account, check it for password reset instructions.'};
       status('authStatus',messages[challenge.kind]);
     }
+    if(session&&!recovering)history.replaceState(null,'',location.pathname);
     await loadAccount();
   }catch(error){
-    status('authStatus',failure(error,'Request unsuccessful.'));
+    status('authStatus',authErrorMessage(error));
   }finally{authBusy=false;updateForm()}
 };
-$('authModes').onclick=e=>{const b=e.target.closest('button[data-mode]');if(b)switchMode(b.dataset.mode)};
 $('cancelFlow').onclick=async()=>{
   if(recovering&&client){try{checked(await client.auth.signOut({scope:'local'}))}catch(error){status('authStatus',failure(error,'Sign-out failed.'));return}}
   recovering=false;sessionStorage.removeItem('hb-account-recovery');switchMode('login');session=null;await loadAccount();
@@ -135,24 +164,30 @@ $('cancelFlow').onclick=async()=>{
 $('showPassword').onchange=()=>{$('password').type=$('showPassword').checked?'text':'password'};
 $('generate').onclick=()=>{ $('password').value=suggestedPassword();$('showPassword').checked=true;$('password').type='text';status('authStatus','Suggested password generated. Save it in your password manager.'); };
 $('google').onclick=async()=>{
-  $('google').disabled=true;
+  if(!client||authBusy)return;
+  authBusy=true;updateForm();
+  $('google').textContent='Opening Google…';status('authStatus','Continue on Google’s sign-in page.');
   try{checked(await client.auth.signInWithOAuth({provider:'google',options:{redirectTo:accountURL}}))}
-  catch(error){status('authStatus',failure(error,'Google sign-in failed.'));updateForm()}
+  catch(error){
+    authBusy=false;$('google').textContent='Continue with Google';
+    status('authStatus',authErrorMessage(error));updateForm();
+  }
 };
-$('logout').onclick=async()=>{
+const signOut=async()=>{
   try{checked(await client.auth.signOut({scope:'local'}));session=null;clearTabData();switchMode('login');await loadAccount()}
   catch(error){status('settingsStatus',failure(error,'Sign-out failed. Try again.'))}
 };
+$('accountSignOut').onclick=signOut;
 $('settingsForm').onsubmit=async e=>{
   e.preventDefault();if(!hasSettings)return;
   const generation=userGeneration,submit=$('settingsForm').querySelector('button');submit.disabled=true;
   try{
-    const settings={saveHistory:$('saveHistory').checked,readingMode:$('readingMode').value,theme:$('savedTheme').value};
+    const settings={readingMode:$('readingMode').value,theme:$('savedTheme').value,timezone:$('settingsTimezone').value};
     await accountRequest('/api/me/settings',{method:'PATCH',body:settings});
     if(generation===userGeneration){sessionStorage.setItem('hb-reader',JSON.stringify(settings.readingMode));
       if(settings.theme==='system')localStorage.removeItem('healthbrowse-theme');else localStorage.setItem('healthbrowse-theme',settings.theme);
       document.documentElement.dataset.theme=settings.theme==='system'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):settings.theme;
-      status('settingsStatus','Settings saved.');}
+      settingsUI.preferences(settings);renderAccountDates();window.dispatchEvent(new Event('healthbrowse-theme-change'));status('settingsStatus','Preferences saved.');settingsUI.toast('Preferences saved');}
   }catch(error){status('settingsStatus',failure(error,'Settings could not be saved.'))}
   finally{if(generation===userGeneration)submit.disabled=false}
 };
@@ -183,27 +218,75 @@ $('contactForm').onsubmit=async e=>{
 };
 
 async function init(){
-  readingModes.forEach(r=>$('readingMode').append(new Option(r)));
+  readingModes.forEach(r=>$('readingMode').append(new Option(readingLabel(r),r)));
+  const view=new URLSearchParams(location.search).get('view');
+  if(Object.hasOwn(modes,view))mode=view;
+  else if(location.hash==='#signup')mode='signup';
   updateForm();
   try{
     client=await getAuthClient();
-    const url=new URL(location.href),code=url.searchParams.get('code'),err=url.searchParams.get('error');
-    if(code||err){const safe=new URL(url);safe.search='';safe.hash='';history.replaceState(null,'',safe.pathname)}
-    if(err)throw new Error('Account authorization was cancelled or could not complete. You may retry.');
-    if(code){
-      const data=checked(await client.auth.exchangeCodeForSession(code));
-      if(!data.session)throw new Error('The sign-in link has expired. Request a new one.');
-      if(url.searchParams.get('flow')==='recovery'){recovering=true;sessionStorage.setItem('hb-account-recovery','1')}
-    }
+    const url=new URL(location.href),fragment=new URLSearchParams(url.hash.slice(1));
+    if(url.searchParams.has('code')||url.searchParams.has('error')||fragment.has('error'))history.replaceState(null,'',url.pathname);
+    const callback=await completeAuthCallback(client.auth,url);
+    if(callback&&sessionStorage.getItem('hb-email-change')){sessionStorage.removeItem('hb-email-change');history.replaceState(null,'','/account.html#profile')}
+    if(callback?.recovering){recovering=true;sessionStorage.setItem('hb-account-recovery','1')}
     session=checked(await client.auth.getSession()).session;
     recovering=Boolean(session)&&sessionStorage.getItem('hb-account-recovery')==='1';
     client.auth.onAuthStateChange((event,newSession)=>{
       if(authBusy)return;
       if(event==='SIGNED_OUT'){clearTabData();session=null;setTimeout(()=>loadAccount(),0)}
-      else if(newSession?.user.id===session?.user.id){session=newSession}
+      else if(newSession?.user.id===session?.user.id){session=newSession;if(event==='USER_UPDATED')setTimeout(()=>{if(!authBusy)loadAccount()},0)}
     });
     status('authStatus','');await loadAccount();
-  }catch(error){status('authStatus',failure(error,'Account sign-in is unavailable.'))}
+  }catch(error){status('authStatus',authErrorMessage(error))}
   finally{show('authForm',Boolean(client));updateForm()}
 }
 init();
+// Returning from Google must not restore a disabled, in-progress form from bfcache.
+window.addEventListener('pageshow',event=>{if(event.persisted)location.reload()});
+
+function renderChats(items){
+ const root=$('accountChats');root.replaceChildren();
+ for(const chat of items){
+  const row=text('div','');row.className='row';const open=text('a',chat.title);open.href='/?chat='+encodeURIComponent(chat.id);
+  const detail=text('p',chat.topic+' · ');detail.className='muted';const time=text('time',settingsUI.formatTime(chat.updatedAt));time.dataset.accountTime=chat.updatedAt;time.dateTime=chat.updatedAt;detail.append(time);
+  const actions=text('div','');actions.className='chat-actions';
+  const rename=text('button','Rename'),remove=text('button','Delete');rename.type=remove.type='button';
+  const form=document.createElement('form');form.hidden=true;
+  const label=text('label','Chat name');const input=document.createElement('input');input.id='rename-'+chat.id;input.maxLength=160;input.required=true;input.value=chat.title;label.htmlFor=input.id;
+  const save=text('button','Save name'),cancel=text('button','Cancel');save.type='submit';cancel.type='button';form.append(label,input,save,cancel);
+  rename.onclick=()=>{form.hidden=false;input.focus()};cancel.onclick=()=>{form.hidden=true};
+  form.onsubmit=async event=>{event.preventDefault();save.disabled=true;try{const data=await accountRequest('/api/me/chats/'+chat.id,{method:'PATCH',body:{title:input.value.trim()}});open.textContent=data.chat.title;form.hidden=true;status('chatsStatus','Chat renamed.')}catch(error){status('chatsStatus',error.message)}finally{save.disabled=false}};
+  remove.onclick=async()=>{if(!confirm('Delete this chat and all its messages? This cannot be undone.'))return;remove.disabled=true;try{await accountRequest('/api/me/chats/'+chat.id,{method:'DELETE'});row.remove();if(!root.children.length)root.append(text('p','No saved chats yet.'));status('chatsStatus','Chat deleted.')}catch(error){remove.disabled=false;status('chatsStatus',error.message)}};
+  actions.append(rename,remove);row.append(open,detail,actions,form);root.append(row);
+ }
+ if(!items.length)root.append(text('p','No saved chats yet. Start a research chat on the desk.'));
+}
+$('emailForm').onsubmit=async event=>{
+ event.preventDefault();if(!client||!session)return;const button=event.target.querySelector('button[type=submit]');button.disabled=true;
+ const email=$('profileEmail').value.trim();
+ try{
+  if(email.toLowerCase()===session.user.email?.toLowerCase()){status('emailStatus','This is already your account email.');return}
+  await requestEmailChange(client.auth,email,accountURL);
+  sessionStorage.setItem('hb-email-change','1');
+  status('emailStatus','Change requested. Check the current and new email inboxes for confirmation instructions.');settingsUI.toast('Email verification requested');
+ }catch(error){status('emailStatus',authErrorMessage(error))}finally{button.disabled=false}
+};
+$('deleteAllChats').onclick=()=>{$('deleteConfirmation').value='';$('confirmDeleteChats').disabled=true;$('deleteChatsDialog').showModal()};
+$('deleteConfirmation').oninput=()=>{$('confirmDeleteChats').disabled=$('deleteConfirmation').value!=='DELETE'};
+$('cancelDeleteChats').onclick=()=>$('deleteChatsDialog').close();
+$('confirmDeleteChats').onclick=async()=>{
+ if($('deleteConfirmation').value!=='DELETE')return;
+ const button=$('confirmDeleteChats');button.disabled=true;
+ try{
+  await accountRequest('/api/me/chats',{method:'DELETE',body:{confirmation:'DELETE_ALL_CHATS'}});
+  clearResearchSession();localStorage.setItem('hb-history-cleared',String(Date.now()));renderChats([]);renderHistory([]);
+  status('deleteChatsStatus','All saved chats, messages, and research activity were deleted.');$('deleteChatsDialog').close();
+ }catch(error){status('deleteChatsStatus',error.message);$('deleteChatsDialog').close()}finally{button.disabled=false}
+};
+
+$('privacyForm').onsubmit=async event=>{
+ event.preventDefault();if(!hasSettings)return;const button=event.target.querySelector('button');button.disabled=true;
+ try{await accountRequest('/api/me/settings',{method:'PATCH',body:{saveChats:$('saveChats').checked,saveHistory:$('saveHistory').checked}});if(!$('saveHistory').checked)renderHistory([]);status('privacyStatus','Privacy preferences saved.');settingsUI.toast('Privacy preferences saved')}
+ catch(error){status('privacyStatus',error.message)}finally{button.disabled=false}
+};

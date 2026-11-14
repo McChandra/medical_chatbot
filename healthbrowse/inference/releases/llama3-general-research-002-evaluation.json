@@ -1,0 +1,245 @@
+{
+  "audit_version": 1,
+  "evaluation_zip_sha256": "693228c1701f758675af5d4d23818f350daeab7abd1318ea0a6a56fa4aaeed66",
+  "adapter_sha256": "9fd872b09372d3d079aa7f359e4072cdb66954d0e5e77b130f5a0441a397e5c5",
+  "fixture_sha256": "90956139e1cc5369c60be7c42be254e771df964d1922bf0888824a4d586136e4",
+  "base_revision": "8afb486c1db24fe5011ec46dfbe5b5dccdb575c2",
+  "expected_results": 78,
+  "observed_results": 78,
+  "archive_crc_passed": true,
+  "fixture_hashes_match": true,
+  "clinical_release_approved": false,
+  "groups": [
+    {
+      "suite": "generation",
+      "route": "adapter",
+      "mode": "chat",
+      "cases": 7,
+      "recorded_schema_passes": 6,
+      "nonempty_answers_in_valid_outputs": 6,
+      "direct_question_answering": "not established by format checks",
+      "claim_support": "not established by quote matches",
+      "latency_seconds": {
+        "mean": 16.439,
+        "median": 15.24,
+        "min": 12.248,
+        "max": 22.922
+      },
+      "errors": {
+        "Expecting ',' delimiter: line 1 column 377 (char 376)": 1
+      }
+    },
+    {
+      "suite": "generation",
+      "route": "adapter",
+      "mode": "search",
+      "cases": 5,
+      "recorded_schema_passes": 3,
+      "nonempty_answers_in_valid_outputs": 3,
+      "direct_question_answering": "not established by format checks",
+      "claim_support": "not established by quote matches",
+      "latency_seconds": {
+        "mean": 92.444,
+        "median": 98.32,
+        "min": 51.344,
+        "max": 129.785
+      },
+      "errors": {
+        "invalid or prescriptive claim": 1,
+        "Expecting ',' delimiter: line 1 column 685 (char 684)": 1
+      },
+      "search_decks": {
+        "valid_outputs": 3,
+        "invalid_outputs_not_scored_as_empty": 2,
+        "populated_slots_in_valid_outputs": 11,
+        "empty_slots_in_valid_outputs": 7,
+        "unfilled_evidence_slots_in_valid_outputs": 0,
+        "all_six_populated_valid_outputs": 0
+      }
+    },
+    {
+      "suite": "generation",
+      "route": "base",
+      "mode": "chat",
+      "cases": 7,
+      "recorded_schema_passes": 0,
+      "nonempty_answers_in_valid_outputs": 0,
+      "direct_question_answering": "not established by format checks",
+      "claim_support": "not established by quote matches",
+      "latency_seconds": {
+        "mean": 16.637,
+        "median": 16.181,
+        "min": 11.098,
+        "max": 26.539
+      },
+      "errors": {
+        "'decks'": 4,
+        "Expecting ',' delimiter: line 1 column 375 (char 374)": 1,
+        "Expecting ',' delimiter: line 1 column 452 (char 451)": 1,
+        "Expecting ',' delimiter: line 1 column 875 (char 874)": 1
+      }
+    },
+    {
+      "suite": "generation",
+      "route": "base",
+      "mode": "search",
+      "cases": 5,
+      "recorded_schema_passes": 0,
+      "nonempty_answers_in_valid_outputs": 0,
+      "direct_question_answering": "not established by format checks",
+      "claim_support": "not established by quote matches",
+      "latency_seconds": {
+        "mean": 30.173,
+        "median": 23.306,
+        "min": 13.853,
+        "max": 51.076
+      },
+      "errors": {
+        "'decks'": 1,
+        "Expecting ',' delimiter: line 1 column 394 (char 393)": 1,
+        "Expecting ',' delimiter: line 3 column 1 (char 585)": 1,
+        "Expecting ',' delimiter: line 1 column 784 (char 783)": 1,
+        "Expecting ',' delimiter: line 1 column 2508 (char 2507)": 1
+      },
+      "search_decks": {
+        "valid_outputs": 0,
+        "invalid_outputs_not_scored_as_empty": 5,
+        "populated_slots_in_valid_outputs": 0,
+        "empty_slots_in_valid_outputs": 0,
+        "unfilled_evidence_slots_in_valid_outputs": 0,
+        "all_six_populated_valid_outputs": 0
+      }
+    },
+    {
+      "suite": "holdout-extraction",
+      "route": "adapter",
+      "mode": "chat",
+      "cases": 11,
+      "recorded_schema_passes": 11,
+      "nonempty_answers_in_valid_outputs": 11,
+      "direct_question_answering": "not established by format checks",
+      "claim_support": "not established by quote matches",
+      "latency_seconds": {
+        "mean": 11.412,
+        "median": 10.629,
+        "min": 7.612,
+        "max": 16.427
+      },
+      "errors": {}
+    },
+    {
+      "suite": "holdout-extraction",
+      "route": "adapter",
+      "mode": "search",
+      "cases": 14,
+      "recorded_schema_passes": 14,
+      "nonempty_answers_in_valid_outputs": 14,
+      "direct_question_answering": "not established by format checks",
+      "claim_support": "not established by quote matches",
+      "latency_seconds": {
+        "mean": 28.082,
+        "median": 27.318,
+        "min": 16.816,
+        "max": 37.404
+      },
+      "errors": {},
+      "search_decks": {
+        "valid_outputs": 14,
+        "invalid_outputs_not_scored_as_empty": 0,
+        "populated_slots_in_valid_outputs": 11,
+        "empty_slots_in_valid_outputs": 73,
+        "unfilled_evidence_slots_in_valid_outputs": 10,
+        "all_six_populated_valid_outputs": 0
+      }
+    },
+    {
+      "suite": "holdout-extraction",
+      "route": "base",
+      "mode": "chat",
+      "cases": 11,
+      "recorded_schema_passes": 0,
+      "nonempty_answers_in_valid_outputs": 0,
+      "direct_question_answering": "not established by format checks",
+      "claim_support": "not established by quote matches",
+      "latency_seconds": {
+        "mean": 19.723,
+        "median": 19.996,
+        "min": 13.124,
+        "max": 24.188
+      },
+      "errors": {
+        "Expecting value: line 1 column 1 (char 0)": 11
+      }
+    },
+    {
+      "suite": "holdout-extraction",
+      "route": "base",
+      "mode": "search",
+      "cases": 14,
+      "recorded_schema_passes": 0,
+      "nonempty_answers_in_valid_outputs": 0,
+      "direct_question_answering": "not established by format checks",
+      "claim_support": "not established by quote matches",
+      "latency_seconds": {
+        "mean": 21.416,
+        "median": 20.652,
+        "min": 13.786,
+        "max": 32.567
+      },
+      "errors": {
+        "Expecting value: line 1 column 1 (char 0)": 14
+      },
+      "search_decks": {
+        "valid_outputs": 0,
+        "invalid_outputs_not_scored_as_empty": 14,
+        "populated_slots_in_valid_outputs": 0,
+        "empty_slots_in_valid_outputs": 0,
+        "unfilled_evidence_slots_in_valid_outputs": 0,
+        "all_six_populated_valid_outputs": 0
+      }
+    },
+    {
+      "suite": "review",
+      "route": "adapter",
+      "mode": "chat",
+      "cases": 2,
+      "recorded_schema_passes": 2,
+      "nonempty_answers_in_valid_outputs": 0,
+      "direct_question_answering": "not established by format checks",
+      "claim_support": "not established by quote matches",
+      "latency_seconds": {
+        "mean": 9.256,
+        "median": 9.256,
+        "min": 7.757,
+        "max": 10.755
+      },
+      "errors": {},
+      "synthetic_contract_passes": 2
+    },
+    {
+      "suite": "review",
+      "route": "base",
+      "mode": "chat",
+      "cases": 2,
+      "recorded_schema_passes": 2,
+      "nonempty_answers_in_valid_outputs": 0,
+      "direct_question_answering": "not established by format checks",
+      "claim_support": "not established by quote matches",
+      "latency_seconds": {
+        "mean": 6.431,
+        "median": 6.431,
+        "min": 5.61,
+        "max": 7.252
+      },
+      "errors": {},
+      "synthetic_contract_passes": 2
+    }
+  ],
+  "limitations": [
+    "This audit validates export completeness and aggregates recorded deterministic checks; it does not rerun a model.",
+    "A nonempty answer is not evidence that the question was answered correctly or completely.",
+    "Invalid search responses have unknown deck coverage, not six measured empty decks.",
+    "Quote presence does not establish that the cited passage supports the claim.",
+    "No clinical accuracy score or clinician review is provided."
+  ]
+}

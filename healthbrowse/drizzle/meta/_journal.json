@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1793878526589,
+      "tag": "0000_bent_masked_marvel",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1793952191409,
+      "tag": "0001_oval_charles_xavier",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1794551541477,
+      "tag": "0002_mysterious_lizard",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1794552686292,
+      "tag": "0003_motionless_bedlam",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1794555677656,
+      "tag": "0004_silly_firelord",
+      "breakpoints": true
+    }
+  ]
+}

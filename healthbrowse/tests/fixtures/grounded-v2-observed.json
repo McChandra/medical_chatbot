@@ -1,0 +1,1809 @@
+{
+  "provenance": {
+    "archive_sha256": "0a9e16dcd79b334a2e01fc41e45ca78ef1c1742248a673656087c59b6c6d4d4f",
+    "implementation_commit": "842dab12a047dce6506cd8a99b54b3d84f1706f5",
+    "description": "Observed failed research outputs. Not clinical facts, training targets, or held-out quality evaluation."
+  },
+  "acceptedDrafts": [
+    {
+      "id": "leukemia-outlook",
+      "route": "adapter",
+      "input": {
+        "topic": "Leukemia",
+        "question": "What complications and outcomes are described for leukemia?",
+        "role": "General reader",
+        "mode": "chat",
+        "deck": 5,
+        "history": [],
+        "searchQuery": "What is Leukemia?"
+      },
+      "prepared": {
+        "evidence": {
+          "sources": [
+            {
+              "key": "nci-aml-complications",
+              "topic": "Leukemia",
+              "deck": 5,
+              "text": "In AML, there is an increase in the number of immature white blood cells called myeloblasts (or myeloid blasts). The myeloblasts in AML are abnormal and do not become healthy white blood cells. As the number of these cells, also called leukemia cells, increases in the blood and bone marrow, there is less room for healthy platelets, red blood cells, and other white blood cells. This may lead to easy bleeding, anemia, and infection.",
+              "url": "https://www.cancer.gov/types/leukemia/patient/adult-aml-treatment-pdq",
+              "title": "Acute Myeloid Leukemia Treatment (PDQ\u00ae)\u2013Patient Version \u00b7 NCI",
+              "heading": "Leukemia may affect red blood cells, white blood cells, and platelets.",
+              "intent": "complications",
+              "focus": "Acute myeloid leukemia (AML)",
+              "scopeTerms": [
+                "AML",
+                "acute myeloid"
+              ],
+              "date": "Publication date not verified; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "c6bf93986a10db5ba5eb2a9d74ec7023624b36dc490e2802841206d3bf41e18b",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S14"
+            },
+            {
+              "id": "S3",
+              "deck": 1,
+              "overview": false,
+              "text": "There are different types of leukemia. Which type of leukemia you have depends on the type of blood cell that becomes cancer and whether it grows quickly or slowly.",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 What are the types of leukemia?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "What are the types of leukemia?",
+              "intent": "classification",
+              "scopeTerms": []
+            },
+            {
+              "id": "S5",
+              "deck": 2,
+              "overview": false,
+              "text": "The different types can grow quickly or slowly: \u2022 Acute leukemia is fast growing. It usually gets worse quickly if it's not treated. \u2022 Chronic leukemia is slow growing. It usually gets worse over a longer period of time.",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 What are the types of leukemia?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "What are the types of leukemia?",
+              "intent": "course",
+              "scopeTerms": []
+            },
+            {
+              "id": "S6",
+              "deck": 3,
+              "overview": false,
+              "text": "Your health care provider may use many tools to diagnose leukemia: \u2022 A physical exam \u2022 A medical history \u2022 Blood tests, such as a complete blood count (CBC) \u2022 Bone marrow tests. There are two main types - bone marrow aspiration and bone marrow biopsy. Both tests involve removing a sample of bone marrow and bone. The samples are sent to a lab for testing. \u2022 Genetic tests to look for gene and chromosome changes",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 How is leukemia diagnosed?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "How is leukemia diagnosed?",
+              "intent": "identify",
+              "scopeTerms": []
+            },
+            {
+              "id": "S9",
+              "deck": 4,
+              "overview": false,
+              "text": "The treatments for leukemia depend on which type you have, how severe the leukemia is, your age, your overall health, and other factors. Some possible treatments might include: \u2022 Chemotherapy \u2022 Radiation therapy \u2022 Chemotherapy with stem cell transplant \u2022 Targeted therapy, which uses drugs or other substances that attack specific cancer cells with less harm to normal cells",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 What are the treatments for leukemia?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "What are the treatments for leukemia?",
+              "intent": "therapy",
+              "scopeTerms": []
+            },
+            {
+              "id": "S12",
+              "deck": 6,
+              "overview": false,
+              "text": "For the specific types, there are different factors which can raise your risk of getting that type. Overall, your risk of leukemia goes up as you age. It is most common over age 60.",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 Who is at risk for leukemia?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "Who is at risk for leukemia?",
+              "intent": "population",
+              "scopeTerms": []
+            },
+            {
+              "id": "S2",
+              "deck": 1,
+              "overview": false,
+              "text": "When you have leukemia, your bone marrow makes large numbers of abnormal cells. This problem most often happens with white blood cells. These abnormal cells build up in your bone marrow and blood. They crowd out the healthy blood cells and make it hard for your cells and blood to do their work.",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 What is leukemia?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "What is leukemia?",
+              "intent": "mechanism",
+              "scopeTerms": []
+            },
+            {
+              "id": "S8",
+              "deck": 3,
+              "overview": false,
+              "text": "Other leukemia symptoms can be different from type to type. Chromic leukemia may not cause symptoms at first.",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 What are the symptoms of leukemia?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "What are the symptoms of leukemia?",
+              "intent": "symptoms",
+              "scopeTerms": []
+            },
+            {
+              "id": "S11",
+              "deck": 1,
+              "overview": false,
+              "text": "Leukemia happens when there are changes in the genetic material (DNA) in bone marrow cells. The cause of these genetic changes is unknown.",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 What causes leukemia?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "What causes leukemia?",
+              "intent": "risk",
+              "scopeTerms": []
+            },
+            {
+              "id": "S4",
+              "deck": 1,
+              "overview": false,
+              "text": "The type of blood cell could be: \u2022 Lymphocytes, a type of white blood cell \u2022 Myeloid cells, immature cells that become white blood cells, red blood cells, or platelets",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 What are the types of leukemia?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "What are the types of leukemia?",
+              "intent": "classification",
+              "scopeTerms": []
+            },
+            {
+              "id": "S7",
+              "deck": 3,
+              "overview": false,
+              "text": "Some of the symptoms of leukemia may include: \u2022 Feeling tired \u2022 Fever or night sweats \u2022 Easy bruising or bleeding \u2022 Weight loss or loss of appetite \u2022 Petechiae, which are tiny red dots under the skin. They are caused by bleeding.",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 What are the symptoms of leukemia?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "What are the symptoms of leukemia?",
+              "intent": "symptoms",
+              "scopeTerms": []
+            }
+          ],
+          "topic": "Leukemia",
+          "role": "General reader",
+          "style": "Plain-language answer",
+          "domains": [
+            {
+              "id": 1,
+              "title": "Etiology & Pathogenesis",
+              "scope": "Causes, risk factors, genetics, and biological mechanisms."
+            },
+            {
+              "id": 2,
+              "title": "Natural History & Progression",
+              "scope": "Early changes, symptom onset, and the course of disease."
+            },
+            {
+              "id": 3,
+              "title": "Clinical Presentation & Diagnosis",
+              "scope": "Symptoms, signs, examinations, and diagnostic tests."
+            },
+            {
+              "id": 4,
+              "title": "Therapeutics & Management",
+              "scope": "Treatment approaches, ongoing care, and support."
+            },
+            {
+              "id": 5,
+              "title": "Prognosis & Complications",
+              "scope": "Possible outcomes and health problems associated with the disease."
+            },
+            {
+              "id": 6,
+              "title": "Epidemiology & Public Health",
+              "scope": "Population patterns, prevention, and access to care."
+            }
+          ],
+          "snapshot": "2026-11-05"
+        },
+        "facets": [
+          {
+            "key": "outlook",
+            "label": "Outlook and complications",
+            "deck": 5,
+            "intents": [
+              "complications",
+              "prognosis"
+            ],
+            "id": "F1"
+          }
+        ]
+      },
+      "raw": {
+        "answer": [
+          {
+            "text": "In AML, there is an increase in the number of immature white blood cells called myeloblasts (or myeloid blasts). The myeloblasts in AML are abnormal and do not become healthy white",
+            "sources": [
+              "S14"
+            ]
+          },
+          {
+            "text": "Leukemia may affect red blood cells, white blood cells, and platelets. This may lead to easy bleeding, anemia, and infection. In AML, there is an increase in the number of immature",
+            "sources": [
+              "S14"
+            ]
+          },
+          {
+            "text": "The different types of leukemia can grow quickly or slowly. Acute leukemia is fast growing, and chronic leukemia is slow growing. The different types can grow quickly or slowly: \u2022",
+            "sources": [
+              "S5"
+            ]
+          }
+        ],
+        "decks": {},
+        "gaps": []
+      },
+      "review": {
+        "checks": [
+          {
+            "id": "C1",
+            "verdict": "supported"
+          },
+          {
+            "id": "C2",
+            "verdict": "supported"
+          },
+          {
+            "id": "C3",
+            "verdict": "supported"
+          }
+        ],
+        "coverage": [
+          {
+            "id": "F1",
+            "verdict": "answered"
+          }
+        ]
+      }
+    },
+    {
+      "id": "buddy-treatment",
+      "route": "base",
+      "input": {
+        "topic": "Sore Throat",
+        "question": "When are antibiotics relevant, and when are they not helpful?",
+        "role": "General reader",
+        "mode": "chat",
+        "deck": 4,
+        "history": [],
+        "searchQuery": "What is Sore Throat?"
+      },
+      "prepared": {
+        "evidence": {
+          "sources": [
+            {
+              "id": "S3",
+              "deck": 4,
+              "overview": false,
+              "text": "Treatment depends on the cause. Sucking on lozenges, drinking lots of liquids, and gargling may ease the pain. Over-the-counter pain relievers can also help, but children should not take aspirin.",
+              "title": "Sore Throat \u00b7 MedlinePlus",
+              "url": "https://medlineplus.gov/sorethroat.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Sore Throat",
+              "sourceType": "patient-education",
+              "heading": "",
+              "intent": "therapy",
+              "scopeTerms": []
+            },
+            {
+              "id": "S2",
+              "deck": 1,
+              "overview": false,
+              "text": "You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: \u2022 Allergies \u2022 Mononucleosis \u2022 Smoking \u2022 Strep throat \u2022 Tonsillitis",
+              "title": "Sore Throat \u00b7 MedlinePlus",
+              "url": "https://medlineplus.gov/sorethroat.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Sore Throat",
+              "sourceType": "patient-education",
+              "heading": "",
+              "intent": "risk",
+              "scopeTerms": []
+            },
+            {
+              "key": "cdc-throat-course",
+              "topic": "Sore Throat",
+              "deck": 2,
+              "text": "Most sore throats will get better on their own within one week.",
+              "url": "https://www.cdc.gov/sore-throat/about/index.html",
+              "title": "Sore Throat Basics \u00b7 CDC",
+              "heading": "Overview",
+              "intent": "course",
+              "focus": "Sore Throat",
+              "scopeTerms": [],
+              "date": "2024-04-17; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "a6e69d52092bd3560c88a622c123e9515651b95b855f2f4565be0fc7c17bd995",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S4"
+            },
+            {
+              "key": "cdc-throat-care",
+              "topic": "Sore Throat",
+              "deck": 3,
+              "text": "Also, see a healthcare provider if you or your child have any of the following: \u2022 Difficulty breathing. \u2022 Difficulty swallowing. \u2022 Blood in saliva or phlegm. \u2022 Excessive drooling (in young children). \u2022 Dehydration. \u2022 Joint swelling and pain. \u2022 Rash. \u2022 Symptoms that do not improve within a few days or get worse.",
+              "url": "https://www.cdc.gov/sore-throat/about/index.html",
+              "title": "Sore Throat Basics \u00b7 CDC",
+              "heading": "When to seek medical care",
+              "intent": "escalation",
+              "focus": "Sore Throat",
+              "scopeTerms": [],
+              "date": "2024-04-17; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "8cbec87b75f00852d5c93cedd60bc521d07e24ff6b74a3c74c9562bebd3422fe",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S5"
+            },
+            {
+              "key": "cdc-strep-complications",
+              "topic": "Sore Throat",
+              "deck": 5,
+              "text": "Complications can occur after a strep throat infection if the bacteria spread to other parts of the body. Complications can include: \u2022 Abscesses (pockets of pus) around the tonsils or in the neck \u2022 Ear infections \u2022 Post-streptococcal glomerulonephritis (a kidney disease) \u2022 Rheumatic fever (a disease affecting the heart, joints, brain, skin) \u2022 Sinus infections",
+              "url": "https://www.cdc.gov/group-a-strep/about/strep-throat.html",
+              "title": "About Strep Throat \u00b7 CDC",
+              "heading": "Complications",
+              "intent": "complications",
+              "focus": "Strep throat",
+              "scopeTerms": [
+                "strep",
+                "streptococcal"
+              ],
+              "date": "2026-01-15; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "dc11949589030cccdd1f685e652a37a81c77f4af84b2d91f9432ed98654b667b",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S10"
+            },
+            {
+              "key": "cdc-throat-prevention",
+              "topic": "Sore Throat",
+              "deck": 6,
+              "text": "You can help prevent sore throat by doing your best to stay healthy and keep others healthy, including: \u2022 Clean your hands. \u2022 Avoid close contact with people who have sore throats, colds or other upper respiratory infections. \u2022 Don't smoke and avoid exposure to secondhand smoke.",
+              "url": "https://www.cdc.gov/sore-throat/about/index.html",
+              "title": "Sore Throat Basics \u00b7 CDC",
+              "heading": "Prevention",
+              "intent": "public-health",
+              "focus": "Sore Throat",
+              "scopeTerms": [],
+              "date": "2024-04-17; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "b601bfbe790a24dd1886853d22bf906f746f448e4f0988388271595abb8d4ade",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S8"
+            },
+            {
+              "key": "cdc-throat-antibiotics",
+              "topic": "Sore Throat",
+              "deck": 4,
+              "text": "If a virus causes a sore throat, antibiotics will not help. Most sore throats will get better on their own within one week. Your healthcare provider may prescribe other medicine or give you tips to help you feel better.",
+              "url": "https://www.cdc.gov/sore-throat/about/index.html",
+              "title": "Sore Throat Basics \u00b7 CDC",
+              "heading": "Treatment",
+              "intent": "therapy",
+              "focus": "Sore Throat",
+              "scopeTerms": [],
+              "date": "2024-04-17; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "b6d8051b08ad64110ece29e22404879fcf1926efbbcb42c80cadf40d8a222086",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S7"
+            },
+            {
+              "key": "cdc-strep-treatment",
+              "topic": "Sore Throat",
+              "deck": 4,
+              "text": "Antibiotics can help people with strep throat feel better faster.",
+              "url": "https://www.cdc.gov/group-a-strep/about/strep-throat.html",
+              "title": "About Strep Throat \u00b7 CDC",
+              "heading": "Key points",
+              "intent": "therapy",
+              "focus": "Strep throat",
+              "scopeTerms": [
+                "strep",
+                "streptococcal"
+              ],
+              "date": "2026-01-15; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "53ceed1f703fac04cd9f119c1bb29b214a4b798467d953f608efafae9bfe256a",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S9"
+            },
+            {
+              "key": "cdc-throat-care-limits",
+              "topic": "Sore Throat",
+              "deck": 3,
+              "text": "This list is not all-inclusive. Please see your healthcare provider for any symptom that is severe or concerning. Tell your healthcare provider if you or your child have recurrent sore throats.",
+              "url": "https://www.cdc.gov/sore-throat/about/index.html",
+              "title": "Sore Throat Basics \u00b7 CDC",
+              "heading": "When to seek medical care",
+              "intent": "escalation",
+              "focus": "Sore Throat",
+              "scopeTerms": [],
+              "date": "2024-04-17; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "80fd1c1ffe2525def48af495a831fd4126562778db7702efeb34e8d09c57fb68",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S6"
+            },
+            {
+              "id": "S1",
+              "deck": 1,
+              "overview": true,
+              "text": "Your throat is a tube that carries food to your esophagus and air to your windpipe and larynx (also called the voice box). The technical name for the throat is pharynx.",
+              "title": "Sore Throat \u00b7 MedlinePlus",
+              "url": "https://medlineplus.gov/sorethroat.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Sore Throat",
+              "sourceType": "patient-education",
+              "heading": "",
+              "intent": "definition",
+              "scopeTerms": []
+            }
+          ],
+          "topic": "Sore Throat",
+          "role": "General reader",
+          "style": "Plain-language answer",
+          "domains": [
+            {
+              "id": 1,
+              "title": "Etiology & Pathogenesis",
+              "scope": "Causes, risk factors, genetics, and biological mechanisms."
+            },
+            {
+              "id": 2,
+              "title": "Natural History & Progression",
+              "scope": "Early changes, symptom onset, and the course of disease."
+            },
+            {
+              "id": 3,
+              "title": "Clinical Presentation & Diagnosis",
+              "scope": "Symptoms, signs, examinations, and diagnostic tests."
+            },
+            {
+              "id": 4,
+              "title": "Therapeutics & Management",
+              "scope": "Treatment approaches, ongoing care, and support."
+            },
+            {
+              "id": 5,
+              "title": "Prognosis & Complications",
+              "scope": "Possible outcomes and health problems associated with the disease."
+            },
+            {
+              "id": 6,
+              "title": "Epidemiology & Public Health",
+              "scope": "Population patterns, prevention, and access to care."
+            }
+          ],
+          "snapshot": "2026-11-05"
+        },
+        "facets": [
+          {
+            "key": "treatment",
+            "label": "Treatment and its limitations",
+            "deck": 4,
+            "intents": [
+              "therapy"
+            ],
+            "id": "F1"
+          }
+        ]
+      },
+      "raw": {
+        "answer": [
+          {
+            "text": "Antibiotics are relevant when a bacterial infection, such as strep throat, is the cause of the sore throat. In these cases, antibiotics can help people feel better faster and treat",
+            "sources": [
+              "S9"
+            ]
+          },
+          {
+            "text": "Antibiotics are not helpful when a virus causes a sore throat, as they will not help the infection resolve. Most sore throats will get better on their own within one week, and over",
+            "sources": [
+              "S7"
+            ]
+          },
+          {
+            "text": "Antibiotics are not necessary for sore throats caused by allergies, colds, flu, or other viral infections. Treatment for these types of sore throats typically involves managing",
+            "sources": [
+              "S3",
+              "S2"
+            ]
+          }
+        ],
+        "decks": {},
+        "gaps": []
+      },
+      "review": {
+        "checks": [
+          {
+            "id": "C1",
+            "verdict": "supported"
+          },
+          {
+            "id": "C2",
+            "verdict": "supported"
+          },
+          {
+            "id": "C3",
+            "verdict": "supported"
+          }
+        ],
+        "coverage": [
+          {
+            "id": "F1",
+            "verdict": "answered"
+          }
+        ]
+      }
+    },
+    {
+      "id": "buddy-treatment",
+      "route": "adapter",
+      "input": {
+        "topic": "Sore Throat",
+        "question": "When are antibiotics relevant, and when are they not helpful?",
+        "role": "General reader",
+        "mode": "chat",
+        "deck": 4,
+        "history": [],
+        "searchQuery": "What is Sore Throat?"
+      },
+      "prepared": {
+        "evidence": {
+          "sources": [
+            {
+              "id": "S3",
+              "deck": 4,
+              "overview": false,
+              "text": "Treatment depends on the cause. Sucking on lozenges, drinking lots of liquids, and gargling may ease the pain. Over-the-counter pain relievers can also help, but children should not take aspirin.",
+              "title": "Sore Throat \u00b7 MedlinePlus",
+              "url": "https://medlineplus.gov/sorethroat.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Sore Throat",
+              "sourceType": "patient-education",
+              "heading": "",
+              "intent": "therapy",
+              "scopeTerms": []
+            },
+            {
+              "id": "S2",
+              "deck": 1,
+              "overview": false,
+              "text": "You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: \u2022 Allergies \u2022 Mononucleosis \u2022 Smoking \u2022 Strep throat \u2022 Tonsillitis",
+              "title": "Sore Throat \u00b7 MedlinePlus",
+              "url": "https://medlineplus.gov/sorethroat.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Sore Throat",
+              "sourceType": "patient-education",
+              "heading": "",
+              "intent": "risk",
+              "scopeTerms": []
+            },
+            {
+              "key": "cdc-throat-course",
+              "topic": "Sore Throat",
+              "deck": 2,
+              "text": "Most sore throats will get better on their own within one week.",
+              "url": "https://www.cdc.gov/sore-throat/about/index.html",
+              "title": "Sore Throat Basics \u00b7 CDC",
+              "heading": "Overview",
+              "intent": "course",
+              "focus": "Sore Throat",
+              "scopeTerms": [],
+              "date": "2024-04-17; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "a6e69d52092bd3560c88a622c123e9515651b95b855f2f4565be0fc7c17bd995",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S4"
+            },
+            {
+              "key": "cdc-throat-care",
+              "topic": "Sore Throat",
+              "deck": 3,
+              "text": "Also, see a healthcare provider if you or your child have any of the following: \u2022 Difficulty breathing. \u2022 Difficulty swallowing. \u2022 Blood in saliva or phlegm. \u2022 Excessive drooling (in young children). \u2022 Dehydration. \u2022 Joint swelling and pain. \u2022 Rash. \u2022 Symptoms that do not improve within a few days or get worse.",
+              "url": "https://www.cdc.gov/sore-throat/about/index.html",
+              "title": "Sore Throat Basics \u00b7 CDC",
+              "heading": "When to seek medical care",
+              "intent": "escalation",
+              "focus": "Sore Throat",
+              "scopeTerms": [],
+              "date": "2024-04-17; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "8cbec87b75f00852d5c93cedd60bc521d07e24ff6b74a3c74c9562bebd3422fe",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S5"
+            },
+            {
+              "key": "cdc-strep-complications",
+              "topic": "Sore Throat",
+              "deck": 5,
+              "text": "Complications can occur after a strep throat infection if the bacteria spread to other parts of the body. Complications can include: \u2022 Abscesses (pockets of pus) around the tonsils or in the neck \u2022 Ear infections \u2022 Post-streptococcal glomerulonephritis (a kidney disease) \u2022 Rheumatic fever (a disease affecting the heart, joints, brain, skin) \u2022 Sinus infections",
+              "url": "https://www.cdc.gov/group-a-strep/about/strep-throat.html",
+              "title": "About Strep Throat \u00b7 CDC",
+              "heading": "Complications",
+              "intent": "complications",
+              "focus": "Strep throat",
+              "scopeTerms": [
+                "strep",
+                "streptococcal"
+              ],
+              "date": "2026-01-15; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "dc11949589030cccdd1f685e652a37a81c77f4af84b2d91f9432ed98654b667b",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S10"
+            },
+            {
+              "key": "cdc-throat-prevention",
+              "topic": "Sore Throat",
+              "deck": 6,
+              "text": "You can help prevent sore throat by doing your best to stay healthy and keep others healthy, including: \u2022 Clean your hands. \u2022 Avoid close contact with people who have sore throats, colds or other upper respiratory infections. \u2022 Don't smoke and avoid exposure to secondhand smoke.",
+              "url": "https://www.cdc.gov/sore-throat/about/index.html",
+              "title": "Sore Throat Basics \u00b7 CDC",
+              "heading": "Prevention",
+              "intent": "public-health",
+              "focus": "Sore Throat",
+              "scopeTerms": [],
+              "date": "2024-04-17; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "b601bfbe790a24dd1886853d22bf906f746f448e4f0988388271595abb8d4ade",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S8"
+            },
+            {
+              "key": "cdc-throat-antibiotics",
+              "topic": "Sore Throat",
+              "deck": 4,
+              "text": "If a virus causes a sore throat, antibiotics will not help. Most sore throats will get better on their own within one week. Your healthcare provider may prescribe other medicine or give you tips to help you feel better.",
+              "url": "https://www.cdc.gov/sore-throat/about/index.html",
+              "title": "Sore Throat Basics \u00b7 CDC",
+              "heading": "Treatment",
+              "intent": "therapy",
+              "focus": "Sore Throat",
+              "scopeTerms": [],
+              "date": "2024-04-17; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "b6d8051b08ad64110ece29e22404879fcf1926efbbcb42c80cadf40d8a222086",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S7"
+            },
+            {
+              "key": "cdc-strep-treatment",
+              "topic": "Sore Throat",
+              "deck": 4,
+              "text": "Antibiotics can help people with strep throat feel better faster.",
+              "url": "https://www.cdc.gov/group-a-strep/about/strep-throat.html",
+              "title": "About Strep Throat \u00b7 CDC",
+              "heading": "Key points",
+              "intent": "therapy",
+              "focus": "Strep throat",
+              "scopeTerms": [
+                "strep",
+                "streptococcal"
+              ],
+              "date": "2026-01-15; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "53ceed1f703fac04cd9f119c1bb29b214a4b798467d953f608efafae9bfe256a",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S9"
+            },
+            {
+              "key": "cdc-throat-care-limits",
+              "topic": "Sore Throat",
+              "deck": 3,
+              "text": "This list is not all-inclusive. Please see your healthcare provider for any symptom that is severe or concerning. Tell your healthcare provider if you or your child have recurrent sore throats.",
+              "url": "https://www.cdc.gov/sore-throat/about/index.html",
+              "title": "Sore Throat Basics \u00b7 CDC",
+              "heading": "When to seek medical care",
+              "intent": "escalation",
+              "focus": "Sore Throat",
+              "scopeTerms": [],
+              "date": "2024-04-17; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "80fd1c1ffe2525def48af495a831fd4126562778db7702efeb34e8d09c57fb68",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S6"
+            },
+            {
+              "id": "S1",
+              "deck": 1,
+              "overview": true,
+              "text": "Your throat is a tube that carries food to your esophagus and air to your windpipe and larynx (also called the voice box). The technical name for the throat is pharynx.",
+              "title": "Sore Throat \u00b7 MedlinePlus",
+              "url": "https://medlineplus.gov/sorethroat.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Sore Throat",
+              "sourceType": "patient-education",
+              "heading": "",
+              "intent": "definition",
+              "scopeTerms": []
+            }
+          ],
+          "topic": "Sore Throat",
+          "role": "General reader",
+          "style": "Plain-language answer",
+          "domains": [
+            {
+              "id": 1,
+              "title": "Etiology & Pathogenesis",
+              "scope": "Causes, risk factors, genetics, and biological mechanisms."
+            },
+            {
+              "id": 2,
+              "title": "Natural History & Progression",
+              "scope": "Early changes, symptom onset, and the course of disease."
+            },
+            {
+              "id": 3,
+              "title": "Clinical Presentation & Diagnosis",
+              "scope": "Symptoms, signs, examinations, and diagnostic tests."
+            },
+            {
+              "id": 4,
+              "title": "Therapeutics & Management",
+              "scope": "Treatment approaches, ongoing care, and support."
+            },
+            {
+              "id": 5,
+              "title": "Prognosis & Complications",
+              "scope": "Possible outcomes and health problems associated with the disease."
+            },
+            {
+              "id": 6,
+              "title": "Epidemiology & Public Health",
+              "scope": "Population patterns, prevention, and access to care."
+            }
+          ],
+          "snapshot": "2026-11-05"
+        },
+        "facets": [
+          {
+            "key": "treatment",
+            "label": "Treatment and its limitations",
+            "deck": 4,
+            "intents": [
+              "therapy"
+            ],
+            "id": "F1"
+          }
+        ]
+      },
+      "raw": {
+        "answer": [
+          {
+            "text": "Antibiotics are relevant when a bacterial infection, such as strep throat, is the cause. In these cases, antibiotics can help people feel better faster. However, if a virus causes,",
+            "sources": [
+              "S7"
+            ]
+          },
+          {
+            "text": "Antibiotics are not helpful when a virus causes a sore throat, as they will not help the body fight the infection. Most sore throats will get better on their own within one week,",
+            "sources": [
+              "S4",
+              "S7"
+            ]
+          },
+          {
+            "text": "Antibiotics are not necessary for most sore throats, as they are usually caused by viruses. However, if a strep throat infection is suspected, a healthcare provider may prescribe",
+            "sources": [
+              "S9"
+            ]
+          }
+        ],
+        "decks": {},
+        "gaps": []
+      },
+      "review": {
+        "checks": [
+          {
+            "id": "C1",
+            "verdict": "supported"
+          },
+          {
+            "id": "C2",
+            "verdict": "supported"
+          },
+          {
+            "id": "C3",
+            "verdict": "supported"
+          }
+        ],
+        "coverage": [
+          {
+            "id": "F1",
+            "verdict": "answered"
+          }
+        ]
+      }
+    },
+    {
+      "id": "leukemia-population",
+      "route": "adapter",
+      "input": {
+        "topic": "Leukemia",
+        "question": "Who is affected by leukemia, and can it be prevented?",
+        "role": "General reader",
+        "mode": "chat",
+        "deck": 6,
+        "history": [],
+        "searchQuery": "What is Leukemia?"
+      },
+      "prepared": {
+        "evidence": {
+          "sources": [
+            {
+              "id": "S2",
+              "deck": 6,
+              "overview": false,
+              "text": "For the specific types, there are different factors which can raise your risk of getting that type. Overall, your risk of leukemia goes up as you age. It is most common over age 60.",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 Who is at risk for leukemia?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "Who is at risk for leukemia?",
+              "intent": "population",
+              "scopeTerms": []
+            },
+            {
+              "id": "S3",
+              "deck": 1,
+              "overview": false,
+              "text": "When you have leukemia, your bone marrow makes large numbers of abnormal cells. This problem most often happens with white blood cells. These abnormal cells build up in your bone marrow and blood. They crowd out the healthy blood cells and make it hard for your cells and blood to do their work.",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 What is leukemia?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "What is leukemia?",
+              "intent": "mechanism",
+              "scopeTerms": []
+            },
+            {
+              "id": "S4",
+              "deck": 2,
+              "overview": false,
+              "text": "There are different types of leukemia. Which type of leukemia you have depends on the type of blood cell that becomes cancer and whether it grows quickly or slowly.",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 What are the types of leukemia?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "What are the types of leukemia?",
+              "intent": "course",
+              "scopeTerms": []
+            },
+            {
+              "id": "S6",
+              "deck": 3,
+              "overview": false,
+              "text": "Other leukemia symptoms can be different from type to type. Chromic leukemia may not cause symptoms at first.",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 What are the symptoms of leukemia?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "What are the symptoms of leukemia?",
+              "intent": "symptoms",
+              "scopeTerms": []
+            },
+            {
+              "id": "S8",
+              "deck": 4,
+              "overview": false,
+              "text": "The treatments for leukemia depend on which type you have, how severe the leukemia is, your age, your overall health, and other factors. Some possible treatments might include: \u2022 Chemotherapy \u2022 Radiation therapy \u2022 Chemotherapy with stem cell transplant \u2022 Targeted therapy, which uses drugs or other substances that attack specific cancer cells with less harm to normal cells",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 What are the treatments for leukemia?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "What are the treatments for leukemia?",
+              "intent": "therapy",
+              "scopeTerms": []
+            },
+            {
+              "key": "nci-aml-complications",
+              "topic": "Leukemia",
+              "deck": 5,
+              "text": "In AML, there is an increase in the number of immature white blood cells called myeloblasts (or myeloid blasts). The myeloblasts in AML are abnormal and do not become healthy white blood cells. As the number of these cells, also called leukemia cells, increases in the blood and bone marrow, there is less room for healthy platelets, red blood cells, and other white blood cells. This may lead to easy bleeding, anemia, and infection.",
+              "url": "https://www.cancer.gov/types/leukemia/patient/adult-aml-treatment-pdq",
+              "title": "Acute Myeloid Leukemia Treatment (PDQ\u00ae)\u2013Patient Version \u00b7 NCI",
+              "heading": "Leukemia may affect red blood cells, white blood cells, and platelets.",
+              "intent": "complications",
+              "focus": "Acute myeloid leukemia (AML)",
+              "scopeTerms": [
+                "AML",
+                "acute myeloid"
+              ],
+              "date": "Publication date not verified; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "c6bf93986a10db5ba5eb2a9d74ec7023624b36dc490e2802841206d3bf41e18b",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S14"
+            },
+            {
+              "id": "S5",
+              "deck": 2,
+              "overview": false,
+              "text": "The different types can grow quickly or slowly: \u2022 Acute leukemia is fast growing. It usually gets worse quickly if it's not treated. \u2022 Chronic leukemia is slow growing. It usually gets worse over a longer period of time.",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 What are the types of leukemia?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "What are the types of leukemia?",
+              "intent": "course",
+              "scopeTerms": []
+            },
+            {
+              "id": "S10",
+              "deck": 3,
+              "overview": false,
+              "text": "Once the provider makes a diagnosis, there may be additional tests to see whether the cancer has spread. These include imaging tests and a lumbar puncture, which is a procedure to collect and test cerebrospinal fluid (CSF).",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 How is leukemia diagnosed?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "How is leukemia diagnosed?",
+              "intent": "identify",
+              "scopeTerms": []
+            },
+            {
+              "id": "S7",
+              "deck": 3,
+              "overview": false,
+              "text": "Your health care provider may use many tools to diagnose leukemia: \u2022 A physical exam \u2022 A medical history \u2022 Blood tests, such as a complete blood count (CBC) \u2022 Bone marrow tests. There are two main types - bone marrow aspiration and bone marrow biopsy. Both tests involve removing a sample of bone marrow and bone. The samples are sent to a lab for testing. \u2022 Genetic tests to look for gene and chromosome changes",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 How is leukemia diagnosed?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "How is leukemia diagnosed?",
+              "intent": "identify",
+              "scopeTerms": []
+            },
+            {
+              "id": "S9",
+              "deck": 1,
+              "overview": false,
+              "text": "The main types of leukemia are: \u2022 Acute lymphocytic leukemia (ALL), which is the most common type of cancer in children. It can also affect adults. \u2022 Acute myeloid leukemia (AML), which is more common in older adults but can also affect children \u2022 Chronic lymphocytic leukemia (CLL), which is one of the most common types of leukemia in adults. It often occurs during or after middle age. \u2022 Chronic myeloid leukemia (CML), which usually occurs in adults during or after middle age",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 What are the types of leukemia?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "What are the types of leukemia?",
+              "intent": "classification",
+              "scopeTerms": []
+            }
+          ],
+          "topic": "Leukemia",
+          "role": "General reader",
+          "style": "Plain-language answer",
+          "domains": [
+            {
+              "id": 1,
+              "title": "Etiology & Pathogenesis",
+              "scope": "Causes, risk factors, genetics, and biological mechanisms."
+            },
+            {
+              "id": 2,
+              "title": "Natural History & Progression",
+              "scope": "Early changes, symptom onset, and the course of disease."
+            },
+            {
+              "id": 3,
+              "title": "Clinical Presentation & Diagnosis",
+              "scope": "Symptoms, signs, examinations, and diagnostic tests."
+            },
+            {
+              "id": 4,
+              "title": "Therapeutics & Management",
+              "scope": "Treatment approaches, ongoing care, and support."
+            },
+            {
+              "id": 5,
+              "title": "Prognosis & Complications",
+              "scope": "Possible outcomes and health problems associated with the disease."
+            },
+            {
+              "id": 6,
+              "title": "Epidemiology & Public Health",
+              "scope": "Population patterns, prevention, and access to care."
+            }
+          ],
+          "snapshot": "2026-11-05"
+        },
+        "facets": [
+          {
+            "key": "population",
+            "label": "Who is affected",
+            "deck": 6,
+            "intents": [
+              "public-health",
+              "population"
+            ],
+            "id": "F1"
+          },
+          {
+            "key": "prevention",
+            "label": "Prevention",
+            "deck": 6,
+            "intents": [
+              "public-health"
+            ],
+            "id": "F2"
+          }
+        ]
+      },
+      "raw": {
+        "answer": [
+          {
+            "text": "Leukemia can affect anyone, but the risk increases with age. It is most common over age 60. Different types of leukemia affect different types of blood cells, and the risk factors,",
+            "sources": [
+              "S2"
+            ]
+          },
+          {
+            "text": "The main types of leukemia are acute lymphocytic leukemia (ALL), acute myeloid leukemia (AML), chronic lymphocytic leukemia (CLL), and chronic myeloid leukemia (CML). Each type has",
+            "sources": [
+              "S9"
+            ]
+          },
+          {
+            "text": "For the specific types, there are different factors which can raise your risk of getting that type. Overall, your risk of leukemia goes up as you age. It is most common over age 60",
+            "sources": [
+              "S2"
+            ]
+          }
+        ],
+        "decks": {},
+        "gaps": []
+      },
+      "review": {
+        "checks": [
+          {
+            "id": "C1",
+            "verdict": "supported"
+          },
+          {
+            "id": "C2",
+            "verdict": "supported"
+          },
+          {
+            "id": "C3",
+            "verdict": "supported"
+          }
+        ],
+        "coverage": [
+          {
+            "id": "F1",
+            "verdict": "answered"
+          },
+          {
+            "id": "F2",
+            "verdict": "answered"
+          }
+        ]
+      }
+    }
+  ],
+  "controls": [
+    {
+      "id": "wrong-staging-citation",
+      "draft": {
+        "answer": {
+          "claims": [
+            {
+              "id": "C1",
+              "text": "Complications of leukemia include anemia, bleeding, infection, and organ damage.",
+              "support": [
+                {
+                  "id": "X1",
+                  "quote": "There is no standard staging system for adult AML."
+                }
+              ]
+            }
+          ]
+        },
+        "decks": [],
+        "gaps": []
+      },
+      "expectedSupported": false,
+      "prepared": {
+        "evidence": {
+          "sources": [
+            {
+              "id": "X1",
+              "text": "There is no standard staging system for adult AML.",
+              "focus": "Adult Acute Myeloid Leukemia",
+              "date": "Regression control; original source scope retained"
+            }
+          ],
+          "topic": "Leukemia",
+          "role": "General reader",
+          "style": "Plain-language answer",
+          "domains": [
+            {
+              "id": 1,
+              "title": "Etiology & Pathogenesis",
+              "scope": "Causes, risk factors, genetics, and biological mechanisms."
+            },
+            {
+              "id": 2,
+              "title": "Natural History & Progression",
+              "scope": "Early changes, symptom onset, and the course of disease."
+            },
+            {
+              "id": 3,
+              "title": "Clinical Presentation & Diagnosis",
+              "scope": "Symptoms, signs, examinations, and diagnostic tests."
+            },
+            {
+              "id": 4,
+              "title": "Therapeutics & Management",
+              "scope": "Treatment approaches, ongoing care, and support."
+            },
+            {
+              "id": 5,
+              "title": "Prognosis & Complications",
+              "scope": "Possible outcomes and health problems associated with the disease."
+            },
+            {
+              "id": 6,
+              "title": "Epidemiology & Public Health",
+              "scope": "Population patterns, prevention, and access to care."
+            }
+          ],
+          "snapshot": "2026-11-05"
+        },
+        "facets": [
+          {
+            "key": "outlook",
+            "label": "Outlook and complications",
+            "deck": 5,
+            "intents": [
+              "complications",
+              "prognosis"
+            ],
+            "id": "F1"
+          }
+        ]
+      },
+      "review": {
+        "checks": [
+          {
+            "id": "C1",
+            "verdict": "insufficient"
+          }
+        ],
+        "coverage": [
+          {
+            "id": "F1",
+            "verdict": "missed"
+          }
+        ]
+      },
+      "originalAccepted": false
+    },
+    {
+      "id": "wrong-causes-for-antibiotics",
+      "draft": {
+        "answer": {
+          "claims": [
+            {
+              "id": "C1",
+              "text": "Antibiotics clear strep throat and prevent complications but do not help viral infections.",
+              "support": [
+                {
+                  "id": "X1",
+                  "quote": "You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include allergies, mononucleosis, smoking, strep throat, and tonsillitis."
+                }
+              ]
+            }
+          ]
+        },
+        "decks": [],
+        "gaps": []
+      },
+      "expectedSupported": false,
+      "prepared": {
+        "evidence": {
+          "sources": [
+            {
+              "id": "X1",
+              "text": "You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include allergies, mononucleosis, smoking, strep throat, and tonsillitis.",
+              "focus": "Sore Throat",
+              "date": "Regression control; original source scope retained"
+            }
+          ],
+          "topic": "Sore Throat",
+          "role": "General reader",
+          "style": "Plain-language answer",
+          "domains": [
+            {
+              "id": 1,
+              "title": "Etiology & Pathogenesis",
+              "scope": "Causes, risk factors, genetics, and biological mechanisms."
+            },
+            {
+              "id": 2,
+              "title": "Natural History & Progression",
+              "scope": "Early changes, symptom onset, and the course of disease."
+            },
+            {
+              "id": 3,
+              "title": "Clinical Presentation & Diagnosis",
+              "scope": "Symptoms, signs, examinations, and diagnostic tests."
+            },
+            {
+              "id": 4,
+              "title": "Therapeutics & Management",
+              "scope": "Treatment approaches, ongoing care, and support."
+            },
+            {
+              "id": 5,
+              "title": "Prognosis & Complications",
+              "scope": "Possible outcomes and health problems associated with the disease."
+            },
+            {
+              "id": 6,
+              "title": "Epidemiology & Public Health",
+              "scope": "Population patterns, prevention, and access to care."
+            }
+          ],
+          "snapshot": "2026-11-05"
+        },
+        "facets": [
+          {
+            "key": "treatment",
+            "label": "Treatment and its limitations",
+            "deck": 4,
+            "intents": [
+              "therapy"
+            ],
+            "id": "F1"
+          }
+        ]
+      },
+      "review": {
+        "checks": [
+          {
+            "id": "C1",
+            "verdict": "insufficient"
+          }
+        ],
+        "coverage": [
+          {
+            "id": "F1",
+            "verdict": "answered"
+          }
+        ]
+      },
+      "originalAccepted": false
+    },
+    {
+      "id": "wrong-mechanism-for-management",
+      "draft": {
+        "answer": {
+          "claims": [
+            {
+              "id": "C1",
+              "text": "Diabetes is managed with medicines, diet and exercise.",
+              "support": [
+                {
+                  "id": "X1",
+                  "quote": "If you have diabetes, your body can't make insulin, can't use insulin as well as it should, or both. Too much glucose stays in your blood and doesn't reach your cells."
+                }
+              ]
+            }
+          ]
+        },
+        "decks": [],
+        "gaps": []
+      },
+      "expectedSupported": false,
+      "prepared": {
+        "evidence": {
+          "sources": [
+            {
+              "id": "X1",
+              "text": "If you have diabetes, your body can't make insulin, can't use insulin as well as it should, or both. Too much glucose stays in your blood and doesn't reach your cells.",
+              "focus": "Diabetes",
+              "date": "Regression control; original source scope retained"
+            }
+          ],
+          "topic": "Diabetes",
+          "role": "General reader",
+          "style": "Plain-language answer",
+          "domains": [
+            {
+              "id": 1,
+              "title": "Etiology & Pathogenesis",
+              "scope": "Causes, risk factors, genetics, and biological mechanisms."
+            },
+            {
+              "id": 2,
+              "title": "Natural History & Progression",
+              "scope": "Early changes, symptom onset, and the course of disease."
+            },
+            {
+              "id": 3,
+              "title": "Clinical Presentation & Diagnosis",
+              "scope": "Symptoms, signs, examinations, and diagnostic tests."
+            },
+            {
+              "id": 4,
+              "title": "Therapeutics & Management",
+              "scope": "Treatment approaches, ongoing care, and support."
+            },
+            {
+              "id": 5,
+              "title": "Prognosis & Complications",
+              "scope": "Possible outcomes and health problems associated with the disease."
+            },
+            {
+              "id": 6,
+              "title": "Epidemiology & Public Health",
+              "scope": "Population patterns, prevention, and access to care."
+            }
+          ],
+          "snapshot": "2026-11-05"
+        },
+        "facets": [
+          {
+            "key": "treatment",
+            "label": "Treatment and its limitations",
+            "deck": 4,
+            "intents": [
+              "therapy"
+            ],
+            "id": "F1"
+          }
+        ]
+      },
+      "review": {
+        "checks": [
+          {
+            "id": "C1",
+            "verdict": "supported"
+          }
+        ],
+        "coverage": [
+          {
+            "id": "F1",
+            "verdict": "answered"
+          }
+        ]
+      },
+      "originalAccepted": true
+    },
+    {
+      "id": "missing-when-to-seek-care",
+      "draft": {
+        "answer": {
+          "claims": [
+            {
+              "id": "C1",
+              "text": "Colds and flu often cause sore throats.",
+              "support": [
+                {
+                  "id": "S2",
+                  "quote": "You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: \u2022 Allergies \u2022 Mononucleosis \u2022 Smoking \u2022 Strep throat \u2022 Tonsillitis"
+                }
+              ]
+            }
+          ]
+        },
+        "decks": [],
+        "gaps": []
+      },
+      "expectedSupported": false,
+      "prepared": {
+        "evidence": {
+          "sources": [
+            {
+              "id": "S2",
+              "deck": 1,
+              "overview": false,
+              "text": "You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: \u2022 Allergies \u2022 Mononucleosis \u2022 Smoking \u2022 Strep throat \u2022 Tonsillitis",
+              "title": "Sore Throat \u00b7 MedlinePlus",
+              "url": "https://medlineplus.gov/sorethroat.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Sore Throat",
+              "sourceType": "patient-education",
+              "heading": "",
+              "intent": "risk",
+              "scopeTerms": []
+            }
+          ],
+          "topic": "Sore Throat",
+          "role": "General reader",
+          "style": "Plain-language answer",
+          "domains": [
+            {
+              "id": 1,
+              "title": "Etiology & Pathogenesis",
+              "scope": "Causes, risk factors, genetics, and biological mechanisms."
+            },
+            {
+              "id": 2,
+              "title": "Natural History & Progression",
+              "scope": "Early changes, symptom onset, and the course of disease."
+            },
+            {
+              "id": 3,
+              "title": "Clinical Presentation & Diagnosis",
+              "scope": "Symptoms, signs, examinations, and diagnostic tests."
+            },
+            {
+              "id": 4,
+              "title": "Therapeutics & Management",
+              "scope": "Treatment approaches, ongoing care, and support."
+            },
+            {
+              "id": 5,
+              "title": "Prognosis & Complications",
+              "scope": "Possible outcomes and health problems associated with the disease."
+            },
+            {
+              "id": 6,
+              "title": "Epidemiology & Public Health",
+              "scope": "Population patterns, prevention, and access to care."
+            }
+          ],
+          "snapshot": "2026-11-05"
+        },
+        "facets": [
+          {
+            "key": "causes",
+            "label": "Causes and risk factors",
+            "deck": 1,
+            "intents": [
+              "risk",
+              "mechanism"
+            ],
+            "id": "F1"
+          },
+          {
+            "key": "care",
+            "label": "When to seek medical care",
+            "deck": 3,
+            "intents": [
+              "escalation"
+            ],
+            "id": "F2"
+          }
+        ]
+      },
+      "review": {
+        "checks": [
+          {
+            "id": "C1",
+            "verdict": "supported"
+          }
+        ],
+        "coverage": [
+          {
+            "id": "F1",
+            "verdict": "answered"
+          },
+          {
+            "id": "F2",
+            "verdict": "answered"
+          }
+        ]
+      },
+      "originalAccepted": true
+    },
+    {
+      "id": "missing-prevention",
+      "draft": {
+        "answer": {
+          "claims": [
+            {
+              "id": "C1",
+              "text": "The risk of leukemia goes up with age; it is most common over age 60.",
+              "support": [
+                {
+                  "id": "S2",
+                  "quote": "For the specific types, there are different factors which can raise your risk of getting that type. Overall, your risk of leukemia goes up as you age. It is most common over age 60."
+                }
+              ]
+            }
+          ]
+        },
+        "decks": [],
+        "gaps": []
+      },
+      "expectedSupported": false,
+      "prepared": {
+        "evidence": {
+          "sources": [
+            {
+              "id": "S2",
+              "deck": 6,
+              "overview": false,
+              "text": "For the specific types, there are different factors which can raise your risk of getting that type. Overall, your risk of leukemia goes up as you age. It is most common over age 60.",
+              "title": "Leukemia \u00b7 MedlinePlus \u00b7 Who is at risk for leukemia?",
+              "url": "https://medlineplus.gov/leukemia.html",
+              "date": "MedlinePlus feed snapshot \u00b7 2026-11-05",
+              "historical": false,
+              "focus": "Leukemia",
+              "sourceType": "patient-education",
+              "heading": "Who is at risk for leukemia?",
+              "intent": "population",
+              "scopeTerms": []
+            }
+          ],
+          "topic": "Leukemia",
+          "role": "General reader",
+          "style": "Plain-language answer",
+          "domains": [
+            {
+              "id": 1,
+              "title": "Etiology & Pathogenesis",
+              "scope": "Causes, risk factors, genetics, and biological mechanisms."
+            },
+            {
+              "id": 2,
+              "title": "Natural History & Progression",
+              "scope": "Early changes, symptom onset, and the course of disease."
+            },
+            {
+              "id": 3,
+              "title": "Clinical Presentation & Diagnosis",
+              "scope": "Symptoms, signs, examinations, and diagnostic tests."
+            },
+            {
+              "id": 4,
+              "title": "Therapeutics & Management",
+              "scope": "Treatment approaches, ongoing care, and support."
+            },
+            {
+              "id": 5,
+              "title": "Prognosis & Complications",
+              "scope": "Possible outcomes and health problems associated with the disease."
+            },
+            {
+              "id": 6,
+              "title": "Epidemiology & Public Health",
+              "scope": "Population patterns, prevention, and access to care."
+            }
+          ],
+          "snapshot": "2026-11-05"
+        },
+        "facets": [
+          {
+            "key": "population",
+            "label": "Who is affected",
+            "deck": 6,
+            "intents": [
+              "public-health",
+              "population"
+            ],
+            "id": "F1"
+          },
+          {
+            "key": "prevention",
+            "label": "Prevention",
+            "deck": 6,
+            "intents": [
+              "public-health"
+            ],
+            "id": "F2"
+          }
+        ]
+      },
+      "review": {
+        "checks": [
+          {
+            "id": "C1",
+            "verdict": "supported"
+          }
+        ],
+        "coverage": [
+          {
+            "id": "F1",
+            "verdict": "answered"
+          },
+          {
+            "id": "F2",
+            "verdict": "missed"
+          }
+        ]
+      },
+      "originalAccepted": false
+    },
+    {
+      "id": "supported-viral-antibiotic",
+      "draft": {
+        "answer": {
+          "claims": [
+            {
+              "id": "C1",
+              "text": "If a virus causes a sore throat, antibiotics will not help.",
+              "support": [
+                {
+                  "id": "S7",
+                  "quote": "If a virus causes a sore throat, antibiotics will not help. Most sore throats will get better on their own within one week. Your healthcare provider may prescribe other medicine or give you tips to help you feel better."
+                }
+              ]
+            }
+          ]
+        },
+        "decks": [],
+        "gaps": []
+      },
+      "expectedSupported": true,
+      "prepared": {
+        "evidence": {
+          "sources": [
+            {
+              "key": "cdc-throat-antibiotics",
+              "topic": "Sore Throat",
+              "deck": 4,
+              "text": "If a virus causes a sore throat, antibiotics will not help. Most sore throats will get better on their own within one week. Your healthcare provider may prescribe other medicine or give you tips to help you feel better.",
+              "url": "https://www.cdc.gov/sore-throat/about/index.html",
+              "title": "Sore Throat Basics \u00b7 CDC",
+              "heading": "Treatment",
+              "intent": "therapy",
+              "focus": "Sore Throat",
+              "scopeTerms": [],
+              "date": "2024-04-17; retrieved 2026-11-12",
+              "retrievedAt": "2026-11-12",
+              "textSha256": "b6d8051b08ad64110ece29e22404879fcf1926efbbcb42c80cadf40d8a222086",
+              "clinicalReviewed": false,
+              "historical": false,
+              "overview": false,
+              "id": "S7"
+            }
+          ],
+          "topic": "Sore Throat",
+          "role": "General reader",
+          "style": "Plain-language answer",
+          "domains": [
+            {
+              "id": 1,
+              "title": "Etiology & Pathogenesis",
+              "scope": "Causes, risk factors, genetics, and biological mechanisms."
+            },
+            {
+              "id": 2,
+              "title": "Natural History & Progression",
+              "scope": "Early changes, symptom onset, and the course of disease."
+            },
+            {
+              "id": 3,
+              "title": "Clinical Presentation & Diagnosis",
+              "scope": "Symptoms, signs, examinations, and diagnostic tests."
+            },
+            {
+              "id": 4,
+              "title": "Therapeutics & Management",
+              "scope": "Treatment approaches, ongoing care, and support."
+            },
+            {
+              "id": 5,
+              "title": "Prognosis & Complications",
+              "scope": "Possible outcomes and health problems associated with the disease."
+            },
+            {
+              "id": 6,
+              "title": "Epidemiology & Public Health",
+              "scope": "Population patterns, prevention, and access to care."
+            }
+          ],
+          "snapshot": "2026-11-05"
+        },
+        "facets": [
+          {
+            "key": "treatment",
+            "label": "Treatment and its limitations",
+            "deck": 4,
+            "intents": [
+              "therapy"
+            ],
+            "id": "F1"
+          }
+        ]
+      },
+      "review": {
+        "checks": [
+          {
+            "id": "C1",
+            "verdict": "supported"
+          }
+        ],
+        "coverage": [
+          {
+            "id": "F1",
+            "verdict": "answered"
+          }
+        ]
+      },
+      "originalAccepted": true
+    }
+  ]
+}

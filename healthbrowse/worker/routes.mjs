@@ -1,8 +1,11 @@
+import {inspectQuery} from '../dist/clinical-engine.js';
+import {assessSafety,safetyAnswer} from '../dist/safety-policy.js';
 import {browserConfig} from '../server/public-config.mjs';
 import {accountAPI} from '../server/account-api.mjs';
 import {lookupTerminology,patientEducationForCode} from './terminology.mjs';
 import {researchRoute} from './research-routes.mjs';
 import {careLookup} from './care.mjs';
+import {modelAPI} from '../server/model-api.mjs';
 export async function respond(request,env,assets) {
   if(request.cf?.tlsVersion && request.cf.tlsVersion!=='TLSv1.3')
     return new Response('TLS 1.3 is required.',{status:426});
@@ -16,11 +19,22 @@ export async function respond(request,env,assets) {
   if(url.pathname==='/api/config'){
     return Response.json(browserConfig(env),{headers});
   }
+  if(url.pathname.startsWith('/api/ai/'))return modelAPI(request,env,assets);
   if(url.pathname.startsWith('/api/me/')||['/api/feedback','/api/contact'].includes(url.pathname)){
     return accountAPI(request,env);
   }
   if(url.pathname==='/api/care')return careLookup(request,headers);
   if(!['GET','HEAD'].includes(request.method))return new Response(null,{status:405,headers});
+  // Older shared search links used /search?q=... . Preserve the question and
+  // load the canonical desk so relative asset paths remain correct.
+  if(url.pathname==='/search'||url.pathname==='/search/')return new Response(null,{status:307,headers:{...headers,Location:'/'+url.search}});
+  if(url.pathname==='/api/terminology'||url.pathname.startsWith('/api/research/')){
+    for(const key of ['term','topic','q','query']){
+      const value=url.searchParams.get(key)||'',status=inspectQuery(value);
+      if(status==='unsafe')return Response.json({status:'blocked',answer:safetyAnswer(assessSafety(value).category)},{status:422,headers});
+      if(status!=='ok')return Response.json({status:'blocked',code:status,error:status==='emergency'?'Seek immediate local emergency help.':'Remove identifying details before searching.'},{status:422,headers});
+    }
+  }
   if(url.pathname==='/api/terminology'){
     const term=url.searchParams.get('term')||'';
     const result=await lookupTerminology(term,env);
@@ -29,7 +43,7 @@ export async function respond(request,env,assets) {
     return Response.json(result,{headers});
   }
   if(url.pathname.startsWith('/api/research/'))return researchRoute(url,assets,headers);
-  if(url.pathname==='/api/profile')return Response.json({readingModes:5},{headers});
+  if(url.pathname==='/api/profile')return Response.json({readingModes:2,labels:['General','Clinicians']},{headers});
   if(url.pathname==='/api/clinical-lens'){
     const tier=Number(url.searchParams.get('tier'));
     if(!Number.isInteger(tier)||tier<3||tier>5)return new Response('Unknown reading mode.',{status:400,headers});
@@ -46,7 +60,7 @@ export async function respond(request,env,assets) {
   if(file.type?.startsWith('text/html')){
     const origin=browserConfig(env).supabaseUrl;
     headers['Content-Security-Policy']=[
-      "default-src 'self'","script-src 'self'","style-src 'self'","img-src 'self'",
+      "default-src 'self'","script-src 'self'","style-src 'self'","img-src 'self' data:",
       "connect-src 'self' https://www.ebi.ac.uk"+(origin?' '+origin:''),
       "object-src 'none'","base-uri 'none'","form-action 'self'","frame-ancestors 'self'"
     ].join('; ');

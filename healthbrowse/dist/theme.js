@@ -5,10 +5,11 @@
     try { return localStorage.getItem(key); } catch { return null; }
   }
   let preference = saved();
+  if(preference===null&&matchMedia('(max-width: 640px)').matches)preference='dark';
   function apply() {
     const dark = preference === 'dark' || (preference !== 'light' && media.matches);
     document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#12221e' : '#f8f9f3');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#121819' : '#f8f9f3');
     document.querySelectorAll('[data-mode]').forEach(button => {
       button.setAttribute('aria-pressed', String(button.dataset.mode === (dark ? 'dark' : 'light')));
     });
@@ -22,6 +23,7 @@
       apply();
     }));
   });
+  addEventListener('healthbrowse-theme-change',()=>{preference=saved();apply()});
   media.addEventListener('change', apply);
   addEventListener('storage', event => {
     if (event.key === key || event.key === null) { preference = saved(); apply(); }

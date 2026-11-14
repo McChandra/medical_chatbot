@@ -1,0 +1,119 @@
+{
+  "audit_version": 2,
+  "archive_sha256": "0a9e16dcd79b334a2e01fc41e45ca78ef1c1742248a673656087c59b6c6d4d4f",
+  "file_sha256": {
+    "evaluation-fixtures/cases.json": "dedcff9af53567149229edb3b7053e4710aba016c9824dd8667b3bb2f5078964",
+    "evaluation-fixtures/manifest.json": "6500d3869540e1221b30a0c76f1ba69ed3d5df1076470cdd9669baef6947fe73",
+    "evaluation-manifest.json": "4c52346c748d0784ceb1d7e24bc8bb3656458af4469cc30e14fb779e288c78ff",
+    "results.jsonl": "729d9b6a8c4cd8b8ba71df5ea2b05765fea0f84448868def95b0f3b1153dceb9",
+    "runtime.json": "f6b9a0e928ae8f434e94f2aba155f1521899e5fd1a7cc74dbcc562d72ade0baa",
+    "summary.json": "fe3482f6d677cfe7c3d21b3a1f42d20ea061a63bbad98e92c571e3927cc7b636"
+  },
+  "expected_results": 22,
+  "observed_results": 22,
+  "archive_crc_passed": true,
+  "summary_recomputed": true,
+  "controls_rescored": true,
+  "pinned_source_files_verified": 23,
+  "runtime": {
+    "adapter_sha256": "9fd872b09372d3d079aa7f359e4072cdb66954d0e5e77b130f5a0441a397e5c5",
+    "base_model": "meta-llama/Meta-Llama-3-8B-Instruct",
+    "base_revision": "8afb486c1db24fe5011ec46dfbe5b5dccdb575c2",
+    "node": "v22.23.4",
+    "python": "3.13.16 (main, Oct  1 2026, 15:40:24) [GCC 13.3.0]",
+    "packages": {
+      "torch": "2.8.0",
+      "transformers": "4.57.6",
+      "peft": "0.17.1",
+      "bitsandbytes": "0.48.1",
+      "lm-format-enforcer": "0.11.3",
+      "jsonschema": "4.25.1"
+    },
+    "gpu": "Tesla T4, 580.82.07, 15360 MiB",
+    "inference_hashes": {
+      "serve.py": "e501cf509773790f2cd3ca90525c4d8cd1b29ba71938f4099a39deb52e87ce9e",
+      "structured_output.py": "f1a15d55c2b5acb9ddfe5bef6f90abfd22a845fe56fda7aab5715c3dc71735f6",
+      "model_settings.py": "0bcd7691f2c67d48e3796002183de19ea8260312094518abc42e5eb933a07409",
+      "run_grounded_pipeline.py": "6df3e630e80d96d6c81ae207bb227fd13b4bc5922e093f20e48d65cf69d4b3fc",
+      "requirements.txt": "2a6d97320c6baf06261d0b124e43ba603b28ae1540e769abb2cbf8d9a9d1c466"
+    }
+  },
+  "groups": [
+    {
+      "route": "base",
+      "cases": 8,
+      "gateway_accepted": 1,
+      "browser_cases": 5,
+      "browser_accepted": 0,
+      "buddy_cases": 3,
+      "buddy_accepted": 1,
+      "accepted_answers_with_unfinished_sentence_markers": [
+        "buddy-treatment"
+      ],
+      "observed_deadline_failures": 1,
+      "browser_seconds": {
+        "min": 39.682,
+        "median": 65.786,
+        "max": 120.107
+      },
+      "buddy_seconds": {
+        "min": 28.296,
+        "median": 37.229,
+        "max": 44.729
+      },
+      "gateway_failure_codes": {
+        "23": 1,
+        "verification_failed": 6
+      }
+    },
+    {
+      "route": "adapter",
+      "cases": 8,
+      "gateway_accepted": 3,
+      "browser_cases": 5,
+      "browser_accepted": 0,
+      "buddy_cases": 3,
+      "buddy_accepted": 3,
+      "accepted_answers_with_unfinished_sentence_markers": [
+        "leukemia-outlook",
+        "buddy-treatment",
+        "leukemia-population"
+      ],
+      "observed_deadline_failures": 4,
+      "browser_seconds": {
+        "min": 53.151,
+        "median": 120.038,
+        "max": 120.062
+      },
+      "buddy_seconds": {
+        "min": 34.701,
+        "median": 37.697,
+        "max": 67.816
+      },
+      "gateway_failure_codes": {
+        "23": 4,
+        "provider_unavailable": 1
+      }
+    }
+  ],
+  "controls": {
+    "completed": 6,
+    "expected": 6,
+    "false_acceptances": 2,
+    "false_rejections": 0,
+    "request_failures": 0
+  },
+  "false_accepted_controls": [
+    "wrong-mechanism-for-management",
+    "missing-when-to-seek-care"
+  ],
+  "clinical_release_approved": false,
+  "limitations": [
+    "This is a CPU audit of saved records, not a new model run or clinical review.",
+    "Gateway acceptance and valid JSON do not establish claim support or answer quality.",
+    "Terminal punctuation is a structural warning, not a complete grammatical or factual check.",
+    "No browser answer was accepted; missing final decks do not measure retrieval coverage.",
+    "Source hashes establish reproducibility, not medical currency or correctness.",
+    "This selected development suite is not an untouched final test set."
+  ]
+}

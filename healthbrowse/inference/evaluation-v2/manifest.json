@@ -1,0 +1,32 @@
+{
+  "version": 2,
+  "sha256": "63280ceb2cbe0e9007a6bc4db5892450be4f5b887e712d2c2f02a01cb29a3405",
+  "sourceHashes": {
+    "dist/faq-spec.js": "63b1c8806e09745a0bae8c817fe82e881869f50cd692ccdc2050d40c20db73bf",
+    "server/buddy-prompt.mjs": "cde4ed9a029ab1ea960dbe12d405942ddb627af597efc44e64dbf97502cfa880",
+    "dist/buddy-policy.js": "19ac002746928ef82cb829e3bbdc7a90317003f80177280e2531ab015e7112e1",
+    "dist/refusal.js": "e24990f266f9ec31b4dbf328ba58f2794c8fc45e79ab00b20c4a03f8b5270cd8",
+    "dist/medical-contract.js": "3ce83b01395601bd46fd5a019ba02b243f2ca9e6594d1afaa961a415889313ae",
+    "server/model-cited.mjs": "380962dcec6d87f93a9da93e2a4fb486aae0c13506d6aae29290af77add2170e",
+    "server/model-grounded.mjs": "1776dddbb7b178eaade5c7be94767510aed7c60eb155f101c6ed8d936377daa9",
+    "server/model-api.mjs": "f75e4a549791cabf10384bb37f676ae89394e4a7787d00357415a378f86d70fc",
+    "server/model-provider.mjs": "24e88a3c39005e33de17b673a90f36f75e7dffd3bf6c557b85e841134a13f5b2",
+    "server/model-evidence.mjs": "d187bd9b093f0f8e7dbf96035f403ba1d2069df2b6b0c1abcef2555c1751f223",
+    "server/model-context.mjs": "67971f46335ceb42b38b488d4b644ed84975f1d14d990b982c55a0fa3599fa2f",
+    "dist/grounded-sources.json": "7394f3349ed1dbde1ec93bf5783f2ba47101ef5edc923a1eb79b828d8c8ffc49",
+    "dist/medline-topics.json": "722fdee5d14cbd2e1c8a6f701506f8f199a01041b1a2b3f7f814d74c6e135510",
+    "dist/clinical-passages.json": "5c8c33590e6ca0c775b24a1b4f10e69db836e3cfd3ae582aa055f612538a49c4",
+    "dist/medline.js": "b7eb75b2de086ec6aa082560d349fe1a28e832a6ec10e3a4394532de087ddb43",
+    "dist/medcard.js": "7a398f482e6314510d1167262ad16b829dee31834cf4aa3ad36643ba80b13876",
+    "dist/reading-profiles.js": "f8bce11673d81f303fc2af2e7fc25e38aad71ab42d55410e48810e72b6b59da1",
+    "dist/source-labels.js": "515614d411b9f01fdd901e070b2f2a5d3e4587ddd761ddff62b39f5a0a8a0df0",
+    "dist/claim-check.js": "eaa471ced400b475bd4de911b375aad5d00bba51e5c3e249524d9b3764b12a39",
+    "dist/clinical-engine.js": "9bd82bdbbbded02d43c81ad1e5dd69868f7d5105d1c2c0ca7454216c800b5ad1",
+    "dist/safety-policy.js": "2bdd6a4b2e7dbf8a2b1888253a30aa3e88315d047676b7e3e19d53e2dc877593",
+    "dist/search-experience.js": "cb70edca1e6807ae12930fd12d6b9d957448bc6698ac6fabc1ea046d0395424d",
+    "dist/authorities.js": "3ea48fa8a78094d46e7a2d3a495f2ef856e3f7959eb20492ec46bf0ff23782f6",
+    "dist/disease-framework.js": "bd72eb19f72530419fd49676f9fe46c9f6430cd936d14d0ab6a23288b17928c5"
+  },
+  "clinical_release_approved": false,
+  "scope": "Development regression cases using actual gateway v2. Not a final test set or clinical validation."
+}

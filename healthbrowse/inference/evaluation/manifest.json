@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "fixture_sha256": "0fac59d19b0921e2894f6de3d9e24186138b654cfb7f32d1f20bd53c7611aad7",
+  "case_count": 17,
+  "generation_cases": 12,
+  "source_hashes": {
+    "dist/faq-spec.js": "63b1c8806e09745a0bae8c817fe82e881869f50cd692ccdc2050d40c20db73bf",
+    "server/buddy-prompt.mjs": "cde4ed9a029ab1ea960dbe12d405942ddb627af597efc44e64dbf97502cfa880",
+    "dist/buddy-policy.js": "19ac002746928ef82cb829e3bbdc7a90317003f80177280e2531ab015e7112e1",
+    "dist/refusal.js": "e24990f266f9ec31b4dbf328ba58f2794c8fc45e79ab00b20c4a03f8b5270cd8",
+    "dist/medical-contract.js": "3ce83b01395601bd46fd5a019ba02b243f2ca9e6594d1afaa961a415889313ae",
+    "dist/reading-profiles.js": "f8bce11673d81f303fc2af2e7fc25e38aad71ab42d55410e48810e72b6b59da1",
+    "server/model-evidence.mjs": "d187bd9b093f0f8e7dbf96035f403ba1d2069df2b6b0c1abcef2555c1751f223",
+    "server/model-context.mjs": "67971f46335ceb42b38b488d4b644ed84975f1d14d990b982c55a0fa3599fa2f",
+    "dist/disease-framework.js": "bd72eb19f72530419fd49676f9fe46c9f6430cd936d14d0ab6a23288b17928c5",
+    "dist/source-labels.js": "515614d411b9f01fdd901e070b2f2a5d3e4587ddd761ddff62b39f5a0a8a0df0",
+    "dist/clinical-engine.js": "9bd82bdbbbded02d43c81ad1e5dd69868f7d5105d1c2c0ca7454216c800b5ad1",
+    "dist/safety-policy.js": "2bdd6a4b2e7dbf8a2b1888253a30aa3e88315d047676b7e3e19d53e2dc877593",
+    "dist/medline-topics.json": "722fdee5d14cbd2e1c8a6f701506f8f199a01041b1a2b3f7f814d74c6e135510",
+    "dist/clinical-passages.json": "5c8c33590e6ca0c775b24a1b4f10e69db836e3cfd3ae582aa055f612538a49c4"
+  },
+  "clinical_release_approved": false,
+  "scope": "Development benchmark using current gateway retrieval and compact prompts. Holdout extraction results must be reported separately. No new facts or clinical approvals generated."
+}

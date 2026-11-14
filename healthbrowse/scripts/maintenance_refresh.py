@@ -107,6 +107,10 @@ def validate_topics(new, old):
             raise ValueError("Topic shape changed")
         if any(len(value) > 560 or not value for value in row["sections"].values()):
             raise ValueError("Invalid section extract")
+        for block in row.get("knowledge", []):
+            if (block.get("deck") not in range(1, 7) or not block.get("text") or
+                    len(block["text"]) > 30000 or not re.fullmatch(r"[a-f0-9]{16}", block.get("id", ""))):
+                raise ValueError("Invalid headed source block")
         if any(not importer.allowed_link(item["url"]) for item in row["links"].values()):
             raise ValueError("Unapproved linked resource")
     previous = {r["url"]: r for r in old}
@@ -156,7 +160,7 @@ def prepare(root=ROOT, fetch=download, today=None):
                   "sourceUrl": f"https://medlineplus.gov/xml/{name}", "feedDate": feed_day.isoformat(),
                   "retrievedAt": today.isoformat(), "licenseUrl": importer.RIGHTS_URL, "topics": topics}
     packed = json.dumps(next_index, ensure_ascii=False, separators=(",", ":")).encode()
-    if len(packed) > 4_000_000:
+    if len(packed) > 6_000_000:
         raise ValueError("Index exceeds artifact size budget")
     manifest = {"source": archive_url, "feed_date": feed_day.isoformat(), "checked_on": today.isoformat(),
                 "archive_sha256": sha(archive), "index_sha256": sha(packed),

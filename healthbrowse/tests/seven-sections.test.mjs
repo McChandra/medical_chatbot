@@ -17,5 +17,5 @@ test('leukemia typo, outside-catalog questions and exact coding queries',()=>{
  assert.deepEqual(resolveSearch('How is cystic fibrosis diagnosed?',idx).choices,['Cystic Fibrosis']);
  assert.equal(codeQuery('What is ICD-9 250.00?'),'ICD-9 250.00');
  assert.equal(codeQuery('SNOMED CT 73211009'),'SNOMED CT 73211009');
- assert.deepEqual(remapPassages({a:[{deck:5},{deck:7},{deck:8}]}).a.map(r=>r.deck),[2,6,3]);
+ assert.deepEqual(remapPassages({a:[{deck:5},{deck:7},{deck:8}]}).a.map(r=>r.deck),[3,5,7]);
 });

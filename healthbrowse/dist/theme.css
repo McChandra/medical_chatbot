@@ -1,5 +1,28 @@
-:root{color-scheme:light;--paper:#f8f9f3;--ink:#193d36;--dim:#53645b;--line:#cbd5c8;--surface:#fff;--panel:#edf1e5;--wash:#e8eddf;--tag:#e2ead8;--link:#225f50;--muted-green:#526e48;--action:#193d36;--on-action:white;--focus:#527833}
-:root[data-theme=dark]{color-scheme:dark;--paper:#12221e;--ink:#e3efe4;--dim:#b1c3b7;--line:#425b4f;--surface:#1b3029;--panel:#20372c;--wash:#22382f;--tag:#324d39;--link:#abdcb8;--muted-green:#b3ce98;--action:#b9d69f;--on-action:#15271c;--focus:#c9e391}
+:root{color-scheme:light;--paper:#f8f9f3;--ink:#193d36;--dim:#53645b;--line:#cbd5c8;--surface:#fff;--panel:#edf1e5;--wash:#e8eddf;--tag:#e2ead8;--link:#225f50;--muted-green:#526e48;--action:#193d36;--on-action:white;--focus:#527833;--elevated:#ffffff;--hover:#e2ead8;--control-border:#718277;--disabled:#69776f;--action-hover:#285346;--danger:#a42b39;--danger-bg:#fff6f5;--accent:#526e48;--space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-9:2.25rem;--space-12:3rem}
+:root[data-theme=dark]{
+ color-scheme:dark;
+ --paper:#121819;
+ --surface:#1d2729;
+ --elevated:#2b383b;
+ --panel:#263336;
+ --wash:#1a2224;
+ --tag:#344448;
+ --hover:#354649;
+ --ink:#e0e6e7;
+ --dim:#adbabc;
+ --disabled:#98a6a8;
+ --line:#3d4b4e;
+ --control-border:#84969b;
+ --link:#a7cbb8;
+ --muted-green:#a7cbb8;
+ --accent:#a7cbb8;
+ --action:#a7cbb8;
+ --action-hover:#bddccb;
+ --on-action:#142720;
+ --focus:#99c8eb;
+ --danger:#e8a0ac;
+ --danger-bg:#38282f;
+}
 body{background:var(--paper);color:var(--ink);overflow-wrap:anywhere}a{color:var(--link)}
 .theme-controls{display:inline-flex;align-items:center;border:1px solid var(--line);background:var(--surface);border-radius:24px;padding:3px;gap:2px;flex-shrink:0}
 .theme-controls button{font:600 13px/1 system-ui;min-height:36px;padding:0 12px;color:var(--dim);cursor:pointer;background:transparent;border:0;border-radius:20px}
@@ -7,3 +30,51 @@ body{background:var(--paper);color:var(--ink);overflow-wrap:anywhere}a{color:var
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 .auditbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
 @media print{.theme-controls{display:none}body{background:white;color:black}}
+
+/* Keep secondary copy and native form text readable on dark surfaces. */
+:root[data-theme=dark] input:not([type=checkbox]):not([type=radio]),
+:root[data-theme=dark] textarea,
+:root[data-theme=dark] select,
+:root[data-theme=dark] option{color:var(--ink);background-color:var(--paper);caret-color:var(--ink)}
+:root[data-theme=dark] input::placeholder,
+:root[data-theme=dark] textarea::placeholder{color:var(--dim);opacity:1}
+:root[data-theme=dark] .panel button:disabled{opacity:1;color:var(--disabled);background:var(--panel)}
+:root[data-theme=dark] input:autofill{box-shadow:0 0 0 1000px var(--paper) inset;-webkit-text-fill-color:var(--ink);caret-color:var(--ink)}
+:root[data-theme=dark] .domain-label,
+:root[data-theme=dark] .clinical-lens,
+:root[data-theme=dark] .coverage-gap{color:var(--dim)}
+
+/* Semantic dark-mode rules: decorative lines stay subtle; controls do not. */
+:root[data-theme=dark] body{font-weight:400;line-height:1.6;letter-spacing:.01em}
+:root[data-theme=dark] :is(h1,h2,h3,h4){font-weight:500;letter-spacing:-.015em;line-height:1.25}
+:root[data-theme=dark] :is(p,.answer-text,.excerpt,.meta,.muted){line-height:1.65}
+:root[data-theme=dark] :is(input:not([type=checkbox]):not([type=radio]),textarea,select){border-color:var(--control-border)}
+:root[data-theme=dark] .field{border-color:var(--control-border)}
+:root[data-theme=dark] :is(input[type=checkbox],input[type=radio]){accent-color:var(--action)}
+:root[data-theme=dark] :is(button,.secondary-action,.file-button){border-color:var(--control-border)}
+:root[data-theme=dark] :is(button,.secondary-action,.file-button):not(:disabled):hover{background:var(--hover);color:var(--ink)}
+:root[data-theme=dark] #google:not(:disabled):hover{background:var(--hover);color:var(--ink)}
+:root[data-theme=dark] :is(button.primary,#authSubmit,.send,.auth-action,#buddyMeet,.field button,.buddy-launcher):not(:disabled):hover{background:var(--action-hover);color:var(--on-action)}
+:root[data-theme=dark] :is(.theme-controls button[aria-pressed=true],.settings-sidebar nav a[aria-current=page]):hover{background:var(--action-hover);color:var(--on-action)}
+:root[data-theme=dark] :is(input,select,textarea,button):disabled{opacity:1;color:var(--disabled);background:var(--panel);cursor:not-allowed}
+:root[data-theme=dark] :is(:focus-visible,.site-header a:focus-visible,.site-header button:focus-visible){outline:3px solid var(--focus);outline-offset:3px}
+:root[data-theme=dark] :is(dialog,.confirm-delete,#welcome,#buddyDialog,#buddyDialog #copilot,#buddyDialog .copilot-head,.buddy-nudge,.query-suggestions){background:var(--elevated);border-color:var(--control-border);box-shadow:none}
+:root[data-theme=dark] :is(.query-suggestions-list>button,select option){background:var(--elevated)}
+:root[data-theme=dark] .query-suggestions-list>button:is(:hover,[aria-selected=true]){background:var(--hover)}
+:root[data-theme=dark] :is(dialog,#welcome,#buddyDialog)::backdrop{background:rgba(18,24,25,.76)}
+:root[data-theme=dark] :is(.answer-block,.source-evidence,.overview-note,.item,.settings-content,.claim-check) a:not(.secondary-action){text-decoration:underline;text-underline-offset:.2em}
+:root[data-theme=dark] :is(.hero svg,.eyebrow i){color:var(--link)}
+:root[data-theme=dark] .eyebrow i{background:var(--link)}
+:root[data-theme=dark] :is(input:not([type=checkbox]):not([type=radio]),textarea,select)[aria-invalid=true]{border-color:var(--danger)}
+:root[data-theme=dark] :is(.danger-button,#confirmDeleteChats):not(:disabled):hover{background:var(--hover)!important;color:var(--danger)!important}
+:root[data-theme=dark] .settings-content :is(h2,h3,h4){font-weight:650}
+:root[data-theme=dark] .settings-content :is(input,select,textarea):disabled{opacity:1}
+:root[data-theme=dark] .settings-content .file-button{border-color:var(--control-border)}
+:root[data-theme=dark] .settings-content .file-button:hover{background:var(--hover)}
+:root[data-theme=dark] .password-criteria li.met::marker{content:"✓  "}
+@media(forced-colors:active){
+ :focus-visible{outline:3px solid Highlight!important;outline-offset:3px}
+ button,input,textarea,select,dialog{border-color:ButtonText}
+ .settings-sidebar nav a[aria-current=page]{outline:2px solid Highlight}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

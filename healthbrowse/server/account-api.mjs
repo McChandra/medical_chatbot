@@ -1,5 +1,7 @@
+import {sessionIdFromVerifiedAccessToken} from './auth-session.mjs';
+import {workspaceAPI} from './workspace-api.mjs';
 // No service key, authorization header, contact body or feedback body is logged.
-const modes=['General reader','Patient','Medical student','Medical professional','Advanced professional'];
+import {isReadingRole,normalizeReadingRole} from '../dist/reading-profiles.js';
 const themes=['system','light','dark'];
 const sections=['Education and definitions','Identification','Research and evidence','Data and AI resources','Prediction and genetics','Physiology, symptoms and treatments','Care facilities'];
 const uuid=/^[\da-f]{8}-[\da-f]{4}-[1-8][\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i;
@@ -34,7 +36,7 @@ async function jsonBody(request){
 }
 function only(value,keys){if(Object.keys(value).some(k=>!keys.includes(k)))reject(400,'Unexpected request field.')}
 function credentials(key,token){return {apikey:key,Authorization:'Bearer '+token,'Content-Type':'application/json'}}
-function freshFetch(url,options){return fetch(url,{...options,redirect:'error',cache:'no-store',signal:AbortSignal.timeout(8000)})}
+function freshFetch(url,options){return fetch(url,{...options,headers:{...options.headers,'Cache-Control':'no-store'},redirect:'manual',signal:AbortSignal.timeout(8000)})}
 async function database(base,headers,path,method='GET',body,prefer){
   const res=await freshFetch(base+'/rest/v1/'+path,{method,headers:{...headers,...(prefer?{Prefer:prefer}:{})},
     ...(body===undefined?{}:{body:JSON.stringify(body)})});
@@ -47,7 +49,7 @@ async function database(base,headers,path,method='GET',body,prefer){
   }
   const text=await res.text();return text?JSON.parse(text):null;
 }
-function settings(row){return {saveHistory:row?.save_history??false,readingMode:row?.reading_mode??modes[0],theme:row?.theme??'system'}}
+function settings(row){return {saveHistory:row?.save_history??false,readingMode:normalizeReadingRole(row?.reading_mode),theme:row?.theme??'system'}}
 function historyItem(row){
   const name=sections[row.section-1],q=row.kind==='chat'?'Explore '+name+' for '+row.topic:'Research '+row.topic+' · '+name;
   return {...row,questionLabel:q,href:'/?'+new URLSearchParams({topic:row.topic,section:String(row.section)})};
@@ -103,14 +105,15 @@ export async function accountAPI(request,env){
     const base=config(env),headers=credentials(env.SUPABASE_ANON_KEY,token);
     const auth=await freshFetch(base+'/auth/v1/user',{headers});
     if(!auth.ok)reject(auth.status===401||auth.status===403?401:503,'The account session could not be verified.');
-    const user=(await auth.json()).id;if(!uuid.test(user||''))reject(401,'Invalid account session.');
+    const identity=await auth.json(),user=identity.id;if(!uuid.test(user||''))reject(401,'Invalid account session.');
+    if(env.DB&&path.startsWith('/api/me/'))return workspaceAPI(request,env.DB,identity,{sessionId:sessionIdFromVerifiedAccessToken(token,user)});
     const db=(...args)=>database(base,headers,...args);
     const owner='user_id=eq.'+user;
     if(path==='/api/me/settings'){
       if(method==='GET')return reply({settings:settings((await db('hb_settings?'+owner+'&select=save_history,reading_mode,theme'))[0])});
       if(method==='PATCH'){const b=await jsonBody(request);only(b,['saveHistory','readingMode','theme']);
         if(b.saveHistory!==undefined&&typeof b.saveHistory!=='boolean')reject(400,'Invalid history setting.');
-        if(b.readingMode!==undefined)oneOf(b.readingMode,modes,'reading mode');if(b.theme!==undefined)oneOf(b.theme,themes,'theme');
+        if(b.readingMode!==undefined){if(!isReadingRole(b.readingMode))reject(400,'Invalid reading mode.');b.readingMode=normalizeReadingRole(b.readingMode)}if(b.theme!==undefined)oneOf(b.theme,themes,'theme');
         const rows=await db('rpc/hb_update_settings','POST',{p_history:b.saveHistory??null,p_mode:b.readingMode??null,p_theme:b.theme??null});
         return reply({settings:settings(rows[0])});}
     }else if(path==='/api/me/saved'){

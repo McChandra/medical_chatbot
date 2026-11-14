@@ -1,10 +1,31 @@
 {
-  "name":"healthbrowse-research-platform",
-  "version":"0.1.0",
-  "private":true,
-  "type":"module",
-  "engines":{"node":">=24 <25"},
-  "scripts":{"build":"node scripts/build-account.mjs && node scripts/build-worker.mjs","start":"node server/main.mjs","test":"node --test tests/*.test.mjs"},
-  "dependencies":{"@supabase/supabase-js":"2.118.0"},
-  "devDependencies":{"esbuild":"0.28.2"}
+  "name": "healthbrowse-research-platform",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "build": "node scripts/build-account.mjs && node scripts/build-worker.mjs",
+    "start": "node server/main.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "qa:bot": "node scripts/qa-bot.mjs",
+    "db:generate": "drizzle-kit generate"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.118.0"
+  },
+  "devDependencies": {
+    "drizzle-kit": "0.31.10",
+    "drizzle-orm": "0.45.2",
+    "esbuild": "0.28.2",
+    "miniflare": "4.20260730.0"
+  },
+  "overrides": {
+    "miniflare": {
+      "sharp": "0.35.5",
+      "undici": "7.30.1"
+    }
+  }
 }
